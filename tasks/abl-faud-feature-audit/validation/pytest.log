@@ -1,0 +1,21 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-8.4.1, pluggy-1.6.0 -- /usr/local/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests
+plugins: anyio-4.14.1
+collecting ... collected 5 items
+
+../tests/test_outputs.py::test_auditor_module_exists PASSED              [ 20%]
+../tests/test_outputs.py::test_stale_detected_exit_1 PASSED              [ 40%]
+../tests/test_outputs.py::test_partial_feature_not_stale PASSED          [ 60%]
+../tests/test_outputs.py::test_fix_reconciles_and_clean_exit_0 PASSED    [ 80%]
+../tests/test_outputs.py::test_clean_repo_exit_0 PASSED                  [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_auditor_module_exists
+PASSED ../tests/test_outputs.py::test_stale_detected_exit_1
+PASSED ../tests/test_outputs.py::test_partial_feature_not_stale
+PASSED ../tests/test_outputs.py::test_fix_reconciles_and_clean_exit_0
+PASSED ../tests/test_outputs.py::test_clean_repo_exit_0
+============================== 5 passed in 1.14s ===============================

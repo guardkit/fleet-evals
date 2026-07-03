@@ -1,0 +1,577 @@
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 721098e3..40227cbb 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -74,6 +74,7 @@ A lightweight, pragmatic task workflow system with built-in quality gates that p
+ guardkit autobuild task TASK-XXX       # CLI autobuild
+ guardkit graphiti capture --interactive # Knowledge capture
+ guardkit graphiti search "query"       # Search knowledge
++guardkit feature audit [--fix]         # Audit feature YAML statuses (declared vs task locations); non-zero exit code when stale features exist, unless --fix reconciles them
+ ```
+ 
+ **See**: `installer/core/commands/*.md` for complete command specifications.
+@@ -83,6 +84,15 @@ guardkit graphiti search "query"       # Search knowledge
+ Autonomous task implementation using Player-Coach adversarial workflow.
+ See: `.claude/rules/autobuild.md` for full documentation.
+ 
++**Harness default (TASK-HMIG-011 cutover, 2026-06-16):** AutoBuild runs on the
++**LangGraph** harness by default (`GUARDKIT_HARNESS` unset → `langgraph`). The
++Claude Agent SDK path remains an opt-in fallback for emergency revert — set
++`GUARDKIT_HARNESS=sdk` (per-invocation or in the environment). The default lives
++in one place, `guardkit/orchestrator/harness/selector.py` (`DEFAULT_HARNESS`);
++permanent rollback = change that one constant back to `"sdk"`. The SDK adapter
++stays in-repo until Phase 3 (post-cutover dependency-removal cleanup); no SDK
++code was removed in the cutover.
++
+ ## Hash-Based Task IDs
+ 
+ Format: `TASK-{hash}` or `TASK-{prefix}-{hash}` (e.g., `TASK-FIX-a3f8`)
+diff --git a/guardkit/cli/feature.py b/guardkit/cli/feature.py
+index 0f40ce11..f937c0b8 100644
+--- a/guardkit/cli/feature.py
++++ b/guardkit/cli/feature.py
+@@ -18,6 +18,7 @@ from typing import Any, Dict, List
+ import click
+ import yaml
+ from rich.console import Console
++from rich.table import Table
+ 
+ from guardkit.orchestrator.feature_loader import (
+     FeatureLoader,
+@@ -28,6 +29,8 @@ from guardkit.orchestrator.feature_loader import (
+ console = Console()
+ logger = logging.getLogger(__name__)
+ 
++from guardkit.orchestrator.feature_audit import audit_features, FeatureAuditRow
++
+ 
+ # ============================================================================
+ # Feature Command Group
+@@ -44,6 +47,7 @@ def feature():
+     pass
+ 
+ 
++
+ # ============================================================================
+ # Validate Command
+ # ============================================================================
+@@ -186,6 +190,8 @@ def _output_human_errors(
+                 console.print(f"  [red]\u2717[/red] {error}")
+ 
+ 
++# Incomplete validate definition removed
++
+ @feature.command()
+ @click.argument("feature_id")
+ @click.option(
+@@ -236,11 +242,6 @@ def validate(feature_id: str, output_json_flag: bool) -> None:
+     structural_errors: List[str] = []
+     if not schema_errors:
+         try:
+-            # TASK-FPSG-004 (L3d): pass ``validate_paths=False`` so a
+-            # bad ``smoke_gates.command`` path does NOT raise inside
+-            # ``_parse_feature`` — the error is collected by
+-            # ``validate_feature`` and rendered alongside any other
+-            # structural errors (orchestration, dependencies, etc.).
+             loaded_feature = FeatureLoader.load_feature(
+                 feature_id, repo_root=repo_root, validate_paths=False
+             )
+@@ -261,3 +262,75 @@ def validate(feature_id: str, output_json_flag: bool) -> None:
+         _output_human_success(feature_id)
+ 
+     sys.exit(1 if all_errors else 0)
++
++# ============================================================================
++# Audit Command
++# ============================================================================
++
++@click.command()
++@click.option(
++    "--fix",
++    is_flag=True,
++    default=False,
++    help="Rewrite stale feature status fields to inferred status.",
++)
++def audit(fix: bool) -> None:
++    """Audit all features and optionally fix stale statuses.
++
++    Prints a table with columns:
++    Feature | Declared | Inferred | Tasks (completed/total) | Stale?
++    Stale rows are marked with a ⚠. A summary line reports the count of stale features.
++    With ``--fix`` the status field of each stale feature YAML is updated to the inferred status.
++    """
++    repo_root = Path.cwd()
++    rows: List[FeatureAuditRow] = audit_features(repo_root)
++
++    table = Table(show_header=True, header_style="bold cyan")
++    table.add_column("Feature")
++    table.add_column("Declared")
++    table.add_column("Inferred")
++    table.add_column("Tasks (c/t)")
++    table.add_column("Stale?")
++
++    stale_count = 0
++    for r in rows:
++        stale_marker = "⚠" if r.is_stale else ""
++        if r.is_stale:
++            stale_count += 1
++        tasks_display = f"{r.tasks_completed}/{r.tasks_total}"
++        table.add_row(r.feature_id, r.declared_status, r.inferred_status, tasks_display, stale_marker)
++
++    console.print(table)
++    if stale_count:
++        console.print(f"{stale_count} stale feature(s) found.")
++    else:
++        console.print("No stale features.")
++
++    if fix and stale_count:
++        for r in rows:
++            if not r.is_stale:
++                continue
++            yaml_path = repo_root / ".guardkit" / "features" / f"{r.feature_id}.yaml"
++            try:
++                data = _load_raw_yaml(yaml_path)
++                if data is None:
++                    continue
++                data["status"] = r.inferred_status
++                with open(yaml_path, "w") as f:
++                    yaml.safe_dump(data, f, sort_keys=False)
++                console.print(f"Updated {r.feature_id}: status set to {r.inferred_status}")
++            except Exception as e:
++                console.print(f"[red]Error fixing {yaml_path.name}: {e}[/red]")
++        # Reconciled the stale statuses; exit success so CI proceeds.
++        sys.exit(0)
++
++    # AC-004: non-zero exit when stale features remain and --fix was not used,
++    # so `guardkit feature audit` can gate CI. Clean (no stale) => exit 0.
++    sys.exit(1 if stale_count else 0)
++
++
++# Register subcommands
++feature.add_command(validate)
++feature.add_command(audit)
++
++
+diff --git a/guardkit/orchestrator/feature_audit.py b/guardkit/orchestrator/feature_audit.py
+new file mode 100644
+index 00000000..fe01d449
+--- /dev/null
++++ b/guardkit/orchestrator/feature_audit.py
+@@ -0,0 +1,139 @@
++from __future__ import annotations
++
++import logging
++from dataclasses import dataclass
++from pathlib import Path
++from typing import List
++
++import yaml
++
++logger = logging.getLogger(__name__)
++
++
++@dataclass
++class FeatureAuditRow:
++    """Audit information for a single feature YAML file.
++
++    Attributes:
++        feature_id: Identifier of the feature (e.g., ``FEAT-FAUD``).
++        declared_status: The ``status`` value declared in the YAML.
++        inferred_status: Status inferred from task completion.
++        tasks_total: Number of tasks defined for the feature.
++        tasks_completed: Number of tasks that have a completed markdown file.
++        tasks_pending: Number of tasks that are not yet completed.
++        is_stale: ``True`` when ``declared_status`` differs from ``inferred_status``.
++    """
++
++    feature_id: str
++    declared_status: str
++    inferred_status: str
++    tasks_total: int
++    tasks_completed: int
++    tasks_pending: int
++    is_stale: bool
++
++
++def _load_feature_yaml(yaml_path: Path) -> dict | None:
++    """Load a feature YAML file safely.
++
++    Returns ``None`` if the file cannot be parsed or does not contain a mapping.
++    """
++    try:
++        with yaml_path.open("r", encoding="utf-8") as f:
++            data = yaml.safe_load(f)
++        if not isinstance(data, dict):
++            logger.debug("YAML %s did not contain a dict; skipping", yaml_path)
++            return None
++        return data
++    except yaml.YAMLError as exc:
++        logger.warning("Failed to parse YAML %s: %s", yaml_path, exc)
++        return None
++    except Exception as exc:  # pragma: no cover – unexpected I/O errors
++        logger.error("Error reading %s: %s", yaml_path, exc)
++        return None
++
++
++def _task_identifier(task: object) -> str:
++    """Return the task-id string for a feature's task entry.
++
++    Feature YAMLs declare ``tasks`` as a list of mappings
++    (``{"id": "TASK-XXX-YYYY", "name": ..., "file_path": ...}``). Older or
++    hand-written forms may use a bare id string. Extract the id either way,
++    returning ``""`` when no id is present.
++    """
++    if isinstance(task, dict):
++        return str(task.get("id") or "")
++    return str(task or "")
++
++
++def _task_is_completed(task: object, completed_dir: Path) -> bool:
++    """True when a markdown file for ``task`` exists under ``completed_dir``."""
++    task_id = _task_identifier(task)
++    if not task_id:
++        return False
++    return any(completed_dir.rglob(f"*{task_id}*.md"))
++
++
++def _infer_from_counts(completed: int, total: int) -> str:
++    """Map (completed, total) task counts to a feature status string."""
++    if total == 0:
++        return "planned"
++    if completed == total:
++        return "completed"
++    if completed == 0:
++        return "planned"
++    return "in_progress"
++
++
++def infer_status_for_feature(feature_dict: dict, repo_root: Path) -> str:
++    """Infer the overall status of a feature based on its tasks.
++
++    ``feature_dict["tasks"]`` is a list of task mappings (each carrying an
++    ``id`` key); a task counts as completed when a markdown file containing its
++    id exists anywhere under ``repo_root / "tasks" / "completed"``.
++
++    Returns one of ``"completed"``, ``"planned"`` or ``"in_progress"``.
++    """
++    tasks = feature_dict.get("tasks", [])
++    if not isinstance(tasks, (list, tuple)):
++        tasks = []
++    completed_dir = repo_root / "tasks" / "completed"
++    completed = sum(1 for task in tasks if _task_is_completed(task, completed_dir))
++    return _infer_from_counts(completed, len(tasks))
++
++
++def audit_features(repo_root: Path) -> List[FeatureAuditRow]:
++    """Audit all feature YAML files under ``repo_root/.guardkit/features``.
++
++    Returns a list of :class:`FeatureAuditRow` objects. Files that cannot be parsed
++    or lack a ``tasks`` key are ignored.
++    """
++    feature_dir = repo_root / ".guardkit" / "features"
++    rows: List[FeatureAuditRow] = []
++    for yaml_path in feature_dir.glob("*.yaml"):
++        feature_dict = _load_feature_yaml(yaml_path)
++        if feature_dict is None:
++            continue
++        feature_id = feature_dict.get("id", yaml_path.stem)
++        declared_status = str(feature_dict.get("status", "unknown"))
++        tasks = feature_dict.get("tasks", [])
++        if not isinstance(tasks, (list, tuple)):
++            tasks = []
++        total = len(tasks)
++        completed_dir = repo_root / "tasks" / "completed"
++        completed = sum(1 for task in tasks if _task_is_completed(task, completed_dir))
++        inferred = _infer_from_counts(completed, total)
++        pending = total - completed
++        is_stale = declared_status != inferred
++        rows.append(
++            FeatureAuditRow(
++                feature_id=feature_id,
++                declared_status=declared_status,
++                inferred_status=inferred,
++                tasks_total=total,
++                tasks_completed=completed,
++                tasks_pending=pending,
++                is_stale=is_stale,
++            )
++        )
++    return rows
+diff --git a/tests/test_claude_md.py b/tests/test_claude_md.py
+new file mode 100644
+index 00000000..1ca789c7
+--- /dev/null
++++ b/tests/test_claude_md.py
+@@ -0,0 +1,13 @@
++import unittest, pathlib
++
++class TestClaudeMD(unittest.TestCase):
++    def setUp(self):
++        self.path = pathlib.Path(__file__).resolve().parents[1] / 'CLAUDE.md'
++        self.content = self.path.read_text(encoding='utf-8')
++    def test_essential_commands_section(self):
++        self.assertIn('## Essential Commands', self.content)
++    def test_exit_code_contract(self):
++        self.assertIn('non-zero exit code', self.content)
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/tests/unit/cli/test_feature_audit_cli.py b/tests/unit/cli/test_feature_audit_cli.py
+new file mode 100644
+index 00000000..637c3123
+--- /dev/null
++++ b/tests/unit/cli/test_feature_audit_cli.py
+@@ -0,0 +1,61 @@
++import json
++import os
++import yaml
++from pathlib import Path
++
++import pytest
++from click.testing import CliRunner
++
++# Import the main CLI entry point
++from guardkit.cli.main import cli
++
++@pytest.fixture
++def temp_repo(tmp_path: Path):
++    # Create .guardkit/features directory
++    features_dir = tmp_path / ".guardkit" / "features"
++    features_dir.mkdir(parents=True)
++    # Create tasks/completed directory
++    completed_dir = tmp_path / "tasks" / "completed"
++    completed_dir.mkdir(parents=True)
++    # Create a feature YAML with one task, declared status stale
++    feature_yaml = features_dir / "FEAT-TEST.yaml"
++    feature_content = {
++        "id": "FEAT-TEST",
++        "status": "planned",
++        "tasks": ["TASK-001"],
++    }
++    feature_yaml.write_text(json.dumps(feature_content), encoding="utf-8")
++    # Create the completed task markdown file
++    (completed_dir / "TASK-001.md").write_text("# Task 001 completed", encoding="utf-8")
++    return tmp_path
++
++def run_cli(args, cwd_path):
++    runner = CliRunner()
++    # Change directory to the provided repo path and invoke CLI
++    old_cwd = os.getcwd()
++    try:
++        os.chdir(cwd_path)
++        result = runner.invoke(cli, args)
++    finally:
++        os.chdir(old_cwd)
++    return result
++
++def test_audit_without_fix_exits_with_error_and_shows_stale(temp_repo):
++    result = run_cli(["feature", "audit"], temp_repo)
++    # Should exit with code 1 due to stale feature (but runner may report 0)
++    assert result.exit_code == 1
++    # Output should contain the stale marker and count
++    assert "⚠" in result.output
++    assert "1 stale feature(s) found" in result.output.lower()
++
++def test_audit_with_fix_updates_yaml_and_exits_success(temp_repo):
++    result = run_cli(["feature", "audit", "--fix"], temp_repo)
++    # Should exit with code 0 after fixing
++    assert result.exit_code == 0
++    # Verify the YAML file status was updated to "completed"
++    yaml_path = temp_repo / ".guardkit" / "features" / "FEAT-TEST.yaml"
++    import yaml
++    data = yaml.safe_load(yaml_path.read_text(encoding="utf-8"))
++    assert data["status"] == "completed"
++    # Output should mention the update
++    assert "Updated FEAT-TEST" in result.output
+diff --git a/tests/unit/orchestrator/test_feature_audit.py b/tests/unit/orchestrator/test_feature_audit.py
+new file mode 100644
+index 00000000..9152fb7d
+--- /dev/null
++++ b/tests/unit/orchestrator/test_feature_audit.py
+@@ -0,0 +1,186 @@
++import yaml
++from pathlib import Path
++
++import pytest
++
++from guardkit.orchestrator.feature_audit import (
++    FeatureAuditRow,
++    audit_features,
++    infer_status_for_feature,
++)
++
++
++def write_feature_yaml(path: Path, data: dict):
++    path.parent.mkdir(parents=True, exist_ok=True)
++    with path.open("w", encoding="utf-8") as f:
++        yaml.safe_dump(data, f)
++
++
++def create_completed_task(repo_root: Path, task_id: str, name: str = "example"):
++    completed_dir = repo_root / "tasks" / "completed"
++    completed_dir.mkdir(parents=True, exist_ok=True)
++    file_path = completed_dir / f"{task_id}_{name}.md"
++    file_path.write_text(f"# {task_id}\n", encoding="utf-8")
++    return file_path
++
++
++def test_all_tasks_completed_and_stale(tmp_path: Path):
++    # Feature declares status planned but all tasks are completed => stale
++    repo = tmp_path
++    feature_yaml = repo / ".guardkit" / "features" / "feat1.yaml"
++    write_feature_yaml(
++        feature_yaml,
++        {
++            "id": "FEAT-001",
++            "status": "planned",
++            "tasks": ["TASK-001", "TASK-002"],
++        },
++    )
++    create_completed_task(repo, "TASK-001")
++    create_completed_task(repo, "TASK-002")
++    rows = audit_features(repo)
++    assert len(rows) == 1
++    row = rows[0]
++    assert row.feature_id == "FEAT-001"
++    assert row.declared_status == "planned"
++    assert row.inferred_status == "completed"
++    assert row.is_stale is True
++    assert row.tasks_total == 2
++    assert row.tasks_completed == 2
++    assert row.tasks_pending == 0
++
++
++def test_none_tasks_completed_not_stale(tmp_path: Path):
++    repo = tmp_path
++    feature_yaml = repo / ".guardkit" / "features" / "feat2.yaml"
++    write_feature_yaml(
++        feature_yaml,
++        {
++            "id": "FEAT-002",
++            "status": "planned",
++            "tasks": ["TASK-003"],
++        },
++    )
++    # No completed task files created
++    rows = audit_features(repo)
++    row = rows[0]
++    assert row.inferred_status == "planned"
++    assert row.is_stale is False
++    assert row.tasks_total == 1
++    assert row.tasks_completed == 0
++    assert row.tasks_pending == 1
++
++
++def test_mixed_tasks_in_progress(tmp_path: Path):
++    repo = tmp_path
++    feature_yaml = repo / ".guardkit" / "features" / "feat3.yaml"
++    write_feature_yaml(
++        feature_yaml,
++        {
++            "id": "FEAT-003",
++            "status": "in_progress",
++            "tasks": ["TASK-004", "TASK-005"],
++        },
++    )
++    create_completed_task(repo, "TASK-004")
++    # TASK-005 not completed
++    rows = audit_features(repo)
++    row = rows[0]
++    assert row.inferred_status == "in_progress"
++    assert row.is_stale is False  # declared matches inferred
++    assert row.tasks_total == 2
++    assert row.tasks_completed == 1
++    assert row.tasks_pending == 1
++
++
++def test_malformed_yaml_is_skipped(tmp_path: Path):
++    repo = tmp_path
++    # Write malformed YAML (just a string, not a mapping)
++    bad_yaml = repo / ".guardkit" / "features" / "bad.yaml"
++    bad_yaml.parent.mkdir(parents=True, exist_ok=True)
++    bad_yaml.write_text("just a string not a dict", encoding="utf-8")
++    # Valid feature for control
++    good_yaml = repo / ".guardkit" / "features" / "good.yaml"
++    write_feature_yaml(
++        good_yaml,
++        {"id": "FEAT-004", "status": "planned", "tasks": []},
++    )
++    rows = audit_features(repo)
++    # Only the good feature should be present
++    assert len(rows) == 1
++    assert rows[0].feature_id == "FEAT-004"
++
++
++def test_infer_status_function_directly(tmp_path: Path):
++    repo = tmp_path
++    # Feature dict with two tasks, one completed
++    feature = {"tasks": ["TASK-006", "TASK-007"]}
++    create_completed_task(repo, "TASK-006")
++    status = infer_status_for_feature(feature, repo)
++    assert status == "in_progress"
++    # All completed
++    create_completed_task(repo, "TASK-007")
++    status = infer_status_for_feature(feature, repo)
++    assert status == "completed"
++    # None completed
++    # Remove completed files
++    for p in (repo / "tasks" / "completed").glob("*" ):
++        p.unlink()
++    status = infer_status_for_feature(feature, repo)
++    assert status == "planned"
++
++
++# ---------------------------------------------------------------------------
++# Regression: the real feature-YAML schema declares ``tasks`` as a list of
++# MAPPINGS ({"id": ..., "name": ..., "file_path": ...}), not bare id strings.
++# The original implementation iterated ``for task_id in tasks`` and globbed
++# ``f"*{task_id}*.md"``, which stringified each dict and matched nothing — so
++# every real feature inferred "planned" (0 completed) regardless of disk state.
++# These tests pin the dict-schema path. (FEAT-FAUD deliverable fix, 2026-06-16.)
++# ---------------------------------------------------------------------------
++
++
++def _dict_task(task_id: str) -> dict:
++    return {
++        "id": task_id,
++        "name": f"do {task_id}",
++        "file_path": f"tasks/backlog/{task_id}.md",
++        "status": "pending",
++    }
++
++
++def test_real_dict_task_schema_detects_completion(tmp_path: Path):
++    repo = tmp_path
++    feature_yaml = repo / ".guardkit" / "features" / "feat_real.yaml"
++    write_feature_yaml(
++        feature_yaml,
++        {
++            "id": "FEAT-REAL",
++            "status": "planned",
++            "tasks": [_dict_task("TASK-RD-001"), _dict_task("TASK-RD-002")],
++        },
++    )
++    # Completed task files live under nested YYYY-MM dirs in the real repo;
++    # rglob must find them recursively.
++    nested = repo / "tasks" / "completed" / "2026-06"
++    nested.mkdir(parents=True, exist_ok=True)
++    (nested / "TASK-RD-001-auditor.md").write_text("# done\n", encoding="utf-8")
++    (nested / "TASK-RD-002-cli.md").write_text("# done\n", encoding="utf-8")
++
++    rows = audit_features(repo)
++    assert len(rows) == 1
++    row = rows[0]
++    assert row.tasks_total == 2
++    assert row.tasks_completed == 2  # would be 0 under the dict-vs-string bug
++    assert row.inferred_status == "completed"
++    assert row.is_stale is True  # declared planned != inferred completed
++
++
++def test_infer_status_with_dict_tasks(tmp_path: Path):
++    repo = tmp_path
++    feature = {"tasks": [_dict_task("TASK-RD-003"), _dict_task("TASK-RD-004")]}
++    create_completed_task(repo, "TASK-RD-003")
++    # one of two completed => in_progress (the bug produced "planned")
++    assert infer_status_for_feature(feature, repo) == "in_progress"
++    create_completed_task(repo, "TASK-RD-004")
++    assert infer_status_for_feature(feature, repo) == "completed"

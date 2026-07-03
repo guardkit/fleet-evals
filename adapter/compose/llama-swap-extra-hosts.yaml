@@ -1,0 +1,11 @@
+# Harbor --extra-docker-compose overlay: portable container -> host llama-swap
+# route (FEAT-ABL-002 runbook, §Networking). Bare Tailscale MagicDNS happens to
+# work on the GB10, but host-gateway is the portable form ABL-003 bakes in.
+#
+#   harbor run ... --extra-docker-compose adapter/compose/llama-swap-extra-hosts.yaml
+#
+# "main" is Harbor's docker-compose service name for the task container.
+services:
+  main:
+    extra_hosts:
+      - "promaxgb10-41b1:host-gateway"

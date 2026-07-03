@@ -1,0 +1,39 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-8.4.1, pluggy-1.6.0 -- /usr/local/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests
+collecting ... collected 7 items
+
+../tests/test_outputs.py::test_producer_script_exists PASSED             [ 14%]
+../tests/test_outputs.py::test_dashboard_schema_and_ordering PASSED      [ 28%]
+../tests/test_outputs.py::test_dashboard_byte_stable_modulo_timestamp PASSED [ 42%]
+../tests/test_outputs.py::test_single_task_null_filled_and_byte_stable PASSED [ 57%]
+../tests/test_outputs.py::test_unknown_task_id_exits_1_with_stderr PASSED [ 71%]
+../tests/test_outputs.py::test_bin_entry_registered PASSED               [ 85%]
+../tests/test_outputs.py::test_command_specs_wired FAILED                [100%]
+
+=================================== FAILURES ===================================
+___________________________ test_command_specs_wired ___________________________
+
+    def test_command_specs_wired():
+        for spec in [
+            APP / "installer/core/commands/task-status.md",
+            APP / ".claude/commands/task-status.md",
+        ]:
+>           assert "--json" in spec.read_text(encoding="utf-8"), f"{spec} not wired"
+E           AssertionError: /app/installer/core/commands/task-status.md not wired
+E           assert '--json' in '# Task Status - View Task Progress with Epic/Feature Context\n\nDisplay comprehensive task status with epic/feature hierarchy context, progress tracking, PM tool sync status, and Agentecflow Stage 3 integration.\n\n## Feature Detection\n\nThis command supports **graceful degradation** based on installed packages:\n\n### GuardKit Only (Core Filters)\n```bash\n/task-status --status in_progress    # Filter by status\n/task-status --assignee "John"       # Filter by assignee\n/task-status --priority high         # Filter by priority\n```\n\nAvailable filters: `--status`, `--assignee`, `--priority`, `--tags`\n\n### GuardKit + Require-Kit (Extended Filters)\n```bash\n/task-status --epic EPIC-001         # Filter by epic (requires require-kit)\n/task-status --feature FEAT-003      # Filter by feature (requires require-kit)\n/task-status TASK-001 --hierarchy    # Show epic/feature context (requires require-kit)\n```\n\nAdditional filters: `--epic`, `--feature`, `--hierarchy`, `--sync-status`\n\n**Note**: Epic and feature filtering requires [require-kit](https://github.com/requirekit/require-kit) to be installed. These filters will show a helpful message if require-kit is not available.\...rt\n\n## Integration with Other Commands\n\n### Cross-Command Navigation\n```bash\n# From task status to implementation\n/task-status TASK-001 → shows "Run: /task-work TASK-001"\n\n# From task to feature context\n/task-status TASK-001 → shows "Run: /feature-status FEAT-003"\n\n# From task to epic overview\n/task-status TASK-001 → shows "Run: /epic-status EPIC-001"\n```\n\n### Workflow Integration\n```bash\n# Status check before starting work\n/task-status TASK-001 --brief\n/task-work TASK-001\n\n# Progress check during implementation\n/task-status TASK-001 --technical\n# Continue with /task-work TASK-001\n\n# Completion check\n/task-status TASK-001 --completion-check\n/task-complete TASK-001\n```\n\n## Best Practices\n\n1. **Regular Monitoring**: Check task status daily during active development\n2. **Blocker Management**: Address blocked tasks immediately to prevent cascade delays\n3. **Progress Accuracy**: Update progress regularly for accurate feature/epic rollup\n4. **Context Awareness**: Use hierarchy view to understand task impact\n5. **Team Coordination**: Use team dashboard for workload distribution\n6. **External Sync**: Monitor PM tool sync status for data consistency\n'
+E            +  where '# Task Status - View Task Progress with Epic/Feature Context\n\nDisplay comprehensive task status with epic/feature hierarchy context, progress tracking, PM tool sync status, and Agentecflow Stage 3 integration.\n\n## Feature Detection\n\nThis command supports **graceful degradation** based on installed packages:\n\n### GuardKit Only (Core Filters)\n```bash\n/task-status --status in_progress    # Filter by status\n/task-status --assignee "John"       # Filter by assignee\n/task-status --priority high         # Filter by priority\n```\n\nAvailable filters: `--status`, `--assignee`, `--priority`, `--tags`\n\n### GuardKit + Require-Kit (Extended Filters)\n```bash\n/task-status --epic EPIC-001         # Filter by epic (requires require-kit)\n/task-status --feature FEAT-003      # Filter by feature (requires require-kit)\n/task-status TASK-001 --hierarchy    # Show epic/feature context (requires require-kit)\n```\n\nAdditional filters: `--epic`, `--feature`, `--hierarchy`, `--sync-status`\n\n**Note**: Epic and feature filtering requires [require-kit](https://github.com/requirekit/require-kit) to be installed. These filters will show a helpful message if require-kit is not available.\...rt\n\n## Integration with Other Commands\n\n### Cross-Command Navigation\n```bash\n# From task status to implementation\n/task-status TASK-001 → shows "Run: /task-work TASK-001"\n\n# From task to feature context\n/task-status TASK-001 → shows "Run: /feature-status FEAT-003"\n\n# From task to epic overview\n/task-status TASK-001 → shows "Run: /epic-status EPIC-001"\n```\n\n### Workflow Integration\n```bash\n# Status check before starting work\n/task-status TASK-001 --brief\n/task-work TASK-001\n\n# Progress check during implementation\n/task-status TASK-001 --technical\n# Continue with /task-work TASK-001\n\n# Completion check\n/task-status TASK-001 --completion-check\n/task-complete TASK-001\n```\n\n## Best Practices\n\n1. **Regular Monitoring**: Check task status daily during active development\n2. **Blocker Management**: Address blocked tasks immediately to prevent cascade delays\n3. **Progress Accuracy**: Update progress regularly for accurate feature/epic rollup\n4. **Context Awareness**: Use hierarchy view to understand task impact\n5. **Team Coordination**: Use team dashboard for workload distribution\n6. **External Sync**: Monitor PM tool sync status for data consistency\n' = read_text(encoding='utf-8')
+E            +    where read_text = PosixPath('/app/installer/core/commands/task-status.md').read_text
+
+/tests/test_outputs.py:162: AssertionError
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_producer_script_exists
+PASSED ../tests/test_outputs.py::test_dashboard_schema_and_ordering
+PASSED ../tests/test_outputs.py::test_dashboard_byte_stable_modulo_timestamp
+PASSED ../tests/test_outputs.py::test_single_task_null_filled_and_byte_stable
+PASSED ../tests/test_outputs.py::test_unknown_task_id_exits_1_with_stderr
+PASSED ../tests/test_outputs.py::test_bin_entry_registered
+FAILED ../tests/test_outputs.py::test_command_specs_wired - AssertionError: /...
+========================= 1 failed, 6 passed in 0.22s ==========================

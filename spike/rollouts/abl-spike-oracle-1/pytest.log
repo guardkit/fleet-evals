@@ -1,0 +1,24 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-8.4.1, pluggy-1.6.0 -- /usr/local/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests
+collecting ... collected 7 items
+
+../tests/test_outputs.py::test_producer_script_exists PASSED             [ 14%]
+../tests/test_outputs.py::test_dashboard_schema_and_ordering PASSED      [ 28%]
+../tests/test_outputs.py::test_dashboard_byte_stable_modulo_timestamp PASSED [ 42%]
+../tests/test_outputs.py::test_single_task_null_filled_and_byte_stable PASSED [ 57%]
+../tests/test_outputs.py::test_unknown_task_id_exits_1_with_stderr PASSED [ 71%]
+../tests/test_outputs.py::test_bin_entry_registered PASSED               [ 85%]
+../tests/test_outputs.py::test_command_specs_wired PASSED                [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_producer_script_exists
+PASSED ../tests/test_outputs.py::test_dashboard_schema_and_ordering
+PASSED ../tests/test_outputs.py::test_dashboard_byte_stable_modulo_timestamp
+PASSED ../tests/test_outputs.py::test_single_task_null_filled_and_byte_stable
+PASSED ../tests/test_outputs.py::test_unknown_task_id_exits_1_with_stderr
+PASSED ../tests/test_outputs.py::test_bin_entry_registered
+PASSED ../tests/test_outputs.py::test_command_specs_wired
+============================== 7 passed in 0.20s ===============================

@@ -1,0 +1,35 @@
+schema_version = "1.3"
+artifacts = []
+
+[task]
+name = "fleet-evals/abl-spike-001-task-status-json"
+description = "FEAT-ABL-002 spike task: re-implement guardkit FEAT-9DDE (/task-status --json producer + wiring) against the repo pinned at pre-FEAT 3450f602c; reward = independent PyTest asserting the landed behaviour."
+authors = [{ name = "Richard Woollcott", email = "rich@appmilla.com" }]
+keywords = ["ablation-spike", "guardkit", "historical-feat", "arm64"]
+
+[metadata]
+suite = "ablation-spike"
+feat_id = "FEAT-9DDE"
+source_repo = "guardkit"
+pre_feat_pin = "3450f602cd27093724e43f426875e431735df29f"
+landed_ref = "f9c4070be11199ad381624248f87de43dc277bd6"
+context_note = "environment build context tarball is generated (not committed) by environment/prepare_context.sh from a local guardkit checkout; sha256 pinned in environment/CONTEXT.sha256"
+
+[verifier]
+timeout_sec = 300.0
+collect = []
+
+[verifier.env]
+
+[agent]
+timeout_sec = 2400.0
+
+[environment]
+network_mode = "public"
+build_timeout_sec = 1200.0
+os = "linux"
+mcp_servers = []
+
+[environment.env]
+
+[solution.env]

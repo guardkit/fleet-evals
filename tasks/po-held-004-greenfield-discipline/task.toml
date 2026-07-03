@@ -1,0 +1,18 @@
+[task]
+id = "po-held-004-greenfield-discipline"
+suite = "po-heldout"
+mode = "greenfield"
+phase = "full"
+schema = "ProductRoadmap"
+artifact = "response.txt"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+instruction_source = "specialist-agent/roles/product-owner/prompts/player_greenfield.md (serving prompt, pinned 2026-07-03)"
+brief_source = "input/brief.md — authored for this suite 2026-07-03 (deliberate unknowns; disjoint from golden-set briefs)"
+oracle_source = "solution/ authored for this suite 2026-07-03 (minimal schema-exercising roadmap)"

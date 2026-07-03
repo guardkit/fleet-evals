@@ -1,0 +1,6 @@
+{
+ "expect_fail": [
+  "test_coverage_score_null",
+  "test_no_source_references"
+ ]
+}

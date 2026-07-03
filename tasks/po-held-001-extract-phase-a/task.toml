@@ -1,0 +1,19 @@
+[task]
+id = "po-held-001-extract-phase-a"
+suite = "po-heldout"
+mode = "extract"
+phase = "roadmap"
+schema = "EpicPlan"
+artifact = "response.txt"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+instruction_source = "specialist-agent/roles/product-owner/prompts/player_extract_roadmap.md (serving prompt, pinned 2026-07-03)"
+corpus_source = "lpa-project-docs/research — the exact files_read of the April session log; SHA-256 pinned in input/corpus/MANIFEST.sha256"
+oracle_source = "April 2026-04-21 phased extract run, epic_plan.json (contract-clean as found)"
+reference = "lpa-platform/docs/buildplan.md via test/reference/coverage_checklist.json"

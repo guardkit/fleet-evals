@@ -1,0 +1,20 @@
+[task]
+id = "po-held-002-extract-phase-b"
+suite = "po-heldout"
+mode = "extract"
+phase = "features"
+target_epic = "EPIC-006"
+schema = "EnrichmentBatch"
+artifact = "response.txt"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+instruction_source = "specialist-agent/roles/product-owner/prompts/player_extract_features.md (serving prompt, pinned 2026-07-03)"
+corpus_source = "lpa-project-docs/research; SHA-256 pinned in input/corpus/MANIFEST.sha256"
+phase_a_input = "input/epic_plan.json — the April 2026-04-21 Phase A artifact (fixed conditioning for the batch)"
+oracle_source = "EnrichmentBatch reconstructed from the April enriched_roadmap.json EPIC-006 features (see solution/PROVENANCE.md)"

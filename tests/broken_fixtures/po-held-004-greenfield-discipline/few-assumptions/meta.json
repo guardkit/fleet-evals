@@ -1,0 +1,5 @@
+{
+ "expect_fail": [
+  "test_assumptions_present_and_falsifiable_shape"
+ ]
+}

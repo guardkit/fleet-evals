@@ -1,0 +1,19 @@
+[task]
+id = "po-held-003-extract-full"
+suite = "po-heldout"
+mode = "extract"
+phase = "full"
+schema = "ProductRoadmap"
+artifact = "response.txt"
+reps = 3
+timeout_seconds = 2700
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+instruction_source = "specialist-agent/roles/product-owner/prompts/player_extract.md (serving prompt, pinned 2026-07-03)"
+corpus_source = "lpa-project-docs/research; SHA-256 pinned in input/corpus/MANIFEST.sha256"
+oracle_source = "April 2026-04-22 enriched_roadmap.json, REPAIRED (see solution/PROVENANCE.md); un-repaired original preserved as tests/broken_fixtures/po-held-003-extract-full/april-fabrication"
+reference = "lpa-platform/docs/buildplan.md via test/reference/coverage_checklist.json"

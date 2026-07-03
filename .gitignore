@@ -1,0 +1,23 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+# candidate outputs are graded artifacts, never committed
+tasks/*/output/
+# graded-run artifacts (per-rep response.txt + config.json live with the RESULTS doc, not in git)
+runs/
+
+# private FinProxy eval assets — symlinked by harness/link_assets.py, NEVER committed
+tasks/po-held-001-extract-phase-a/input/corpus
+tasks/po-held-001-extract-phase-a/solution
+tasks/po-held-001-extract-phase-a/test/reference/coverage_checklist.json
+tasks/po-held-002-extract-phase-b/input/corpus
+tasks/po-held-002-extract-phase-b/input/epic_plan.json
+tasks/po-held-002-extract-phase-b/solution
+tasks/po-held-003-extract-full/input/corpus
+tasks/po-held-003-extract-full/solution
+tasks/po-held-003-extract-full/test/reference/coverage_checklist.json
+tests/broken_fixtures/po-held-001-extract-phase-a
+tests/broken_fixtures/po-held-002-extract-phase-b
+tests/broken_fixtures/po-held-003-extract-full
+tests/good_fixtures/po-held-001-extract-phase-a
+tests/good_fixtures/po-held-002-extract-phase-b

@@ -1,0 +1,192 @@
+
+Oracle solution: authored minimal greenfield roadmap exercising the discipline contract (null coverage, empty sources, explicit assumptions).
+
+
+```json
+{
+  "project_name": "roundroute",
+  "mode": "greenfield",
+  "epics": [
+    {
+      "id": "EPIC-RR-001",
+      "name": "Round planning and dispatch",
+      "bounded_context": "Round Planning",
+      "description": "Plan and dispatch each driver's daily round from the morning's dispensed prescriptions. Replaces the whiteboard and paper manifests.",
+      "features": [
+        {
+          "feature_id": "FEAT-RR-001",
+          "title": "Daily round planning",
+          "description": "Plan each driver's daily delivery round from the prescriptions dispensed that morning. The planner produces an ordered stop list per driver that replaces the whiteboard.",
+          "bounded_context": "RoundRoute",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": []
+        },
+        {
+          "feature_id": "FEAT-RR-002",
+          "title": "Driver round manifest",
+          "description": "Give each driver a working manifest of their round that they can progress stop by stop on the road. The manifest replaces the paper sheet and reflects re-planning during the day.",
+          "bounded_context": "RoundRoute",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-RR-001"
+          ]
+        }
+      ],
+      "source_documents": []
+    },
+    {
+      "id": "EPIC-RR-002",
+      "name": "Delivery execution and traceability",
+      "bounded_context": "Delivery Execution",
+      "description": "Execute deliveries with doorstep proof and give the pharmacy end-to-end visibility of every prescription. Covers failed-delivery same-day returns.",
+      "features": [
+        {
+          "feature_id": "FEAT-RR-003",
+          "title": "Proof of delivery capture",
+          "description": "Record proof of delivery at the doorstep, replacing the clipboard signature. Each delivery is confirmed against the specific prescription items handed over.",
+          "bounded_context": "RoundRoute",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-RR-002"
+          ]
+        },
+        {
+          "feature_id": "FEAT-RR-004",
+          "title": "Prescription delivery tracking",
+          "description": "Let pharmacy staff see where any dispensed prescription is in its delivery lifecycle. Status covers collected, out for delivery, delivered, and failed.",
+          "bounded_context": "RoundRoute",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-RR-003"
+          ]
+        },
+        {
+          "feature_id": "FEAT-RR-005",
+          "title": "Failed delivery same-day return",
+          "description": "Handle missed deliveries by routing the prescription back to the pharmacy the same day. The return is tracked to closure so no medicine is left in a van overnight.",
+          "bounded_context": "RoundRoute",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-RR-002"
+          ]
+        }
+      ],
+      "source_documents": []
+    }
+  ],
+  "priority_rationale": "Round planning comes first because every other capability consumes its output. Proof of delivery and tracking follow, as they are the compliance-bearing record; returns handling completes the loop.",
+  "constraints_and_dependencies": [
+    "Some medicines are temperature-sensitive and some are controlled drugs (stated in the brief).",
+    "Missed deliveries must be returned to the pharmacy the same day (stated in the brief)."
+  ],
+  "open_questions": [
+    "Should the donor pharmacy group's existing dispensing workflow trigger round planning automatically, or is manual round creation acceptable for v1?"
+  ],
+  "feature_spec_inputs": [
+    {
+      "feature_id": "FEAT-RR-001",
+      "title": "Daily round planning",
+      "description": "Plan each driver's daily delivery round from the prescriptions dispensed that morning. The planner produces an ordered stop list per driver that replaces the whiteboard.",
+      "bounded_context": "RoundRoute",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": []
+    },
+    {
+      "feature_id": "FEAT-RR-002",
+      "title": "Driver round manifest",
+      "description": "Give each driver a working manifest of their round that they can progress stop by stop on the road. The manifest replaces the paper sheet and reflects re-planning during the day.",
+      "bounded_context": "RoundRoute",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-RR-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-RR-003",
+      "title": "Proof of delivery capture",
+      "description": "Record proof of delivery at the doorstep, replacing the clipboard signature. Each delivery is confirmed against the specific prescription items handed over.",
+      "bounded_context": "RoundRoute",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-RR-002"
+      ]
+    },
+    {
+      "feature_id": "FEAT-RR-004",
+      "title": "Prescription delivery tracking",
+      "description": "Let pharmacy staff see where any dispensed prescription is in its delivery lifecycle. Status covers collected, out for delivery, delivered, and failed.",
+      "bounded_context": "RoundRoute",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-RR-003"
+      ]
+    },
+    {
+      "feature_id": "FEAT-RR-005",
+      "title": "Failed delivery same-day return",
+      "description": "Handle missed deliveries by routing the prescription back to the pharmacy the same day. The return is tracked to closure so no medicine is left in a van overnight.",
+      "bounded_context": "RoundRoute",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-RR-002"
+      ]
+    }
+  ],
+  "coverage_score": null,
+  "source_documents": [],
+  "assumptions": [
+    {
+      "id": "ASM-001",
+      "category": "scale",
+      "statement": "The fleet is small (fewer than 20 drivers across the pharmacy group), so route optimisation can be simple ordering rather than a solver.",
+      "source": "unstated",
+      "confidence": "medium",
+      "impact_if_wrong": "Planning UX and algorithm choice would need rework for depot-scale routing."
+    },
+    {
+      "id": "ASM-002",
+      "category": "platform",
+      "statement": "Drivers use their own or company smartphones, so the manifest is a mobile app or mobile web view rather than dedicated hardware.",
+      "source": "unstated",
+      "confidence": "medium",
+      "impact_if_wrong": "A hardware scanner or in-van device would change the manifest and proof-of-delivery design."
+    },
+    {
+      "id": "ASM-003",
+      "category": "compliance",
+      "statement": "Controlled-drug deliveries require an identity check and a named-recipient signature, not just any doorstep confirmation.",
+      "source": "unstated",
+      "confidence": "low",
+      "impact_if_wrong": "Proof-of-delivery capture would be non-compliant and the feature would need a regulatory rework."
+    },
+    {
+      "id": "ASM-004",
+      "category": "integration",
+      "statement": "There is no integration with the pharmacy dispensing system in v1; dispensed prescriptions are entered or imported manually.",
+      "source": "unstated",
+      "confidence": "medium",
+      "impact_if_wrong": "An available PMR integration would remove manual entry and change the planning trigger."
+    }
+  ]
+}
+```

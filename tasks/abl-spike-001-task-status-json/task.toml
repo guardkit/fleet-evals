@@ -13,6 +13,14 @@ feat_id = "FEAT-9DDE"
 source_repo = "guardkit"
 pre_feat_pin = "3450f602cd27093724e43f426875e431735df29f"
 landed_ref = "f9c4070be11199ad381624248f87de43dc277bd6"
+# Promoted to the phase-ablation corpus (build-plan Appendix A row 1) after
+# spike exit — selection-rule metadata per scope §4 FEAT-ABL-004:
+corpus = "phase-ablation"
+corpus_row = 1
+memory_relevant = true
+predating_fixture_entries = 1027
+difficulty = "easy-medium"
+oracle_validated = "2026-07-03 (RED 7/7 -> GREEN 7/7, see docs/runbooks/FEAT-ABL-002-spike.md)"
 context_note = "environment build context tarball is generated (not committed) by environment/prepare_context.sh from a local guardkit checkout; sha256 pinned in environment/CONTEXT.sha256"
 
 [verifier]

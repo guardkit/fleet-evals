@@ -1,0 +1,20 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- /usr/local/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests
+plugins: timeout-2.4.0, anyio-4.14.1, langsmith-0.9.7, bdd-8.1.0, asyncio-1.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 4 items
+
+../tests/test_outputs.py::test_frozen_verifier_files_untouched PASSED    [ 25%]
+../tests/test_outputs.py::test_lifespan_suite_green PASSED               [ 50%]
+../tests/test_outputs.py::test_full_unit_suite_green PASSED              [ 75%]
+../tests/test_outputs.py::test_wave4_wiring_still_present PASSED         [100%]
+
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED ../tests/test_outputs.py::test_frozen_verifier_files_untouched
+PASSED ../tests/test_outputs.py::test_lifespan_suite_green
+PASSED ../tests/test_outputs.py::test_full_unit_suite_green
+PASSED ../tests/test_outputs.py::test_wave4_wiring_still_present
+============================== 4 passed in 15.67s ==============================

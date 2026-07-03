@@ -1,0 +1,40 @@
+schema_version = "1.3"
+artifacts = []
+
+[task]
+name = "fleet-evals/abl-fs01-coach-false-approval"
+description = "fs-01 regression task: fleet-memory pinned at the Coach-false-approved state (FEAT-MEM-04 wave 4, TASK-RLY-006 wiring broke test_app_lifespan while AutoBuild reported all-green). Reward = full unit suite green with the wave-4 wiring intact and the verifier tests unweakened."
+authors = [{ name = "Richard Woollcott", email = "rich@appmilla.com" }]
+keywords = ["phase-ablation", "fleet-memory", "regression", "false-green", "arm64"]
+
+[metadata]
+suite = "phase-ablation"
+corpus = "phase-ablation"
+corpus_row = 8
+regression_id = "fs-01"
+incident = "2026-06-13 Coach false-approval, FEAT-MEM-04 / TASK-RLY-006 (forge proposer-eval corpus fs-01)"
+source_repo = "fleet-memory"
+pre_fix_pin = "92ef8979865c469cf76c88277fb1f327a4d3954b"
+fix_ref = "6390d1edd3ce8b19a7077639bd0ed80bc9b3782f"
+memory_relevant = false
+difficulty = "regression"
+context_note = "environment build context tarball is generated (not committed) by environment/prepare_context.sh from a local fleet-memory checkout; sha256 pinned in environment/CONTEXT.sha256"
+
+[verifier]
+timeout_sec = 600.0
+collect = []
+
+[verifier.env]
+
+[agent]
+timeout_sec = 2400.0
+
+[environment]
+network_mode = "public"
+build_timeout_sec = 1800.0
+os = "linux"
+mcp_servers = []
+
+[environment.env]
+
+[solution.env]

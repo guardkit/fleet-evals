@@ -1,0 +1,20 @@
+{
+  "note": "Constraint-carried anchor groups (extension scope §2.5): ALL groups must match the joined constraints_and_dependencies text of the response. Paraphrase-tolerant alternates by design; exempt from input-disjointness against the constraint text (they must match it). Filename deliberately NOT coverage_checklist.json (frozen area-pin trap).",
+  "groups": [
+    {
+      "id": "timebox",
+      "note": "the 6-week window",
+      "alternates": ["6[\\s-]*week", "six[\\s-]*week"]
+    },
+    {
+      "id": "team",
+      "note": "the 2-engineer capacity",
+      "alternates": ["2\\s*engineers?", "two\\s*engineers?", "pair\\s*of\\s*engineers?"]
+    },
+    {
+      "id": "mvp",
+      "note": "MVP-first pilot cut",
+      "alternates": ["\\bmvp\\b", "minimum\\s*viable", "\\bpilot\\b"]
+    }
+  ]
+}

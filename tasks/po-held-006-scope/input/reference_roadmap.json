@@ -1,0 +1,123 @@
+{
+  "project_name": "roundroute",
+  "mode": "greenfield",
+  "epics": [
+    {
+      "id": "EPIC-001",
+      "name": "Round Planning & Dispatch",
+      "bounded_context": "Planning BC",
+      "description": "Plans each driver's daily round from the day's dispensed prescriptions and hands the driver a workable manifest. Replaces the whiteboard and paper manifests.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-001",
+          "title": "Round Planning Board",
+          "description": "A dispatcher assembles the day's rounds by assigning dispensed prescriptions to drivers. The board shows unassigned items so nothing dispensed is left behind.",
+          "bounded_context": "Planning BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": []
+        },
+        {
+          "feature_id": "FEAT-PO-002",
+          "title": "Driver Manifest",
+          "description": "Each driver receives an ordered manifest of the day's deliveries they can work through on the road. Items show address, prescription reference and any handling flags.",
+          "bounded_context": "Planning BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-001"]
+        },
+        {
+          "feature_id": "FEAT-PO-003",
+          "title": "Route Sequencing",
+          "description": "The manifest order is optimised for drive time across the round's addresses. Dispatchers can pin stops that must happen in a fixed window before optimisation runs.",
+          "bounded_context": "Planning BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-001"]
+        }
+      ],
+      "source_documents": []
+    },
+    {
+      "id": "EPIC-002",
+      "name": "Delivery & Custody",
+      "bounded_context": "Delivery BC",
+      "description": "Everything that happens at the doorstep and in the van: proof of delivery, temperature-sensitive custody, controlled-drug handover and same-day returns. This is where the paper clipboard disappears.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-004",
+          "title": "Proof of Delivery Capture",
+          "description": "The driver records proof of delivery at the doorstep against the manifest item. Failed attempts are recorded with a reason so the return path can pick them up.",
+          "bounded_context": "Delivery BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-002"]
+        },
+        {
+          "feature_id": "FEAT-PO-005",
+          "title": "Cold-Chain Custody Log",
+          "description": "Temperature-sensitive items carry a custody log from pharmacy fridge to doorstep. The log shows how long an item has been out and flags items approaching their limit.",
+          "bounded_context": "Delivery BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-002"]
+        },
+        {
+          "feature_id": "FEAT-PO-006",
+          "title": "Controlled-Drugs Handover",
+          "description": "Controlled-drug deliveries require an enhanced handover recorded against the recipient at the doorstep. The record is kept distinct so the pharmacy can evidence controlled-drug custody separately.",
+          "bounded_context": "Delivery BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-004"]
+        },
+        {
+          "feature_id": "FEAT-PO-007",
+          "title": "Same-Day Return to Pharmacy",
+          "description": "Missed deliveries are routed back to the dispensing pharmacy the same day and signed back into stock. The return closes the loop on the manifest item so nothing is left in a van overnight.",
+          "bounded_context": "Delivery BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-002"]
+        }
+      ],
+      "source_documents": []
+    },
+    {
+      "id": "EPIC-003",
+      "name": "Pharmacy Visibility",
+      "bounded_context": "Visibility BC",
+      "description": "Lets the pharmacy see where a prescription is right now without phoning the driver. Built on the delivery events the doorstep features record.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-008",
+          "title": "Pharmacy Tracking View",
+          "description": "Pharmacy staff look up a prescription and see its current state: assigned, out for delivery, delivered, failed or returned. State comes from the delivery events recorded on the round.",
+          "bounded_context": "Visibility BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-004"]
+        }
+      ],
+      "source_documents": []
+    }
+  ],
+  "priority_rationale": "Planning before delivery before visibility: nothing can be delivered without a round, and nothing can be tracked without delivery events.",
+  "constraints_and_dependencies": [
+    "Temperature-sensitive and controlled-drug items carry statutory handling obligations",
+    "Missed deliveries must be returned to the dispensing pharmacy the same day"
+  ],
+  "open_questions": [],
+  "feature_spec_inputs": [],
+  "source_documents": [],
+  "assumptions": [],
+  "coverage_score": null
+}

@@ -1,0 +1,8 @@
+{
+  "defect_class": "invented feature \u2014 scope mode's named anti-pattern (selects from what exists, never invents)",
+  "construction": "Oracle + FEAT-PO-999 'Fleet Telemetry Dashboard', absent from the reference roadmap, mirrored in feature_spec_inputs",
+  "expect_fail": [
+    "test_selection_subset"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-004 seed battery)"
+}

@@ -1,0 +1,20 @@
+[task]
+id = "po-held-006-scope"
+suite = "po-heldout-idea"
+mode = "scope"
+phase = "full"
+schema = "ProductRoadmap"
+artifact = "response.txt"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+instruction_source = "specialist-agent/roles/product-owner/prompts/player_scope.md (serving prompt, verified present + pinned 2026-07-05)"
+roadmap_source = "input/reference_roadmap.json — authored fresh for this suite 2026-07-05 (ASSUM-003 as overridden: real dependency chains, 1 dependency-free feature, acyclic, FEAT-PO-### ids; RoundRoute domain, zero client content); pinned by input/REFERENCE.sha256"
+constraint_source = "input/constraint.md — authored 2026-07-05 (6 weeks / 2 engineers / MVP-first pilot per ASSUM-003)"
+anchors_source = "test/reference/constraint_anchors.json — authored 2026-07-05 with paraphrase-tolerant alternates (extension scope §2.5)"
+oracle_source = "solution/ authored for this suite 2026-07-05 (dependency-closed MVP selection: FEAT-PO-001/002/004/008)"

@@ -1,0 +1,6 @@
+{
+  "defect_class": "deliberately-stubbed answer sheet (build-plan Session-1 validation criterion: a stub must FAIL)",
+  "construction": "schema-shaped, boilerplate one-sentence descriptions, zero assumptions — effort-dodging, not answering the brief",
+  "expect_fail": ["test_schema_valid", "test_assumptions_present_and_falsifiable_shape"],
+  "authored": "2026-07-05 (TASK-EVI-003 seed battery)"
+}

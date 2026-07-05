@@ -1,0 +1,30 @@
+{
+  "note": "One group per deliberate unknown in input/brief.md (extension scope §2.1). Patterns are matched case-insensitively over NFKC+casefold-normalized text (§2.2). No alternate may match the brief's own text (input-disjointness, enforced by tests/test_idea_verifier_integrity.py).",
+  "groups": [
+    {
+      "id": "platform",
+      "note": "delivery platform unstated (deliberate unknown 1)",
+      "alternates": ["\\bios\\b", "\\bandroid\\b", "native\\s*app", "app\\s*store"]
+    },
+    {
+      "id": "regulatory",
+      "note": "regulatory regime unstated (deliberate unknown 2)",
+      "alternates": ["\\bgdpr\\b", "\\bhipaa\\b", "\\bcqc\\b", "data\\s*protection\\s*act"]
+    },
+    {
+      "id": "integration",
+      "note": "depth of booking-system/PMS integration unstated (deliberate unknown 3)",
+      "alternates": ["\\bpms\\b", "\\behr\\b", "\\bemr\\b", "two-?way\\s*sync", "\\bcliniko\\b"]
+    },
+    {
+      "id": "patient_data",
+      "note": "patient-data handling unstated (deliberate unknown 4)",
+      "alternates": ["\\bencrypt", "retention\\s*period", "anonymi", "pseudonymi", "data\\s*residency"]
+    },
+    {
+      "id": "clinician_workflow",
+      "note": "clinician workflow/channel unstated (deliberate unknown 5)",
+      "alternates": ["\\bwearable", "\\btelehealth\\b", "video\\s*consult", "push\\s*notification"]
+    }
+  ]
+}

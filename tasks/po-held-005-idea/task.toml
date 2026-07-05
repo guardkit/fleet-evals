@@ -1,0 +1,19 @@
+[task]
+id = "po-held-005-idea"
+suite = "po-heldout-idea"
+mode = "idea"
+phase = "full"
+schema = "ProductRoadmap"
+artifact = "response.txt"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+instruction_source = "specialist-agent/roles/product-owner/prompts/player_idea.md (serving prompt, verified present + pinned 2026-07-05)"
+brief_source = "input/brief.md — authored for this suite 2026-07-05 (thin idea, 5 deliberate unknowns; disjoint from RoundRoute, golden-set briefs, and FinProxy; ASSUM-002)"
+anchors_source = "test/reference/invention_anchors.json — authored 2026-07-05, one group per deliberate unknown (extension scope §2.1); input-disjointness enforced by tests/test_idea_verifier_integrity.py"
+oracle_source = "solution/ authored for this suite 2026-07-05 (minimal schema-exercising roadmap; exercises the licensing path: PMS specific asserted + licensed)"

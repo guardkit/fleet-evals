@@ -1,0 +1,49 @@
+<think>
+Producing a roadmap for the physio idea.
+</think>
+
+```json
+{
+  "project_name": "homestretch",
+  "mode": "idea",
+  "epics": [
+    {
+      "id": "EPIC-001",
+      "name": "Exercise Programmes",
+      "bounded_context": "Programmes BC",
+      "description": "Handles programmes.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-001",
+          "title": "Programmes",
+          "description": "Does the programme thing.",
+          "bounded_context": "Programmes BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": []
+        }
+      ],
+      "source_documents": []
+    }
+  ],
+  "priority_rationale": "Build it.",
+  "constraints_and_dependencies": [],
+  "open_questions": [],
+  "feature_spec_inputs": [
+    {
+      "feature_id": "FEAT-PO-001",
+      "title": "Programmes",
+      "description": "Does the programme thing.",
+      "bounded_context": "Programmes BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": []
+    }
+  ],
+  "source_documents": [],
+  "assumptions": [],
+  "coverage_score": null
+}
+```

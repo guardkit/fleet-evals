@@ -1,0 +1,7 @@
+{
+  "defect_class": "serving shape \u2014 think block missing (Decision A makes it the fine-tune's shape)",
+  "expect_fail": [
+    "test_serving_shape"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-006)"
+}

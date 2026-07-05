@@ -1,0 +1,7 @@
+{
+  "defect_class": "duplicate feature_ids collide in written feature_spec_inputs/<id>.md artefacts (CONTRACT-tightened rule)",
+  "expect_fail": [
+    "test_schema_valid"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-006)"
+}

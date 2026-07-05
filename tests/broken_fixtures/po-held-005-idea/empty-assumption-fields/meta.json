@@ -1,0 +1,7 @@
+{
+  "defect_class": "falsifiable shape \u2014 empty impact_if_wrong",
+  "expect_fail": [
+    "test_assumptions_present_and_falsifiable_shape"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-006)"
+}

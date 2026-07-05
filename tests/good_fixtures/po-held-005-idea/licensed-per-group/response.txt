@@ -1,0 +1,153 @@
+<think>
+The idea is thin by design: a physiotherapy clinic wants patients to follow
+self-service exercise programmes between appointments, with the physio able to
+adjust remotely. The brief deliberately leaves platform, regulatory posture,
+integration depth, patient-data handling and clinician workflow unstated — those
+become assumptions or open questions, not silent requirements. I will propose a
+single bounded context with three features covering the build/track/adjust loop,
+keep grounding empty (no corpus was provided), and surface the one integration
+specific I rely on (read-only PMS access) as an explicit assumption.
+</think>
+
+```json
+{
+  "project_name": "homestretch",
+  "mode": "idea",
+  "epics": [
+    {
+      "id": "EPIC-001",
+      "name": "Programme Delivery",
+      "bounded_context": "Programme Delivery BC",
+      "description": "Everything needed for a physio to hand a patient a structured home exercise programme and keep it current between appointments. Covers programme composition, the patient's day-to-day view, and remote adjustment.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-001",
+          "title": "Programme Builder",
+          "description": "A physio composes programmes in the iOS app, with GDPR consent capture on first use. Adherence records are encrypted at rest and reviewed in telehealth check-ins alongside read-only PMS lookups.",
+          "bounded_context": "Programme Delivery BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": []
+        },
+        {
+          "feature_id": "FEAT-PO-002",
+          "title": "Patient Programme View",
+          "description": "A patient sees today's exercises with instructions and ticks each one off as done, building a simple adherence record. Missed days are visible to the patient without judgement so the record stays honest.",
+          "bounded_context": "Programme Delivery BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-PO-003",
+          "title": "Remote Adjustment",
+          "description": "The treating physio reviews a patient's adherence record and adjusts the programme between appointments without a new booking. Patient identity and appointment context come from read-only lookups against the clinic's PMS so the physio adjusts the right programme for the right patient.",
+          "bounded_context": "Programme Delivery BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-001",
+            "FEAT-PO-002"
+          ]
+        }
+      ],
+      "source_documents": []
+    }
+  ],
+  "priority_rationale": "The builder comes first because nothing exists without a programme to follow. The patient view is second because adherence data is the product's core feedback loop. Remote adjustment lands last because it depends on both and is where clinical judgement enters the loop.",
+  "constraints_and_dependencies": [
+    "Exercise content must be clinically approved by the clinic before patients can be assigned it",
+    "A programme adjustment must never delete the history of what the patient was previously prescribed"
+  ],
+  "open_questions": [
+    "Which regulatory obligations apply to storing patient exercise and adherence records for this clinic?",
+    "Should family members or carers be able to view a patient's programme on their behalf?"
+  ],
+  "feature_spec_inputs": [
+    {
+      "feature_id": "FEAT-PO-001",
+      "title": "Programme Builder",
+      "description": "A physio composes programmes in the iOS app, with GDPR consent capture on first use. Adherence records are encrypted at rest and reviewed in telehealth check-ins alongside read-only PMS lookups.",
+      "bounded_context": "Programme Delivery BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": []
+    },
+    {
+      "feature_id": "FEAT-PO-002",
+      "title": "Patient Programme View",
+      "description": "A patient sees today's exercises with instructions and ticks each one off as done, building a simple adherence record. Missed days are visible to the patient without judgement so the record stays honest.",
+      "bounded_context": "Programme Delivery BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-PO-003",
+      "title": "Remote Adjustment",
+      "description": "The treating physio reviews a patient's adherence record and adjusts the programme between appointments without a new booking. Patient identity and appointment context come from read-only lookups against the clinic's PMS so the physio adjusts the right programme for the right patient.",
+      "bounded_context": "Programme Delivery BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-001",
+        "FEAT-PO-002"
+      ]
+    }
+  ],
+  "source_documents": [],
+  "assumptions": [
+    {
+      "id": "ASM-001",
+      "category": "technology",
+      "statement": "We assume an iOS-first client is acceptable for the clinic's patient base.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "low",
+      "impact_if_wrong": "An Android-heavy patient base would invert the platform order."
+    },
+    {
+      "id": "ASM-002",
+      "category": "constraints",
+      "statement": "We assume GDPR is the governing regime and first-use consent capture satisfies it.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "medium",
+      "impact_if_wrong": "A different regime changes consent, retention and breach handling."
+    },
+    {
+      "id": "ASM-003",
+      "category": "technology",
+      "statement": "We assume records encrypted at rest meet the clinic's data-handling bar.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "medium",
+      "impact_if_wrong": "Additional controls (field-level encryption, residency) would need design time."
+    },
+    {
+      "id": "ASM-004",
+      "category": "scope",
+      "statement": "We assume telehealth check-ins are an acceptable channel for programme review.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "low",
+      "impact_if_wrong": "If review must happen in person, the oversight loop loses its remote half."
+    },
+    {
+      "id": "ASM-005",
+      "category": "integration",
+      "statement": "We assume read-only PMS lookups are available for patient identity.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "medium",
+      "impact_if_wrong": "Without PMS access, patient matching becomes manual and error-prone."
+    }
+  ],
+  "coverage_score": null
+}
+```

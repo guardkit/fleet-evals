@@ -1,0 +1,7 @@
+{
+  "defect_class": "coverage score with no corpus is fabricated coverage",
+  "expect_fail": [
+    "test_coverage_score_null"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-006)"
+}

@@ -1,0 +1,7 @@
+{
+  "defect_class": "fabricated source reference on thin input \u2014 no document was ever provided",
+  "expect_fail": [
+    "test_no_source_references"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-006)"
+}

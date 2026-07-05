@@ -1,0 +1,151 @@
+<think>
+The idea is thin by design: a physiotherapy clinic wants patients to follow
+self-service exercise programmes between appointments, with the physio able to
+adjust remotely. The brief deliberately leaves platform, regulatory posture,
+integration depth, patient-data handling and clinician workflow unstated — those
+become assumptions or open questions, not silent requirements. I will propose a
+single bounded context with three features covering the build/track/adjust loop,
+keep grounding empty (no corpus was provided), and surface the one integration
+specific I rely on (read-only PMS access) as an explicit assumption.
+</think>
+
+Draft I considered first (discarded): {"mode": "idea", "epics": [{"name":
+"Native App Shell", "features": [{"title": "iOS launch", "description": "GDPR
+banner, wearable sync, telehealth calls, two-way sync with the PMS."}]}]} — too
+much invented specificity; the final payload below sticks to what the idea
+licenses.
+
+```json
+{
+  "project_name": "homestretch",
+  "mode": "idea",
+  "epics": [
+    {
+      "id": "EPIC-001",
+      "name": "Programme Delivery",
+      "bounded_context": "Programme Delivery BC",
+      "description": "Everything needed for a physio to hand a patient a structured home exercise programme and keep it current between appointments. Covers programme composition, the patient's day-to-day view, and remote adjustment.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-001",
+          "title": "Programme Builder",
+          "description": "A physio composes a patient-specific exercise programme from a clinic-curated exercise library, setting repetitions, frequency and progression notes per exercise. Programmes are versioned so an adjustment never silently rewrites what the patient already followed.",
+          "bounded_context": "Programme Delivery BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": []
+        },
+        {
+          "feature_id": "FEAT-PO-002",
+          "title": "Patient Programme View",
+          "description": "A patient sees today's exercises with instructions and ticks each one off as done, building a simple adherence record. Missed days are visible to the patient without judgement so the record stays honest.",
+          "bounded_context": "Programme Delivery BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-PO-003",
+          "title": "Remote Adjustment",
+          "description": "The treating physio reviews a patient's adherence record and adjusts the programme between appointments without a new booking. Patient identity and appointment context come from read-only lookups against the clinic's PMS so the physio adjusts the right programme for the right patient.",
+          "bounded_context": "Programme Delivery BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-001",
+            "FEAT-PO-002"
+          ]
+        }
+      ],
+      "source_documents": []
+    }
+  ],
+  "priority_rationale": "The builder comes first because nothing exists without a programme to follow. The patient view is second because adherence data is the product's core feedback loop. Remote adjustment lands last because it depends on both and is where clinical judgement enters the loop.",
+  "constraints_and_dependencies": [
+    "Exercise content must be clinically approved by the clinic before patients can be assigned it",
+    "A programme adjustment must never delete the history of what the patient was previously prescribed"
+  ],
+  "open_questions": [
+    "Which regulatory obligations apply to storing patient exercise and adherence records for this clinic?",
+    "Should family members or carers be able to view a patient's programme on their behalf?"
+  ],
+  "feature_spec_inputs": [
+    {
+      "feature_id": "FEAT-PO-001",
+      "title": "Programme Builder",
+      "description": "A physio composes a patient-specific exercise programme from a clinic-curated exercise library, setting repetitions, frequency and progression notes per exercise. Programmes are versioned so an adjustment never silently rewrites what the patient already followed.",
+      "bounded_context": "Programme Delivery BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": []
+    },
+    {
+      "feature_id": "FEAT-PO-002",
+      "title": "Patient Programme View",
+      "description": "A patient sees today's exercises with instructions and ticks each one off as done, building a simple adherence record. Missed days are visible to the patient without judgement so the record stays honest.",
+      "bounded_context": "Programme Delivery BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-PO-003",
+      "title": "Remote Adjustment",
+      "description": "The treating physio reviews a patient's adherence record and adjusts the programme between appointments without a new booking. Patient identity and appointment context come from read-only lookups against the clinic's PMS so the physio adjusts the right programme for the right patient.",
+      "bounded_context": "Programme Delivery BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-001",
+        "FEAT-PO-002"
+      ]
+    }
+  ],
+  "source_documents": [],
+  "assumptions": [
+    {
+      "id": "ASM-001",
+      "category": "integration",
+      "statement": "Read-only access to patient identity and appointment context in the clinic's PMS is sufficient for the first release; no write-back into the booking system is needed.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "medium",
+      "impact_if_wrong": "If adjustments must appear inside the booking system, the integration surface roughly doubles and vendor cooperation becomes a delivery dependency."
+    },
+    {
+      "id": "ASM-002",
+      "category": "scope",
+      "statement": "Adherence is self-reported by the patient ticking exercises off; no sensor or measurement verification is in scope for the first release.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "high",
+      "impact_if_wrong": "If clinicians require verified adherence, the patient view needs instrumented capture and the honesty of the record becomes a hardware problem, not a UX one."
+    },
+    {
+      "id": "ASM-003",
+      "category": "team",
+      "statement": "The clinic's physios will curate and clinically approve the exercise library themselves rather than licensing third-party content.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "medium",
+      "impact_if_wrong": "If the library is licensed instead, content review workflow disappears but a procurement and liability question replaces it."
+    },
+    {
+      "id": "ASM-004",
+      "category": "scope",
+      "statement": "One treating physio owns each patient's programme; multi-clinician co-management of a single programme is out of scope for the first release.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "medium",
+      "impact_if_wrong": "If programmes are co-managed, adjustment needs conflict handling and an audit trail of who changed what, which changes the Remote Adjustment feature's shape."
+    }
+  ],
+  "coverage_score": null
+}
+```

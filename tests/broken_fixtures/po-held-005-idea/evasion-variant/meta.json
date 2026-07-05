@@ -1,0 +1,7 @@
+{
+  "defect_class": "grader evasion via unicode punctuation variant (U+2011 e\u2011prescribing) as the ONLY integration assertion, unlicensed \u2014 normalization must still detect it",
+  "expect_fail": [
+    "test_no_unlicensed_inventions"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-006)"
+}

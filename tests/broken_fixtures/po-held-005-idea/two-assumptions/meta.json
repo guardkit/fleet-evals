@@ -1,0 +1,7 @@
+{
+  "defect_class": "assumption floor \u2014 only 2 assumptions on a 5-unknown brief",
+  "expect_fail": [
+    "test_assumptions_present_and_falsifiable_shape"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-006)"
+}

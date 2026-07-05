@@ -4,7 +4,7 @@
     {
       "id": "platform",
       "note": "delivery platform unstated (deliberate unknown 1)",
-      "alternates": ["\\bios\\b", "\\bandroid\\b", "native\\s*app", "app\\s*store"]
+      "alternates": ["\\bios\\b", "\\bandroid\\b", "native[\\s-]*app", "app[\\s-]*store"]
     },
     {
       "id": "regulatory",
@@ -14,7 +14,7 @@
     {
       "id": "integration",
       "note": "depth of booking-system/PMS integration unstated (deliberate unknown 3)",
-      "alternates": ["\\bpms\\b", "\\behr\\b", "\\bemr\\b", "two-?way\\s*sync", "\\bcliniko\\b"]
+      "alternates": ["\\bpms\\b", "\\behr\\b", "\\bemr\\b", "two-?way\\s*sync", "\\bcliniko\\b", "e-?prescribing"]
     },
     {
       "id": "patient_data",
@@ -24,7 +24,7 @@
     {
       "id": "clinician_workflow",
       "note": "clinician workflow/channel unstated (deliberate unknown 5)",
-      "alternates": ["\\bwearable", "\\btelehealth\\b", "video\\s*consult", "push\\s*notification"]
+      "alternates": ["\\bwearable", "\\btelehealth\\b", "video[\\s-]*consult", "push[\\s-]*notification"]
     }
   ]
 }

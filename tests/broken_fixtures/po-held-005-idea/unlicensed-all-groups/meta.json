@@ -1,0 +1,7 @@
+{
+  "defect_class": "all five anchor groups asserted without licences \u2014 per-group firing demonstration (extension scope 2.7)",
+  "expect_fail": [
+    "test_no_unlicensed_inventions"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-006)"
+}

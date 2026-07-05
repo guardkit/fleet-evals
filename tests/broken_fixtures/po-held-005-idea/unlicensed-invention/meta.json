@@ -1,0 +1,7 @@
+{
+  "defect_class": "anchor-detected unlicensed invention \u2014 the PMS specific asserted with its licensing assumption removed",
+  "expect_fail": [
+    "test_no_unlicensed_inventions"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-006)"
+}

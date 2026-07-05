@@ -1,0 +1,7 @@
+{
+  "defect_class": "keyword-stuffed licensing \u2014 one statement matching 3 body-asserted anchor groups licenses nothing (anti-stuffing, extension scope 2.4)",
+  "expect_fail": [
+    "test_no_unlicensed_inventions"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-006)"
+}

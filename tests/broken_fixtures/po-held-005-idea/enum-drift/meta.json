@@ -1,0 +1,7 @@
+{
+  "defect_class": "confidence enum drift \u2014 'certain' is not in the closed Literal",
+  "expect_fail": [
+    "test_schema_valid"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-006)"
+}

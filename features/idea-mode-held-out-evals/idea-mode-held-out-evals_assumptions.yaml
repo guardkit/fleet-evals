@@ -38,10 +38,10 @@ assumptions:
 
   - id: "ASSUM-005"
     scenario: "Idea-mode tasks stay out of the frozen deployment verdict"
-    assumption: "Idea-gate verdict lives in a NEW pre-registered doc (docs/research/ideas/po-heldout-idea-extension-scope.md), frozen by Rich before any grading; gates G-I1 (shape+schema 3/3 reps per task), G-I2 (zero unlicensed inventions and zero fabricated citations across all reps), G-I3 (>=3 falsifiable assumptions in 3/3 idea-task reps), G-I4 (scope subset + dependency closure 3/3); verdict gates SPL go-live (G2), not po-ft-v1 deploy"
+    assumption: "Idea-gate verdict lives in a NEW pre-registered doc (docs/research/ideas/po-heldout-idea-extension-scope.md), landing as DRAFT and frozen by Rich before any grading; gates G-I1 (shape+schema 3/3 reps per task), G-I2 (zero ANCHOR-DETECTED unlicensed inventions and zero fabricated citations across all reps — a detection floor, not a completeness claim; paraphrase evasion and polarity are recorded Coach territory), G-I3 (>=3 falsifiable assumptions in 3/3 idea-task reps), G-I4 (scope selection gates 3/3 — subset with title/bounded_context pinning, closure vs the REFERENCE graph, constraint-carried floor); verdict gates SPL go-live (G2), not po-ft-v1 deploy"
     confidence: medium
-    basis: "Mirrors frozen G1/G2/G5 strictness; the frozen §5 doc is never edited (freeze discipline, Decided territory)"
-    human_response: "confirmed"
+    basis: "Mirrors frozen G1/G2/G5 strictness; G-I2/G-I4 wording tightened per TASK-REV-09AB red-team so the gate claims exactly what the instrument detects"
+    human_response: "confirmed (wording amendment accepted at [I]mplement, 2026-07-05)"
 
   - id: "ASSUM-006"
     scenario: "A non-null coverage score on thin input is rejected"
@@ -66,10 +66,17 @@ assumptions:
 
   - id: "ASSUM-009"
     scenario: "A keyword-stuffed assumption statement licenses nothing"
-    assumption: "Anti-stuffing threshold: a single assumption/open-question statement matching more than 2 distinct anchor groups licenses none of them"
+    assumption: "Anti-stuffing rule (amended per TASK-REV-09AB red-team): a statement's stuffing score counts only anchor groups that are ALSO asserted in requirement-bearing fields; a single statement scoring more than 2 such groups licenses none of them. Threshold calibrated against the frontier baseline and compound-assumption good fixtures BEFORE the addendum freeze (raising to >3 pre-freeze is legal)"
     confidence: low
-    basis: "Analogue of the frozen suite's >=2-distinct-units anti-keyword-salad hardening; the specific threshold (2) is a design choice"
-    human_response: "confirmed"
+    basis: "Penalty-side analogue of the frozen anti-keyword-salad rule; counting only body-asserted groups spares legitimately compound assumptions that player_idea.md's own 'state your interpretation and proceed' training pressure produces"
+    human_response: "confirmed (counting amendment accepted at [I]mplement, 2026-07-05)"
+
+  - id: "ASSUM-011"
+    scenario: "A selection dropping a reference-declared prerequisite fails closure even with emptied depends_on"
+    assumption: "Scope-gate semantics pinned per TASK-REV-09AB red-team: dependency closure is computed against the REFERENCE roadmap's dependency graph (every selected feature's reference-declared direct deps must be selected; response depends_on entries must resolve to selected ids); selection-subset additionally pins title and bounded_context to the reference feature under NFKC+casefold normalization (description free — Coach territory); all anchor matching uses central NFKC+casefold normalization over structural_units()-convention units; no anchor alternate may match the task's own input texts; every anchor group owns both a firing broken fixture and a licensed good fixture; all gates consume the parsed payload dict, never raw response text"
+    confidence: medium
+    basis: "TASK-REV-09AB red-team findings B1/B2 plus mechanical hardenings, each with an owning fixture; documented as gate-stricter-than-serving divergences per the frozen suite's pattern"
+    human_response: "confirmed ([I]mplement, 2026-07-05)"
 
   - id: "ASSUM-010"
     scenario: "A scope response that drops the delivery constraint is rejected"

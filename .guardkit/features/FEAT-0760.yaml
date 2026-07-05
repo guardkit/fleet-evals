@@ -1,0 +1,119 @@
+id: FEAT-0760
+name: Idea-Mode Held-Out Eval Tasks
+description: Additive idea/scope-mode held-out eval tasks (po-held-005/006) with invention-anchor,
+  constraint-carried, subset and closure gates; frozen suite untouched (SPL gate G2)
+created: '2026-07-05T10:00:43.911835'
+status: planned
+complexity: 6
+estimated_tasks: 8
+tasks:
+- id: TASK-EVI-001
+  name: Addendum scope doc DRAFT
+  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-001-addendum-scope-doc-draft.md
+  complexity: 3
+  dependencies: []
+  status: pending
+  description: ''
+  implementation_mode: direct
+  estimated_minutes: 33
+- id: TASK-EVI-002
+  name: Harness idea_gates and runner suite flag
+  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-002-harness-idea-gates-and-runner.md
+  complexity: 5
+  dependencies:
+  - TASK-EVI-001
+  status: pending
+  description: ''
+  implementation_mode: task-work
+  estimated_minutes: 75
+- id: TASK-EVI-003
+  name: po-held-005-idea task folder
+  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-003-po-held-005-idea-task-folder.md
+  complexity: 6
+  dependencies:
+  - TASK-EVI-002
+  status: pending
+  description: ''
+  implementation_mode: task-work
+  estimated_minutes: 113
+- id: TASK-EVI-004
+  name: po-held-006-scope task folder
+  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-004-po-held-006-scope-task-folder.md
+  complexity: 6
+  dependencies:
+  - TASK-EVI-002
+  status: pending
+  description: ''
+  implementation_mode: task-work
+  estimated_minutes: 113
+- id: TASK-EVI-005
+  name: Frontier answer sheets and calibration
+  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-005-frontier-answer-sheets.md
+  complexity: 2
+  dependencies:
+  - TASK-EVI-002
+  - TASK-EVI-003
+  - TASK-EVI-004
+  status: pending
+  description: ''
+  implementation_mode: direct
+  estimated_minutes: 22
+- id: TASK-EVI-006
+  name: po-held-005 fixture battery
+  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-006-po-held-005-fixture-battery.md
+  complexity: 5
+  dependencies:
+  - TASK-EVI-003
+  - TASK-EVI-005
+  status: pending
+  description: ''
+  implementation_mode: task-work
+  estimated_minutes: 75
+- id: TASK-EVI-007
+  name: po-held-006 fixture battery
+  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-007-po-held-006-fixture-battery.md
+  complexity: 4
+  dependencies:
+  - TASK-EVI-004
+  - TASK-EVI-005
+  status: pending
+  description: ''
+  implementation_mode: task-work
+  estimated_minutes: 50
+- id: TASK-EVI-008
+  name: Validation baselines handoff
+  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-008-validation-baselines-handoff.md
+  complexity: 3
+  dependencies:
+  - TASK-EVI-001
+  - TASK-EVI-002
+  - TASK-EVI-003
+  - TASK-EVI-004
+  - TASK-EVI-005
+  - TASK-EVI-006
+  - TASK-EVI-007
+  status: pending
+  description: ''
+  implementation_mode: direct
+  estimated_minutes: 33
+orchestration:
+  parallel_groups:
+  - - TASK-EVI-001
+  - - TASK-EVI-002
+  - - TASK-EVI-003
+    - TASK-EVI-004
+  - - TASK-EVI-005
+  - - TASK-EVI-006
+    - TASK-EVI-007
+  - - TASK-EVI-008
+  estimated_duration_minutes: 514
+  recommended_parallel: 2
+
+# Green-per-commit rule made mechanical: full verifier-integrity suite after every wave.
+smoke_gates:
+  after_wave: "all"
+  command: |
+    set -e
+    python3 -m pytest tests/ -q
+  expected_exit: 0
+  timeout: 300

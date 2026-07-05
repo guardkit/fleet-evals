@@ -10,7 +10,8 @@ next to a config.json rep record (§5 validity gate: per-rep config records).
 stdlib only, like the graders. Python 3.11+ (tomllib).
 
 Usage:
-  python3 harness/run_po_eval.py --model po-ft-v1                # all 4 tasks × reps
+  python3 harness/run_po_eval.py --model po-ft-v1                # all --suite tasks × reps
+                                                                 # (default suite po-heldout = the frozen 4)
   python3 harness/run_po_eval.py --model po-ft-v1 --dry-run      # assemble + record, no network
   python3 harness/run_po_eval.py --model po-ft-v1 --grade        # run + pytest-grade each rep
   python3 harness/run_po_eval.py --model po-ft-v1 --task po-held-002-extract-phase-b --rep 2
@@ -134,7 +135,43 @@ def assemble(task_id: str, task_dir: Path, prompts_root: Path) -> dict:
         user = (input_dir / "brief.md").read_text(encoding="utf-8")
         return {"system": system, "user": user, "project": "roundroute"}
 
+    if task_id == "po-held-005-idea":
+        system = read_prompt(
+            prompts_root, "roles/product-owner/prompts/player_idea.md"
+        )
+        user = (input_dir / "brief.md").read_text(encoding="utf-8")
+        return {"system": system, "user": user, "project": "homestretch"}
+
+    if task_id == "po-held-006-scope":
+        system = read_prompt(
+            prompts_root, "roles/product-owner/prompts/player_scope.md"
+        )
+        roadmap = (input_dir / "reference_roadmap.json").read_text(encoding="utf-8")
+        constraint = (input_dir / "constraint.md").read_text(encoding="utf-8")
+        user = (
+            "## Existing Roadmap\n\n"
+            + roadmap
+            + "\n\n## Constraint\n\n"
+            + constraint
+        )
+        return {"system": system, "user": user, "project": "roundroute"}
+
     raise ValueError(f"No runner assembly registered for task {task_id!r}")
+
+
+def discover_task_dirs(suite: str) -> list[Path]:
+    """Task dirs whose task.toml declares exactly this suite. Exact match by
+    design: this repo hosts multiple suites (po-heldout, po-heldout-idea,
+    ablation-*); runs are never mixed, so the frozen 12-rollout grade cannot
+    grow by accident."""
+    dirs = []
+    for d in sorted(TASKS_DIR.iterdir()):
+        if not (d / "task.toml").is_file():
+            continue
+        if load_task(d)["task"].get("suite") != suite:
+            continue
+        dirs.append(d)
+    return dirs
 
 
 def call_model(
@@ -312,6 +349,9 @@ def main() -> int:
     ap.add_argument("--prompts-root", default=str(DEFAULT_PROMPTS_ROOT),
                     help="specialist-agent checkout holding the pinned serving prompts")
     ap.add_argument("--out", default=None, help="run dir (default runs/<utc-stamp>-<model>)")
+    ap.add_argument("--suite", default="po-heldout",
+                    help="task suite to run (default po-heldout — the frozen 4 tasks; "
+                         "po-heldout-idea = the FEAT-EVAL-IDEA extension)")
     ap.add_argument("--task", action="append", default=None, help="restrict to task id (repeatable)")
     ap.add_argument("--rep", type=int, default=None, help="run only this rep number (for re-runs)")
     ap.add_argument("--dry-run", action="store_true", help="assemble + record, no model call")
@@ -323,17 +363,11 @@ def main() -> int:
 
     stamp = _dt.datetime.now(_dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     out_dir = Path(args.out) if args.out else REPO_ROOT / "runs" / f"{stamp}-{args.model}"
-    task_dirs = []
-    for d in sorted(TASKS_DIR.iterdir()):
-        if not (d / "task.toml").is_file():
-            continue
-        if load_task(d)["task"].get("suite") != "po-heldout":
-            continue  # this repo will host other suites (coach-ft); never mix runs
-        task_dirs.append(d)
+    task_dirs = discover_task_dirs(args.suite)
     if args.task:
         task_dirs = [d for d in task_dirs if d.name in set(args.task)]
         if not task_dirs:
-            ap.error(f"no po-heldout task dirs match {args.task}")
+            ap.error(f"no {args.suite} task dirs match {args.task}")
 
     results = []
     for task_dir in task_dirs:

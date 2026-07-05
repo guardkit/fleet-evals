@@ -1,0 +1,7 @@
+{
+  "defect_class": "dependency closure vs the REFERENCE graph \u2014 FEAT-PO-004's reference-declared prerequisite FEAT-PO-002 unselected, response depends_on emptied (red-team B1 regression)",
+  "expect_fail": [
+    "test_dependency_closure"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-007)"
+}

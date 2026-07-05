@@ -90,6 +90,23 @@ def test_005_fixture_floor_never_shrinks():
     assert FLOOR_GOOD_005 <= good, f"missing good fixtures: {sorted(FLOOR_GOOD_005 - good)}"
 
 
+FLOOR_BROKEN_006 = {
+    "invented-feature", "dropped-prerequisite", "content-swap", "dropped-constraint",
+    "wrong-mode", "duplicate-feature-ids", "dangling-depends-on",
+}
+FLOOR_GOOD_006 = {
+    "frontier-baseline", "select-all", "single-dependency-free",
+    "paraphrase-echo", "rewritten-descriptions",
+}
+
+
+def test_006_fixture_floor_never_shrinks():
+    broken = _fixture_names(REPO_ROOT / "tests" / "broken_fixtures" / "po-held-006-scope")
+    good = _fixture_names(REPO_ROOT / "tests" / "good_fixtures" / "po-held-006-scope")
+    assert FLOOR_BROKEN_006 <= broken, f"missing broken fixtures: {sorted(FLOOR_BROKEN_006 - broken)}"
+    assert FLOOR_GOOD_006 <= good, f"missing good fixtures: {sorted(FLOOR_GOOD_006 - good)}"
+
+
 # --- Per-group firing + licensed demonstrations (§2.7) -------------------------
 
 def _payload_of(fixture: Path) -> dict:

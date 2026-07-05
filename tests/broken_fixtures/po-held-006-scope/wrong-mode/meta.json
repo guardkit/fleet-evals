@@ -1,0 +1,7 @@
+{
+  "defect_class": "mode pinning \u2014 task grades scope mode, response declares evolve",
+  "expect_fail": [
+    "test_mode_is_scope"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-007)"
+}

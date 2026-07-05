@@ -1,0 +1,68 @@
+<think>
+The constraint is 6 weeks, 2 engineers, MVP first, pilot with the pharmacy group.
+The pilot's minimum credible loop is: plan a round, give the driver a manifest,
+capture proof of delivery, and let the pharmacy see prescription state. That is
+FEAT-PO-001 -> FEAT-PO-002 -> FEAT-PO-004 -> FEAT-PO-008, which is dependency-closed
+against the reference roadmap. Route optimisation, cold-chain custody, controlled
+drugs and same-day returns are deferred, not deleted — cold-chain and controlled
+drugs carry statutory weight, so they head the next cut. I keep reference ids,
+titles and bounded contexts verbatim, rewrite descriptions only where the pilot
+narrows scope, and carry the constraint explicitly.
+</think>
+
+```json
+{
+  "project_name": "roundroute",
+  "mode": "scope",
+  "epics": [
+    {
+      "id": "EPIC-001",
+      "name": "Round Planning & Dispatch",
+      "bounded_context": "Planning BC",
+      "description": "Plans each driver's daily round from the day's dispensed prescriptions and hands the driver a workable manifest. Replaces the whiteboard and paper manifests.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-001",
+          "title": "Round Planning Board",
+          "description": "A dispatcher assembles the day's rounds by assigning dispensed prescriptions to drivers. The board shows unassigned items so nothing dispensed is left behind.",
+          "bounded_context": "Planning BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": []
+        }
+      ],
+      "source_documents": []
+    }
+  ],
+  "priority_rationale": "Planning is the only selection: the pilot proves the round-assembly workflow first; everything downstream is deferred, not deleted.",
+  "constraints_and_dependencies": [
+    "A 6-week window for 2 engineers, cut to the smallest MVP pilot slice: planning only"
+  ],
+  "open_questions": [],
+  "feature_spec_inputs": [
+    {
+      "feature_id": "FEAT-PO-001",
+      "title": "Round Planning Board",
+      "description": "A dispatcher assembles the day's rounds by assigning dispensed prescriptions to drivers. The board shows unassigned items so nothing dispensed is left behind.",
+      "bounded_context": "Planning BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": []
+    }
+  ],
+  "source_documents": [],
+  "assumptions": [
+    {
+      "id": "ASM-001",
+      "category": "constraints",
+      "statement": "The six-week window is build time for the two engineers, with pilot onboarding alongside the final week.",
+      "source": "unstated (inferred from constraint)",
+      "confidence": "medium",
+      "impact_if_wrong": "A separate onboarding phase shrinks the buildable selection."
+    }
+  ],
+  "coverage_score": null
+}
+```

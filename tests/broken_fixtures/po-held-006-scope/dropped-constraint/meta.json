@@ -1,0 +1,7 @@
+{
+  "defect_class": "constraint-carried floor \u2014 constraints_and_dependencies never echoes the 6-week / 2-engineer / MVP constraint",
+  "expect_fail": [
+    "test_constraint_carried"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-007)"
+}

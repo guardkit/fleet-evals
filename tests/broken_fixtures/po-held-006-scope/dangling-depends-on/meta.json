@@ -1,0 +1,7 @@
+{
+  "defect_class": "response depends_on referencing an unselected id \u2014 dangling reference",
+  "expect_fail": [
+    "test_dependency_closure"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-007)"
+}

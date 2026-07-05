@@ -1,0 +1,178 @@
+<think>
+The constraint is 6 weeks, 2 engineers, MVP first, pilot with the pharmacy group.
+The pilot's minimum credible loop is: plan a round, give the driver a manifest,
+capture proof of delivery, and let the pharmacy see prescription state. That is
+FEAT-PO-001 -> FEAT-PO-002 -> FEAT-PO-004 -> FEAT-PO-008, which is dependency-closed
+against the reference roadmap. Route optimisation, cold-chain custody, controlled
+drugs and same-day returns are deferred, not deleted — cold-chain and controlled
+drugs carry statutory weight, so they head the next cut. I keep reference ids,
+titles and bounded contexts verbatim, rewrite descriptions only where the pilot
+narrows scope, and carry the constraint explicitly.
+</think>
+
+```json
+{
+  "project_name": "roundroute",
+  "mode": "evolve",
+  "epics": [
+    {
+      "id": "EPIC-001",
+      "name": "Round Planning & Dispatch",
+      "bounded_context": "Planning BC",
+      "description": "The pilot slice of planning: assemble rounds and hand each driver a manifest. Route optimisation is deferred to keep the six-week window credible.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-001",
+          "title": "Round Planning Board",
+          "description": "A dispatcher assembles the day's rounds by assigning dispensed prescriptions to drivers. For the pilot the board is manual-only, with no optimisation, so the flow stays simple for two engineers to deliver.",
+          "bounded_context": "Planning BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": []
+        },
+        {
+          "feature_id": "FEAT-PO-002",
+          "title": "Driver Manifest",
+          "description": "Each driver receives an ordered manifest of the day's deliveries they can work through on the road. Pilot ordering is the dispatcher's manual order; optimisation arrives with the deferred sequencing feature.",
+          "bounded_context": "Planning BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-001"
+          ]
+        }
+      ],
+      "source_documents": []
+    },
+    {
+      "id": "EPIC-002",
+      "name": "Delivery & Custody",
+      "bounded_context": "Delivery BC",
+      "description": "The pilot's doorstep slice: proof of delivery only. Cold-chain custody and controlled-drug handover are deferred with their statutory obligations flagged for the cut after the pilot.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-004",
+          "title": "Proof of Delivery Capture",
+          "description": "The driver records proof of delivery at the doorstep against the manifest item. Failed attempts are recorded with a reason so returns can be handled manually during the pilot.",
+          "bounded_context": "Delivery BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-002"
+          ]
+        }
+      ],
+      "source_documents": []
+    },
+    {
+      "id": "EPIC-003",
+      "name": "Pharmacy Visibility",
+      "bounded_context": "Visibility BC",
+      "description": "Lets the pharmacy see where a prescription is right now without phoning the driver. Built on the delivery events the pilot's proof-of-delivery capture records.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-008",
+          "title": "Pharmacy Tracking View",
+          "description": "Pharmacy staff look up a prescription and see its current state: assigned, out for delivery, delivered or failed. Returned state arrives with the deferred same-day-returns feature.",
+          "bounded_context": "Visibility BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-004"
+          ]
+        }
+      ],
+      "source_documents": []
+    }
+  ],
+  "priority_rationale": "The selection is the minimum credible pilot loop: plan a round, drive it with a manifest, prove delivery, and let the pharmacy see state. Deferred, not deleted: FEAT-PO-003 Route Sequencing (value, not viability), FEAT-PO-005 Cold-Chain Custody Log and FEAT-PO-006 Controlled-Drugs Handover (statutory weight \u2014 first in the next cut, and the pilot excludes those item classes until they land), and FEAT-PO-007 Same-Day Return to Pharmacy (handled manually during the pilot; failed-delivery reasons are already captured to make that manual loop workable).",
+  "constraints_and_dependencies": [
+    "Fits the 6-week window with 2 engineers by cutting to the MVP pilot loop",
+    "Pilot excludes temperature-sensitive and controlled-drug items until FEAT-PO-005 and FEAT-PO-006 land",
+    "Missed deliveries are returned manually during the pilot; FEAT-PO-007 automates this after the pilot"
+  ],
+  "open_questions": [
+    "Which pharmacies in the group take part in the pilot, and do any dispense mostly cold-chain items?"
+  ],
+  "feature_spec_inputs": [
+    {
+      "feature_id": "FEAT-PO-001",
+      "title": "Round Planning Board",
+      "description": "A dispatcher assembles the day's rounds by assigning dispensed prescriptions to drivers. For the pilot the board is manual-only, with no optimisation, so the flow stays simple for two engineers to deliver.",
+      "bounded_context": "Planning BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": []
+    },
+    {
+      "feature_id": "FEAT-PO-002",
+      "title": "Driver Manifest",
+      "description": "Each driver receives an ordered manifest of the day's deliveries they can work through on the road. Pilot ordering is the dispatcher's manual order; optimisation arrives with the deferred sequencing feature.",
+      "bounded_context": "Planning BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-PO-004",
+      "title": "Proof of Delivery Capture",
+      "description": "The driver records proof of delivery at the doorstep against the manifest item. Failed attempts are recorded with a reason so returns can be handled manually during the pilot.",
+      "bounded_context": "Delivery BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-002"
+      ]
+    },
+    {
+      "feature_id": "FEAT-PO-008",
+      "title": "Pharmacy Tracking View",
+      "description": "Pharmacy staff look up a prescription and see its current state: assigned, out for delivery, delivered or failed. Returned state arrives with the deferred same-day-returns feature.",
+      "bounded_context": "Visibility BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-004"
+      ]
+    }
+  ],
+  "source_documents": [],
+  "assumptions": [
+    {
+      "id": "ASM-001",
+      "category": "constraints",
+      "statement": "The 6-week window means six calendar weeks of build with the 2 engineers full-time, with the pilot starting immediately after.",
+      "source": "unstated (inferred from constraint)",
+      "confidence": "medium",
+      "impact_if_wrong": "If the window includes pilot onboarding or the engineers are part-time, the selection must shrink further, starting with FEAT-PO-008."
+    },
+    {
+      "id": "ASM-002",
+      "category": "scope",
+      "statement": "The pharmacy group can exclude temperature-sensitive and controlled-drug items from the pilot's delivery rounds operationally.",
+      "source": "unstated (inferred from constraint)",
+      "confidence": "medium",
+      "impact_if_wrong": "If those item classes cannot be excluded, FEAT-PO-005 and FEAT-PO-006 move into the pilot cut and something else must give \u2014 most likely FEAT-PO-008."
+    },
+    {
+      "id": "ASM-003",
+      "category": "scope",
+      "statement": "Manual same-day returns are operationally acceptable for the pilot's expected missed-delivery volume.",
+      "source": "unstated (inferred from constraint)",
+      "confidence": "high",
+      "impact_if_wrong": "If missed-delivery volume is high, the manual return loop overwhelms pharmacy staff and FEAT-PO-007 must join the cut."
+    }
+  ],
+  "coverage_score": null
+}
+```

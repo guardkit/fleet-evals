@@ -1,0 +1,7 @@
+{
+  "defect_class": "invention-by-content-swap under a legitimate feature_id (red-team B2 regression) \u2014 title diverges from the reference",
+  "expect_fail": [
+    "test_selection_subset"
+  ],
+  "authored": "2026-07-05 (TASK-EVI-007)"
+}

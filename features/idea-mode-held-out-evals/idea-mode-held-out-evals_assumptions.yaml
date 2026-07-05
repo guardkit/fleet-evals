@@ -24,10 +24,10 @@ assumptions:
 
   - id: "ASSUM-003"
     scenario: "A constraint-respecting selection from the reference roadmap passes the scope gate"
-    assumption: "po-held-006-scope is included now; reference roadmap = SHA-256-pinned copy of po-held-004's Oracle roadmap (RoundRoute); constraint = 6 weeks / 2 engineers / MVP-first pilot"
+    assumption: "po-held-006-scope is included now; reference roadmap = authored fresh with real dependency chains, SHA-256-pinned into the task input; constraint = 6 weeks / 2 engineers / MVP-first pilot"
     confidence: medium
-    basis: "Reuses suite-internal assets with zero new corpus; scope mode's subset/closure rules are the deterministically gateable core"
-    human_response: "confirmed"
+    basis: "po-held-004's Oracle has zero dependency chains, which would make the dependency-closure gate vacuous; an authored roadmap with chains makes it meaningful (absorbed from the parallel --auto spec during fork reconciliation)"
+    human_response: "overridden: author fresh roadmap with dependency chains (Rich, 2026-07-05 fork reconciliation)"
 
   - id: "ASSUM-004"
     scenario: "An unstated specific asserted without a covering assumption is rejected"
@@ -70,3 +70,10 @@ assumptions:
     confidence: low
     basis: "Analogue of the frozen suite's >=2-distinct-units anti-keyword-salad hardening; the specific threshold (2) is a design choice"
     human_response: "confirmed"
+
+  - id: "ASSUM-010"
+    scenario: "A scope response that drops the delivery constraint is rejected"
+    assumption: "Constraint-carried gate: the stated delivery constraint's anchor terms must appear in the scope response's constraints_and_dependencies (deterministic anchor match, same matcher family as the invention anchors)"
+    confidence: medium
+    basis: "Absorbed from the parallel --auto spec during fork reconciliation; the constraint is scope mode's whole exercise and its echo is deterministically checkable"
+    human_response: "confirmed (Rich, 2026-07-05 fork reconciliation)"

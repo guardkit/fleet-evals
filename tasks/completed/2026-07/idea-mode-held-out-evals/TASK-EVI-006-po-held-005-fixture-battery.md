@@ -1,7 +1,7 @@
 ---
 id: TASK-EVI-006
 title: "Full fixture battery + anchor-instrument integrity for po-held-005-idea"
-status: backlog
+status: completed
 task_type: testing
 parent_review: TASK-REV-09AB
 feature_id: FEAT-EVI

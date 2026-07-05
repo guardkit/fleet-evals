@@ -3,13 +3,13 @@ name: Idea-Mode Held-Out Eval Tasks
 description: Additive idea/scope-mode held-out eval tasks (po-held-005/006) with invention-anchor,
   constraint-carried, subset and closure gates; frozen suite untouched (SPL gate G2)
 created: '2026-07-05T10:00:43.911835'
-status: planned
+status: completed
 complexity: 6
 estimated_tasks: 8
 tasks:
 - id: TASK-EVI-001
   name: Addendum scope doc DRAFT
-  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-001-addendum-scope-doc-draft.md
+  file_path: tasks/completed/2026-07/idea-mode-held-out-evals/TASK-EVI-001-addendum-scope-doc-draft.md
   complexity: 3
   dependencies: []
   status: pending
@@ -18,7 +18,7 @@ tasks:
   estimated_minutes: 33
 - id: TASK-EVI-002
   name: Harness idea_gates and runner suite flag
-  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-002-harness-idea-gates-and-runner.md
+  file_path: tasks/completed/2026-07/idea-mode-held-out-evals/TASK-EVI-002-harness-idea-gates-and-runner.md
   complexity: 5
   dependencies:
   - TASK-EVI-001
@@ -28,7 +28,7 @@ tasks:
   estimated_minutes: 75
 - id: TASK-EVI-003
   name: po-held-005-idea task folder
-  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-003-po-held-005-idea-task-folder.md
+  file_path: tasks/completed/2026-07/idea-mode-held-out-evals/TASK-EVI-003-po-held-005-idea-task-folder.md
   complexity: 6
   dependencies:
   - TASK-EVI-002
@@ -38,7 +38,7 @@ tasks:
   estimated_minutes: 113
 - id: TASK-EVI-004
   name: po-held-006-scope task folder
-  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-004-po-held-006-scope-task-folder.md
+  file_path: tasks/completed/2026-07/idea-mode-held-out-evals/TASK-EVI-004-po-held-006-scope-task-folder.md
   complexity: 6
   dependencies:
   - TASK-EVI-002
@@ -48,7 +48,7 @@ tasks:
   estimated_minutes: 113
 - id: TASK-EVI-005
   name: Frontier answer sheets and calibration
-  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-005-frontier-answer-sheets.md
+  file_path: tasks/completed/2026-07/idea-mode-held-out-evals/TASK-EVI-005-frontier-answer-sheets.md
   complexity: 2
   dependencies:
   - TASK-EVI-002
@@ -60,7 +60,7 @@ tasks:
   estimated_minutes: 22
 - id: TASK-EVI-006
   name: po-held-005 fixture battery
-  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-006-po-held-005-fixture-battery.md
+  file_path: tasks/completed/2026-07/idea-mode-held-out-evals/TASK-EVI-006-po-held-005-fixture-battery.md
   complexity: 5
   dependencies:
   - TASK-EVI-003
@@ -71,7 +71,7 @@ tasks:
   estimated_minutes: 75
 - id: TASK-EVI-007
   name: po-held-006 fixture battery
-  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-007-po-held-006-fixture-battery.md
+  file_path: tasks/completed/2026-07/idea-mode-held-out-evals/TASK-EVI-007-po-held-006-fixture-battery.md
   complexity: 4
   dependencies:
   - TASK-EVI-004
@@ -82,7 +82,7 @@ tasks:
   estimated_minutes: 50
 - id: TASK-EVI-008
   name: Validation baselines handoff
-  file_path: tasks/backlog/idea-mode-held-out-evals/TASK-EVI-008-validation-baselines-handoff.md
+  file_path: tasks/completed/2026-07/idea-mode-held-out-evals/TASK-EVI-008-validation-baselines-handoff.md
   complexity: 3
   dependencies:
   - TASK-EVI-001

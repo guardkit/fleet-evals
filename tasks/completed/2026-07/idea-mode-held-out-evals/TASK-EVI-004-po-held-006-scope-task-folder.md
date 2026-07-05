@@ -1,7 +1,7 @@
 ---
 id: TASK-EVI-004
 title: "po-held-006-scope task folder + authored chained roadmap + seed battery"
-status: backlog
+status: completed
 task_type: feature
 parent_review: TASK-REV-09AB
 feature_id: FEAT-EVI

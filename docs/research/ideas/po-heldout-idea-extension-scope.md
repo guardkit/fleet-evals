@@ -168,17 +168,17 @@ No negation heuristics, ever — transparent JSON checklists with no hidden logi
 
 ## 6. Baselines (filled by TASK-EVI-008 from measurement, not estimation)
 
-| Measurement | Value |
+| Measurement | Value (measured 2026-07-05, TASK-EVI-008) |
 |---|---|
-| Verifier integrity, total (frozen 33 as strict green subset) | *(pending)* |
-| Frozen tasks' gate results identical pre/post extension (node-id diff) | *(pending)* |
-| Frozen dry-run assembly SHAs identical pre/post `--suite` change (12/12) | *(pending)* |
-| New-suite dry-run assembly proven (6/6) | *(pending)* |
-| Frontier sheet, po-held-005-idea: per-axis | *(pending)* |
-| Frontier sheet, po-held-006-scope: per-axis | *(pending)* |
-| Deliberately-stubbed sheet FAILS (owning gates named) | *(pending)* |
-| Fixture floor lists (registered names) | *(pending)* |
-| 38-scenario traceability map | *(pending — recorded in §8)* |
+| Verifier integrity, total (frozen 33 as strict green subset) | **105/105 green** — the 33 pre-extension node-ids all present, all PASSED (zero diff vs the Wave-0 capture) |
+| Frozen tasks' gate results identical pre/post extension (node-id diff) | **CONFIRMED** — `comm` diff of Wave-0 vs final node-id+verdict lists = 0 lines |
+| Frozen dry-run assembly SHAs identical pre/post `--suite` change (12/12) | **12/12 SHA-IDENTICAL** (system+user sha256 per rep, Wave-0 vs final) |
+| New-suite dry-run assembly proven (6/6) | **6/6** (`--suite po-heldout-idea --dry-run`; both serving prompts resolve from the specialist-agent checkout) |
+| Frontier sheet, po-held-005-idea: per-axis | **7/7 PASS** (shape, schema, mode, coverage-null, emptiness, assumptions ≥3, invention gate) |
+| Frontier sheet, po-held-006-scope: per-axis | **9/9 PASS** (incl. subset w/ content pinning, closure vs reference graph, constraint-carried via paraphrase) |
+| Deliberately-stubbed sheet FAILS (owning gates named) | **FAILS exactly** `test_schema_valid` + `test_assumptions_present_and_falsifiable_shape` |
+| Fixture floor lists (registered names) | Pinned in `tests/test_idea_verifier_integrity.py`: 005 = 14 broken + 7 good; 006 = 7 broken + 5 good |
+| 38-scenario traceability map | Complete — §8 |
 
 ## 7. RESULTS template (stub)
 
@@ -188,7 +188,53 @@ commit referenced; INVALID reps listed with re-run evidence.
 
 ## 8. Traceability map
 
-*(filled by TASK-EVI-008: each of the 38 spec scenarios → owning test or fixture)*
+Each of the 38 spec scenarios (`features/idea-mode-held-out-evals/`) → owning test or
+fixture. Gate tests live in `tasks/po-held-005-idea/test/test_gate_po_held_005.py` (G5)
+and `tasks/po-held-006-scope/test/test_gate_po_held_006.py` (G6); integrity tests in
+`tests/test_idea_verifier_integrity.py` (IVI) and the frozen
+`tests/test_verifier_integrity.py` (FVI, untouched — auto-discovery); fixtures under
+`tests/{broken,good}_fixtures/<task>/<name>/`.
+
+| # | Scenario (short) | Owner |
+|---|---|---|
+| 1 | Oracle passes idea gate | FVI `test_oracle_passes[po-held-005-idea]` |
+| 2 | Frontier sheet passes | good `005/frontier-baseline` (FVI good-fixture case) + §4/§6 record |
+| 3 | Thin-input assumption discipline | G5 `test_assumptions_present_and_falsifiable_shape` |
+| 4 | New tasks join integrity; pre-existing pass; frozen results identical | FVI glob discovery + §6 rows 1–2 |
+| 5 | Frozen verdict separation | `tests/test_idea_gates.py` suite-selection trio + §6 rows 3–4 |
+| 6 | Constraint-respecting selection passes | FVI `test_oracle_passes[po-held-006-scope]` + G6 battery |
+| 7 | Assumption floor outline (3, 8 pass) | G5 assumption gate (Oracle=4; good `005/many-assumptions`=10) |
+| 8 | <3 assumptions rejected | broken `005/two-assumptions` |
+| 9 | Covered specific accepted | Oracle ASM-001 path + good `005/licensed-per-group` |
+| 10 | Uncovered specific rejected, named | broken `005/unlicensed-invention` |
+| 11 | Empty grounding accepted | G5 `test_no_source_references` (Oracle) |
+| 12 | Non-null coverage rejected | broken `005/coverage-non-null` |
+| 13 | Reference-declared closure passes | 006 Oracle + good `006/select-all` |
+| 14 | Dropped prerequisite fails despite emptied depends_on | broken `006/dropped-prerequisite` |
+| 15 | Select-all passes | good `006/select-all` |
+| 16 | Single dependency-free passes | good `006/single-dependency-free` |
+| 17 | Fabricated citation rejected | broken `005/fabricated-citation` |
+| 18 | Wrong mode rejected | broken `005/wrong-mode` + `006/wrong-mode` |
+| 19 | Missing think block rejected | broken `005/no-think-block` |
+| 20 | Stubbed sheet rejected | broken `005/stub-sheet` (§6 row 7) |
+| 21 | Flatten mismatch rejected | broken `005/flatten-mismatch` |
+| 22 | Invented feature rejected, named | broken `006/invented-feature` |
+| 23 | Content swap rejected, named | broken `006/content-swap` |
+| 24 | Empty assumption fields rejected | broken `005/empty-assumption-fields` |
+| 25 | Unrecognised confidence rejected | broken `005/enum-drift` |
+| 26 | Dropped constraint rejected | broken `006/dropped-constraint` |
+| 27 | Case/punct variant still rejected | broken `005/evasion-variant` (U+2011) |
+| 28 | Keyword-stuffed statement licenses nothing | broken `005/stuffed-license` |
+| 29 | Literal think tags pass | good `005/literal-think-tags` |
+| 30 | Trailing echo passes | good `005/trailing-echo` |
+| 31 | Open-question licensing passes | good `005/open-question-licensing` |
+| 32 | Many assumptions not penalised | good `005/many-assumptions` |
+| 33 | Duplicate ids rejected | broken `005/duplicate-feature-ids` + `006/duplicate-feature-ids` |
+| 34 | Think-draft decoy not graded | good `005/think-draft-decoy` (anchor terms in draft) |
+| 35 | Battery floor covers new tasks | IVI `test_005/006_fixture_floor_never_shrinks` |
+| 36 | Reference roadmap checksum-pinned | IVI `test_reference_roadmap_checksum_pinned` |
+| 37 | Aborted rep ⇒ INVALID, not failed | §3 validity gate (doc-owned; runner re-run flow inherited from frozen §5, unchanged) |
+| 38 | Anchors compile + own firing/licensed demos | IVI anchor-compile + `test_every_anchor_group_fires…` + `…is_licensable…` + disjointness |
 
 ## 9. Freeze procedure
 

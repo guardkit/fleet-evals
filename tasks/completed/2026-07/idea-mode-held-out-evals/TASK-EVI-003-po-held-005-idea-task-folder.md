@@ -1,7 +1,7 @@
 ---
 id: TASK-EVI-003
 title: "po-held-005-idea task folder + seed fixture battery"
-status: backlog
+status: completed
 task_type: feature
 parent_review: TASK-REV-09AB
 feature_id: FEAT-EVI

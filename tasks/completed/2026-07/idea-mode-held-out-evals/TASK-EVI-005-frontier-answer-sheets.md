@@ -1,7 +1,7 @@
 ---
 id: TASK-EVI-005
 title: "Frontier answer sheets (both tasks) + ASSUM-009 threshold calibration"
-status: backlog
+status: completed
 task_type: operator_handoff
 parent_review: TASK-REV-09AB
 feature_id: FEAT-EVI

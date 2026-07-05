@@ -1,7 +1,7 @@
 ---
 id: TASK-EVI-002
 title: "harness/idea_gates.py + run_po_eval.py --suite flag and assembly branches"
-status: backlog
+status: completed
 task_type: feature
 parent_review: TASK-REV-09AB
 feature_id: FEAT-EVI

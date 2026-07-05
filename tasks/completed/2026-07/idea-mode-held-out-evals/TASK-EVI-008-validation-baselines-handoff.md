@@ -1,7 +1,7 @@
 ---
 id: TASK-EVI-008
 title: "End-to-end validation, baselines, traceability sweep, freeze hand-off"
-status: backlog
+status: completed
 task_type: testing
 parent_review: TASK-REV-09AB
 feature_id: FEAT-EVI

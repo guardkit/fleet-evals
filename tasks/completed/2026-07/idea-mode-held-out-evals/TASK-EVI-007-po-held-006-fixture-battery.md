@@ -1,7 +1,7 @@
 ---
 id: TASK-EVI-007
 title: "Full fixture battery + roadmap-pin integrity for po-held-006-scope"
-status: backlog
+status: completed
 task_type: testing
 parent_review: TASK-REV-09AB
 feature_id: FEAT-EVI

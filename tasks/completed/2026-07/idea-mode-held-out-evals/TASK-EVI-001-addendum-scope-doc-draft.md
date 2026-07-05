@@ -1,7 +1,7 @@
 ---
 id: TASK-EVI-001
 title: "Addendum scope doc (DRAFT): idea-gate verdict + pinned instrument contracts"
-status: backlog
+status: completed
 task_type: documentation
 parent_review: TASK-REV-09AB
 feature_id: FEAT-EVI

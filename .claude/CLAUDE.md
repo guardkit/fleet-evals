@@ -1,4 +1,4 @@
-> **Fleet decisions:** read `../ai-transition/docs/decisions/REGISTER.md` (sibling repo) before architectural or cross-repo changes. Cross-cutting decisions are indexed there, not in this repo. This repo's decision-carrying records: `docs/research/ideas/po-heldout-suite-scope.md` (§5 frozen 2026-07-03) and `docs/runbooks/FEAT-ABL-002-spike.md` (Harbor adoption).
+> **Fleet decisions:** read `../ai-transition/docs/decisions/REGISTER.md` (sibling repo) before architectural or cross-repo changes. Cross-cutting decisions are indexed there, not in this repo. This repo's decision-carrying records: `docs/research/ideas/po-heldout-suite-scope.md` (§5 frozen 2026-07-03), `docs/research/ideas/po-heldout-idea-extension-scope.md` (G-I1..G-I4 frozen 2026-07-05 — SPL go-live gate G2), and `docs/runbooks/FEAT-ABL-002-spike.md` (Harbor adoption).
 
 # GuardKit - Default Template
 

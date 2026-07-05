@@ -151,9 +151,9 @@ results never rescue a failed G-I gate, and vice versa.
 
 | Item | Method | Result (filled by TASK-EVI-005) |
 |---|---|---|
-| ASSUM-009 anti-stuffing threshold | Run invention gate over the 005 frontier sheet + natural compound-assumption shapes; if >2 trips the frontier baseline, raise to >3 | *(pending)* |
-| Constraint-anchor paraphrase tolerance | Run constraint gate over the 006 frontier sheet; extend alternates if faithful paraphrase misses | *(pending)* |
-| License-source width (statement only vs +impact_if_wrong) | Watch item: if the frontier baseline names a specific only in impact_if_wrong, widen pre-freeze | *(pending)* |
+| ASSUM-009 anti-stuffing threshold | Run invention gate over the 005 frontier sheet + natural compound-assumption shapes; if >2 trips the frontier baseline, raise to >3 | **>2 CONFIRMED, no raise (2026-07-05).** The frontier sheet's ASM-001 is a natural 2-group compound (integration + clinician_workflow, both body-asserted) — score 2 = at threshold, licenses both, gate passes 7/7. A synthetic 3-body-asserted-group statement voids as designed (unit test `test_stuffed_statement_licenses_nothing`). Amended counting (body-asserted groups only) verified: ASM-002 mentions the unasserted regulatory group, score 0 |
+| Constraint-anchor paraphrase tolerance | Run constraint gate over the 006 frontier sheet; extend alternates if faithful paraphrase misses | **PASS (2026-07-05).** Paraphrased echo "six-week window" / "pair of engineers" / "MVP pilot loop" matched by the authored alternates; 006 frontier sheet 9/9 |
+| License-source width (statement only vs +impact_if_wrong) | Watch item: if the frontier baseline names a specific only in impact_if_wrong, widen pre-freeze | **Did not trip (2026-07-05).** Frontier sheets carry every relied-on specific in statements; width stays statement+open_questions only |
 
 ## 5. Accepted residuals — Coach territory, recorded so G-I2/G-I4 are never overread
 

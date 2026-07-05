@@ -1,0 +1,264 @@
+<think>
+The idea: a physiotherapy clinic wants self-service home exercise programmes that
+patients follow between appointments, with the treating physio able to adjust
+remotely. The brief is deliberately thin — platform, regulatory regime, depth of
+booking-system integration, patient-data handling and the clinician's working
+channel are all unstated. Idea-mode discipline: propose concrete features, state
+my interpretation, and surface every unstated specific I rely on as a
+confidence-tagged assumption or an open question rather than asserting it.
+
+Core hypothesis: adherence between appointments is the clinic's real product
+gap; the appointment itself already works. So the roadmap centres on the
+programme lifecycle: author → follow → observe → adjust. Three bounded contexts
+fall out naturally: Programme Authoring (clinician composes), Patient Experience
+(patient follows and reports), Clinical Oversight (physio observes and adjusts).
+
+Dependencies: the library precedes the composer; the composer precedes the
+patient view; adherence capture precedes both the progress timeline and the
+oversight dashboard; remote adjustment needs the composer (to edit) and the
+dashboard (to know what to edit). Two specifics I genuinely rely on and must
+license: read-only PMS lookups for patient/appointment identity, and opt-in push
+notifications as the reminder channel. Regulatory regime I leave as an
+assumption (UK GDPR posture) without baking it into any feature text.
+</think>
+
+```json
+{
+  "project_name": "homestretch",
+  "mode": "idea",
+  "epics": [
+    {
+      "id": "EPIC-001",
+      "name": "Programme Authoring",
+      "bounded_context": "Programme Authoring BC",
+      "description": "The clinician-facing half of the product: a curated exercise library and a composer for building patient-specific programmes from it. Nothing a patient sees exists until this context can produce a programme.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-001",
+          "title": "Exercise Library & Curation",
+          "description": "Physios maintain a clinic-approved library of exercises with instructions, media placeholders and contraindication notes. Every library entry records who approved it and when, so clinical accountability is built in from the start.",
+          "bounded_context": "Programme Authoring BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": []
+        },
+        {
+          "feature_id": "FEAT-PO-002",
+          "title": "Programme Composer",
+          "description": "A physio assembles a patient-specific programme from library exercises, setting sets, repetitions, frequency and progression rules. Programmes are versioned so every adjustment preserves the history of what the patient was previously prescribed.",
+          "bounded_context": "Programme Authoring BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-001"]
+        }
+      ],
+      "source_documents": []
+    },
+    {
+      "id": "EPIC-002",
+      "name": "Patient Experience",
+      "bounded_context": "Patient Experience BC",
+      "description": "What the patient touches every day between appointments: today's exercises, a low-friction way to record what was done, and a view of progress over time. Honesty of the adherence record is the design centre — recording a missed day must be as easy as recording a done one.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-003",
+          "title": "Daily Programme View",
+          "description": "A patient opens their programme and sees today's exercises with instructions and any progression notes from their physio. The view works without training or a manual because patients use it unsupervised at home.",
+          "bounded_context": "Patient Experience BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-002"]
+        },
+        {
+          "feature_id": "FEAT-PO-004",
+          "title": "Adherence Capture",
+          "description": "Patients tick exercises off as done, partially done or skipped, with an optional one-tap reason for skips. Optional reminder push notifications nudge the patient at their chosen time of day, and the record never scolds — the goal is an honest signal for the physio, not a compliance score.",
+          "bounded_context": "Patient Experience BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-003"]
+        },
+        {
+          "feature_id": "FEAT-PO-005",
+          "title": "Progress Timeline",
+          "description": "The patient sees their own adherence and progression over the weeks between appointments. Seeing the streak build is the patient-side motivation loop that makes self-service stick.",
+          "bounded_context": "Patient Experience BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-004"]
+        }
+      ],
+      "source_documents": []
+    },
+    {
+      "id": "EPIC-003",
+      "name": "Clinical Oversight",
+      "bounded_context": "Clinical Oversight BC",
+      "description": "The physio-facing loop closure: see how assigned patients are doing between appointments and adjust programmes remotely without a booking. Patient identity and appointment context come from read-only PMS lookups so oversight always attaches to the right clinical record.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-006",
+          "title": "Adherence Review Dashboard",
+          "description": "A physio sees their caseload's adherence at a glance, ordered by who most needs attention. Patients flagged by falling adherence surface first so limited clinician time lands where it matters.",
+          "bounded_context": "Clinical Oversight BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-004"]
+        },
+        {
+          "feature_id": "FEAT-PO-007",
+          "title": "Remote Programme Adjustment",
+          "description": "From the dashboard, the physio adjusts a patient's programme — progressing, regressing or swapping exercises — without booking a session. Every adjustment is versioned and visible to the patient with a short note explaining what changed and why.",
+          "bounded_context": "Clinical Oversight BC",
+          "source_documents": [],
+          "constraints": [],
+          "suggested_context_files": [],
+          "depends_on": ["FEAT-PO-002", "FEAT-PO-006"]
+        }
+      ],
+      "source_documents": []
+    }
+  ],
+  "priority_rationale": "Authoring comes first because nothing downstream exists without a programme. The patient experience follows in strict order — view, capture, timeline — because adherence data is the product's core feedback loop and each step feeds the next. Clinical oversight lands last: the dashboard needs adherence data to show, and remote adjustment needs both the composer and the dashboard. If capacity forces a cut, the progress timeline defers first; the authoring-to-adjustment loop is the hypothesis under test.",
+  "constraints_and_dependencies": [
+    "Exercise content must be clinically approved before it can be assigned to any patient",
+    "Programme adjustments must never erase the history of what a patient was previously prescribed",
+    "The adherence record must remain honest — recording a missed day must be as frictionless as recording a done one"
+  ],
+  "open_questions": [
+    "Which regulatory and professional-standards obligations apply to storing patient exercise and adherence records for this clinic?",
+    "Should carers or family members be able to act on a patient's behalf in the daily view?",
+    "Does the clinic want adherence data summarised back into the patient's clinical notes at the next appointment?"
+  ],
+  "feature_spec_inputs": [
+    {
+      "feature_id": "FEAT-PO-001",
+      "title": "Exercise Library & Curation",
+      "description": "Physios maintain a clinic-approved library of exercises with instructions, media placeholders and contraindication notes. Every library entry records who approved it and when, so clinical accountability is built in from the start.",
+      "bounded_context": "Programme Authoring BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": []
+    },
+    {
+      "feature_id": "FEAT-PO-002",
+      "title": "Programme Composer",
+      "description": "A physio assembles a patient-specific programme from library exercises, setting sets, repetitions, frequency and progression rules. Programmes are versioned so every adjustment preserves the history of what the patient was previously prescribed.",
+      "bounded_context": "Programme Authoring BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": ["FEAT-PO-001"]
+    },
+    {
+      "feature_id": "FEAT-PO-003",
+      "title": "Daily Programme View",
+      "description": "A patient opens their programme and sees today's exercises with instructions and any progression notes from their physio. The view works without training or a manual because patients use it unsupervised at home.",
+      "bounded_context": "Patient Experience BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": ["FEAT-PO-002"]
+    },
+    {
+      "feature_id": "FEAT-PO-004",
+      "title": "Adherence Capture",
+      "description": "Patients tick exercises off as done, partially done or skipped, with an optional one-tap reason for skips. Optional reminder push notifications nudge the patient at their chosen time of day, and the record never scolds — the goal is an honest signal for the physio, not a compliance score.",
+      "bounded_context": "Patient Experience BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": ["FEAT-PO-003"]
+    },
+    {
+      "feature_id": "FEAT-PO-005",
+      "title": "Progress Timeline",
+      "description": "The patient sees their own adherence and progression over the weeks between appointments. Seeing the streak build is the patient-side motivation loop that makes self-service stick.",
+      "bounded_context": "Patient Experience BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": ["FEAT-PO-004"]
+    },
+    {
+      "feature_id": "FEAT-PO-006",
+      "title": "Adherence Review Dashboard",
+      "description": "A physio sees their caseload's adherence at a glance, ordered by who most needs attention. Patients flagged by falling adherence surface first so limited clinician time lands where it matters.",
+      "bounded_context": "Clinical Oversight BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": ["FEAT-PO-004"]
+    },
+    {
+      "feature_id": "FEAT-PO-007",
+      "title": "Remote Programme Adjustment",
+      "description": "From the dashboard, the physio adjusts a patient's programme — progressing, regressing or swapping exercises — without booking a session. Every adjustment is versioned and visible to the patient with a short note explaining what changed and why.",
+      "bounded_context": "Clinical Oversight BC",
+      "source_documents": [],
+      "constraints": [],
+      "suggested_context_files": [],
+      "depends_on": ["FEAT-PO-002", "FEAT-PO-006"]
+    }
+  ],
+  "source_documents": [],
+  "assumptions": [
+    {
+      "id": "ASM-001",
+      "category": "integration",
+      "statement": "Read-only PMS lookups for patient identity and appointment context, plus opt-in push notifications on the patient's own device, are acceptable for the first release — no write-back into the booking system and no clinic-managed hardware.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "medium",
+      "impact_if_wrong": "If write-back or clinic-managed devices are required, integration scope and support burden both grow substantially and the six-context cut above needs revisiting."
+    },
+    {
+      "id": "ASM-002",
+      "category": "constraints",
+      "statement": "UK GDPR is the governing data-protection regime for the clinic's patient records, with no additional jurisdiction in scope for the first release.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "medium",
+      "impact_if_wrong": "A different or additional regime changes consent capture, retention and breach obligations before any patient data can be stored."
+    },
+    {
+      "id": "ASM-003",
+      "category": "scope",
+      "statement": "Adherence is self-reported by the patient; no sensor, camera or measurement verification is in scope for the first release.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "high",
+      "impact_if_wrong": "Verified adherence turns capture into an instrumentation problem and invalidates the honesty-first design of the record."
+    },
+    {
+      "id": "ASM-004",
+      "category": "team",
+      "statement": "The clinic's own physios curate and clinically approve the exercise library rather than licensing third-party content.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "medium",
+      "impact_if_wrong": "Licensed content removes the curation workflow but introduces procurement, attribution and liability questions that change FEAT-PO-001 entirely."
+    },
+    {
+      "id": "ASM-005",
+      "category": "scope",
+      "statement": "One treating physio owns each patient's programme; co-management by multiple clinicians is out of scope for the first release.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "medium",
+      "impact_if_wrong": "Co-management requires conflict handling and a who-changed-what audit trail, reshaping Remote Programme Adjustment."
+    },
+    {
+      "id": "ASM-006",
+      "category": "scope",
+      "statement": "Patients have their own smartphone or computer and are willing to use it for their programme; no offline or paper fallback is in scope initially.",
+      "source": "unstated (inferred from idea)",
+      "confidence": "low",
+      "impact_if_wrong": "If a meaningful share of the clinic's housebound or older patients cannot self-serve digitally, adherence data will be biased and a paper or carer-mediated fallback becomes a launch requirement."
+    }
+  ],
+  "coverage_score": null
+}
+```

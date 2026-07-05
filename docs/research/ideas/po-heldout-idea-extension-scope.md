@@ -1,9 +1,11 @@
 # PO Held-Out Suite — Idea/Scope-Mode Extension (FEAT-EVAL-IDEA)
 
-**Status:** **DRAFT** — pre-registered but NOT yet frozen. Rich freezes by commit **after**
-build validation (TASK-EVI-008 hands over) and **before** any grading run. "Pre-registered"
-binds the freeze to precede *grading*, not the build: the sanctioned build-time calibration
-(§4) happens while this doc is DRAFT. Amendments after grading starts: never.
+**Status:** **FROZEN 2026-07-05** (Rich; reviewed post-build, thresholds G-I1..G-I4
+accepted as proposed with the §4 calibration results riding with the freeze; freeze =
+this commit, house convention). Pre-registration held: the freeze precedes any grading
+run; the §4 calibration happened during the sanctioned DRAFT window (build). From here
+thresholds may only be *raised* between candidates, never adjusted after a grading run
+starts — same discipline as the frozen suite's §5.
 **Date:** 2026-07-05 (Claude Fable, attended session; parent review TASK-REV-09AB)
 **Repo:** fleet-evals · **Feature:** FEAT-0760 · spec `features/idea-mode-held-out-evals/`
 **Relationship to the frozen suite:** strictly additive. `po-heldout-suite-scope.md`
@@ -242,3 +244,7 @@ TASK-EVI-008 fills §4/§6/§8 → this doc is handed to Rich → Rich amends §
 **freezes by commit** (house convention: freeze = the commit that flips this Status line).
 The frozen thresholds ride with the RESULTS doc. The frozen suite's own doc is untouched
 throughout.
+
+**Executed 2026-07-05:** hand-off completed same session as the build (TASK-EVI-008);
+Rich reviewed and accepted the doc as proposed — no §3 amendments — and authorised the
+freeze. This commit is the freeze.

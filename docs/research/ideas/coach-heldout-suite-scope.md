@@ -1,9 +1,13 @@
 # Coach Held-Out Suite — Bundle Judgment (FEAT-EVAL-COACH)
 
-**Status: PROPOSED — awaiting Rich (freeze = his commit flipping this line; verdict
-never frozen by the building session).** Pre-registration discipline verbatim from the
-frozen suites: the freeze precedes any grading run (none has run); after a grading run
-starts, thresholds are immutable; between candidates they may only be *raised*.
+**Status:** **FROZEN 2026-07-08 (Rich — thresholds G-C1..G-C4 accepted as proposed;
+G-C4 confirmed ZERO-TOLERANCE at the current green N — converts to a rate ceiling only
+via a pre-freeze reopening of this doc if the green battery grows; this commit is the
+freeze).** Acceptance given by Rich in the 2026-07-08 P16 follow-up session
+(fleet-evals); house convention: freeze = the commit flipping this line.
+Pre-registration discipline verbatim from the frozen suites: the freeze precedes any
+grading run (none has run); after a grading run starts, thresholds are immutable;
+between candidates they may only be *raised*.
 **Date:** 2026-07-08 (Claude Fable 5, P16 session per
 `ai-transition/docs/kickoff-prompts-fable-sessions-2026-07-07.md` Prompt 16)
 **Repo:** fleet-evals · new suite `coach-heldout` (tasks `coach-held-001-escape-kin`,

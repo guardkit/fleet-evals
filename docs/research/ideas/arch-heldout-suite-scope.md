@@ -1,7 +1,10 @@
 # Architect Held-Out Suite — Adversarial Review (FEAT-EVAL-ARCH)
 
-**Status: PROPOSED — awaiting Rich (freeze = his commit flipping this line; verdict
-never frozen by the building session).** Pre-registration discipline verbatim from the
+**Status:** **FROZEN 2026-07-08 (Rich — thresholds G-A1..G-A3 accepted as proposed,
+G-A2 at must-catch 100%; the MISSING_SEAM taxonomy extension explicitly RATIFIED —
+"so many issues trace back to the seam"; this commit is the freeze).** Acceptance given
+by Rich in the 2026-07-08 P16 follow-up session (fleet-evals); house convention:
+freeze = the commit flipping this line. Pre-registration discipline verbatim from the
 frozen suites: the freeze precedes any grading run (none has run); after a grading run
 starts, thresholds are immutable; between candidates they may only be *raised*.
 **Date:** 2026-07-08 (Claude Fable 5, P16 session per

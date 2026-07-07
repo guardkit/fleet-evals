@@ -1,0 +1,8 @@
+{
+  "defect_class": "tag-vocabulary violation \u2014 scenario with no Specification-by-Example category tag",
+  "construction": "oracle with one @edge-case tag swapped for the ad-hoc @concurrency grouping tag (allowed only in addition to a category tag); summary edge count adjusted so only the tag gate fires",
+  "expect_fail": [
+    "test_category_tags"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

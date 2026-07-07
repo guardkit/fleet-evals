@@ -1,0 +1,8 @@
+{
+  "defect_class": "anchor instrument coverage \u2014 every group must be able to fire",
+  "construction": "oracle (already asserting booking-limit + cancellation-window) plus scenarios asserting payment, email, premium tier and waitlist, with every licensing assumption text replaced by anchor-free filler \u2014 all six groups unlicensed",
+  "expect_fail": [
+    "test_no_unlicensed_inventions"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

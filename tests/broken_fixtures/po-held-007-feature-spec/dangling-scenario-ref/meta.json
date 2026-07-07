@@ -1,0 +1,8 @@
+{
+  "defect_class": "manifest referential integrity \u2014 scenario title does not resolve",
+  "construction": "oracle manifest with ASSUM-003's scenario title reworded so it matches no scenario in the .feature",
+  "expect_fail": [
+    "test_assumptions_manifest_schema"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

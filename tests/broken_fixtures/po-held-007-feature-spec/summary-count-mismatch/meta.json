@@ -1,0 +1,8 @@
+{
+  "defect_class": "summary/feature coherence violation \u2014 scenario count drift",
+  "construction": "oracle summary claiming 10 scenarios where the .feature has 11",
+  "expect_fail": [
+    "test_summary_coherence"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

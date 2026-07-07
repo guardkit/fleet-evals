@@ -1,0 +1,8 @@
+{
+  "defect_class": "domain-language violation \u2014 implementation language in steps",
+  "construction": "oracle plus one scenario whose steps hit ALL five banlist groups (http-status, sql, json-body, file-path, tech-internals); summary counts adjusted so only the language gate fires",
+  "expect_fail": [
+    "test_domain_language"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

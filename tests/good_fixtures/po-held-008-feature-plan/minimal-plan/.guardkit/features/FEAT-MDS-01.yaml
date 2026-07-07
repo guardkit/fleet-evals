@@ -1,0 +1,40 @@
+id: FEAT-MDS-01
+name: Member Directory Search
+description: Minimal decomposition at the anti-collapse floor.
+created: '2026-07-07T12:00:00+01:00'
+status: planned
+complexity: 4
+estimated_tasks: 3
+tasks:
+- id: TASK-MDS-001
+  name: Directory search service and data model
+  file_path: tasks/backlog/member-directory-search/TASK-MDS-001-directory-search-service-and-model.md
+  complexity: 5
+  dependencies: []
+  status: pending
+  implementation_mode: task-work
+  estimated_minutes: 120
+- id: TASK-MDS-002
+  name: Results page with access control
+  file_path: tasks/backlog/member-directory-search/TASK-MDS-002-results-page-with-access-control.md
+  complexity: 4
+  dependencies:
+  - TASK-MDS-001
+  status: pending
+  implementation_mode: task-work
+  estimated_minutes: 90
+- id: TASK-MDS-003
+  name: End-to-end tests for directory search
+  file_path: tasks/backlog/member-directory-search/TASK-MDS-003-directory-search-tests.md
+  complexity: 3
+  dependencies:
+  - TASK-MDS-001
+  status: pending
+  implementation_mode: direct
+  estimated_minutes: 45
+orchestration:
+  parallel_groups:
+  - - TASK-MDS-001
+  - - TASK-MDS-002
+    - TASK-MDS-003
+  estimated_duration_minutes: 255

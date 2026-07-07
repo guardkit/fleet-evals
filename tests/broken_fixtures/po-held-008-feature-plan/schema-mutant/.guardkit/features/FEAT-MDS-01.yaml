@@ -1,0 +1,64 @@
+id: FEAT-MDS-01
+name: Member Directory Search
+description: Search the member directory by name or skill for signed-in members,
+  with paged results, profile summaries, refusal of empty and too-short queries,
+  namesake handling, and an opt-out visibility flag. Planned headless from the
+  pinned /feature-spec triple (9 scenarios, 3 assumptions, all low/deferred).
+created: '2026-07-07T12:00:00+01:00'
+status: shipped
+complexity: 4
+estimated_tasks: 5
+tasks:
+- id: TASK-MDS-001
+  name: Member directory data model and opt-out flag
+  file_path: tasks/backlog/member-directory-search/TASK-MDS-001-member-directory-data-model.md
+  complexity: 3
+  dependencies: []
+  status: pending
+  implementation_mode: direct
+  estimated_minutes: 30
+- id: TASK-MDS-002
+  name: Directory search service with paging and query rules
+  file_path: tasks/backlog/member-directory-search/TASK-MDS-002-directory-search-service.md
+  complexity: 15
+  dependencies:
+  - TASK-MDS-001
+  status: pending
+  implementation_mode: task-work
+  estimated_minutes: 90
+- id: TASK-MDS-003
+  name: Search access control for signed-in members
+  file_path: tasks/backlog/member-directory-search/TASK-MDS-003-search-access-control.md
+  complexity: 4
+  dependencies:
+  - TASK-MDS-001
+  status: pending
+  implementation_mode: task-work
+  estimated_minutes: 60
+- id: TASK-MDS-004
+  name: Member search results page with profile summaries
+  file_path: tasks/backlog/member-directory-search/TASK-MDS-004-member-search-results-page.md
+  complexity: 4
+  dependencies:
+  - TASK-MDS-002
+  - TASK-MDS-003
+  status: pending
+  implementation_mode: task-work
+  estimated_minutes: 60
+- id: TASK-MDS-005
+  name: End-to-end tests for the directory search scenarios
+  file_path: tasks/backlog/member-directory-search/TASK-MDS-005-directory-search-end-to-end-tests.md
+  complexity: 3
+  dependencies:
+  - TASK-MDS-004
+  status: pending
+  implementation_mode: direct
+  estimated_minutes: 45
+orchestration:
+  parallel_groups:
+  - - TASK-MDS-001
+  - - TASK-MDS-002
+    - TASK-MDS-003
+  - - TASK-MDS-004
+  - - TASK-MDS-005
+  estimated_duration_minutes: 285

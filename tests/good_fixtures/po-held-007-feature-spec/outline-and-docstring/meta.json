@@ -1,0 +1,4 @@
+{
+  "purpose": "Scenario Outline + Examples table + doc-string block are the contract's sanctioned multi-line forms \u2014 the single-line invariant constrains only the five step keywords",
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

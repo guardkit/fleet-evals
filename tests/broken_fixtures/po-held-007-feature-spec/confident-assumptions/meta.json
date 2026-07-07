@@ -1,0 +1,8 @@
+{
+  "defect_class": "SPL headless-pin violation \u2014 silently confirmed high-confidence assumptions",
+  "construction": "oracle with every assumption high/confirmed and review_required false (the vanilla --auto template shape without the SPL 'deferred' pin) \u2014 internally coherent, so ONLY the auto-mode discipline gate fires",
+  "expect_fail": [
+    "test_auto_mode_discipline"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

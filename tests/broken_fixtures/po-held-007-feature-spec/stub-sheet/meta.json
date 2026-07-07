@@ -1,0 +1,10 @@
+{
+  "defect_class": "deliberately-stubbed answer sheet (G2b session gate: a stub must FAIL)",
+  "construction": "3 boilerplate happy-path scenarios, zero assumptions on a brief full of unknowns, no boundary/negative/edge groups \u2014 internally coherent so only the effort gates fire",
+  "expect_fail": [
+    "test_scenario_floor",
+    "test_auto_mode_discipline",
+    "test_category_tags"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

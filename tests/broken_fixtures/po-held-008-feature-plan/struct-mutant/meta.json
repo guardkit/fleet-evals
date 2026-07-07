@@ -1,0 +1,8 @@
+{
+  "defect_class": "feature-YAML structural violation (validate_feature layer)",
+  "construction": "TASK-MDS-005 dropped from orchestration + TASK-MDS-004 dependency retargeted to nonexistent TASK-MDS-999 + TASK-MDS-002 moved into wave 1 beside its own dependency \u2014 the contract Part D FEAT-RTBAD-STRUCT mutation class",
+  "expect_fail": [
+    "test_guardkit_validate"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+}

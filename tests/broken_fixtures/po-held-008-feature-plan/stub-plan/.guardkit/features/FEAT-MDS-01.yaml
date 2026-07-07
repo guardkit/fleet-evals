@@ -1,0 +1,20 @@
+id: FEAT-MDS-01
+name: Member Directory Search
+description: Do the directory search feature.
+created: '2026-07-07T12:00:00+01:00'
+status: planned
+complexity: 4
+estimated_tasks: 1
+tasks:
+- id: TASK-MDS-001
+  name: Implement member directory search
+  file_path: tasks/backlog/member-directory-search/TASK-MDS-001-implement-member-directory-search.md
+  complexity: 8
+  dependencies: []
+  status: pending
+  implementation_mode: task-work
+  estimated_minutes: 240
+orchestration:
+  parallel_groups:
+  - - TASK-MDS-001
+  estimated_duration_minutes: 240

@@ -1,0 +1,8 @@
+{
+  "defect_class": "GHERKIN SYNTAX INVARIANT violation \u2014 multi-line step continuation",
+  "construction": "oracle with one And step wrapped across two physical lines (the CompositeParserException class feature_spec_normalize exists to reject)",
+  "expect_fail": [
+    "test_single_line_steps"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

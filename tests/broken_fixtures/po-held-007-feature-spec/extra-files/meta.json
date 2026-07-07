@@ -1,0 +1,8 @@
+{
+  "defect_class": "purely-additive rule violation \u2014 support files beside the triple",
+  "construction": "oracle plus a step-definitions .py in the slug directory ('never generate step definitions, support files, or test scaffolding')",
+  "expect_fail": [
+    "test_three_file_contract"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

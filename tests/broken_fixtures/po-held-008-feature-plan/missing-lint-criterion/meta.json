@@ -1,0 +1,8 @@
+{
+  "defect_class": "Step 9 lint acceptance criterion missing from an implementation task",
+  "construction": "TASK-MDS-003 (feature) with the lint/format acceptance criterion removed",
+  "expect_fail": [
+    "test_lint_acceptance_criterion"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+}

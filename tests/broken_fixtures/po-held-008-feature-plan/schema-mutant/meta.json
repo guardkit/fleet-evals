@@ -1,0 +1,8 @@
+{
+  "defect_class": "feature-YAML schema violation (Pydantic layer)",
+  "construction": "status 'shipped' (invalid literal) + task complexity 15 (> 10) \u2014 the contract Part D FEAT-RTBAD-SCHEMA mutation class",
+  "expect_fail": [
+    "test_guardkit_validate"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+}

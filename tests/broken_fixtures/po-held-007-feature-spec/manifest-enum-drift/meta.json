@@ -1,0 +1,9 @@
+{
+  "defect_class": "manifest schema drift \u2014 confidence/human_response outside the pinned enums",
+  "construction": "oracle manifest with ASSUM-002 confidence 'certain' and human_response 'accepted'",
+  "expect_fail": [
+    "test_assumptions_manifest_schema",
+    "test_auto_mode_discipline"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

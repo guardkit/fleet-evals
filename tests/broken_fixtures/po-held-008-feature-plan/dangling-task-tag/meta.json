@@ -1,0 +1,8 @@
+{
+  "defect_class": "linkage coherence \u2014 @task tag names no plan task",
+  "construction": "one scenario tagged @task:TASK-MDS-999 (not in the YAML); TASK-MDS-004 still owns another scenario so only the dangling ref fires",
+  "expect_fail": [
+    "test_bdd_linkage_coherence"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+}

@@ -1,0 +1,4 @@
+{
+  "purpose": "unknown top-level and task-level YAML keys are tolerated (Feature/Task models extra='ignore') \u2014 a naive strict grader would falsely reject",
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+}

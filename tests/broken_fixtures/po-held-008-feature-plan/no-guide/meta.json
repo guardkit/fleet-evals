@@ -1,0 +1,8 @@
+{
+  "defect_class": "Step 8/9 folder contract \u2014 IMPLEMENTATION-GUIDE.md missing",
+  "construction": "oracle with the guide deleted (diagram gate errors on the missing file too \u2014 the folder gate owns the defect)",
+  "expect_fail": [
+    "test_readme_and_guide_present"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+}

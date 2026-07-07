@@ -1,0 +1,8 @@
+{
+  "defect_class": "three-file contract violation \u2014 _summary.md not written",
+  "construction": "oracle triple with the summary deleted",
+  "expect_fail": [
+    "test_three_file_contract"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

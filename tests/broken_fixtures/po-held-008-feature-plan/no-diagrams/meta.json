@@ -1,0 +1,8 @@
+{
+  "defect_class": "mandatory-diagram rule (contract B.5) \u2014 no Mermaid blocks in the guide",
+  "construction": "oracle guide with both mermaid fences replaced by prose",
+  "expect_fail": [
+    "test_mandatory_diagrams"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+}

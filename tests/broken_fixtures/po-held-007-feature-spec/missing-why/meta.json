@@ -1,0 +1,8 @@
+{
+  "defect_class": "proposal-annotation violation \u2014 scenario without # Why: reasoning",
+  "construction": "oracle with one scenario's # Why: comment removed",
+  "expect_fail": [
+    "test_why_comments"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

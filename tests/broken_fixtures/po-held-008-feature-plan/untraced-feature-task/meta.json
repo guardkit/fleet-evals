@@ -1,0 +1,8 @@
+{
+  "defect_class": "linkage coherence \u2014 feature-type task owns no scenario",
+  "construction": "both of TASK-MDS-004's scenario tags retargeted to TASK-MDS-002: a feature task no scenario motivates is plan-invented work",
+  "expect_fail": [
+    "test_bdd_linkage_coherence"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+}

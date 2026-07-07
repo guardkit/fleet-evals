@@ -1,0 +1,8 @@
+{
+  "defect_class": "mode-assignment rule violation (contract B.4)",
+  "construction": "TASK-MDS-002 (complexity 5) assigned implementation_mode: direct \u2014 the pinned rule is task-work for complexity >= 4",
+  "expect_fail": [
+    "test_mode_assignment"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+}

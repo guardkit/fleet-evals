@@ -1,0 +1,8 @@
+{
+  "defect_class": "annotation/manifest agreement \u2014 inferred value not annotated in the Gherkin",
+  "construction": "oracle with ASSUM-001's # [ASSUMPTION] comment removed from its scenario",
+  "expect_fail": [
+    "test_assumption_annotations"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

@@ -1,0 +1,4 @@
+{
+  "purpose": "task_type 'implementation' is a pinned alias of feature (task_types.py) \u2014 explicit-but-aliased must PASS, and the aliased task still counts as feature-type for linkage",
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+}

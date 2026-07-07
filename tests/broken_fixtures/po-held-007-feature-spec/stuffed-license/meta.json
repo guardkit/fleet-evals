@@ -1,0 +1,8 @@
+{
+  "defect_class": "anti-stuffing (ASSUM-009 rule) \u2014 keyword-salad statement licenses nothing",
+  "construction": "scenarios assert payment + email + waitlist (plus the oracle's licensed pair); ONE assumption statement names all three (stuffing score 3 > 2) so it licenses none of them",
+  "expect_fail": [
+    "test_no_unlicensed_inventions"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

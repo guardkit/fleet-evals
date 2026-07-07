@@ -1,0 +1,8 @@
+{
+  "defect_class": "encoding contract \u2014 UTF-8 BOM (contract pins 'no BOM')",
+  "construction": "oracle .feature with a BOM prepended",
+  "expect_fail": [
+    "test_gherkin_structure"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

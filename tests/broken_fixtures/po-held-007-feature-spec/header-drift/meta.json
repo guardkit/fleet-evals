@@ -1,0 +1,8 @@
+{
+  "defect_class": "header-block drift \u2014 count disagreement + bare-date timestamp",
+  "construction": "oracle with '# Assumptions: 5' (manifest has 3) and the gold-trace bare-date deviation new output must not reproduce",
+  "expect_fail": [
+    "test_feature_header_block"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-003 fixture battery)"
+}

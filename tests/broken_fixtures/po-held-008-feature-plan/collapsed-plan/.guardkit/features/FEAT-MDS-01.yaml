@@ -1,0 +1,29 @@
+id: FEAT-MDS-01
+name: Member Directory Search
+description: Directory search planned as one implementation lump plus tests.
+created: '2026-07-07T12:00:00+01:00'
+status: planned
+complexity: 4
+estimated_tasks: 2
+tasks:
+- id: TASK-MDS-001
+  name: Implement member directory search
+  file_path: tasks/backlog/member-directory-search/TASK-MDS-001-implement-member-directory-search.md
+  complexity: 6
+  dependencies: []
+  status: pending
+  implementation_mode: task-work
+  estimated_minutes: 180
+- id: TASK-MDS-002
+  name: End-to-end tests for directory search
+  file_path: tasks/backlog/member-directory-search/TASK-MDS-002-directory-search-tests.md
+  complexity: 3
+  dependencies: []
+  status: pending
+  implementation_mode: direct
+  estimated_minutes: 45
+orchestration:
+  parallel_groups:
+  - - TASK-MDS-001
+    - TASK-MDS-002
+  estimated_duration_minutes: 225

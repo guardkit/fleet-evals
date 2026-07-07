@@ -1,0 +1,8 @@
+{
+  "defect_class": "spec preservation \u2014 plan rewrote a spec step",
+  "construction": "one Then step reworded in the tagged copy; Step 11 only INSERTS @task lines, never rewrites (bdd_linker.apply_mapping pinned shape)",
+  "expect_fail": [
+    "test_spec_preserved_verbatim"
+  ],
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+}

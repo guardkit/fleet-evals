@@ -1,0 +1,9 @@
+{
+  "defect_class": "incomplete answer sheet \u2014 one bundle never judged",
+  "construction": "verdicts/CE-04.json absent; a missing verdict must be a contract failure, never a silent skip",
+  "expect_fail": [
+    "test_verdict_contract",
+    "test_escape_kin_all_caught"
+  ],
+  "authored": "2026-07-08 (coach-heldout fixture battery)"
+}

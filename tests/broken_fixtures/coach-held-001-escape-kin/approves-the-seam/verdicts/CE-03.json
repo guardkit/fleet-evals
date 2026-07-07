@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "collect_conditions passes weather_feed=None with a TODO — the guard's producer is never wired, so apply_weather_guard is permanently vacuous in production and AC-2's unit-level evidence proves nothing about the event page"
+    }
+  ]
+}

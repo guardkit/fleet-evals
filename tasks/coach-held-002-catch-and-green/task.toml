@@ -1,0 +1,20 @@
+[task]
+id = "coach-held-002-catch-and-green"
+suite = "coach-heldout"
+mode = "bundle-judgment"
+phase = "regression-and-false-block"
+schema = "per-bundle verdict json: verdict + findings[{class,locus}]"
+artifact = "verdicts/{BUNDLE-ID}.json, one per input bundle"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+weakness_source = "two-sided by design: CK rows encode the DOCUMENTED CATCH classes (narrative false-greens deterministically overridden in ABL-001 run 3; the run-2 sys.modules stub attempt that ended in a stall not an approval — ai-transition factory-gap-analysis-2026-07-07.md 'the honesty machinery demonstrably works in-loop') as the coach-ft-v4 regression floor; HG rows carry the false-block ceiling (coach-v2 81/19 → 87.5% false-approval imbalance lesson, generalized in the WS2 balance rules — ugly greens are the lever)"
+row_lineage = "bundles CK-01/CK-02/HG-01/HG-02 are AUTHORED trailhub analogues; no real incident row is reproduced (FEAT-EVAL-QAV/B12 disjointness tripwire in tests/test_coach_verifier_integrity.py). Verdict grammar and DC classes as coach-held-001 (adf OUTPUT-CONTRACT.md §3)"
+bundle_shape = "identical convention to coach-held-001-escape-kin (CoachEvidenceBundle attribute names, guardkit coach_evidence.py:172–381 @ 5ad48fcf; values authored 2026-07-08)"
+instruction_source = "instruction.md — authored for this suite 2026-07-08"
+oracle_source = "solution/verdicts/ authored 2026-07-08 — 2 rejects (owning class + signal locus) + 2 approves (empty findings)"

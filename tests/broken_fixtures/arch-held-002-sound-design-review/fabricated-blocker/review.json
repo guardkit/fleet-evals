@@ -1,0 +1,10 @@
+{
+  "verdict": "revise",
+  "findings": [
+    {
+      "pattern": "PHANTOM",
+      "target": "shift-changed event (in-process queue)",
+      "evidence": "The in-process event queue is a new middleware component the manifest does not contain and the goals never ask for; the design should be blocked until a message broker is evaluated."
+    }
+  ]
+}

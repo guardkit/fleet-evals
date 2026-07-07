@@ -1,0 +1,9 @@
+{
+  "defect_class": "contract violation \u2014 reject carrying zero findings",
+  "construction": "CE-03 rejected with findings: []; the OUTPUT-CONTRACT \u00a73 rule (reject \u21d2 \u22651 finding) carried by this suite must fire",
+  "expect_fail": [
+    "test_verdict_contract",
+    "test_escape_kin_all_caught"
+  ],
+  "authored": "2026-07-08 (coach-heldout fixture battery)"
+}

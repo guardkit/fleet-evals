@@ -1,0 +1,10 @@
+{
+  "verdict": "approve",
+  "findings": [
+    {
+      "pattern": "MISSING_TRADEOFF",
+      "target": "server-rendered web",
+      "evidence": "Approving, but the web decision could have listed more alternatives."
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "bundle_id": "HG-02",
+  "feature_id": "FEAT-TH-GPX",
+  "task_id": "TASK-THG-004",
+  "gathering_status": "complete",
+  "honesty": {
+    "verified": true,
+    "claims": [
+      "GPX import done; parser split into two modules for testability (recorded as a plan variance); integration trio skipped in CI per policy, covered nightly"
+    ],
+    "resolved_paths": [
+      "trailhub/gpx/parser.py",
+      "trailhub/gpx/segments.py",
+      "trailhub/migrations/0009_gpx.py",
+      "tests/unit/test_gpx_parser.py",
+      "features/gpx_import.feature",
+      "features/steps/gpx_steps.py"
+    ],
+    "should_fix_count": 0
+  },
+  "quality_gates": {"tests": "pass", "coverage": "warn", "arch_review": "pass", "plan_audit": "warn"},
+  "coverage_details": {
+    "line_coverage": 78.4,
+    "branch_coverage": 76.2,
+    "files_below_threshold": [
+      "trailhub/migrations/0009_gpx.py — generated migration, excluded-by-policy candidate"
+    ]
+  },
+  "plan_audit": {
+    "variances": [
+      {
+        "type": "structure",
+        "detail": "parser split into parser.py + segments.py (plan had one module); same public surface, documented in the task notes"
+      }
+    ],
+    "severity": "low"
+  },
+  "bdd": {
+    "scenarios_attempted": 4,
+    "scenarios_passed": 4,
+    "scenarios_failed": 0,
+    "scenarios_pending": 0,
+    "failures": [],
+    "pending": [],
+    "feature_files": ["features/gpx_import.feature"]
+  },
+  "tests": {"tests_passed": true, "tests_run": 91, "line_coverage_met": false, "branch_coverage_met": true, "requires_infrastructure": true},
+  "independent_tests": {"tests_passed": true, "tests_run": 91, "signal_absent": false, "stdout_tail": "91 passed, 3 skipped (S3 fixture bucket unavailable in CI; nightly infra suite covers) in 7.41s"},
+  "requirements": {"acceptance_criteria_met": 4, "acceptance_criteria_total": 4, "notes": "import ACs scenario-owned; the S3 round-trip AC additionally covered by the nightly infra suite"}
+}

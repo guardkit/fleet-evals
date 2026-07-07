@@ -1,0 +1,11 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "start_roster_sync() got an unexpected keyword argument 'retry_policy', swallowed by the soft-fail wrapper"
+    }
+  ],
+  "ground_truth_source": "seeded",
+  "rationale": "extra keys beyond the graded pair are tolerated by the gate"
+}

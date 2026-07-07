@@ -1,0 +1,21 @@
+{
+  "bundle_id": "CK-01",
+  "feature_id": "FEAT-TH-MAPS",
+  "task_id": "TASK-THM-001",
+  "gathering_status": "complete",
+  "honesty": {
+    "verified": false,
+    "claims": [
+      "Implementation complete, all tests green, ready to merge"
+    ],
+    "resolved_paths": ["trailhub/maps/render.py"],
+    "should_fix_count": 2
+  },
+  "quality_gates": {"tests": "no_signal", "coverage": "no_signal", "arch_review": "pass", "plan_audit": "pass"},
+  "coverage_details": null,
+  "plan_audit": {"variances": [], "severity": "low"},
+  "bdd": null,
+  "tests": {"tests_passed": null, "tests_run": 0, "line_coverage_met": null, "branch_coverage_met": null, "requires_infrastructure": false},
+  "independent_tests": {"tests_passed": false, "tests_run": 0, "signal_absent": true, "stdout_tail": "collected 0 items"},
+  "requirements": {"acceptance_criteria_met": 2, "acceptance_criteria_total": 4, "notes": "AC-3/AC-4 claimed done in the narrative only"}
+}

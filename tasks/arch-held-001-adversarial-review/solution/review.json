@@ -1,0 +1,25 @@
+{
+  "verdict": "revise",
+  "findings": [
+    {
+      "pattern": "PHANTOM",
+      "target": "ReconciliationService (data-flow step 2)",
+      "evidence": "Data-flow step 2 hands the week's shift-allocation records to a ReconciliationService that appears in no container table, no repo-manifest module, and no product goal. The component is untraceable — it exists only in the flow narrative."
+    },
+    {
+      "pattern": "MISSING_SEAM",
+      "target": "ShiftScheduler → NotificationService (absent integration)",
+      "evidence": "Goal 3 requires every affected volunteer to be told within an hour of a shift change, but the design gives NotificationService a Monday digest and nothing else: no integration row and no event path routes shift changes to it, so the one-hour obligation is unmet by construction."
+    },
+    {
+      "pattern": "UNSTATED_ASSUMPTION",
+      "target": "PostgreSQL 16 + two read replicas behind PgBouncer (technology decisions)",
+      "evidence": "Sizing for 100k concurrent sessions rests on a scale assumption stated nowhere: the goals record ~200 volunteers with evening peaks of a few dozen people, and the constraint is the smallest system a 2-person ops team can run."
+    },
+    {
+      "pattern": "SCOPE_CREEP",
+      "target": "GamificationEngine (containers + integration table)",
+      "evidence": "Badges and a volunteer leaderboard trace to none of the six goals, and goals.md states there are no requirements beyond them. Engagement mechanics are invented scope carrying their own tables and maintenance load."
+    }
+  ]
+}

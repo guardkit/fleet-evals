@@ -1,0 +1,11 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "collect_conditions passes weather_feed=None (TODO) \u2014 the producer is never wired and the guard is vacuous"
+    }
+  ],
+  "ground_truth_source": "seeded",
+  "rationale": "extra keys beyond the graded pair are tolerated by the gate"
+}

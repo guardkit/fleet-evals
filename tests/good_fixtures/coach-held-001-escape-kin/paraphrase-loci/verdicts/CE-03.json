@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "the guard reads a feed that collect_conditions hardcodes to None, so production behaviour is a no-op regardless of the 14 green unit tests"
+    }
+  ]
+}

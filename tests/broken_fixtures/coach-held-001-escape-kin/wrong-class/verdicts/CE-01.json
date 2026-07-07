@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "features/rsvp.feature:41 \u2014 the waitlist-promotion scenario is pending (StepDefinitionNotFoundError), AC-5 unevidenced"
+    }
+  ]
+}

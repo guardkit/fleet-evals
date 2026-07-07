@@ -1,0 +1,11 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-08",
+      "locus": "features/rsvp.feature:41 \u2014 AC-5's waitlist scenario is pending: StepDefinitionNotFoundError, no step definition exists"
+    }
+  ],
+  "ground_truth_source": "seeded",
+  "rationale": "extra keys beyond the graded pair are tolerated by the gate"
+}

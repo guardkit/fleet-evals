@@ -1,0 +1,8 @@
+{
+  "defect_class": "right rejection, wrong defect class \u2014 a BDD hole filed as a composition seam",
+  "construction": "CE-01 rejected with an anchor-firing locus but class DC-03 instead of the owning DC-08; class labels feed the flywheel taxonomy and must not drift",
+  "expect_fail": [
+    "test_escape_kin_all_caught"
+  ],
+  "authored": "2026-07-08 (coach-heldout fixture battery)"
+}

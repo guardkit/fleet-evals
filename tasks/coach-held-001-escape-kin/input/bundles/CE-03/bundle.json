@@ -1,0 +1,37 @@
+{
+  "bundle_id": "CE-03",
+  "feature_id": "FEAT-TH-SAFE",
+  "task_id": "TASK-THS-003",
+  "gathering_status": "complete",
+  "honesty": {
+    "verified": true,
+    "claims": [
+      "apply_weather_guard implemented with 14 unit tests, all green; absent-signal-safe no-op"
+    ],
+    "resolved_paths": [
+      "trailhub/safety/weather_guard.py",
+      "tests/unit/test_weather_guard.py",
+      "trailhub/events/page.py"
+    ],
+    "should_fix_count": 0
+  },
+  "quality_gates": {"tests": "pass", "coverage": "pass", "arch_review": "pass", "plan_audit": "pass"},
+  "coverage_details": {"line_coverage": 90.5, "branch_coverage": 83.1, "files_below_threshold": []},
+  "plan_audit": {
+    "variances": [
+      {
+        "type": "scope",
+        "detail": "collect_conditions still passes weather_feed=None with a TODO to wire the Met feed; the guard no-ops on absent signal by design"
+      }
+    ],
+    "severity": "low"
+  },
+  "bdd": null,
+  "tests": {"tests_passed": true, "tests_run": 14, "line_coverage_met": true, "branch_coverage_met": true, "requires_infrastructure": false},
+  "independent_tests": {"tests_passed": true, "tests_run": 14, "signal_absent": false, "stdout_tail": "14 passed in 0.82s"},
+  "requirements": {
+    "acceptance_criteria_met": 4,
+    "acceptance_criteria_total": 4,
+    "notes": "AC-2 'event page shows a weather alert for red warnings' evidenced by unit tests driving apply_weather_guard directly"
+  }
+}

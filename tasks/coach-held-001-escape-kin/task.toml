@@ -1,0 +1,20 @@
+[task]
+id = "coach-held-001-escape-kin"
+suite = "coach-heldout"
+mode = "bundle-judgment"
+phase = "must-catch"
+schema = "per-bundle verdict json: verdict + findings[{class,locus}]"
+artifact = "verdicts/{BUNDLE-ID}.json, one per input bundle"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+weakness_source = "the 4 documented final-week Coach escapes (composition-seam/BDD-hole classes that shipped past coach-ft-v3, caught only by operator/merge review — ai-transition factory-gap-analysis-2026-07-07.md 'But 4 of the 8 completions shipped a composition-seam defect past the Coach'); this suite is the v4-prerequisite role suite WS4 §5/§6.2 name"
+row_lineage = "bundles CE-01..CE-04 are AUTHORED trailhub analogues, one per escape CLASS — deliberately NOT the four real rows (those are FEAT-EVAL-QAV's gold negatives, WS2 B12, single registration); disjointness is mechanically enforced by tests/test_coach_verifier_integrity.py's tripwire. Verdict grammar = adf domains/qa-verifier/OUTPUT-CONTRACT.md §3 trio minus ground_truth_source (row metadata here, never a model output); DC classes = the Phase-1 admissible set verbatim"
+bundle_shape = "field names per the documented CoachEvidenceBundle attributes (guardkit coach_evidence.py:172–381 @ 5ad48fcf; B-min contract kin, WS2-B11 bundle schema @ guardkit 41a0ebe457) — shape reference, values authored 2026-07-08; each bundle carries sufficient in-bundle signal BY DESIGN (an eval row must be decidable; the live thin-signal problem belongs to WS2's live-gate runner)"
+instruction_source = "instruction.md — authored for this suite 2026-07-08; the serving prompt is the Coach seat's; answer sheets come from that harness, not run_po_eval.py"
+oracle_source = "solution/verdicts/ authored 2026-07-08 — 4 rejects, owning DC class + signal-naming locus each (the catchability demonstration the integrity file pins)"

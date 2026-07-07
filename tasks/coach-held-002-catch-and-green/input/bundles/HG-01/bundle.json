@@ -1,0 +1,34 @@
+{
+  "bundle_id": "HG-01",
+  "feature_id": "FEAT-TH-CAL",
+  "task_id": "TASK-THC-003",
+  "gathering_status": "complete",
+  "honesty": {
+    "verified": true,
+    "claims": [
+      "Calendar export implemented; 64 unit tests and all 5 scenarios green"
+    ],
+    "resolved_paths": [
+      "trailhub/calendar/export.py",
+      "tests/unit/test_calendar_export.py",
+      "features/calendar_export.feature",
+      "features/steps/calendar_steps.py"
+    ],
+    "should_fix_count": 0
+  },
+  "quality_gates": {"tests": "pass", "coverage": "pass", "arch_review": "pass", "plan_audit": "pass"},
+  "coverage_details": {"line_coverage": 93.1, "branch_coverage": 87.5, "files_below_threshold": []},
+  "plan_audit": {"variances": [], "severity": "low"},
+  "bdd": {
+    "scenarios_attempted": 5,
+    "scenarios_passed": 5,
+    "scenarios_failed": 0,
+    "scenarios_pending": 0,
+    "failures": [],
+    "pending": [],
+    "feature_files": ["features/calendar_export.feature"]
+  },
+  "tests": {"tests_passed": true, "tests_run": 64, "line_coverage_met": true, "branch_coverage_met": true, "requires_infrastructure": false},
+  "independent_tests": {"tests_passed": true, "tests_run": 64, "signal_absent": false, "stdout_tail": "64 passed in 3.20s"},
+  "requirements": {"acceptance_criteria_met": 3, "acceptance_criteria_total": 3, "notes": "each AC owned by a named scenario"}
+}

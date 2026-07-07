@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-08",
+      "locus": "five scenarios feels thin for a calendar export; edge cases may be missing"
+    }
+  ]
+}

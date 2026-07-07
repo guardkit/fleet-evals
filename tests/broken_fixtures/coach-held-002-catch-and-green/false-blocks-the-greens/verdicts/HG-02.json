@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "line coverage 78.4% below threshold and three integration tests skipped \u2014 cannot approve"
+    }
+  ]
+}

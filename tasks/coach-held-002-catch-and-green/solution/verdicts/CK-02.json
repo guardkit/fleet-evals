@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-05",
+      "locus": "tests/conftest.py injects sys.modules['trailhub.fees.gateway'] = _FakeGateway() before collection — the 'gateway path' green is manufactured by the stub; no test can ever import the live gateway module"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "note": "One group per seeded flaw in input/design.md (arch-heldout-suite-scope.md §2). Matched case-insensitively over NFKC+casefold-normalized finding text (pattern+target+evidence), per-finding, with the frozen anti-stuffing rule imported from idea_gates. Detection floor: an alternate must plausibly match a genuine catch, and no alternate may match goals.md or repo-manifest.json (a review that merely restates the inputs earns nothing) — enforced by tests/test_arch_verifier_integrity.py.",
+  "groups": [
+    {
+      "id": "phantom-reconciliation",
+      "note": "seeded flaw 1 (PHANTOM): data-flow step 2 hands records to a ReconciliationService that exists in no container list, no manifest module, no goal",
+      "alternates": ["reconcil"]
+    },
+    {
+      "id": "missing-notification-seam",
+      "note": "seeded flaw 2 (MISSING_SEAM): goals require affected volunteers told within an hour of a shift change; the design's NotificationService does a Monday digest and nothing routes shift changes to it. Alternates demand absence-language or the named missing edge, so goal-restating text cannot fire.",
+      "alternates": [
+        "shift[\\s-]?change[^.\\n]{0,120}notif",
+        "notif[^.\\n]{0,120}shift[\\s-]?change",
+        "(?:no|missing|lacks|lacking|without|never|not|nothing)\\b[^.\\n]{0,80}notificationservice",
+        "notificationservice[^.\\n]{0,80}(?:never|not\\b|nothing|no\\s+(?:caller|path|producer|publisher|event|trigger|integration)|un(?:wired|connected|reachable|invoked))",
+        "shiftscheduler[^.\\n]{0,80}notificationservice",
+        "notificationservice[^.\\n]{0,80}shiftscheduler",
+        "within\\s+an\\s+hour[^.\\n]{0,80}(?:digest|monday|weekly)",
+        "(?:digest|monday|weekly)[^.\\n]{0,80}within\\s+an\\s+hour"
+      ]
+    },
+    {
+      "id": "replica-scale-assumption",
+      "note": "seeded flaw 3 (UNSTATED_ASSUMPTION): read replicas + PgBouncer sized for 100k concurrent sessions against a stated ~200-volunteer, few-dozen-peak reality",
+      "alternates": [
+        "read[\\s-]?replica",
+        "pgbouncer",
+        "\\b100[,.]?000\\b|\\b100k\\b",
+        "concurrent\\s+(?:users|sessions)"
+      ]
+    },
+    {
+      "id": "gamification-creep",
+      "note": "seeded flaw 4 (SCOPE_CREEP): GamificationEngine (badges, leaderboard) traceable to no goal; goals state there are no requirements beyond the six",
+      "alternates": ["gamif", "leaderboard", "badge"]
+    }
+  ]
+}

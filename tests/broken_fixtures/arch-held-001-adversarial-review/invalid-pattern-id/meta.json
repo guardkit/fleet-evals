@@ -1,0 +1,6 @@
+{
+  "defect_class": "taxonomy drift — a pattern id outside the pinned architect detection taxonomy",
+  "construction": "an otherwise-complete catch whose first finding invents 'HALLUCINATED_COMPONENT'; label vocabulary must stay pinned or downstream aggregation over pattern ids silently fragments",
+  "expect_fail": ["test_review_schema"],
+  "authored": "2026-07-08 (FEAT-EVAL-ARCH fixture battery)"
+}

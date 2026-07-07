@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-08",
+      "locus": "features/rsvp.feature:41 — AC-5's waitlist-promotion scenario is pending (StepDefinitionNotFoundError: no step definition exists), so the requirements evidence for AC-5 is vacuous despite the green unit suite"
+    }
+  ]
+}

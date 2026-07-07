@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-14",
+      "locus": "tests.tests_run = 0 and independent run 'collected 0 items' (signal_absent) against the narrative claim 'all tests green' — approval would rest on the claim alone, not on any test evidence"
+    }
+  ]
+}

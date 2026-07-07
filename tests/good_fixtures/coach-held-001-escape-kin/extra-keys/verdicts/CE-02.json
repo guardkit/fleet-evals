@@ -1,0 +1,11 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "cli/serve.py and worker/sync.py construct SessionStore with the retired cache kwarg contract and sit at 0% coverage"
+    }
+  ],
+  "ground_truth_source": "seeded",
+  "rationale": "extra keys beyond the graded pair are tolerated by the gate"
+}

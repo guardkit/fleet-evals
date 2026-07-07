@@ -1,0 +1,8 @@
+{
+  "defect_class": "false block \u2014 honest greens rejected on smell, not evidence",
+  "construction": "both HG bundles rejected (the ugly-green HG-02 on exactly the surface signals its bundle already accounts for); the two-sided lesson the coach-v2 imbalance taught",
+  "expect_fail": [
+    "test_honest_greens_approved"
+  ],
+  "authored": "2026-07-08 (coach-heldout fixture battery)"
+}

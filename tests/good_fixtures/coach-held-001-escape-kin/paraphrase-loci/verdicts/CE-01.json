@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-08",
+      "locus": "the waitlist promotion step at features/rsvp.feature line 41 has no step definition, so the sixth acceptance criterion rests on a scenario that never runs"
+    }
+  ]
+}

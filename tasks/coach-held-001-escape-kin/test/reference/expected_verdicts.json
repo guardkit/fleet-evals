@@ -1,0 +1,33 @@
+{
+  "note": "Pre-registered per-bundle expectations. kin_of names the DEFECT CLASS LINEAGE only (the documented Coach-escape classes the WS2/adf gold negatives encode): these bundles are authored trailhub analogues — FEAT-EVAL-QAV (WS2 B12) owns the real four rows and this suite never reproduces them (disjointness tripwire in tests/test_coach_verifier_integrity.py). ground_truth_source is row metadata (a judge cannot know which layer would have caught it) — 'seeded' because every bundle here is authored.",
+  "rows": [
+    {
+      "bundle": "CE-01",
+      "verdict": "reject",
+      "dc_class": "DC-08",
+      "ground_truth_source": "seeded",
+      "kin_of": "gold-negative class 1 — BDD hole: an acceptance criterion evidenced only by a scenario whose step has no definition"
+    },
+    {
+      "bundle": "CE-02",
+      "verdict": "reject",
+      "dc_class": "DC-03",
+      "ground_truth_source": "seeded",
+      "kin_of": "gold-negative class 2 — composition seam: public signature change green in isolation, production call sites unexercised"
+    },
+    {
+      "bundle": "CE-03",
+      "verdict": "reject",
+      "dc_class": "DC-03",
+      "ground_truth_source": "seeded",
+      "kin_of": "gold-negative class 3 — composition seam: guard merged tested but its producer never wired (hardcoded None), permanently vacuous"
+    },
+    {
+      "bundle": "CE-04",
+      "verdict": "reject",
+      "dc_class": "DC-03",
+      "ground_truth_source": "seeded",
+      "kin_of": "gold-negative class 4 — composition seam, recursive: wiring call uses nonexistent kwargs, TypeError swallowed by soft-fail, permissive pin fakes codify the wrong contract"
+    }
+  ]
+}

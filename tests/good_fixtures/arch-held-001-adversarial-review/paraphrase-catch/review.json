@@ -1,0 +1,25 @@
+{
+  "verdict": "revise",
+  "findings": [
+    {
+      "pattern": "PHANTOM",
+      "target": "nightly cross-checking component (flow step 2)",
+      "evidence": "Flow step 2 depends on a reconciling component defined nowhere — not in the container table, not in the codebase inventory, not in any goal."
+    },
+    {
+      "pattern": "MISSING_SEAM",
+      "target": "shift-change alerting path",
+      "evidence": "Nothing routes a changed rota entry to NotificationService — its sole listed duty is the Monday send, so the told-within-an-hour obligation has no carrying edge."
+    },
+    {
+      "pattern": "UNSTATED_ASSUMPTION",
+      "target": "database sizing",
+      "evidence": "Provisioning for a hundred thousand concurrent sessions imports a scale requirement the goals never state; the stated reality is two hundred volunteers."
+    },
+    {
+      "pattern": "SCOPE_CREEP",
+      "target": "engagement mechanics",
+      "evidence": "A leaderboard and award system answer no goal; the requirements record explicitly closes the list at six."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "verdict": "revise",
+  "findings": [
+    {
+      "pattern": "PHANTOM",
+      "target": "ReconciliationService (data-flow step 2)",
+      "evidence": "Handed the week's records for reconciliation yet defined in no container table, no manifest module, no goal."
+    },
+    {
+      "pattern": "MISSING_SEAM",
+      "target": "ShiftScheduler → NotificationService",
+      "evidence": "No integration row or event path carries shift changes to the notification side; goal 3's one-hour window is unmet by construction."
+    },
+    {
+      "pattern": "UNSTATED_ASSUMPTION",
+      "target": "PostgreSQL 16 + PgBouncer sizing",
+      "evidence": "100k concurrent sessions is asserted nowhere in the goals; the stated peak is a few dozen people."
+    },
+    {
+      "pattern": "SCOPE_CREEP",
+      "target": "GamificationEngine",
+      "evidence": "Badges and the volunteer leaderboard trace to none of the six goals."
+    },
+    {
+      "pattern": "MISSING_TRADEOFF",
+      "target": "server-rendered web decision",
+      "evidence": "Stated as obvious with no alternative recorded; one line on why not an SPA would make the decision auditable."
+    }
+  ]
+}

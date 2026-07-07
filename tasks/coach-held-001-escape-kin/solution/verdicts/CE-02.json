@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "trailhub/cli/serve.py and trailhub/worker/sync.py — both construct SessionStore and sit at 0% coverage while __init__ retired the cache kwarg for clock; the 412-green suite never exercises the production call sites of the changed signature"
+    }
+  ]
+}

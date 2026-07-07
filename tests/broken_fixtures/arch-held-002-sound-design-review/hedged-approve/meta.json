@@ -1,0 +1,6 @@
+{
+  "defect_class": "incoherent verdict — approve carrying findings",
+  "construction": "the QAV label rule carried by this suite (approve ⇒ findings: []) violated; a blocking-or-not ambiguity the downstream consumer cannot resolve",
+  "expect_fail": ["test_review_schema"],
+  "authored": "2026-07-08 (FEAT-EVAL-ARCH fixture battery)"
+}

@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-08",
+      "locus": "the evidence does not support approval of this change"
+    }
+  ]
+}

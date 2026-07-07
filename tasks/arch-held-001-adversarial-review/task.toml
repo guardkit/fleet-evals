@@ -1,0 +1,20 @@
+[task]
+id = "arch-held-001-adversarial-review"
+suite = "arch-heldout"
+mode = "design-review"
+phase = "adversarial"
+schema = "review-json: verdict + findings[{pattern,target,evidence}]"
+artifact = "review.json at the answer-sheet root"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+weakness_source = "the architect adversarial-depth weakness — PHANTOM/gap detection, 'accepting without stress-testing' (specialist-agent fan-out GAP, no landed remediation): ai-transition ws4-learning-flywheel-scope-and-build-plan-2026-07-07.md §5 design rules + Architect row; named fine-tune precondition (same doc, WS4-S8 disposition note)"
+taxonomy_source = "specialist-agent roles/architect/criteria/definitions.yaml detection_patterns @ ed2cfe5 (repo HEAD 25e4e4b at authoring) + MISSING_SEAM added by this suite for the player.md flow-trace duty ('missing interactions'); verdict grammar carried from adf domains/qa-verifier/OUTPUT-CONTRACT.md §3 (approve ⇒ findings empty)"
+instruction_source = "instruction.md — authored for this suite 2026-07-08; the serving prompt is the architect review seat's (built when the seat's harness lands); answer sheets come from that harness, not run_po_eval.py"
+input_source = "input/{goals.md,design.md,repo-manifest.json} — authored fresh 2026-07-08 (FoodReach volunteer-rostering domain, chosen disjoint from every existing suite domain and every B12/incident repo); design.md carries exactly 4 seeded flaws, one per test/reference/flaw_anchors.json group"
+oracle_source = "solution/review.json authored for this suite 2026-07-08 — revise + 4 findings, one per seeded flaw, each firing exactly its own anchor group (anti-stuffing demonstrated by fixture, not by the oracle)"

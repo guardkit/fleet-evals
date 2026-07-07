@@ -1,0 +1,10 @@
+{
+  "verdict": "revise",
+  "findings": [
+    {
+      "pattern": "PHANTOM",
+      "target": "the whole design",
+      "evidence": "Multiple issues: reconciliation service, gamification leaderboard badges, read replicas with PgBouncer, and no notification of shift changes — the design needs rework across the board."
+    }
+  ]
+}

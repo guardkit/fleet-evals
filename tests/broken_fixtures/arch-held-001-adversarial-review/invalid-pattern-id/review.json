@@ -1,0 +1,25 @@
+{
+  "verdict": "revise",
+  "findings": [
+    {
+      "pattern": "HALLUCINATED_COMPONENT",
+      "target": "ReconciliationService",
+      "evidence": "The reconciliation component in data-flow step 2 exists nowhere in the containers, manifest, or goals."
+    },
+    {
+      "pattern": "MISSING_SEAM",
+      "target": "ShiftScheduler → NotificationService",
+      "evidence": "Shift changes never reach the notification path; the one-hour obligation in goal 3 has no route."
+    },
+    {
+      "pattern": "UNSTATED_ASSUMPTION",
+      "target": "read replicas + PgBouncer",
+      "evidence": "Sized for 100k concurrent sessions with no stated scale requirement."
+    },
+    {
+      "pattern": "SCOPE_CREEP",
+      "target": "GamificationEngine",
+      "evidence": "Badges and leaderboard trace to no goal."
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "note": "One group per must-catch bundle (group id = bundle id). The verdict's findings (class + locus text) must name the owning in-bundle signal — a blanket 'reject, code is bad' earns nothing. Matched case-insensitively over NFKC+casefold-normalized locus text; compiled by the frozen idea_gates instrument.",
+  "groups": [
+    {
+      "id": "CE-01",
+      "note": "the pending/undefined BDD step behind AC-5",
+      "alternates": ["stepdefinitionnotfound", "no step definition", "\\bpending\\b", "waitlist", "rsvp\\.feature"]
+    },
+    {
+      "id": "CE-02",
+      "note": "the unexercised production call sites of the changed constructor",
+      "alternates": ["cli/serve", "worker/sync", "call\\s?-?site", "__init__|constructor|signature", "\\bcache\\b[^.\\n]{0,60}\\bclock\\b"]
+    },
+    {
+      "id": "CE-03",
+      "note": "the unwired producer / hardcoded None feed",
+      "alternates": ["weather_feed", "=\\s*none|\\bnone\\b[^.\\n]{0,40}(?:feed|producer)", "collect_conditions", "never\\s+wired|not\\s+wired|unwired", "vacuous", "\\btodo\\b"]
+    },
+    {
+      "id": "CE-04",
+      "note": "the swallowed TypeError / soft-fail / permissive fakes",
+      "alternates": ["unexpected keyword", "soft[\\s-]?fail", "retry_policy", "start_roster_sync", "permissive|\\*\\*kwargs"]
+    }
+  ]
+}

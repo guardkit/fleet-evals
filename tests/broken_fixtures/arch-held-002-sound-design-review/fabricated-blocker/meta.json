@@ -1,0 +1,6 @@
+{
+  "defect_class": "fabricated blocker — the false-block failure mode on a sound design",
+  "construction": "schema-valid revise inventing a defect out of the design's own repair (the shift-changed wiring is explicitly wiring over existing modules, stated in §6); a review seat trained only on catching drifts here",
+  "expect_fail": ["test_verdict_is_approve"],
+  "authored": "2026-07-08 (FEAT-EVAL-ARCH fixture battery)"
+}

@@ -1,0 +1,8 @@
+{
+  "defect_class": "regression \u2014 a documented catch class (narrative false-green, zero test signal) approved",
+  "construction": "CK-01 approved on the strength of the claim alone; the regression floor a v4 retrain must not lose",
+  "expect_fail": [
+    "test_catches_hold"
+  ],
+  "authored": "2026-07-08 (coach-heldout fixture battery)"
+}

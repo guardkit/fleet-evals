@@ -1,0 +1,6 @@
+{
+  "defect_class": "shallow review — the surface flaws caught, the structural ones (phantom component, missing seam) missed",
+  "construction": "schema-valid revise catching gamification-creep + replica-scale-assumption only; exactly the depth split the adversarial-depth weakness predicts (flow-trace flaws are the ones that need stress-testing)",
+  "expect_fail": ["test_all_seeded_flaws_caught"],
+  "authored": "2026-07-08 (FEAT-EVAL-ARCH fixture battery)"
+}

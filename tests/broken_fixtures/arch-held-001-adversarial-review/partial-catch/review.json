@@ -1,0 +1,15 @@
+{
+  "verdict": "revise",
+  "findings": [
+    {
+      "pattern": "SCOPE_CREEP",
+      "target": "GamificationEngine",
+      "evidence": "Badges and a volunteer leaderboard trace to no goal; goals.md says there are no requirements beyond the six."
+    },
+    {
+      "pattern": "UNSTATED_ASSUMPTION",
+      "target": "PostgreSQL read replicas",
+      "evidence": "Two read replicas behind PgBouncer for 100k concurrent sessions — the goals record ~200 volunteers and a few dozen at peak."
+    }
+  ]
+}

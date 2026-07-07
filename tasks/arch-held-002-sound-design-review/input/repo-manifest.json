@@ -1,0 +1,17 @@
+{
+  "note": "Ground truth of what exists in the FoodReach codebase today. A design element with no goal AND no manifest entry exists nowhere.",
+  "repo": "foodreach",
+  "modules": [
+    {"path": "rota/scheduler.py", "component": "ShiftScheduler", "purpose": "draft + edit weekly rotas; records shift changes"},
+    {"path": "rota/publisher.py", "component": "RotaPublisher", "purpose": "flips a draft rota to published"},
+    {"path": "web/portal.py", "component": "VolunteerPortal", "purpose": "web UI: view rota, claim shifts, offer swaps"},
+    {"path": "reports/attendance.py", "component": "AttendanceReporter", "purpose": "monthly per-site attendance summary"},
+    {"path": "auth/accounts.py", "component": "AccountService", "purpose": "sign-in and the three roles"},
+    {"path": "notify/service.py", "component": "NotificationService", "purpose": "sends email to volunteers"}
+  ],
+  "infrastructure": {
+    "database": "single PostgreSQL instance",
+    "hosting": "one small VM per environment",
+    "email": "SMTP relay (charity's provider)"
+  }
+}

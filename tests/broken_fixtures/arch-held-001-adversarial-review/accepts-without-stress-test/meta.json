@@ -1,0 +1,6 @@
+{
+  "defect_class": "the weakness under test, verbatim: 'accepting without stress-testing' — the flawed design approved wholesale",
+  "construction": "schema-valid approve with zero findings against the 4-flaw design; the signature fixture of the suite",
+  "expect_fail": ["test_verdict_is_revise", "test_all_seeded_flaws_caught"],
+  "authored": "2026-07-08 (FEAT-EVAL-ARCH fixture battery)"
+}

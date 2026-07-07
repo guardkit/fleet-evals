@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "the warn line shows start_roster_sync rejected the shim's kwargs and the failure was downgraded to a log message; the permissive pin fakes accept any call shape"
+    }
+  ]
+}

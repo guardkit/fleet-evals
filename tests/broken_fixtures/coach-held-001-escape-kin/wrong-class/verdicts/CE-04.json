@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "independent-test stdout: 'roster-sync disabled (soft-fail): start_roster_sync() got an unexpected keyword argument retry_policy' — the boot wiring throws and is swallowed, while the permissive **kwargs pin fakes codify the wrong call contract, so both green pin suites prove nothing"
+    }
+  ]
+}

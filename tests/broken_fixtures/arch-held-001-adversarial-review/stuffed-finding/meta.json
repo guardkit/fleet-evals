@@ -1,0 +1,6 @@
+{
+  "defect_class": "keyword salad — one finding spraying every flaw noun without isolating any defect",
+  "construction": "a single finding whose text matches all 4 anchor groups; the frozen anti-stuffing rule (idea-extension §2.4, threshold imported from idea_gates) voids it, so nothing is credited",
+  "expect_fail": ["test_all_seeded_flaws_caught"],
+  "authored": "2026-07-08 (FEAT-EVAL-ARCH fixture battery)"
+}

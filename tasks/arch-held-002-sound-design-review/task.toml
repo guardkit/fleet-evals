@@ -1,0 +1,20 @@
+[task]
+id = "arch-held-002-sound-design-review"
+suite = "arch-heldout"
+mode = "design-review"
+phase = "false-block"
+schema = "review-json: verdict + findings[{pattern,target,evidence}]"
+artifact = "review.json at the answer-sheet root"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+weakness_source = "the two-sided lesson carried from the QAV/Coach lineage (coach-v2 81/19 → 87.5% false-approval; the false-block ceiling is the second axis of every judgment suite — adf OUTPUT-CONTRACT/PLAN balance rules): an architect seat graded only on catching must not learn to reject everything"
+taxonomy_source = "identical to arch-held-001-adversarial-review (definitions.yaml @ ed2cfe5 + MISSING_SEAM; approve ⇒ findings empty per adf OUTPUT-CONTRACT.md §3)"
+instruction_source = "instruction.md — authored for this suite 2026-07-08; same seat, same packet shape as arch-held-001"
+input_source = "input/goals.md + input/repo-manifest.json byte-identical to arch-held-001 (same product, same codebase); input/design.md is the repaired design — all four seeded flaws resolved (phantom removed, notification seam wired, data store right-sized with stated alternatives, no invented scope), authored 2026-07-08"
+oracle_source = "solution/review.json authored for this suite 2026-07-08 — approve with zero findings"

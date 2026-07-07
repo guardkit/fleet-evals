@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "the boot path cli/serve.py and the sync worker construct the store with the retired signature and are never executed by the 412-test suite"
+    }
+  ]
+}

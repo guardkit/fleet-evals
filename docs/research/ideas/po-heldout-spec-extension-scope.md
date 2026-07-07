@@ -1,10 +1,11 @@
 # PO Held-Out Suite — Feature-Spec/Plan Extension (FEAT-EVAL-SPEC, gate G2b)
 
-**Status:** **PROPOSED — awaiting Rich's freeze.** Thresholds below are proposed by the
-build session (2026-07-07) and are frozen only by Rich's commit flipping this line
-(house convention: freeze = the commit). Pre-registration discipline verbatim from the
-frozen suites: the freeze must precede any grading run; after a grading run starts,
-thresholds are immutable; between candidates they may only be *raised*.
+**Status:** **FROZEN 2026-07-07 (Rich — thresholds G-S1..G-S5 accepted as proposed; this
+commit is the freeze).** Acceptance given by Rich's instruction in the 2026-07-07
+whole-factory analysis session (ai-transition); house convention: freeze = the commit
+flipping this line. Pre-registration discipline verbatim from the frozen suites: the
+freeze precedes any grading run (none has run); after a grading run starts, thresholds
+are immutable; between candidates they may only be *raised*.
 **Date:** 2026-07-07 (Claude Fable 5, WS1 Session H per
 `ai-transition/docs/ws1-outer-loop-completion-build-plan-2026-07-07.md` §8)
 **Repo:** fleet-evals · new suite `po-heldout-spec` (tasks `po-held-007-feature-spec`,

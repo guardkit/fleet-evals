@@ -1,0 +1,20 @@
+[task]
+id = "po-held-008-feature-plan"
+suite = "po-heldout-spec"
+mode = "feature-plan"
+phase = "headless"
+schema = "feature-task-wave-yaml + task-markdown-frontmatter + step-11-linkage"
+artifact = "repo-root tree: .guardkit/features/{FEAT-ID}.yaml + tasks/backlog/{slug}/ + tagged features/{slug}/{slug}.feature"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+contract_source = "specialist-agent/docs/design/contracts/CONTRACT-feature-spec-plan-outputs.md Parts B+D (pinned 2026-07-07, WS1 Session B); guardkit installer/core/commands/feature-plan.md @ 5ad48fcf, feature_loader.py + task_types.py + lib/bdd_linker.py @ main 28587b61 (verified 2026-07-07)"
+oracle_cli = "installed `guardkit feature validate` (~/.agentecflow/bin/guardkit v1.0.0, resolves to the checkout @ 28587b61 — contract §0 'locally verified oracle identity'); the gate shells to it from the answer-sheet root"
+instruction_source = "instruction.md — authored for this suite 2026-07-07; the serving prompt is FEAT-SPL-008's (Session D builds it against the same pinned contract); answer sheets come from the target-terminal harness, not run_po_eval.py"
+input_source = "input/features/member-directory-search/ — authored spec triple 2026-07-07 (SPL-chained shape: all-low/deferred), pinned by input/INPUT.sha256; the checksum pin is enforced by tests/test_spec_verifier_integrity.py"
+oracle_source = "solution/ authored for this suite 2026-07-07 (5-task 4-wave plan tree; guardkit validate exit 0; every gate axis exercised). NOT harvested from the FEAT-RAG-08 gold pair — that trace predates the 2026-07-05 feature-plan template change (binding caveat, WS1 plan §8)"

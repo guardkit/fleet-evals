@@ -1,0 +1,29 @@
+{
+  "groups": [
+    {
+      "id": "http-status",
+      "note": "template §Domain Language: 'the server returns 200' → 'the request should succeed'",
+      "alternates": ["\\bhttp\\b", "\\bstatus code", "\\b(?:returns?|returned|responds? with|response)\\s+(?:a\\s+)?[1-5]\\d{2}\\b"]
+    },
+    {
+      "id": "sql",
+      "note": "template §Domain Language: 'INSERT INTO processing_queue' → domain outcome",
+      "alternates": ["\\bsql\\b", "\\bselect\\s+\\*", "\\bselect .{0,40}\\bfrom\\b", "\\binsert into\\b", "\\bdelete from\\b", "\\bdatabase (?:rows?|tables?)\\b"]
+    },
+    {
+      "id": "file-path",
+      "note": "steps must not name files or paths (test IDs / implementation files rule)",
+      "alternates": ["(?:^|[\\s\"'`(])/[a-z0-9_.-]+/[a-z0-9_./-]+", "\\b\\w+\\.(?:py|json|ya?ml|sql|csv|ts|js)\\b"]
+    },
+    {
+      "id": "json-body",
+      "note": "template §Domain Language: 'response body contains {\"error\": ...}' → 'the error should indicate ...'",
+      "alternates": ["\\bjson\\b", "\\{\\s*\"", "\\bresponse body\\b", "\\bpayload\\b"]
+    },
+    {
+      "id": "tech-internals",
+      "note": "template §Domain Language anti-pattern table names JWT/Redis/S3-style internals; endpoints and tokens are implementation, not domain",
+      "alternates": ["\\bjwt\\b", "\\bredis\\b", "\\bs3\\b", "\\bpostgres", "\\bkafka\\b", "\\bapi\\b", "\\bendpoints?\\b"]
+    }
+  ]
+}

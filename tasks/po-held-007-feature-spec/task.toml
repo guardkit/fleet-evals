@@ -1,0 +1,21 @@
+[task]
+id = "po-held-007-feature-spec"
+suite = "po-heldout-spec"
+mode = "feature-spec"
+phase = "auto"
+schema = "feature-spec-three-file-contract"
+artifact = "features/<kebab-feature-name>/ (three-file triple: .feature + _assumptions.yaml + _summary.md)"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+contract_source = "specialist-agent/docs/design/contracts/CONTRACT-feature-spec-plan-outputs.md Part A (pinned 2026-07-07, WS1 Session B); guardkit installer/core/commands/feature-spec.md @ ce914f7c (repo main 28587b61, verified 2026-07-07)"
+instruction_source = "instruction.md — authored for this suite 2026-07-07; the serving prompt is FEAT-SPL-007's (Session D builds it against the same pinned contract); answer sheets come from the target-terminal harness, not run_po_eval.py"
+brief_source = "input/brief.md — authored for this suite 2026-07-07 (thin feature ask, 6 deliberate unknowns; domain disjoint from RoundRoute, homestretch, FinProxy, and the golden-set briefs)"
+anchors_source = "test/reference/invention_anchors.json — authored 2026-07-07, one group per deliberate unknown (idea-extension scope §2.1 schema); input-disjointness enforced by tests/test_spec_verifier_integrity.py"
+banlist_source = "test/reference/domain_language_banlist.json — authored 2026-07-07 from the pinned template §Domain Language anti-pattern table; every group's firing direction demonstrated by the implementation-language broken fixture"
+oracle_source = "solution/ authored for this suite 2026-07-07 (minimal contract-exercising spec triple; exercises the licensing path: booking-limit + cancellation-window anchors asserted AND licensed)"

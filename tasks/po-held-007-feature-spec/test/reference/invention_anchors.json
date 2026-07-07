@@ -1,0 +1,34 @@
+{
+  "groups": [
+    {
+      "id": "payment",
+      "note": "the brief says nothing about money — deposits, fees, refunds or billing are inventions unless licensed",
+      "alternates": ["\\bdeposit\\b", "\\bpayments?\\b", "\\bfees?\\b", "\\bcharge[sd]?\\b", "\\brefund", "\\binvoice", "\\bbilling\\b"]
+    },
+    {
+      "id": "notification-channel",
+      "note": "the brief never names a channel — 'the member is informed' is domain language; email/SMS/push is an invented specific",
+      "alternates": ["\\be-?mails?\\b", "\\bsms\\b", "\\btext message", "\\bpush notification"]
+    },
+    {
+      "id": "membership-tier",
+      "note": "the brief has one kind of member — tiers, premium levels or member classes are inventions",
+      "alternates": ["\\btiers?\\b", "\\bpremium\\b", "\\bmembership level", "\\bgold member", "\\bplus member"]
+    },
+    {
+      "id": "cancellation-window",
+      "note": "the brief allows cancelling but states no notice rule — any window/notice-period specific must be licensed",
+      "alternates": ["\\bcancellation window\\b", "\\bnotice period\\b", "\\b(?:\\d+|one|two|three|twelve|twenty-four|forty-eight)\\s*hours?'?\\s*notice\\b", "\\b(?:\\d+|one|two|three|twelve|twenty-four|forty-eight)\\s*hours?\\s*(?:before|in advance)\\b", "\\b(?:\\d+|one|two|three|seven)\\s*days?\\s*(?:before|in advance)\\b"]
+    },
+    {
+      "id": "booking-limit",
+      "note": "the brief states no cap on active bookings — a concrete limit is the classic invented boundary and must be licensed",
+      "alternates": ["\\bbooking limit\\b", "\\b(?:\\d+|one|two|three|four|five)\\s+(?:active|concurrent|open)\\s+bookings?\\b", "\\bmaximum (?:of )?(?:\\d+|one|two|three|four|five)\\s+bookings?\\b", "\\bat most (?:\\d+|one|two|three|four|five)\\s+bookings?\\b"]
+    },
+    {
+      "id": "waitlist",
+      "note": "the brief has no waitlist concept — standby/queue behaviour is an invention",
+      "alternates": ["\\bwait-?\\s?list", "\\bstand-?by list\\b", "\\bqueue[sd]?\\b"]
+    }
+  ]
+}

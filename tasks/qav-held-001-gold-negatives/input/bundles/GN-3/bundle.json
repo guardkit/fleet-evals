@@ -1,0 +1,21 @@
+{
+  "bundle_id": "GN-3",
+  "feature_id": "FEAT-10AC",
+  "task_id": "TASK-QAV-005",
+  "tests": {
+    "passed": true
+  },
+  "quality_gates": {
+    "tests_passed": true
+  },
+  "independent_tests": {
+    "passed": true
+  },
+  "honesty": {
+    "discrepancies": []
+  },
+  "behavioural_oracle": null,
+  "wiring": null,
+  "plan_audit": null,
+  "gathering_status": "complete"
+}

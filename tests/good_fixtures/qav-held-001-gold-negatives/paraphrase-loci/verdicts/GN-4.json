@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "the boot shim passes kwargs the callee never declares; the TypeError is soft-failed and the permissive fakes pin nothing"
+    }
+  ]
+}

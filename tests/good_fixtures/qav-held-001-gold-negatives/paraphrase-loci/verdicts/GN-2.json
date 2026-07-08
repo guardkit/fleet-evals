@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "the changed constructor's production call-site in cli/main.py is never exercised; runtime_parity is null so nothing witnesses it"
+    }
+  ]
+}

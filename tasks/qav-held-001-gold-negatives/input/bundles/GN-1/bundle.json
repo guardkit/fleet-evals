@@ -1,0 +1,21 @@
+{
+  "bundle_id": "GN-1",
+  "feature_id": "FEAT-SMP-002",
+  "task_id": "TASK-SMP2-07",
+  "honesty": {
+    "discrepancies": []
+  },
+  "gathering_status": "complete",
+  "bdd": null,
+  "bdd_authoring_sweep": null,
+  "tests": {
+    "passed": true
+  },
+  "quality_gates": {
+    "tests_passed": true
+  },
+  "independent_tests": {
+    "passed": true,
+    "tests_passed": 109
+  }
+}

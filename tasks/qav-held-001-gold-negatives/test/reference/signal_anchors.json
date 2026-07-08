@@ -1,0 +1,54 @@
+{
+  "note": "One group per must-catch gold negative (group id = bundle id). The verdict's findings (class + locus text) must name the owning in-bundle signal — a blanket 'reject, unsafe' earns nothing. Matched case-insensitively over NFKC+casefold-normalized locus text, compiled by the frozen idea_gates instrument.",
+  "groups": [
+    {
+      "id": "GN-1",
+      "note": "gold-negative 1 — DC-08 BDD hole: acceptance criterion evidenced only by a step with no definition",
+      "alternates": [
+        "bdd_authoring_sweep",
+        "absent signal",
+        "independent junit|no .{0,20}junit",
+        "\\bbdd\\b[^.\\n]{0,20}null",
+        "step definition",
+        "task-smp2-07",
+        "authoring task"
+      ]
+    },
+    {
+      "id": "GN-2",
+      "note": "gold-negative 2 — DC-03 composition seam: signature change green in isolation, production call sites unexercised",
+      "alternates": [
+        "call\\s?-?site",
+        "mcpadapter",
+        "cli/main",
+        "runtime_parity",
+        "_build_nats_runtime",
+        "production construction"
+      ]
+    },
+    {
+      "id": "GN-3",
+      "note": "gold-negative 3 — DC-03 composition seam: guard merged tested, producer never wired (hardcoded None)",
+      "alternates": [
+        "behavioural_oracle",
+        "gather_evidence",
+        "_apply_behavioural_oracle_guard",
+        "producer",
+        "vacuous",
+        "hardcod|=\\s*none|\\bnull\\b"
+      ]
+    },
+    {
+      "id": "GN-4",
+      "note": "gold-negative 4 — DC-03 composition seam, recursive: wiring-fix calls nonexistent kwargs, TypeError soft-failed, permissive pin fakes",
+      "alternates": [
+        "kwargs",
+        "typeerror",
+        "soft[\\s-]?fail",
+        "ddr-007",
+        "permissive|\\*\\*kwargs",
+        "pin test"
+      ]
+    }
+  ]
+}

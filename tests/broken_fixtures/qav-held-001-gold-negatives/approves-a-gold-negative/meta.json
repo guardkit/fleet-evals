@@ -1,0 +1,6 @@
+{
+  "note": "GN-1 approved \u2014 the documented escape passes silently",
+  "expect_fail": [
+    "test_gold_negatives_all_caught"
+  ]
+}

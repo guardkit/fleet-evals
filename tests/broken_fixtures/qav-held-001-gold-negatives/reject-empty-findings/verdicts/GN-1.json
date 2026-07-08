@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-08",
+      "locus": "bdd=null and bdd_authoring_sweep=null on TASK-SMP2-07, a task whose whole job is authoring BDD step definitions \u2014 no independent junit for the authoring task itself. Read against gathering_status=complete, that null is absent signal, not clean signal; independent_tests' 109 passed witness other code, not the new scenarios"
+    }
+  ]
+}

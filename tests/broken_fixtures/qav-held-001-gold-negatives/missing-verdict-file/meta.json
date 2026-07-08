@@ -1,0 +1,6 @@
+{
+  "note": "GN-3 verdict file absent",
+  "expect_fail": [
+    "test_verdict_contract"
+  ]
+}

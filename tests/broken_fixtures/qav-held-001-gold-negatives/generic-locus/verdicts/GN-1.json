@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-08",
+      "locus": "the evidence is not sufficient; this work is not safe to approve"
+    }
+  ]
+}

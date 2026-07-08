@@ -1,0 +1,20 @@
+[task]
+id = "qav-held-001-gold-negatives"
+suite = "qav-heldout"
+mode = "bundle-judgment"
+phase = "must-catch"
+schema = "per-bundle verdict json: verdict + findings[{class,locus}]"
+artifact = "verdicts/{BUNDLE-ID}.json, one per input bundle"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+weakness_source = "the four real escaped-seam completions that shipped past the Coach/QAV gates and were caught only by operator or merge review (final-week composition-seam + BDD-hole classes) — adf domains/qa-verifier/SPEC-qav-gold-negatives.md; qav.gold_negatives GN-1..GN-4 (SMP-002/SMP-003/10AC/DD4F). This is the QAV-FT deploy gate's must-catch set (WS4-S8 SCOPE-qav-finetune-training-serving.md: 100% must-catch on the 4 gold negatives)"
+row_lineage = "bundles GN-1..GN-4 are the REAL rows — WS2 B12's single registration. Bundle evidence == adf GoldNegative.reconstructed_bundle FIELD-FOR-FIELD (integrity test drift-guards against adf qav.gold_negatives when the sibling repo is importable); identity fields (bundle_id/feature_id/task_id) are the eval-harness layer added on top. The coach-heldout suite carries only CLASS-KIN analogues (CE-01..CE-04) and mechanically bans these markers — this suite is where they live"
+bundle_shape = "field names per the documented CoachEvidenceBundle attributes (guardkit coach_evidence.py @ 5ad48fcf; B-min contract kin, WS2-B11 bundle schema @ guardkit 41a0ebe457). GN-3 survives VERBATIM on disk (guardkit coach_evidence_turn_2.json, older schema); the on-disk suite bundle uses the committed reconstruction so the suite runs standalone"
+instruction_source = "instruction.md — authored for this suite 2026-07-08; the serving prompt is the QA-verifier seat's (adf GOAL.md); answer sheets come from that harness, not run_po_eval.py"
+oracle_source = "solution/verdicts/ authored 2026-07-08 — 4 rejects, each carrying the documented owning DC class + a locus naming the in-bundle signal (the catchability demonstration the integrity file pins)"

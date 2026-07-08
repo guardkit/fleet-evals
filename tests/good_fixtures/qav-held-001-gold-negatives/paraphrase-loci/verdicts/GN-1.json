@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-08",
+      "locus": "no bdd_authoring_sweep ran for the step-authoring task; bdd stays null against gathering_status complete \u2014 that is absent signal, not clean signal"
+    }
+  ]
+}

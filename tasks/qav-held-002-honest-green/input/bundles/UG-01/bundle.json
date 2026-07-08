@@ -1,0 +1,58 @@
+{
+  "bundle_id": "UG-01",
+  "feature_id": "FEAT-SMP-011",
+  "task_id": "TASK-SMP11-02",
+  "honesty": {
+    "discrepancies": [],
+    "should_fix_count": 2,
+    "notes": "2 should-fix items demoted to advisory: a naming nit and a docstring gap; neither blocks"
+  },
+  "gathering_status": "complete",
+  "quality_gates": {
+    "tests_passed": true,
+    "coverage": "pass"
+  },
+  "coverage_details": {
+    "line_coverage": 88.7,
+    "branch_coverage": 81.0,
+    "files_below_threshold": []
+  },
+  "plan_audit": {
+    "variances": [
+      "split one task file into two modules"
+    ],
+    "severity": "low"
+  },
+  "advisory_issues": [
+    {
+      "severity": "advisory",
+      "note": "TODO left for a follow-up perf pass (documented, non-blocking)"
+    },
+    {
+      "severity": "advisory",
+      "note": "one helper lacks a docstring"
+    }
+  ],
+  "bdd": {
+    "scenarios_attempted": 6,
+    "scenarios_passed": 6,
+    "scenarios_failed": 0,
+    "scenarios_pending": 0
+  },
+  "tests": {
+    "passed": true,
+    "tests_passed": 121
+  },
+  "independent_tests": {
+    "passed": true,
+    "tests_passed": 121,
+    "signal_absent": false
+  },
+  "wiring": {
+    "unwired_paths": []
+  },
+  "requirements": {
+    "acceptance_criteria_met": 5,
+    "acceptance_criteria_total": 5
+  }
+}

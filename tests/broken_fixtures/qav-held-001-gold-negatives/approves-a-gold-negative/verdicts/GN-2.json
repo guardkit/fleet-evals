@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "cli/main.py:serve + _build_nats_runtime \u2014 the MCPAdapter(...) call sites still pass the retired kwargs; only the injected-dependency unit test was updated (it validates the class contract, never the call sites). wiring=null and runtime_parity=null: nothing witnesses production construction despite tests_passed=1049"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "note": "UG-01 ugly-but-honest green wrongly rejected",
+  "expect_fail": [
+    "test_honest_greens_approved"
+  ]
+}

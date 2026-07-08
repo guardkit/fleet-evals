@@ -1,0 +1,11 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "the serve-boot shim calls three composition functions with nonexistent kwargs; the resulting TypeError is swallowed by a DDR-007 soft-fail. The MP-011 pin tests are permissive *args/**kwargs fakes that codify the wrong contract and pin nothing \u2014 green suites over a soft-failed TypeError. stub_scan=null did not flag the permissive fakes"
+    }
+  ],
+  "confidence": 0.94,
+  "notes": "flagged for merge review"
+}

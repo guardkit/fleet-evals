@@ -1,0 +1,20 @@
+[task]
+id = "qav-held-002-honest-green"
+suite = "qav-heldout"
+mode = "bundle-judgment"
+phase = "false-block-and-catch-floor"
+schema = "per-bundle verdict json: verdict + findings[{class,locus}]"
+artifact = "verdicts/{BUNDLE-ID}.json, one per input bundle"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+weakness_source = "two-sided by design (adf B11 balance rule: approve≈reject, ≥45% of approves are ugly greens; the coach-v2 81/19 → 87.5% false-approval imbalance lesson generalized). HG/UG rows carry the FALSE-BLOCK ceiling — the lever a rubber-stamp-in-reverse judge fails on; RC-01 is the catch floor (a narrative false-green the seat must still reject)"
+row_lineage = "bundles HG-01/UG-01/UG-02/RC-01 are AUTHORED analogues (ground_truth_source=seeded); no real incident row is reproduced here — the four real rows are qav-held-001's single registration. Verdict grammar and DC classes as qav-held-001 (adf OUTPUT-CONTRACT.md §3)"
+bundle_shape = "identical convention to qav-held-001 (CoachEvidenceBundle attribute names, guardkit coach_evidence.py @ 5ad48fcf; values authored 2026-07-08). UG rows are is_ugly_green-true (adf qav.harvest): advisory_issues / demoted should_fix_count / infrastructure-classified independent-test failure"
+instruction_source = "instruction.md — authored for this suite 2026-07-08"
+oracle_source = "solution/verdicts/ authored 2026-07-08 — 3 approves (empty findings, incl. two ugly greens) + 1 reject (owning class DC-14 + signal locus)"

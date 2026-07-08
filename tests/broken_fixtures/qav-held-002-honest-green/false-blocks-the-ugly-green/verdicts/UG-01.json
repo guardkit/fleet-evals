@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-05",
+      "locus": "advisory_issues present and should_fix_count>0 \u2014 treating demoted advisories as blockers"
+    }
+  ]
+}

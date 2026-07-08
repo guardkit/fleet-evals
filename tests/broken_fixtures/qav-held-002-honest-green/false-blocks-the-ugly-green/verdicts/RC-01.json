@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-14",
+      "locus": "tests.tests_run=0 / independent_tests collected 0 items with signal_absent=true \u2014 a confident 'full suite green' claim over zero test signal; absent signal is not success"
+    }
+  ]
+}

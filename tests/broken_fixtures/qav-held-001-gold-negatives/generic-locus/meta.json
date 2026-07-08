@@ -1,0 +1,6 @@
+{
+  "note": "blanket rejections that never name the in-bundle signal",
+  "expect_fail": [
+    "test_gold_negatives_all_caught"
+  ]
+}

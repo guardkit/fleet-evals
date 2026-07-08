@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "behavioural_oracle=null in the bundle for TASK-QAV-005, whose job was to make that evidence field real \u2014 gather_evidence hardcodes behavioural_oracle=None while _apply_behavioural_oracle_guard ships. A guard with no wired producer is permanently vacuous; the all-green suite protects nothing"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "bundle_id": "GN-4",
+  "feature_id": "FEAT-DD4F",
+  "task_id": "FEAT-DD4F (wiring-fix 1ad98c0)",
+  "tests": {
+    "passed": true
+  },
+  "quality_gates": {
+    "tests_passed": true
+  },
+  "independent_tests": {
+    "passed": true
+  },
+  "honesty": {
+    "discrepancies": []
+  },
+  "stub_scan": null,
+  "wiring": null,
+  "runtime_parity": null,
+  "gathering_status": "complete"
+}

@@ -1,0 +1,17 @@
+{
+  "note": "One group per must-reject bundle (group id = bundle id); approve rows own no anchor. Matched case-insensitively over NFKC+casefold-normalized locus text, frozen idea_gates.",
+  "groups": [
+    {
+      "id": "RC-01",
+      "note": "zero test signal behind the confident claim",
+      "alternates": [
+        "tests_run",
+        "collected 0",
+        "\\b0\\s+(?:tests|items)\\b",
+        "signal[_\\s-]?absent",
+        "no test signal",
+        "narrative"
+      ]
+    }
+  ]
+}

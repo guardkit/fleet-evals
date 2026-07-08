@@ -1,0 +1,46 @@
+{
+  "bundle_id": "UG-02",
+  "feature_id": "FEAT-SMP-012",
+  "task_id": "TASK-SMP12-03",
+  "honesty": {
+    "discrepancies": [],
+    "should_fix_count": 0
+  },
+  "gathering_status": "complete",
+  "quality_gates": {
+    "tests_passed": true,
+    "coverage": "pass"
+  },
+  "coverage_details": {
+    "line_coverage": 79.2,
+    "branch_coverage": 74.4,
+    "files_below_threshold": [
+      "migrations/0007_add_index.py (generated migration, no branch logic)"
+    ]
+  },
+  "plan_audit": {
+    "variances": [],
+    "severity": "low"
+  },
+  "tests": {
+    "passed": true,
+    "tests_passed": 58,
+    "requires_infrastructure": true
+  },
+  "independent_tests": {
+    "passed": false,
+    "tests_passed": 55,
+    "tests_run": 58,
+    "signal_absent": false,
+    "stdout_tail": "3 errored: psycopg2.OperationalError could not connect to :5432"
+  },
+  "independent_test_classification": {
+    "failure_class": "infrastructure",
+    "detail": "3 db-backed tests errored on a missing local Postgres; unit signal green"
+  },
+  "profile_name": "infra-optional",
+  "requirements": {
+    "acceptance_criteria_met": 3,
+    "acceptance_criteria_total": 3
+  }
+}

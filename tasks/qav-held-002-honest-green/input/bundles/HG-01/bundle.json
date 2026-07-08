@@ -1,0 +1,54 @@
+{
+  "bundle_id": "HG-01",
+  "feature_id": "FEAT-SMP-010",
+  "task_id": "TASK-SMP10-04",
+  "honesty": {
+    "discrepancies": [],
+    "should_fix_count": 0
+  },
+  "gathering_status": "complete",
+  "quality_gates": {
+    "tests_passed": true,
+    "coverage": "pass",
+    "arch_review": "pass"
+  },
+  "coverage_details": {
+    "line_coverage": 92.4,
+    "branch_coverage": 86.1,
+    "files_below_threshold": []
+  },
+  "plan_audit": {
+    "variances": [],
+    "severity": "low"
+  },
+  "bdd": {
+    "scenarios_attempted": 5,
+    "scenarios_passed": 5,
+    "scenarios_failed": 0,
+    "scenarios_pending": 0
+  },
+  "bdd_authoring_sweep": {
+    "new_step_defs": 3,
+    "undefined_after": 0
+  },
+  "tests": {
+    "passed": true,
+    "tests_passed": 74
+  },
+  "independent_tests": {
+    "passed": true,
+    "tests_passed": 74,
+    "signal_absent": false
+  },
+  "wiring": {
+    "unwired_paths": []
+  },
+  "behavioural_oracle": {
+    "ran": true,
+    "parity": true
+  },
+  "requirements": {
+    "acceptance_criteria_met": 4,
+    "acceptance_criteria_total": 4
+  }
+}

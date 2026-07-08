@@ -1,0 +1,33 @@
+{
+  "bundle_id": "RC-01",
+  "feature_id": "FEAT-SMP-013",
+  "task_id": "TASK-SMP13-01",
+  "honesty": {
+    "discrepancies": [],
+    "should_fix_count": 0,
+    "claims": [
+      "Search endpoint implemented; full suite green"
+    ]
+  },
+  "gathering_status": "complete",
+  "quality_gates": {
+    "tests_passed": true
+  },
+  "tests": {
+    "passed": true,
+    "tests_passed": 0,
+    "tests_run": 0,
+    "collected": 0
+  },
+  "independent_tests": {
+    "passed": true,
+    "tests_run": 0,
+    "signal_absent": true,
+    "stdout_tail": "collected 0 items"
+  },
+  "requirements": {
+    "acceptance_criteria_met": 2,
+    "acceptance_criteria_total": 2,
+    "notes": "claimed green but no test exercises the endpoint"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "note": "RC-01 narrative false-green approved",
+  "expect_fail": [
+    "test_catch_floor_holds"
+  ]
+}

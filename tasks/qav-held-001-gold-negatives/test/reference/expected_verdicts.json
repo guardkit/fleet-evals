@@ -1,0 +1,57 @@
+{
+  "note": "Pre-registered per-bundle expectations. These are the FOUR REAL escaped-seam rows (adf domains/qa-verifier/SPEC-qav-gold-negatives.md; qav.gold_negatives GN-1..GN-4) — WS2 B12's single registration. Every row is a must-catch reject with its owning documented DC class. ground_truth_source is row metadata (the real layer that caught the escape: operator or merge review) — never a model output; a judge cannot know it.",
+  "rows": [
+    {
+      "bundle": "GN-1",
+      "verdict": "reject",
+      "dc_class": "DC-08",
+      "ground_truth_source": "operator_caught",
+      "gold_negative": true,
+      "source": {
+        "repo": "study-tutor",
+        "feature": "FEAT-SMP-002",
+        "task": "TASK-SMP2-07"
+      },
+      "kin_of": "gold-negative 1 — DC-08 BDD hole: acceptance criterion evidenced only by a step with no definition"
+    },
+    {
+      "bundle": "GN-2",
+      "verdict": "reject",
+      "dc_class": "DC-03",
+      "ground_truth_source": "operator_caught",
+      "gold_negative": true,
+      "source": {
+        "repo": "study-tutor",
+        "feature": "FEAT-SMP-003",
+        "task": "TASK-SMP3-06"
+      },
+      "kin_of": "gold-negative 2 — DC-03 composition seam: signature change green in isolation, production call sites unexercised"
+    },
+    {
+      "bundle": "GN-3",
+      "verdict": "reject",
+      "dc_class": "DC-03",
+      "ground_truth_source": "merge_review_caught",
+      "gold_negative": true,
+      "source": {
+        "repo": "guardkit",
+        "feature": "FEAT-10AC",
+        "task": "TASK-QAV-005"
+      },
+      "kin_of": "gold-negative 3 — DC-03 composition seam: guard merged tested, producer never wired (hardcoded None)"
+    },
+    {
+      "bundle": "GN-4",
+      "verdict": "reject",
+      "dc_class": "DC-03",
+      "ground_truth_source": "merge_review_caught",
+      "gold_negative": true,
+      "source": {
+        "repo": "forge",
+        "feature": "FEAT-DD4F",
+        "task": "FEAT-DD4F (wiring-fix 1ad98c0)"
+      },
+      "kin_of": "gold-negative 4 — DC-03 composition seam, recursive: wiring-fix calls nonexistent kwargs, TypeError soft-failed, permissive pin fakes"
+    }
+  ]
+}

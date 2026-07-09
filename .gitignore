@@ -3,8 +3,12 @@ __pycache__/
 .pytest_cache/
 # candidate outputs are graded artifacts, never committed
 tasks/*/output/
-# graded-run artifacts (per-rep response.txt + config.json live with the RESULTS doc, not in git)
-runs/
+# graded-run records: runs/<suite>/<candidate>-<date>/ is a COMMITTED durable home —
+# RESULTS doc + runner + per-rep {config.json, verdicts/, responses/, grade.txt}. These are
+# small (the coach-heldout first record is ~0.5 MB), fully pinned (model/quant/template/SHAs)
+# and auditable, so they are tracked. Convention set by the first record (runs/coach-heldout/,
+# 2026-07-09). Exclude only heavyweight raw dumps if a future suite produces them:
+# runs/**/responses/*.bin  (none today)
 
 # private FinProxy eval assets — symlinked by harness/link_assets.py, NEVER committed
 tasks/po-held-001-extract-phase-a/input/corpus

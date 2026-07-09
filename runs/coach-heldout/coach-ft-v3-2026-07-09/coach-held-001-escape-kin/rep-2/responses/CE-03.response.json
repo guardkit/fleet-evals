@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n{\"verdict\": \"reject\", \"findings\": [{\"class\": \"DC-05\", \"locus\": \"plan_audit.variances[0].detail: collect_conditions passes weather_feed=None with TODO to wire Met feed\"}]}\n```"
+      }
+    }
+  ],
+  "created": 1783631329,
+  "model": "coach-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 58,
+    "prompt_tokens": 817,
+    "total_tokens": 875,
+    "prompt_tokens_details": {
+      "cached_tokens": 812
+    }
+  },
+  "id": "chatcmpl-2QiWsaWaNpJfbyCk1dVt1fzxWgzAG4z3",
+  "timings": {
+    "cache_n": 812,
+    "prompt_n": 5,
+    "prompt_ms": 52.242,
+    "prompt_per_token_ms": 10.4484,
+    "prompt_per_second": 95.70843382718886,
+    "predicted_n": 58,
+    "predicted_ms": 1065.916,
+    "predicted_per_token_ms": 18.377862068965516,
+    "predicted_per_second": 54.413293355198725
+  }
+}

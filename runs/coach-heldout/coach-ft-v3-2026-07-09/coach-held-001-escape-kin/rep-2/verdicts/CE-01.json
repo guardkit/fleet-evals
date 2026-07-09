@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-08",
+      "locus": "bdd.pending[0] (StepDefinitionNotFoundError at features/rsvp.feature:41)"
+    }
+  ]
+}

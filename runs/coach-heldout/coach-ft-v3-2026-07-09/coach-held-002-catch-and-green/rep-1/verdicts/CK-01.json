@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "honesty.claims vs tests.tests_run=0"
+    }
+  ]
+}

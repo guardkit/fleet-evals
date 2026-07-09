@@ -1,0 +1,3 @@
+```json
+{"verdict": "reject", "findings": [{"class": "DC-05", "locus": "independent_tests.stdout_tail"}]}
+```

@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n{\"verdict\": \"reject\", \"findings\": [{\"class\": \"DC-05\", \"locus\": \"plan_audit.variances[0].detail\"}]}\n```"
+      }
+    }
+  ],
+  "created": 1783631343,
+  "model": "coach-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 42,
+    "prompt_tokens": 782,
+    "total_tokens": 824,
+    "prompt_tokens_details": {
+      "cached_tokens": 777
+    }
+  },
+  "id": "chatcmpl-GryIreCZiyPHyyxt3GW5py0qQJdEadew",
+  "timings": {
+    "cache_n": 777,
+    "prompt_n": 5,
+    "prompt_ms": 51.82,
+    "prompt_per_token_ms": 10.364,
+    "prompt_per_second": 96.48784253184098,
+    "predicted_n": 42,
+    "predicted_ms": 754.54,
+    "predicted_per_token_ms": 17.965238095238096,
+    "predicted_per_second": 55.663052985925205
+  }
+}

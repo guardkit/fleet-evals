@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n{\"verdict\": \"reject\", \"findings\": [{\"class\": \"DC-05\", \"locus\": \"plan_audit.variances[0].detail: SessionStore.__init__ retired cache kwarg and added clock, change set touches session_store.py and its direct unit test only\"}]}\n```"
+      }
+    }
+  ],
+  "created": 1783631328,
+  "model": "coach-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 70,
+    "prompt_tokens": 848,
+    "total_tokens": 918,
+    "prompt_tokens_details": {
+      "cached_tokens": 843
+    }
+  },
+  "id": "chatcmpl-4Gv9cnRdJIyrKE2E7PkrFgivpbQFVenX",
+  "timings": {
+    "cache_n": 843,
+    "prompt_n": 5,
+    "prompt_ms": 54.382,
+    "prompt_per_token_ms": 10.8764,
+    "prompt_per_second": 91.94218675296973,
+    "predicted_n": 70,
+    "predicted_ms": 1257.924,
+    "predicted_per_token_ms": 17.970342857142857,
+    "predicted_per_second": 55.64724100979074
+  }
+}

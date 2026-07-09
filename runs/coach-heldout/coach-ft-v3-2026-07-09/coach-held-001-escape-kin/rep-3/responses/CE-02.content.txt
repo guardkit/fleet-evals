@@ -1,0 +1,3 @@
+```json
+{"verdict": "reject", "findings": [{"class": "DC-05", "locus": "plan_audit.variances[0].detail (SessionStore.__init__ signature change unexercised at cli/serve.py and worker/sync.py call sites)"}]}
+```

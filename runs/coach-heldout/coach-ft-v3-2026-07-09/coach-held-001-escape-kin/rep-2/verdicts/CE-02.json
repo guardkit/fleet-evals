@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-05",
+      "locus": "plan_audit.variances[0].detail: SessionStore.__init__ retired cache kwarg and added clock, change set touches session_store.py and its direct unit test only"
+    }
+  ]
+}

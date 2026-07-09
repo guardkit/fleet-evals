@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n{\"verdict\": \"reject\", \"findings\": [{\"class\": \"DC-05\", \"locus\": \"plan_audit.variances[0].detail (SessionStore.__init__ signature change unexercised at cli/serve.py and worker/sync.py call sites)\"}]}\n```"
+      }
+    }
+  ],
+  "created": 1783631333,
+  "model": "coach-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 67,
+    "prompt_tokens": 848,
+    "total_tokens": 915,
+    "prompt_tokens_details": {
+      "cached_tokens": 843
+    }
+  },
+  "id": "chatcmpl-d4XV1VoNXqtvFkWFzH5fhuqe3wCNISY0",
+  "timings": {
+    "cache_n": 843,
+    "prompt_n": 5,
+    "prompt_ms": 51.714,
+    "prompt_per_token_ms": 10.3428,
+    "prompt_per_second": 96.68561704760799,
+    "predicted_n": 67,
+    "predicted_ms": 1203.877,
+    "predicted_per_token_ms": 17.96831343283582,
+    "predicted_per_second": 55.65352606620112
+  }
+}

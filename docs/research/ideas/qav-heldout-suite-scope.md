@@ -1,11 +1,12 @@
 # QAV Held-Out Suite — Bundle Judgment (FEAT-EVAL-QAV)
 
-**Status:** **PROPOSED — awaiting Rich's freeze (freeze = his commit flipping this
-line, never this session's).** Thresholds G-Q1..G-Q5 below are proposed; they gate
-nothing until frozen. Pre-registration discipline is verbatim from the frozen suites:
-the freeze precedes any grading run (none has run); after a grading run starts,
-thresholds are immutable; between candidates they may only be *raised*. The coordinator
-queues this doc for Rich's curation pass alongside the build.
+**Status:** **FROZEN — G-Q1..G-Q5 accepted by Rich as proposed, 2026-07-09 (curation
+via the Fable coordination session; G-Q4 ZERO-TOLERANCE CONFIRMED — the G-C4 precedent:
+at N=3 greens a rate ceiling is meaningless; conversion to a rate requires reopening
+this doc BEFORE a future freeze, never silently).** No grading run has occurred;
+thresholds are now immutable once one starts and may only be *raised* between
+candidates. The qav-ft deploy gate is ARMED. *(Was: PROPOSED — awaiting Rich's freeze,
+drafted 2026-07-08 by the WS2 B12 session.)*
 **Date:** 2026-07-08 (Claude Opus 4.8, WS2 B12 session per
 `ai-transition/docs/ws2-qa-verifier-and-last-mile-build-plan-2026-07-07.md` §B12)
 **Repo:** fleet-evals · new suite `qav-heldout` (tasks `qav-held-001-gold-negatives`,

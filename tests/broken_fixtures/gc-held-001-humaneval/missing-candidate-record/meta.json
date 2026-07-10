@@ -1,0 +1,6 @@
+{
+  "expect_fail": [
+    "test_answer_sheet_contract"
+  ],
+  "why": "per-rep records incomplete (no candidate.json) \u2014 G-G1 validity, INVALID-not-failed"
+}

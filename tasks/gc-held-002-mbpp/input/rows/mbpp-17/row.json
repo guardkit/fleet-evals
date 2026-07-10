@@ -1,0 +1,13 @@
+{
+  "benchmark": "MBPP",
+  "benchmark_task_id": 17,
+  "code": "def square_perimeter(a):\r\n  perimeter=4*a\r\n  return perimeter",
+  "row_id": "mbpp-17",
+  "test_list": [
+    "assert square_perimeter(10)==40",
+    "assert square_perimeter(5)==20",
+    "assert square_perimeter(4)==16"
+  ],
+  "test_setup_code": "",
+  "text": "Write a function to find the perimeter of a square."
+}

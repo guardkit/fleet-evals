@@ -1,0 +1,27 @@
+{
+  "_doc": [
+    "Frozen base-model baselines for the gc-heldout suite, keyed by base+quant family",
+    "('<base_family>/<quant>'). ADDITIVE GROWTH ONLY: a family record is measured on the",
+    "served base handle by docs/runbooks/gc-heldout-baseline-run.md (K=3 reps per task),",
+    "added here, and covered by the scope-doc freeze. baseline_solved = median of the",
+    "3 rep solved counts (PROPOSED value, gc-heldout-suite-scope.md). A candidate whose",
+    "family has no record here is BLOCKED from grading — never cross-family compared",
+    "(the coach-ft-v3 Q4_K_M vs Q4_K_XL lesson)."
+  ],
+  "families": {
+    "integrity-fixture/NONE": {
+      "instrument": true,
+      "note": "synthetic instrument for the verifier-integrity battery ONLY; never a grading target; demonstrates the floor mechanics against a known solved count",
+      "benchmarks": {
+        "gc-held-001-humaneval": {
+          "baseline_solved": 25,
+          "rep_solved": [25, 25, 25]
+        },
+        "gc-held-002-mbpp": {
+          "baseline_solved": 25,
+          "rep_solved": [25, 25, 25]
+        }
+      }
+    }
+  }
+}

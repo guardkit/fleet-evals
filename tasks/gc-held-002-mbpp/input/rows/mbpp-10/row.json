@@ -1,0 +1,13 @@
+{
+  "benchmark": "MBPP",
+  "benchmark_task_id": 10,
+  "code": "import heapq\r\ndef small_nnum(list1,n):\r\n  smallest=heapq.nsmallest(n,list1)\r\n  return smallest",
+  "row_id": "mbpp-10",
+  "test_list": [
+    "assert small_nnum([10, 20, 50, 70, 90, 20, 50, 40, 60, 80, 100],2)==[10,20]",
+    "assert small_nnum([10, 20, 50, 70, 90, 20, 50, 40, 60, 80, 100],5)==[10,20,20,40,50]",
+    "assert small_nnum([10, 20, 50, 70, 90, 20, 50, 40, 60, 80, 100],3)==[10,20,20]"
+  ],
+  "test_setup_code": "",
+  "text": "Write a function to get the n smallest items from a dataset."
+}

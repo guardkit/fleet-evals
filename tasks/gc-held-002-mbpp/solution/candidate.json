@@ -1,0 +1,5 @@
+{
+  "model_id": "oracle-canonical-solutions",
+  "note": "the benchmark's own solutions in candidate-program form; the gate battery must grade every row PASS (house rule \u00a73.5: a task whose Oracle fails is a broken verifier, not a hard task)",
+  "oracle": true
+}

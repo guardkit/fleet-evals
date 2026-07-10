@@ -1,0 +1,150 @@
+{
+  "benchmark": "MBPP",
+  "exclusions": [],
+  "field_subset": [
+    "text",
+    "code",
+    "test_list",
+    "test_setup_code"
+  ],
+  "grader_side_fields_note": "reference assertions are grader-side (gc_rows.reference_assertions); the candidate program never contains them",
+  "pinned_interpreter": "Python 3.12.3",
+  "row_count": 25,
+  "rows": [
+    {
+      "benchmark_task_id": 1,
+      "row_id": "mbpp-1",
+      "sha256": "0a234e0b59467f4bd3b709614f08429051af9392b5520e21c9765d71656207f1"
+    },
+    {
+      "benchmark_task_id": 2,
+      "row_id": "mbpp-2",
+      "sha256": "38fa647783d1642f0815096fba337feb0b67c6143d6f2eab319b11fe8353f459"
+    },
+    {
+      "benchmark_task_id": 3,
+      "row_id": "mbpp-3",
+      "sha256": "66ae1332945ac9a7df9f4bea7e521651f3fcb8cefc46d69cb9ce57a986d19039"
+    },
+    {
+      "benchmark_task_id": 4,
+      "row_id": "mbpp-4",
+      "sha256": "1bef3190e9cdb5d56b7ba3290ad904ee9b85fb6f39bcbd697e38c6ec08b7aea3"
+    },
+    {
+      "benchmark_task_id": 5,
+      "row_id": "mbpp-5",
+      "sha256": "ec0577aa91880cab4a212fe10a5127d9141f8af9af149d6d83bb641add975889"
+    },
+    {
+      "benchmark_task_id": 6,
+      "row_id": "mbpp-6",
+      "sha256": "ecf2e124998dd9116ff055ce6259fa6b87895c020a84010ffc79e9d95f56f412"
+    },
+    {
+      "benchmark_task_id": 7,
+      "row_id": "mbpp-7",
+      "sha256": "699c5170fc03807eec7142772ca0eb0765cf1a11bccb56c33414fff1f8d27b4a"
+    },
+    {
+      "benchmark_task_id": 8,
+      "row_id": "mbpp-8",
+      "sha256": "f69c7637a032b58242293fd402d7ab552f6c0b4ec021131eca3ccc9b30905452"
+    },
+    {
+      "benchmark_task_id": 9,
+      "row_id": "mbpp-9",
+      "sha256": "0ede893ef6692dbd26b44d106e7320112b8e99f7366e0f0ab1cee284e52cc569"
+    },
+    {
+      "benchmark_task_id": 10,
+      "row_id": "mbpp-10",
+      "sha256": "7a3fe2beacdd8180c9bc5d9c1aecbc1c310ab0bad2cd12f4e5768fb0de9e9173"
+    },
+    {
+      "benchmark_task_id": 11,
+      "row_id": "mbpp-11",
+      "sha256": "e5788834f799ee2b9d6176253571486bbde1f15993dc2e433d052bb2f09deb7b"
+    },
+    {
+      "benchmark_task_id": 12,
+      "row_id": "mbpp-12",
+      "sha256": "cc3a4857eb17f04b234a781beb30c721bc8e42730dc7635e2567e23f7a31908d"
+    },
+    {
+      "benchmark_task_id": 13,
+      "row_id": "mbpp-13",
+      "sha256": "dd5acdfda81067c80430d1a85ab67ff82b97350e14ee95d96e8b77c676c87972"
+    },
+    {
+      "benchmark_task_id": 14,
+      "row_id": "mbpp-14",
+      "sha256": "b388498b0153855c2ab36cdb3b3e246d2d7bca71412dd095ab33bec8083e1c00"
+    },
+    {
+      "benchmark_task_id": 15,
+      "row_id": "mbpp-15",
+      "sha256": "4b8f3afe28e769f8c5271d209f9815e7c47b4bf13dc39420786afdb9e26a7ebe"
+    },
+    {
+      "benchmark_task_id": 16,
+      "row_id": "mbpp-16",
+      "sha256": "e37d71d49d59833d4460180278857adcd9066008bdbea88348589b0acd492587"
+    },
+    {
+      "benchmark_task_id": 17,
+      "row_id": "mbpp-17",
+      "sha256": "2be0e1acc230beab525a95d36d65bc152a6a07da27404663cffd704c6c94ef7e"
+    },
+    {
+      "benchmark_task_id": 18,
+      "row_id": "mbpp-18",
+      "sha256": "cb69b0ca9e8d9fe3351755d137a565b27615e4ec3bb2b41a2b8382a84c6e6793"
+    },
+    {
+      "benchmark_task_id": 19,
+      "row_id": "mbpp-19",
+      "sha256": "998622fd8877c38134cd773c36e814c314bd3eae8f972a586f5401f8ee393645"
+    },
+    {
+      "benchmark_task_id": 20,
+      "row_id": "mbpp-20",
+      "sha256": "d4b4bc2824ea0899e535087bb947b11993c9dd58d1dc9e47cc576c380e29b80e"
+    },
+    {
+      "benchmark_task_id": 21,
+      "row_id": "mbpp-21",
+      "sha256": "7615982d524382474f13645c64cd2b251fc866eef09f58651e65b4320a6c2888"
+    },
+    {
+      "benchmark_task_id": 22,
+      "row_id": "mbpp-22",
+      "sha256": "f0158ea1c8f759b549a96fb48b722de733092b30386670e74b239b5493baacc5"
+    },
+    {
+      "benchmark_task_id": 23,
+      "row_id": "mbpp-23",
+      "sha256": "1a327d1dd230dac73a08c6da416cdd5e5aea4cc54816e3cdba1fd8b65241a65d"
+    },
+    {
+      "benchmark_task_id": 24,
+      "row_id": "mbpp-24",
+      "sha256": "e97ce3bb04b7b147ed29f516e4460f45710dc744e1e9bb0984e49c8fad537e01"
+    },
+    {
+      "benchmark_task_id": 25,
+      "row_id": "mbpp-25",
+      "sha256": "b5f4e2e68d730018da5402c09143db188aee8b0ccd4361e102df785f3258931b"
+    }
+  ],
+  "sandbox": "harness/gc_sandbox.py (unshare -rn + python3 -I; ROW_TIMEOUT_S=10)",
+  "selection_rule": "ascending numeric benchmark task-id; a row is excluded (recorded below) iff its canonical solution fails under the pinned interpreter inside the gc sandbox; first 25 survivors pinned. No split carve-outs (ASSUM-001 verbatim).",
+  "source": {
+    "license": "CC BY 4.0",
+    "retrieved": "2026-07-10",
+    "upstream_commit": "f82046ba5aabbbb427dbfd38a254d26bff08b533",
+    "url": "https://raw.githubusercontent.com/google-research/google-research/master/mbpp/mbpp.jsonl"
+  },
+  "suite": "gc-heldout",
+  "task_id": "gc-held-002-mbpp"
+}

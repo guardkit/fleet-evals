@@ -1,0 +1,6 @@
+{
+  "expect_fail": [
+    "test_answer_sheet_contract"
+  ],
+  "why": "a program for a row outside the pinned manifest \u2014 row identity must be unambiguous"
+}

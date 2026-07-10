@@ -1,0 +1,13 @@
+{
+  "benchmark": "MBPP",
+  "benchmark_task_id": 25,
+  "code": "def find_Product(arr,n): \r\n    arr.sort() \r\n    prod = 1\r\n    for i in range(0,n,1): \r\n        if (arr[i - 1] != arr[i]): \r\n            prod = prod * arr[i] \r\n    return prod; ",
+  "row_id": "mbpp-25",
+  "test_list": [
+    "assert find_Product([1,1,2,3],4) == 6",
+    "assert find_Product([1,2,3,1,1],5) == 6",
+    "assert find_Product([1,1,4,5,6],5) == 120"
+  ],
+  "test_setup_code": "",
+  "text": "Write a python function to find the product of non-repeated elements in a given array."
+}

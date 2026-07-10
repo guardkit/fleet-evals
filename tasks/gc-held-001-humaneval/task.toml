@@ -1,0 +1,20 @@
+[task]
+id = "gc-held-001-humaneval"
+suite = "gc-heldout"
+mode = "code-generation"
+phase = "general-capability regression (paired-grade rule, S10 §2.5)"
+schema = "per-row candidate program, graded by executed reference assertions in the gc sandbox"
+artifact = "programs/{ROW-ID}.py (+ rows/{ROW-ID}.json diagnostics), one per input row"
+reps = 3
+timeout_seconds = 300
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+weakness_source = "D-OBS-3 (FILED 2026-07-09): catastrophic forgetting on fine-tunes is measured, not assumed away — the coach-ft-v3 grade shipped with 'general side UNMEASURED'; from this suite's availability every fine-tune grade pairs its role suite with this slice"
+row_lineage = "25 pinned HumanEval rows, committed in-repo with per-row SHA-256 pins (input/manifest.json); selection rule = ascending numeric benchmark task-id, canonical solution must pass under the pinned interpreter in the gc sandbox (ASSUM-001, PROPOSED until the scope-doc freeze); public MIT data — the private-asset symlink farm is deliberately not used (ASSUM-007)"
+instruction_source = "instruction.md — authored for this suite 2026-07-10; prompt convention ASSUM-009 (signature+docstring completion, one fenced block); answer sheets come from harness/run_gc_heldout.py (direct-serving stand-in, ASSUM-013), never harness/run_po_eval.py"
+oracle_source = "solution/programs/ = the pinned rows' canonical solutions in candidate-program form (written at subset-pin time by harness/provision_gc_subset.py); the gate battery must grade every Oracle row PASS (§3.5)"
+verdict_basis = "RELATIVE regression vs the frozen same-family base baseline (harness/gc_baselines.json, matching-family rule STRUCTURAL) — never absolute capability; contamination residual pre-registered (public pretraining data)"

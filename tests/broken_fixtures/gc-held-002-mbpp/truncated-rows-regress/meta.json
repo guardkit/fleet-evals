@@ -1,0 +1,6 @@
+{
+  "expect_fail": [
+    "test_regression_floor"
+  ],
+  "why": "3 truncated generations (finish_reason=length) are row FAILs with the truncation diagnostic \u2014 enough of them breach the floor"
+}

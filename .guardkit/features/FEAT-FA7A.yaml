@@ -1,0 +1,109 @@
+id: FEAT-FA7A
+name: General-Capability Regression Suite (FEAT-EVAL-GC / OBS-7)
+description: 'Additive gc-heldout suite: pinned 25+25 HumanEval/MBPP subset graded
+  by execution in a stdlib refuse-loud sandbox; G-G1..G-G4 PROPOSED; baseline-relative
+  verdict with structural matching-family rule; frozen suites untouched'
+created: '2026-07-10T15:02:32.067367'
+status: completed
+complexity: 7
+estimated_tasks: 7
+tasks:
+- id: TASK-GCH-001
+  name: Sandbox module + sandbox integrity tests
+  file_path: tasks/completed/2026-07/gc-heldout-suite/TASK-GCH-001-sandbox-module-and-integrity-tests.md
+  complexity: 6
+  dependencies: []
+  status: completed
+  description: ''
+  implementation_mode: task-work
+  estimated_minutes: 113
+- id: TASK-GCH-002
+  name: Pinned 25+25 benchmark subset provisioning
+  file_path: tasks/completed/2026-07/gc-heldout-suite/TASK-GCH-002-pinned-benchmark-subset-provisioning.md
+  complexity: 6
+  dependencies:
+  - TASK-GCH-001
+  status: completed
+  description: ''
+  implementation_mode: task-work
+  estimated_minutes: 113
+- id: TASK-GCH-003
+  name: gc_gates grading and verdict module
+  file_path: tasks/completed/2026-07/gc-heldout-suite/TASK-GCH-003-gc-gates-module.md
+  complexity: 7
+  dependencies:
+  - TASK-GCH-001
+  - TASK-GCH-002
+  status: completed
+  description: ''
+  implementation_mode: task-work
+  estimated_minutes: 170
+- id: TASK-GCH-004
+  name: Task folders gc-held-001/002 + Oracle
+  file_path: tasks/completed/2026-07/gc-heldout-suite/TASK-GCH-004-task-folders.md
+  complexity: 5
+  dependencies:
+  - TASK-GCH-002
+  - TASK-GCH-003
+  status: completed
+  description: ''
+  implementation_mode: task-work
+  estimated_minutes: 75
+- id: TASK-GCH-005
+  name: Runner harness/run_gc_heldout.py
+  file_path: tasks/completed/2026-07/gc-heldout-suite/TASK-GCH-005-runner.md
+  complexity: 5
+  dependencies:
+  - TASK-GCH-003
+  status: completed
+  description: ''
+  implementation_mode: task-work
+  estimated_minutes: 75
+- id: TASK-GCH-006
+  name: Verifier-integrity battery + fixtures
+  file_path: tasks/completed/2026-07/gc-heldout-suite/TASK-GCH-006-verifier-integrity-battery.md
+  complexity: 6
+  dependencies:
+  - TASK-GCH-004
+  - TASK-GCH-005
+  status: completed
+  description: ''
+  implementation_mode: task-work
+  estimated_minutes: 113
+- id: TASK-GCH-007
+  name: RESULTS template + scope doc + baseline runbook
+  file_path: tasks/completed/2026-07/gc-heldout-suite/TASK-GCH-007-results-scope-doc-runbook.md
+  complexity: 4
+  dependencies:
+  - TASK-GCH-001
+  - TASK-GCH-002
+  - TASK-GCH-003
+  - TASK-GCH-004
+  - TASK-GCH-005
+  - TASK-GCH-006
+  status: completed
+  description: ''
+  implementation_mode: task-work
+  estimated_minutes: 50
+orchestration:
+  parallel_groups:
+  - - TASK-GCH-001
+  - - TASK-GCH-002
+  - - TASK-GCH-003
+  - - TASK-GCH-004
+    - TASK-GCH-005
+  - - TASK-GCH-006
+  - - TASK-GCH-007
+  estimated_duration_minutes: 709
+  recommended_parallel: 2
+
+# Green-per-commit rule made mechanical: full verifier-integrity battery after every wave
+# (FEAT-0760 precedent). Baseline 229 passed in ~105 s; gc adds sandboxed oracle/fixture
+# executions — 600 s bound gives headroom.
+smoke_gates:
+  after_wave: "all"
+  command: |
+    set -e
+    python3 -m pytest tests/ -q
+  expected_exit: 0
+  timeout: 600

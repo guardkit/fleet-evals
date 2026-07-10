@@ -1,0 +1,6 @@
+{
+  "expect_fail": [
+    "test_regression_floor"
+  ],
+  "why": "no frozen baseline for the candidate's base+quant family \u2014 grading BLOCKED, never a cross-family comparison"
+}

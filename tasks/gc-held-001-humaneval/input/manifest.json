@@ -1,0 +1,150 @@
+{
+  "benchmark": "HumanEval",
+  "exclusions": [],
+  "field_subset": [
+    "prompt",
+    "canonical_solution",
+    "test",
+    "entry_point"
+  ],
+  "grader_side_fields_note": "reference assertions are grader-side (gc_rows.reference_assertions); the candidate program never contains them",
+  "pinned_interpreter": "Python 3.12.3",
+  "row_count": 25,
+  "rows": [
+    {
+      "benchmark_task_id": "HumanEval/0",
+      "row_id": "HumanEval-0",
+      "sha256": "70c3d10fe546f7ab2f35414d49fa02eefb75491c22151c452947ad6782b32d8e"
+    },
+    {
+      "benchmark_task_id": "HumanEval/1",
+      "row_id": "HumanEval-1",
+      "sha256": "18beb52781e8b0e582f54a59b1e319b28f4d59d7b2a42f08feabd611b6b8eb5a"
+    },
+    {
+      "benchmark_task_id": "HumanEval/2",
+      "row_id": "HumanEval-2",
+      "sha256": "e16c92a48d07ad701e01936f0d9bd9adf93361f4fc32e8633073b0c775628f82"
+    },
+    {
+      "benchmark_task_id": "HumanEval/3",
+      "row_id": "HumanEval-3",
+      "sha256": "967048c069c4ff79ebea18caefaa87467e38da0a97808f8af8e48be6aeea5178"
+    },
+    {
+      "benchmark_task_id": "HumanEval/4",
+      "row_id": "HumanEval-4",
+      "sha256": "4b40b72fa4b3da8e38d3de10d99db8f3b856a59059feca296d0c979df8434106"
+    },
+    {
+      "benchmark_task_id": "HumanEval/5",
+      "row_id": "HumanEval-5",
+      "sha256": "537454fd4db648f184f4d5f401dd0b8e8e1b2a8bade67522ef4ac66d3637b12c"
+    },
+    {
+      "benchmark_task_id": "HumanEval/6",
+      "row_id": "HumanEval-6",
+      "sha256": "bde6bed26c7428b8daa4ec6dc1b02dfcdc597cb3545e08f2c3976454ea2ee5ea"
+    },
+    {
+      "benchmark_task_id": "HumanEval/7",
+      "row_id": "HumanEval-7",
+      "sha256": "2c53515fc2ed6a96e1de056391227fb458614ff8baf932ffb6f8f4e9e0f8a716"
+    },
+    {
+      "benchmark_task_id": "HumanEval/8",
+      "row_id": "HumanEval-8",
+      "sha256": "997a7a72a4ee076f730ae6010becbab61681ee24339d442881ecb9b1fa8cda77"
+    },
+    {
+      "benchmark_task_id": "HumanEval/9",
+      "row_id": "HumanEval-9",
+      "sha256": "21f50f2c34048c47d6fe98f190e7442a38cf16504deb9da24dd8e1fe233b5810"
+    },
+    {
+      "benchmark_task_id": "HumanEval/10",
+      "row_id": "HumanEval-10",
+      "sha256": "2bf970bfdf5ef4f2ec36fc04d8d53ce246519810ea46c72e063e0ff67dfd43e9"
+    },
+    {
+      "benchmark_task_id": "HumanEval/11",
+      "row_id": "HumanEval-11",
+      "sha256": "ea1a2584c89960a4941196f8838611150fbb0dafc6b7f6f9794ca59b35a5fb58"
+    },
+    {
+      "benchmark_task_id": "HumanEval/12",
+      "row_id": "HumanEval-12",
+      "sha256": "f0e9033f647aebfa0dd952726f006152feb9c182111d896c1e6382ba85cf14bc"
+    },
+    {
+      "benchmark_task_id": "HumanEval/13",
+      "row_id": "HumanEval-13",
+      "sha256": "cf2871876ef4a4ffce7eb5eeee161b74e8722706cb6481a553e733f883e6e6e6"
+    },
+    {
+      "benchmark_task_id": "HumanEval/14",
+      "row_id": "HumanEval-14",
+      "sha256": "3a955092d4b198e7a049b07ec8d78be27354eff3c03ebf594c11c356a1085a18"
+    },
+    {
+      "benchmark_task_id": "HumanEval/15",
+      "row_id": "HumanEval-15",
+      "sha256": "14effd0c2e841d246fc110c1f9b67f29b1c56c1783cefacba024465c554e0e84"
+    },
+    {
+      "benchmark_task_id": "HumanEval/16",
+      "row_id": "HumanEval-16",
+      "sha256": "ddffeefab877a825bcbc28b8de35fc2a9a466d36e7929adeab384b0fda73a0fb"
+    },
+    {
+      "benchmark_task_id": "HumanEval/17",
+      "row_id": "HumanEval-17",
+      "sha256": "ca5502ee1064716a6fa3c7b68b103cef3380cc7428ec45f3a0fcfa0051003b18"
+    },
+    {
+      "benchmark_task_id": "HumanEval/18",
+      "row_id": "HumanEval-18",
+      "sha256": "b680c7edb3c84006511b11db3ddbb43389f20caecd262bed038e77f686e8df2a"
+    },
+    {
+      "benchmark_task_id": "HumanEval/19",
+      "row_id": "HumanEval-19",
+      "sha256": "4049e67ab1b18ef863652971b452a71c779bf3de014d71f7ab67095432056c2d"
+    },
+    {
+      "benchmark_task_id": "HumanEval/20",
+      "row_id": "HumanEval-20",
+      "sha256": "87103610fdea96e9f725f5f2654baa20e64dbb3e57b53a3d9b92622ae80af77c"
+    },
+    {
+      "benchmark_task_id": "HumanEval/21",
+      "row_id": "HumanEval-21",
+      "sha256": "32f7371ae0909b3c179a38a295e7c806cd2a2d7283a0a2ad63136417a07fcd04"
+    },
+    {
+      "benchmark_task_id": "HumanEval/22",
+      "row_id": "HumanEval-22",
+      "sha256": "ce3f76c4e7fd90d2124e3352f2655b30a655325ec50b3773493357939d9253ac"
+    },
+    {
+      "benchmark_task_id": "HumanEval/23",
+      "row_id": "HumanEval-23",
+      "sha256": "e4fdab0d71b53a7224bc73997f9bbd4f00a9006bc45cc147d9b53e2015d45ff5"
+    },
+    {
+      "benchmark_task_id": "HumanEval/24",
+      "row_id": "HumanEval-24",
+      "sha256": "2f74ee32ceb1635f8ee727bba766e9ead2e09951ea7e823da3b59156570561c8"
+    }
+  ],
+  "sandbox": "harness/gc_sandbox.py (unshare -rn + python3 -I; ROW_TIMEOUT_S=10)",
+  "selection_rule": "ascending numeric benchmark task-id; a row is excluded (recorded below) iff its canonical solution fails under the pinned interpreter inside the gc sandbox; first 25 survivors pinned. No split carve-outs (ASSUM-001 verbatim).",
+  "source": {
+    "license": "MIT",
+    "retrieved": "2026-07-10",
+    "upstream_commit": "463c980b59e818ace59f6f9803cd92c749ceae61",
+    "url": "https://raw.githubusercontent.com/openai/human-eval/master/data/HumanEval.jsonl.gz"
+  },
+  "suite": "gc-heldout",
+  "task_id": "gc-held-001-humaneval"
+}

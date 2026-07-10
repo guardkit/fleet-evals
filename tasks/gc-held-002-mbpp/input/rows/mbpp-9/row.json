@@ -1,0 +1,13 @@
+{
+  "benchmark": "MBPP",
+  "benchmark_task_id": 9,
+  "code": "def find_Rotations(str): \r\n    tmp = str + str\r\n    n = len(str) \r\n    for i in range(1,n + 1): \r\n        substring = tmp[i: i+n] \r\n        if (str == substring): \r\n            return i \r\n    return n ",
+  "row_id": "mbpp-9",
+  "test_list": [
+    "assert find_Rotations(\"aaaa\") == 1",
+    "assert find_Rotations(\"ab\") == 2",
+    "assert find_Rotations(\"abc\") == 3"
+  ],
+  "test_setup_code": "",
+  "text": "Write a python function to find the minimum number of rotations required to get the same string."
+}

@@ -1,0 +1,31 @@
+# Gold F1 seed — emitted by /feature-spec (DFEM-008) on the po-held-007 gold trace.
+# Frozen G2b evidence, generated 2026-07-11 (DF-019 window) by the REAL emitter.
+format_version: '2.0'
+feature_slug: kiln-firing-slot-booking
+auth_surface_bearing: false
+auth_surface_basis: no auth signals found
+preconditions:
+- suite_green_vs_ledger
+- analyze_clean
+- build_artifact
+criteria:
+- id: kiln-firing-slot-booking-AC-001
+  text: Booking a free slot succeeds
+  class: machine
+  evidence_kind: screenshot
+  runbook_ref: null
+- id: kiln-firing-slot-booking-AC-002
+  text: Viewing availability shows only free slots
+  class: machine
+  evidence_kind: screenshot
+  runbook_ref: null
+- id: kiln-firing-slot-booking-AC-003
+  text: Cancelling a booking frees the slot
+  class: machine
+  evidence_kind: screenshot
+  runbook_ref: null
+- id: kiln-firing-slot-booking-AC-004
+  text: The manager blocks out a slot for servicing
+  class: machine
+  evidence_kind: screenshot
+  runbook_ref: null

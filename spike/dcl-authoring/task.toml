@@ -1,0 +1,20 @@
+[task]
+id = "dcl-authoring"
+suite = "spike"
+mode = "document-authoring"
+phase = "DCL SPIKE (V-02 re-aimed) — S4 fleet-evals leg"
+schema = "a DCL 1.0 capability document, graded by the vendored DCL compiler (bin/dcl-check.mjs)"
+artifact = "response.dcl"
+reps = 1
+timeout_seconds = 900
+spike_class = true   # NOT a frozen suite; no thresholds implied; freeze = Rich's call post-spike
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "DCL_EVAL_OUTPUT_DIR"
+
+[provenance]
+instruction_source = "instruction.md — authored 2026-07-13 for the DCL SPIKE from the SAME planning inputs S2 used (the api_test /stats Request, self-contained), per docs/ways-of-working/dcl-spike-handoff.md S4"
+checker_source = "bin/dcl-check.mjs + dcl.wasm — vendored from github.com/russelleast/Capability-Language @ 4f9fbe56 (Apache-2.0); shas in bin/SHA256SUMS, provenance in bin/PROVENANCE.md, S1 receipt in bin/PROOF.md"
+oracle_source = "solution/response.dcl = the S2 hand-authored capability.dcl (api_test/qa/dcl-spike/capability.dcl), copied in as the reference; the gate must grade it ok:true / zero errors"
+false_green_guard = "test/fixtures/broken.dcl — a known-bad file (undefined actor/shape + a when-branch naming an undeclared outcome) that the grader MUST keep failing (ok:false, exit 1)"

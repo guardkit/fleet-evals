@@ -1,0 +1,21 @@
+{
+  "model": "qwen36-workhorse",
+  "endpoint": "http://127.0.0.1:9000/v1/chat/completions",
+  "alias_resolved_from": "/opt/llama-swap/config/config.yaml (port :9000, model qwen36-workhorse)",
+  "wall_time_seconds": 99.89,
+  "usage": {
+    "completion_tokens": 5586,
+    "prompt_tokens": 1251,
+    "total_tokens": 6837,
+    "prompt_tokens_details": {
+      "cached_tokens": 1247
+    }
+  },
+  "temperature": 0.3,
+  "max_tokens": 16384,
+  "finish_reason": "stop",
+  "reasoning_content_chars": 21137,
+  "content_chars": 1327,
+  "captured_at": "2026-07-13T14:32:49+0100",
+  "note": "response.dcl = assistant message content verbatim; full API response in raw-response.json"
+}

@@ -1,0 +1,13 @@
+{
+  "config": {
+    "seat_call": "guardkit _default_seat_call (thinking-ON, max_tokens=4096)",
+    "diff_render_cap_chars": 60000,
+    "note": "the built pipeline defaults, unchanged"
+  },
+  "enabled": true,
+  "error": "seat output could not be parsed into F14 findings: seat output contains no JSON object",
+  "seat_note": "seat slot free",
+  "emitted": false,
+  "record": null,
+  "n_findings": 0
+}

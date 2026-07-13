@@ -1,0 +1,55 @@
+{
+  "G1-boot-wiring": {
+    "files": [
+      "src/forge/cli/serve.py",
+      "src/forge/cli/_serve_planning.py",
+      "src/forge/planning/planner.py",
+      "src/forge/planning/states.py"
+    ],
+    "chars": 32739,
+    "seconds": 37.8,
+    "raw_len": 7982,
+    "parse_error": null,
+    "n_findings": 5
+  },
+  "G2-checkpoint-escalation": {
+    "files": [
+      "src/forge/planning/checkpoint.py",
+      "src/forge/planning/escalation.py",
+      "src/forge/planning/gate_adapters.py"
+    ],
+    "chars": 57844,
+    "seconds": 46.6,
+    "raw_len": 8695,
+    "parse_error": null,
+    "n_findings": 5
+  },
+  "G3-store-migration": {
+    "files": [
+      "src/forge/planning/run_store.py",
+      "src/forge/lifecycle/migrations.py",
+      "src/forge/lifecycle/schema_v3.sql"
+    ],
+    "chars": 21712,
+    "seconds": 32.2,
+    "raw_len": 7052,
+    "parse_error": null,
+    "n_findings": 4
+  },
+  "G4-wire-handoff-config": {
+    "files": [
+      "src/forge/adapters/nats/planning_consumer.py",
+      "src/forge/planning/handoff.py",
+      "src/forge/config/models.py",
+      "src/forge/config/__init__.py",
+      "src/forge/planning/__init__.py",
+      "src/forge/planning/audit.py",
+      "src/forge/planning/frontier.py"
+    ],
+    "chars": 42402,
+    "seconds": 38.2,
+    "raw_len": 7359,
+    "parse_error": null,
+    "n_findings": 5
+  }
+}

@@ -1,0 +1,401 @@
+[
+  {
+    "id": "F1",
+    "dimension": "correctness",
+    "severity": "high",
+    "status": "refuted",
+    "summary": "[src/forge/planning/states.py:68] PLANNING_TRANSITIONS allows invalid transitions from QUEUED to CANCELLED and RUNNING to TIMED_OUT without intermediate states, violating the intended state machine logic. \u2014 failing scenario: Input: A planning run is in QUEUED state. System receives a cancellation request. Output: State transitions directly to CANCELLED. Expected: Should likely transition through an intermediate state or be explicitly forbidden if immediate cancellation is not supported. Similarly, RUNNING -> TIMED_OUT is allowed, but typically timeouts are handled by the scheduler, not the state machine itself, or should require a specific 'timeout' event. More critically, the transition table is the source of truth for CAS checks; if this table is wrong, the store will allow invalid states.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "not_refuted",
+        "note": "The comment says 'Terminal states accept no transitions', but QUEUED and RUNNING are not terminal. The transitions listed are technically 'allowed' by the dict, but may not be 'correct' business logic. However, without the store implementation, we can't verify if these are truly invalid. But looking at the recovery logic in serve.py, it seems to assume specific states."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "The state machine is a definition of valid moves. If the business logic allows immediate cancellation of a queued job, this is correct. The severity is high only if this leads to data corruption. Without the store implementation, we can't confirm corruption. However, the transition RUNNING -> TIMED_OUT is suspicious. Usually, a timeout is an event that triggers a transition, not a direct state jump from RUNNING. But this is a design choice. The real issue is likely in the recovery logic."
+      }
+    ],
+    "_group": "G1-boot-wiring"
+  },
+  {
+    "id": "F2",
+    "dimension": "correctness",
+    "severity": "critical",
+    "status": "refuted",
+    "summary": "[src/forge/cli/_serve_planning.py:285] sweep_interrupted_planning_runs fails to recover RUNNING runs correctly by transitioning them to FAILED without checking if they are actually stuck or just slow. \u2014 failing scenario: Input: A planning run is in RUNNING state because it is actively processing a long-running task. Output: On boot, sweep_interrupted_planning_runs transitions it to FAILED. Expected: The run should be left alone or checked for liveness. This causes false failures for active runs.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "refuted",
+        "note": "The comment says 'crash mid-dispatch'. If the daemon restarted, the process is gone, so the run is indeed stuck. The assumption is that RUNNING implies stuck on restart. This is a common pattern in at-least-once delivery systems. However, if the run was persisted as RUNNING before the crash, it is stuck. So this might be correct."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "If the daemon restarts, any RUNNING run is by definition interrupted because the process that was running it is gone. Therefore, failing it is the correct recovery action to prevent zombie runs. The finding is refuted."
+      }
+    ],
+    "_group": "G1-boot-wiring"
+  },
+  {
+    "id": "F3",
+    "dimension": "correctness",
+    "severity": "high",
+    "status": "refuted",
+    "summary": "[src/forge/cli/_serve_planning.py:230] rearm_paused_planning_runs logs success but does not actually re-arm the run, leaving it in PAUSED state indefinitely. \u2014 failing scenario: Input: A planning run is in PAUSED state. Output: rearm_paused_planning_runs logs 'Rearmed paused planning run' and returns the correlation_id. Expected: The run should be transitioned to RUNNING or dispatched. Since it's not, the run remains stuck in PAUSED state after boot.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "refuted",
+        "note": "The code has a TODO comment: 'TODO: Re-arm approval round-trip'. The function is a stub. It logs intent but doesn't perform the action. This is a correctness issue because the function claims to re-arm but doesn't. The caller (serve.py) expects it to work. This is a high severity defect because it breaks the recovery mechanism."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "The function is explicitly marked as a stub with TODOs. However, it is called in production boot path. If it doesn't work, the feature is broken. The severity is high because it's a production-facing function that is non-functional."
+      }
+    ],
+    "_group": "G1-boot-wiring"
+  },
+  {
+    "id": "F4",
+    "dimension": "correctness",
+    "severity": "medium",
+    "status": "refuted",
+    "summary": "[src/forge/cli/serve.py:440] compose_planning_consumer_and_dispatch is called with incorrect arguments (db_path, nats_client) instead of the expected arguments (sqlite_pool, client, planning_config). \u2014 failing scenario: Input: serve.py calls compose_planning_consumer_and_dispatch with client, planning_config, sqlite_pool, config. Output: TypeError because the function signature expects db_path, nats_client, config. Expected: The call should match the function signature.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "refuted",
+        "note": "Looking at the diff in serve.py line 440, the call is: compose_planning_consumer_and_dispatch(client=client, planning_config=forge_config.planning, sqlite_pool=sqlite_pool, config=forge_config). Looking at _serve_planning.py line 150, the signature is: compose_planning_consumer_and_dispatch(*, db_path: Path, nats_client: NatsClient, config: ForgeConfig, clock: ...). The arguments do not match. This is a compile-time error or runtime TypeError."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "The arguments are completely different. serve.py passes 'client' and 'sqlite_pool', while the function expects 'nats_client' and 'db_path'. This is a clear defect."
+      }
+    ],
+    "_group": "G1-boot-wiring"
+  },
+  {
+    "id": "F5",
+    "dimension": "test_coverage",
+    "severity": "low",
+    "status": "refuted",
+    "summary": "[src/forge/planning/planner.py:250] plan_next_step has no tests for the checkpoint_cleared logic path. \u2014 failing scenario: Input: History with PRODUCT_OWNER approved and checkpoint_cleared. Output: ExecuteHandoff. Expected: This path is not tested. A test should verify that if checkpoint_cleared is present, ExecuteHandoff is returned.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "refuted",
+        "note": "The diff shows the planner code. There are no tests in the diff. The docstring has an example for empty history and PRODUCT_OWNER approved, but not for checkpoint_cleared. This is a test coverage gap."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "The docstring example only covers two cases. The checkpoint_cleared case is a distinct branch. It should be tested."
+      }
+    ],
+    "_group": "G1-boot-wiring"
+  },
+  {
+    "id": "F1",
+    "dimension": "correctness",
+    "severity": "high",
+    "status": "refuted",
+    "summary": "[src/forge/planning/checkpoint.py:335] Rejection handler ignores stage_label, potentially cancelling the wrong stage or failing to transition correctly. \u2014 failing scenario: Input: A run has multiple stages (e.g., 'product_docs' and 'integration_test'). The 'product_docs' stage is PAUSED. The approver rejects 'product_docs'. The code calls `transition_to_cancelled` with `build_id` but no `stage_label`. If the state machine's `transition_to_cancelled` implementation relies on `stage_label` to identify the specific stage instance (or if the run is already in a state where only specific stages can be cancelled), this may fail or cancel the entire run incorrectly. Even if it cancels the whole run, the `stage_label` is lost in the rejection event context if the SM requires it for validation.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "not_refuted",
+        "note": "The `transition_to_cancelled` signature in `gate_adapters.py` (line 658) does not accept a `stage_label` argument. It only takes `build_id` and `reason`. Therefore, the caller cannot pass the stage label, and the implementation must handle it internally or ignore it. If the SM implementation assumes a single active stage per run, this is a design flaw in the SM, not the caller. However, if the SM supports multiple concurrent stages, cancelling by `build_id` alone is ambiguous and likely incorrect."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "If the `PlanningStateMachine` is designed to manage the entire run's lifecycle (not per-stage), then cancelling by `build_id` is correct. The `stage_label` is only used for event recording. In this case, the finding is invalid because the SM contract doesn't require stage-specific cancellation."
+      }
+    ],
+    "_group": "G2-checkpoint-escalation"
+  },
+  {
+    "id": "F2",
+    "dimension": "correctness",
+    "severity": "medium",
+    "status": "refuted",
+    "summary": "[src/forge/planning/escalation.py:135] Race condition in escalation phase evaluation: `store._get_run` reads state, but `store.transition` performs CAS. If another thread updates the state between read and CAS, the CAS will fail, but the code logs a warning and returns `CONTINUE_WAITING`, potentially leaving the run in a stale PAUSED state indefinitely. \u2014 failing scenario: Input: Two escalation daemons run concurrently for the same `correlation_id`. Both read `state=PAUSED`. Both decide to escalate. Both call `store.transition` with `expected_from_state=PAUSED`. One succeeds, the other fails. The failing daemon returns `CONTINUE_WAITING`. The run is now ESCALATED (or RUNNING), but the daemon thinks it's still waiting. If the successful daemon fails to publish, the run might be stuck. More critically, if the failing daemon's logic assumes it 'won' the race (which it doesn't, but the code path is complex), it might lead to inconsistent state. The primary issue is that `CONTINUE_WAITING` is returned, which might trigger a re-evaluation loop that keeps hitting the same race.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "not_refuted",
+        "note": "The code explicitly checks `if refused is not None` and returns `CONTINUE_WAITING`. This is a safe fallback. The race is handled by the CAS. The finding is weak because the code correctly handles the refusal. The 'race' is expected and handled."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "The finding claims a defect. The code handles the CAS failure gracefully. There is no defect here, just standard concurrency handling."
+      }
+    ],
+    "_group": "G2-checkpoint-escalation"
+  },
+  {
+    "id": "F3",
+    "dimension": "simplification",
+    "severity": "medium",
+    "status": "refuted",
+    "summary": "[src/forge/planning/checkpoint.py:385] Direct access to private `_store` and `_connection` attributes bypasses encapsulation and makes the code fragile to internal refactoring. \u2014 failing scenario: Input: The `SqlitePlanningRunStore` class is refactored to use a connection pool or change the attribute name from `_connection` to `conn`. Output: `AttributeError` at runtime in `_read_expected_approver` and `_record_rejection_event`.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "not_refuted",
+        "note": "The code comments explicitly state 'This is a bit of a hack but necessary for the implementation'. This indicates a known design limitation. However, it is still a simplification opportunity to expose a method like `get_expected_approver` on the repository or store."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "The `GateRepository` protocol does not expose these methods. The code is working around a missing API. This is a design flaw in the repository, not a simplification issue in this file. The file is doing the best it can with the available API."
+      }
+    ],
+    "_group": "G2-checkpoint-escalation"
+  },
+  {
+    "id": "F4",
+    "dimension": "efficiency",
+    "severity": "low",
+    "status": "refuted",
+    "summary": "[src/forge/planning/gate_adapters.py:285] Inefficient retrieval of `feature_id` and `decision` in `list_paused_builds`: Queries all events for a correlation_id to extract a single field, instead of using a more targeted query or caching. \u2014 failing scenario: Input: A run has 1000 events. Output: The code iterates through all 1000 events to find the `gate_pause` event. This is O(N) where N is the number of events. A more efficient approach would be to query the `planning_runs` table directly if `feature_id` is stored there, or use a more specific query.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "not_refuted",
+        "note": "The `feature_id` is not stored in the `planning_runs` table (only `correlation_id`, `expected_approver`, `pending_approval_request_id`, `paused_at`, `escalated_at` are selected). Therefore, querying events is necessary. However, querying all events is inefficient. A better approach would be to store `feature_id` in the `planning_runs` table or query for the most recent `gate_pause` event specifically."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "The code uses `ORDER BY recorded_at ASC` and breaks on the first match. This is efficient enough for small numbers of events. The finding is low severity."
+      }
+    ],
+    "_group": "G2-checkpoint-escalation"
+  },
+  {
+    "id": "F5",
+    "dimension": "test_coverage",
+    "severity": "medium",
+    "status": "refuted",
+    "summary": "[src/forge/planning/checkpoint.py:280] No test coverage for the case where `coach_evidence` is `None` but `clock` is provided. \u2014 failing scenario: Input: `checkpoint_product_docs` called with `coach_evidence=None` and a custom `clock`. Output: The code should work, but if there's a bug in the `clock` initialization or usage, it won't be caught. Specifically, the `if clock is None` block (line 280) is not exercised if `clock` is provided. If the `clock` function has side effects or errors, they won't be tested.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "not_refuted",
+        "note": "The `clock` parameter is optional. If not provided, a default clock is created. If provided, it's used. The code path for `clock is not None` is simple and unlikely to have bugs. The finding is low severity."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "The finding is about test coverage. The code is correct. The lack of test coverage is a gap, but not a defect in the code itself."
+      }
+    ],
+    "_group": "G2-checkpoint-escalation"
+  },
+  {
+    "id": "F1",
+    "dimension": "correctness",
+    "severity": "high",
+    "status": "refuted",
+    "summary": "[src/forge/planning/run_store.py:145] Duplicate detection in record_queued is not atomic, allowing race conditions to insert duplicate rows. \u2014 failing scenario: Two concurrent threads call record_queued with the same correlation_id. Both read None from _get_run. Both proceed to INSERT. One succeeds, the other fails with IntegrityError (or succeeds if the constraint is missing/ignored). If the second succeeds, a duplicate row exists. If the second fails, the first thread's rollback logic might incorrectly handle the state or the caller receives an error instead of the sentinel.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "refuted",
+        "note": "The code catches sqlite3.IntegrityError and attempts to re-fetch the existing row. However, this only handles the case where the INSERT fails. If the database does not have a UNIQUE constraint on correlation_id (which is not visible in the diff but is implied by the 'duplicate' logic), the race results in two rows. Even with a constraint, the rollback in the except block is dangerous: if the IntegrityError was due to a different constraint (e.g., NOT NULL), the rollback might hide the real error or leave the connection in a bad state. More critically, the initial check-then-insert is a classic TOCTOU race. The 'correct' fix is to rely solely on the UNIQUE constraint and handle the error, or use a serializable transaction. The current code tries to do both, which is fragile."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "not_refuted",
+        "note": "The code assumes that if an IntegrityError occurs, the row must exist. This is generally true for UNIQUE constraints. However, the logic inside the except block calls _get_run again. If the row was inserted by the other thread, this works. But if the IntegrityError was spurious or due to a different constraint, the code might return a DuplicateRun for a row that wasn't actually the intended duplicate, or worse, mask the real error. The primary issue is that the 'check-then-insert' pattern is inherently racy without a transaction isolation level that prevents phantom reads, which SQLite's default isolation level does not guarantee for this pattern across connections."
+      }
+    ],
+    "_group": "G3-store-migration"
+  },
+  {
+    "id": "F2",
+    "dimension": "correctness",
+    "severity": "medium",
+    "status": "refuted",
+    "summary": "[src/forge/planning/run_store.py:235] Transition method does not handle the case where the run is deleted between read and CAS update. \u2014 failing scenario: Thread A reads the run (state=QUEUED). Thread B deletes the run (or transitions it to a state that is then deleted by a cleanup process). Thread A attempts the CAS update. The update affects 0 rows. The code calls _get_run again, which returns None. It then returns TransitionRefused with current_state='<not found>'. This is technically correct behavior for 'refused', but the error message '<not found>' is confusing and might break downstream logic expecting a valid state string.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "refuted",
+        "note": "The code explicitly handles the case where refreshed_row is None by setting refreshed_state to '<not found>'. This is a deliberate design choice to distinguish between 'state changed' and 'row deleted'. While the string is ugly, it is not a correctness defect in terms of logic flow. The caller can check for this specific string."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "not_refuted",
+        "note": "The string '<not found>' is a magic string that is not part of the PlanningState enum. If any downstream code tries to parse this as a PlanningState, it will crash. This is a potential correctness issue if the contract of TransitionRefused.current_state is assumed to be a valid state value."
+      }
+    ],
+    "_group": "G3-store-migration"
+  },
+  {
+    "id": "F3",
+    "dimension": "efficiency",
+    "severity": "low",
+    "status": "refuted",
+    "summary": "[src/forge/planning/run_store.py:115] record_queued performs two SELECTs and one INSERT in a non-atomic sequence, leading to potential wasted I/O. \u2014 failing scenario: In a high-concurrency scenario, many threads will hit the 'existing' check, find the row, and return. This is efficient. However, for new rows, the code does a SELECT, then an INSERT. If the INSERT fails due to a race (another thread inserted), it does a ROLLBACK and another SELECT. This is 3 DB operations for a failed race. A single INSERT with a UNIQUE constraint and error handling would be 1 operation.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "refuted",
+        "note": "The SELECT is necessary to return the DuplicateRun sentinel with the existing state. Without it, the caller wouldn't know if the duplicate was terminal or not. The efficiency cost is acceptable for the semantic requirement."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "not_refuted",
+        "note": "The efficiency cost is low because the SELECT is a simple primary key lookup. The main cost is the potential for 3 operations in a race, but races are rare. The overall impact is negligible."
+      }
+    ],
+    "_group": "G3-store-migration"
+  },
+  {
+    "id": "F4",
+    "dimension": "test_coverage",
+    "severity": "medium",
+    "status": "refuted",
+    "summary": "[src/forge/planning/run_store.py:1] No tests provided for the new SqlitePlanningRunStore class. \u2014 failing scenario: The diff adds a new file with 468 lines of logic. There are no tests in the diff. This means the CAS logic, the duplicate detection, the state transitions, and the event recording are untested. A failure in any of these areas will go undetected until integration.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "refuted",
+        "note": "The prompt asks to review the supplied diff. If tests are not in the diff, they are not part of the change. However, the finding is about 'test_coverage' of the change. The change introduces new code without tests. This is a valid finding."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "not_refuted",
+        "note": "The finding is valid. The code is complex (CAS, state machine, idempotency) and requires thorough testing. The absence of tests is a significant risk."
+      }
+    ],
+    "_group": "G3-store-migration"
+  },
+  {
+    "id": "F1",
+    "dimension": "correctness",
+    "severity": "high",
+    "status": "refuted",
+    "summary": "[src/forge/adapters/nats/planning_consumer.py:165] Correlation ID validation allows path traversal via encoded characters or Unicode normalization, violating RT-03 trust boundary. \u2014 failing scenario: Input: correlation_id='..%2F' (URL-encoded slash) or 'a\u0308' (Unicode combining tilde) -> Wrong output: Accepted by _is_valid_correlation_id because re.fullmatch checks raw bytes/characters against [A-Za-z0-9._-], but downstream systems may interpret '..' or encoded slashes as path traversal, or Unicode normalization may collapse 'a\u0308' into '\u00e4' which might be allowed or disallowed inconsistently. Specifically, '..' is explicitly blocked, but '..%2F' passes the regex and the '..' check, potentially allowing traversal if the downstream system decodes the ID.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "not_refuted",
+        "note": "The regex explicitly forbids '/' and the '..' check forbids consecutive dots. However, URL encoding like '..%2F' passes both. If the downstream system URL-decodes the correlation_id before using it as a path component, this is a traversal vulnerability. The trust boundary validation must happen after decoding or must explicitly forbid encoded traversal sequences."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "not_refuted",
+        "note": "Unicode normalization can create issues. For example, 'a\u0308' (a + combining tilde) might normalize to '\u00e4'. If the downstream system uses a different normalization form, it might treat 'a\u0308' and '\u00e4' differently, potentially bypassing checks or causing inconsistencies. The validation should normalize Unicode before checking."
+      }
+    ],
+    "_group": "G4-wire-handoff-config"
+  },
+  {
+    "id": "F2",
+    "dimension": "correctness",
+    "severity": "medium",
+    "status": "refuted",
+    "summary": "[src/forge/planning/handoff.py:185] PlannedHandoffHandler.handle() does not handle the case where run_data is missing 'correlation_id', leading to a KeyError. \u2014 failing scenario: Input: run_data={'state': 'QUEUED'} (missing 'correlation_id') -> Wrong output: KeyError raised, unhandled, potentially crashing the handler or leaving the message in a bad state.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "not_refuted",
+        "note": "The code accesses run_data['correlation_id'] directly without checking for its existence. If the caller passes a dict without this key, a KeyError will be raised. The docstring says run_data includes correlation_id, but robust code should validate or use .get() with a default or raise a more specific error."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "The function is internal and called by the planner which ensures run_data is populated. However, the diff shows no validation, and if the planner is modified or misused, this is a risk. The severity is medium because it's an internal contract violation, but it's a real defect if the contract is broken."
+      }
+    ],
+    "_group": "G4-wire-handoff-config"
+  },
+  {
+    "id": "F3",
+    "dimension": "efficiency",
+    "severity": "low",
+    "status": "refuted",
+    "summary": "[src/forge/planning/handoff.py:230] String concatenation in a loop for product_docs can be inefficient for large numbers of docs. \u2014 failing scenario: Input: run_data with product_docs containing 1000+ key-value pairs -> Wrong output: Performance degradation due to repeated string concatenation in a loop, creating many intermediate string objects.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "not_refuted",
+        "note": "Python strings are immutable, so concatenating in a loop is O(n^2) in the number of characters. For large product_docs, this is inefficient. Using ''.join() with a list comprehension would be more efficient."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "In practice, product_docs is likely small (a few items). The performance impact is negligible. However, it's still a code smell and could be improved."
+      }
+    ],
+    "_group": "G4-wire-handoff-config"
+  },
+  {
+    "id": "F4",
+    "dimension": "test_coverage",
+    "severity": "medium",
+    "status": "refuted",
+    "summary": "[src/forge/adapters/nats/planning_consumer.py:140] No test for the case where deps.store.record_queued raises an exception other than DuplicateRun. \u2014 failing scenario: Input: Message with valid payload and correlation_id, but store.record_queued raises a DatabaseError -> Wrong output: The exception is caught, logged, and the message is acked. However, if the test suite doesn't cover this, it's an untested error path. The code handles it, but the test coverage is missing.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "not_refuted",
+        "note": "The diff shows a try-except block around store.record_queued that catches Exception. This path is not tested in the provided diff (no tests are included). A test should mock store.record_queued to raise an exception and verify the ack and log."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "The code is defensive and handles the exception. The lack of test coverage is a gap, but the code itself is correct. The severity is medium because it's a test coverage issue, not a code defect."
+      }
+    ],
+    "_group": "G4-wire-handoff-config"
+  },
+  {
+    "id": "F5",
+    "dimension": "simplification",
+    "severity": "low",
+    "status": "refuted",
+    "summary": "[src/forge/planning/handoff.py:150] TerminalRegistry.get() returns None if handler not found, but callers may not handle None, leading to AttributeError. \u2014 failing scenario: Input: get_terminal_registry().get('non-existent-terminal') -> Wrong output: Returns None. If the caller tries to call .handle() on the result, an AttributeError is raised.",
+    "executed_reproduction": null,
+    "refuters": [
+      {
+        "who": "refuter-1",
+        "verdict": "not_refuted",
+        "note": "The get() method returns None if the handler is not found. If the caller does not check for None before calling .handle(), it will raise an AttributeError. This is a potential defect if the registry is used with unknown terminal names."
+      },
+      {
+        "who": "refuter-2",
+        "verdict": "refuted",
+        "note": "The registry is internal and only used with known terminal names from the config. The config validation should ensure the terminal name is valid. However, the code does not validate the terminal name in the config, so this is a risk."
+      }
+    ],
+    "_group": "G4-wire-handoff-config"
+  }
+]

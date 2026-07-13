@@ -1,0 +1,129 @@
+{
+  "range": "d13d88f..1fcb72c",
+  "subject_kind": "merge",
+  "total_files_in_range": 219,
+  "src_files_reviewed": 17,
+  "src_files": [
+    {
+      "path": "src/forge/adapters/nats/planning_consumer.py",
+      "change_kind": "added",
+      "additions": 275,
+      "deletions": 0,
+      "rendered_chars": 10094
+    },
+    {
+      "path": "src/forge/cli/_serve_planning.py",
+      "change_kind": "added",
+      "additions": 457,
+      "deletions": 0,
+      "rendered_chars": 17463
+    },
+    {
+      "path": "src/forge/cli/serve.py",
+      "change_kind": "modified",
+      "additions": 35,
+      "deletions": 0,
+      "rendered_chars": 2246
+    },
+    {
+      "path": "src/forge/config/__init__.py",
+      "change_kind": "modified",
+      "additions": 4,
+      "deletions": 0,
+      "rendered_chars": 458
+    },
+    {
+      "path": "src/forge/config/models.py",
+      "change_kind": "modified",
+      "additions": 145,
+      "deletions": 0,
+      "rendered_chars": 5662
+    },
+    {
+      "path": "src/forge/lifecycle/migrations.py",
+      "change_kind": "modified",
+      "additions": 8,
+      "deletions": 7,
+      "rendered_chars": 1172
+    },
+    {
+      "path": "src/forge/lifecycle/schema_v3.sql",
+      "change_kind": "added",
+      "additions": 106,
+      "deletions": 0,
+      "rendered_chars": 4274
+    },
+    {
+      "path": "src/forge/planning/__init__.py",
+      "change_kind": "added",
+      "additions": 43,
+      "deletions": 0,
+      "rendered_chars": 1174
+    },
+    {
+      "path": "src/forge/planning/audit.py",
+      "change_kind": "added",
+      "additions": 93,
+      "deletions": 0,
+      "rendered_chars": 2959
+    },
+    {
+      "path": "src/forge/planning/checkpoint.py",
+      "change_kind": "added",
+      "additions": 499,
+      "deletions": 0,
+      "rendered_chars": 16955
+    },
+    {
+      "path": "src/forge/planning/escalation.py",
+      "change_kind": "added",
+      "additions": 416,
+      "deletions": 0,
+      "rendered_chars": 14892
+    },
+    {
+      "path": "src/forge/planning/frontier.py",
+      "change_kind": "added",
+      "additions": 202,
+      "deletions": 0,
+      "rendered_chars": 7380
+    },
+    {
+      "path": "src/forge/planning/gate_adapters.py",
+      "change_kind": "added",
+      "additions": 728,
+      "deletions": 0,
+      "rendered_chars": 25995
+    },
+    {
+      "path": "src/forge/planning/handoff.py",
+      "change_kind": "added",
+      "additions": 433,
+      "deletions": 0,
+      "rendered_chars": 14669
+    },
+    {
+      "path": "src/forge/planning/planner.py",
+      "change_kind": "added",
+      "additions": 313,
+      "deletions": 0,
+      "rendered_chars": 10499
+    },
+    {
+      "path": "src/forge/planning/run_store.py",
+      "change_kind": "added",
+      "additions": 468,
+      "deletions": 0,
+      "rendered_chars": 16264
+    },
+    {
+      "path": "src/forge/planning/states.py",
+      "change_kind": "added",
+      "additions": 76,
+      "deletions": 0,
+      "rendered_chars": 2528
+    }
+  ],
+  "src_total_rendered_chars": 154700,
+  "scoping_note": "The gold review reviewed the whole 219-file merge with 5 agents that had repo-wide + cross-repo grep. This single-seat run is scoped to the src/forge/ reviewable code surface (17 files) \u2014 all 16 serious gold findings live in these files. Task .md and test files are excluded as non-code noise the seat could not use (recorded, not hidden). One gold LOW (L09) lives in a test file and is therefore out of the seat's surface."
+}

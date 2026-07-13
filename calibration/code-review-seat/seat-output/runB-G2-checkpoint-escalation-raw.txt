@@ -1,0 +1,115 @@
+{
+  "summary": "The change introduces three new modules: `checkpoint.py` (product docs approval flow), `escalation.py` (defer/escalation policy), and `gate_adapters.py` (SQLite-backed gate repository and state machine). The code implements a pause-before-wire pattern, approval response dispatch, and escalation logic. Key issues include direct access to private internal state (`_store`, `_connection`) bypassing encapsulation, a logic error in the rejection handler that ignores the stage label, and a potential race condition in the escalation phase evaluation.",
+  "findings": [
+    {
+      "id": "F1",
+      "dimension": "correctness",
+      "severity": "high",
+      "file": "src/forge/planning/checkpoint.py",
+      "line": 335,
+      "summary": "Rejection handler ignores stage_label, potentially cancelling the wrong stage or failing to transition correctly.",
+      "failing_scenario": "Input: A run has multiple stages (e.g., 'product_docs' and 'integration_test'). The 'product_docs' stage is PAUSED. The approver rejects 'product_docs'. The code calls `transition_to_cancelled` with `build_id` but no `stage_label`. If the state machine's `transition_to_cancelled` implementation relies on `stage_label` to identify the specific stage instance (or if the run is already in a state where only specific stages can be cancelled), this may fail or cancel the entire run incorrectly. Even if it cancels the whole run, the `stage_label` is lost in the rejection event context if the SM requires it for validation.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "not_refuted",
+          "note": "The `transition_to_cancelled` signature in `gate_adapters.py` (line 658) does not accept a `stage_label` argument. It only takes `build_id` and `reason`. Therefore, the caller cannot pass the stage label, and the implementation must handle it internally or ignore it. If the SM implementation assumes a single active stage per run, this is a design flaw in the SM, not the caller. However, if the SM supports multiple concurrent stages, cancelling by `build_id` alone is ambiguous and likely incorrect."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "If the `PlanningStateMachine` is designed to manage the entire run's lifecycle (not per-stage), then cancelling by `build_id` is correct. The `stage_label` is only used for event recording. In this case, the finding is invalid because the SM contract doesn't require stage-specific cancellation."
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "dimension": "correctness",
+      "severity": "medium",
+      "file": "src/forge/planning/escalation.py",
+      "line": 135,
+      "summary": "Race condition in escalation phase evaluation: `store._get_run` reads state, but `store.transition` performs CAS. If another thread updates the state between read and CAS, the CAS will fail, but the code logs a warning and returns `CONTINUE_WAITING`, potentially leaving the run in a stale PAUSED state indefinitely.",
+      "failing_scenario": "Input: Two escalation daemons run concurrently for the same `correlation_id`. Both read `state=PAUSED`. Both decide to escalate. Both call `store.transition` with `expected_from_state=PAUSED`. One succeeds, the other fails. The failing daemon returns `CONTINUE_WAITING`. The run is now ESCALATED (or RUNNING), but the daemon thinks it's still waiting. If the successful daemon fails to publish, the run might be stuck. More critically, if the failing daemon's logic assumes it 'won' the race (which it doesn't, but the code path is complex), it might lead to inconsistent state. The primary issue is that `CONTINUE_WAITING` is returned, which might trigger a re-evaluation loop that keeps hitting the same race.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "not_refuted",
+          "note": "The code explicitly checks `if refused is not None` and returns `CONTINUE_WAITING`. This is a safe fallback. The race is handled by the CAS. The finding is weak because the code correctly handles the refusal. The 'race' is expected and handled."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "The finding claims a defect. The code handles the CAS failure gracefully. There is no defect here, just standard concurrency handling."
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "dimension": "simplification",
+      "severity": "medium",
+      "file": "src/forge/planning/checkpoint.py",
+      "line": 385,
+      "summary": "Direct access to private `_store` and `_connection` attributes bypasses encapsulation and makes the code fragile to internal refactoring.",
+      "failing_scenario": "Input: The `SqlitePlanningRunStore` class is refactored to use a connection pool or change the attribute name from `_connection` to `conn`. Output: `AttributeError` at runtime in `_read_expected_approver` and `_record_rejection_event`.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "not_refuted",
+          "note": "The code comments explicitly state 'This is a bit of a hack but necessary for the implementation'. This indicates a known design limitation. However, it is still a simplification opportunity to expose a method like `get_expected_approver` on the repository or store."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "The `GateRepository` protocol does not expose these methods. The code is working around a missing API. This is a design flaw in the repository, not a simplification issue in this file. The file is doing the best it can with the available API."
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "dimension": "efficiency",
+      "severity": "low",
+      "file": "src/forge/planning/gate_adapters.py",
+      "line": 285,
+      "summary": "Inefficient retrieval of `feature_id` and `decision` in `list_paused_builds`: Queries all events for a correlation_id to extract a single field, instead of using a more targeted query or caching.",
+      "failing_scenario": "Input: A run has 1000 events. Output: The code iterates through all 1000 events to find the `gate_pause` event. This is O(N) where N is the number of events. A more efficient approach would be to query the `planning_runs` table directly if `feature_id` is stored there, or use a more specific query.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "not_refuted",
+          "note": "The `feature_id` is not stored in the `planning_runs` table (only `correlation_id`, `expected_approver`, `pending_approval_request_id`, `paused_at`, `escalated_at` are selected). Therefore, querying events is necessary. However, querying all events is inefficient. A better approach would be to store `feature_id` in the `planning_runs` table or query for the most recent `gate_pause` event specifically."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "The code uses `ORDER BY recorded_at ASC` and breaks on the first match. This is efficient enough for small numbers of events. The finding is low severity."
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "dimension": "test_coverage",
+      "severity": "medium",
+      "file": "src/forge/planning/checkpoint.py",
+      "line": 280,
+      "summary": "No test coverage for the case where `coach_evidence` is `None` but `clock` is provided.",
+      "failing_scenario": "Input: `checkpoint_product_docs` called with `coach_evidence=None` and a custom `clock`. Output: The code should work, but if there's a bug in the `clock` initialization or usage, it won't be caught. Specifically, the `if clock is None` block (line 280) is not exercised if `clock` is provided. If the `clock` function has side effects or errors, they won't be tested.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "not_refuted",
+          "note": "The `clock` parameter is optional. If not provided, a default clock is created. If provided, it's used. The code path for `clock is not None` is simple and unlikely to have bugs. The finding is low severity."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "The finding is about test coverage. The code is correct. The lack of test coverage is a gap, but not a defect in the code itself."
+        }
+      ]
+    }
+  ]
+}

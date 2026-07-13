@@ -1,0 +1,115 @@
+{
+  "summary": "The change introduces a new Mode P planning subsystem, including a NATS consumer for intake, a terminal handoff handler, configuration models, and a frontier second-opinion provider. It adds new files for the consumer, handoff, audit, and frontier logic, and modifies config models to support planning settings.",
+  "findings": [
+    {
+      "id": "F1",
+      "dimension": "correctness",
+      "severity": "high",
+      "file": "src/forge/adapters/nats/planning_consumer.py",
+      "line": 165,
+      "summary": "Correlation ID validation allows path traversal via encoded characters or Unicode normalization, violating RT-03 trust boundary.",
+      "failing_scenario": "Input: correlation_id='..%2F' (URL-encoded slash) or 'a\u0308' (Unicode combining tilde) -> Wrong output: Accepted by _is_valid_correlation_id because re.fullmatch checks raw bytes/characters against [A-Za-z0-9._-], but downstream systems may interpret '..' or encoded slashes as path traversal, or Unicode normalization may collapse 'a\u0308' into 'ä' which might be allowed or disallowed inconsistently. Specifically, '..' is explicitly blocked, but '..%2F' passes the regex and the '..' check, potentially allowing traversal if the downstream system decodes the ID.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "not_refuted",
+          "note": "The regex explicitly forbids '/' and the '..' check forbids consecutive dots. However, URL encoding like '..%2F' passes both. If the downstream system URL-decodes the correlation_id before using it as a path component, this is a traversal vulnerability. The trust boundary validation must happen after decoding or must explicitly forbid encoded traversal sequences."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "not_refuted",
+          "note": "Unicode normalization can create issues. For example, 'a\u0308' (a + combining tilde) might normalize to 'ä'. If the downstream system uses a different normalization form, it might treat 'a\u0308' and 'ä' differently, potentially bypassing checks or causing inconsistencies. The validation should normalize Unicode before checking."
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "dimension": "correctness",
+      "severity": "medium",
+      "file": "src/forge/planning/handoff.py",
+      "line": 185,
+      "summary": "PlannedHandoffHandler.handle() does not handle the case where run_data is missing 'correlation_id', leading to a KeyError.",
+      "failing_scenario": "Input: run_data={'state': 'QUEUED'} (missing 'correlation_id') -> Wrong output: KeyError raised, unhandled, potentially crashing the handler or leaving the message in a bad state.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "not_refuted",
+          "note": "The code accesses run_data['correlation_id'] directly without checking for its existence. If the caller passes a dict without this key, a KeyError will be raised. The docstring says run_data includes correlation_id, but robust code should validate or use .get() with a default or raise a more specific error."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "The function is internal and called by the planner which ensures run_data is populated. However, the diff shows no validation, and if the planner is modified or misused, this is a risk. The severity is medium because it's an internal contract violation, but it's a real defect if the contract is broken."
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "dimension": "efficiency",
+      "severity": "low",
+      "file": "src/forge/planning/handoff.py",
+      "line": 230,
+      "summary": "String concatenation in a loop for product_docs can be inefficient for large numbers of docs.",
+      "failing_scenario": "Input: run_data with product_docs containing 1000+ key-value pairs -> Wrong output: Performance degradation due to repeated string concatenation in a loop, creating many intermediate string objects.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "not_refuted",
+          "note": "Python strings are immutable, so concatenating in a loop is O(n^2) in the number of characters. For large product_docs, this is inefficient. Using ''.join() with a list comprehension would be more efficient."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "In practice, product_docs is likely small (a few items). The performance impact is negligible. However, it's still a code smell and could be improved."
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "dimension": "test_coverage",
+      "severity": "medium",
+      "file": "src/forge/adapters/nats/planning_consumer.py",
+      "line": 140,
+      "summary": "No test for the case where deps.store.record_queued raises an exception other than DuplicateRun.",
+      "failing_scenario": "Input: Message with valid payload and correlation_id, but store.record_queued raises a DatabaseError -> Wrong output: The exception is caught, logged, and the message is acked. However, if the test suite doesn't cover this, it's an untested error path. The code handles it, but the test coverage is missing.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "not_refuted",
+          "note": "The diff shows a try-except block around store.record_queued that catches Exception. This path is not tested in the provided diff (no tests are included). A test should mock store.record_queued to raise an exception and verify the ack and log."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "The code is defensive and handles the exception. The lack of test coverage is a gap, but the code itself is correct. The severity is medium because it's a test coverage issue, not a code defect."
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "dimension": "simplification",
+      "severity": "low",
+      "file": "src/forge/planning/handoff.py",
+      "line": 150,
+      "summary": "TerminalRegistry.get() returns None if handler not found, but callers may not handle None, leading to AttributeError.",
+      "failing_scenario": "Input: get_terminal_registry().get('non-existent-terminal') -> Wrong output: Returns None. If the caller tries to call .handle() on the result, an AttributeError is raised.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "not_refuted",
+          "note": "The get() method returns None if the handler is not found. If the caller does not check for None before calling .handle(), it will raise an AttributeError. This is a potential defect if the registry is used with unknown terminal names."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "The registry is internal and only used with known terminal names from the config. The config validation should ensure the terminal name is valid. However, the code does not validate the terminal name in the config, so this is a risk."
+        }
+      ]
+    }
+  ]
+}

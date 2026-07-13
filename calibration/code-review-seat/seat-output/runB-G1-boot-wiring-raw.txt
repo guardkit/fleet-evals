@@ -1,0 +1,115 @@
+{
+  "summary": "The change introduces a new planning subsystem for 'Mode P' (planning runs) including a state machine, a pure-function planner, and boot-time recovery logic. It wires these into the serve daemon with a soft-fail posture. The implementation contains several correctness issues regarding state machine enforcement, recovery logic gaps, and API mismatches.",
+  "findings": [
+    {
+      "id": "F1",
+      "dimension": "correctness",
+      "severity": "high",
+      "file": "src/forge/planning/states.py",
+      "line": 68,
+      "summary": "PLANNING_TRANSITIONS allows invalid transitions from QUEUED to CANCELLED and RUNNING to TIMED_OUT without intermediate states, violating the intended state machine logic.",
+      "failing_scenario": "Input: A planning run is in QUEUED state. System receives a cancellation request. Output: State transitions directly to CANCELLED. Expected: Should likely transition through an intermediate state or be explicitly forbidden if immediate cancellation is not supported. Similarly, RUNNING -> TIMED_OUT is allowed, but typically timeouts are handled by the scheduler, not the state machine itself, or should require a specific 'timeout' event. More critically, the transition table is the source of truth for CAS checks; if this table is wrong, the store will allow invalid states.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "not_refuted",
+          "note": "The comment says 'Terminal states accept no transitions', but QUEUED and RUNNING are not terminal. The transitions listed are technically 'allowed' by the dict, but may not be 'correct' business logic. However, without the store implementation, we can't verify if these are truly invalid. But looking at the recovery logic in serve.py, it seems to assume specific states."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "The state machine is a definition of valid moves. If the business logic allows immediate cancellation of a queued job, this is correct. The severity is high only if this leads to data corruption. Without the store implementation, we can't confirm corruption. However, the transition RUNNING -> TIMED_OUT is suspicious. Usually, a timeout is an event that triggers a transition, not a direct state jump from RUNNING. But this is a design choice. The real issue is likely in the recovery logic."
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "dimension": "correctness",
+      "severity": "critical",
+      "file": "src/forge/cli/_serve_planning.py",
+      "line": 285,
+      "summary": "sweep_interrupted_planning_runs fails to recover RUNNING runs correctly by transitioning them to FAILED without checking if they are actually stuck or just slow.",
+      "failing_scenario": "Input: A planning run is in RUNNING state because it is actively processing a long-running task. Output: On boot, sweep_interrupted_planning_runs transitions it to FAILED. Expected: The run should be left alone or checked for liveness. This causes false failures for active runs.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "refuted",
+          "note": "The comment says 'crash mid-dispatch'. If the daemon restarted, the process is gone, so the run is indeed stuck. The assumption is that RUNNING implies stuck on restart. This is a common pattern in at-least-once delivery systems. However, if the run was persisted as RUNNING before the crash, it is stuck. So this might be correct."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "If the daemon restarts, any RUNNING run is by definition interrupted because the process that was running it is gone. Therefore, failing it is the correct recovery action to prevent zombie runs. The finding is refuted."
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "dimension": "correctness",
+      "severity": "high",
+      "file": "src/forge/cli/_serve_planning.py",
+      "line": 230,
+      "summary": "rearm_paused_planning_runs logs success but does not actually re-arm the run, leaving it in PAUSED state indefinitely.",
+      "failing_scenario": "Input: A planning run is in PAUSED state. Output: rearm_paused_planning_runs logs 'Rearmed paused planning run' and returns the correlation_id. Expected: The run should be transitioned to RUNNING or dispatched. Since it's not, the run remains stuck in PAUSED state after boot.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "refuted",
+          "note": "The code has a TODO comment: 'TODO: Re-arm approval round-trip'. The function is a stub. It logs intent but doesn't perform the action. This is a correctness issue because the function claims to re-arm but doesn't. The caller (serve.py) expects it to work. This is a high severity defect because it breaks the recovery mechanism."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "The function is explicitly marked as a stub with TODOs. However, it is called in production boot path. If it doesn't work, the feature is broken. The severity is high because it's a production-facing function that is non-functional."
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "dimension": "correctness",
+      "severity": "medium",
+      "file": "src/forge/cli/serve.py",
+      "line": 440,
+      "summary": "compose_planning_consumer_and_dispatch is called with incorrect arguments (db_path, nats_client) instead of the expected arguments (sqlite_pool, client, planning_config).",
+      "failing_scenario": "Input: serve.py calls compose_planning_consumer_and_dispatch with client, planning_config, sqlite_pool, config. Output: TypeError because the function signature expects db_path, nats_client, config. Expected: The call should match the function signature.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "refuted",
+          "note": "Looking at the diff in serve.py line 440, the call is: compose_planning_consumer_and_dispatch(client=client, planning_config=forge_config.planning, sqlite_pool=sqlite_pool, config=forge_config). Looking at _serve_planning.py line 150, the signature is: compose_planning_consumer_and_dispatch(*, db_path: Path, nats_client: NatsClient, config: ForgeConfig, clock: ...). The arguments do not match. This is a compile-time error or runtime TypeError."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "The arguments are completely different. serve.py passes 'client' and 'sqlite_pool', while the function expects 'nats_client' and 'db_path'. This is a clear defect."
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "dimension": "test_coverage",
+      "severity": "low",
+      "file": "src/forge/planning/planner.py",
+      "line": 250,
+      "summary": "plan_next_step has no tests for the checkpoint_cleared logic path.",
+      "failing_scenario": "Input: History with PRODUCT_OWNER approved and checkpoint_cleared. Output: ExecuteHandoff. Expected: This path is not tested. A test should verify that if checkpoint_cleared is present, ExecuteHandoff is returned.",
+      "executed_reproduction": null,
+      "refuters": [
+        {
+          "who": "refuter-1",
+          "verdict": "refuted",
+          "note": "The diff shows the planner code. There are no tests in the diff. The docstring has an example for empty history and PRODUCT_OWNER approved, but not for checkpoint_cleared. This is a test coverage gap."
+        },
+        {
+          "who": "refuter-2",
+          "verdict": "refuted",
+          "note": "The docstring example only covers two cases. The checkpoint_cleared case is a distinct branch. It should be tested."
+        }
+      ]
+    }
+  ]
+}

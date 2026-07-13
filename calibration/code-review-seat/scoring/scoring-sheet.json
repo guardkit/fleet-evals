@@ -1,0 +1,41 @@
+{
+  "method": "Each of the 19 Run B seat findings (union across 4 subsystem groups) is judged by hand against gold/gold-set.json on file + substance. A CATCH = the seat finding names the same defect in the same file as a gold finding (serious G-id or low L-id). An OVER-FLAG = a seat finding that maps to no gold finding; sub-typed as 'wrong' (flags code the gold review's Checks-that-PASSED verified correct) or 'nit' (speculative/low-value/efficiency-or-test noise). Judged honestly, conservatively; partial substance matches are named as such.",
+  "run_A_as_shipped": {
+    "result": "0 findings emitted — outcome.error = 'seat output could not be parsed into F14 findings: seat output contains no JSON object'",
+    "cause": "The built pipeline's _default_seat_call uses qwen36-workhorse with reasoning ON and max_tokens=4096. On a real ~40k-token diff the seat's reasoning consumes the entire 4096-token budget; the completion is truncated (finish_reason=length) with content='' (all text went to reasoning_content). emit_review_findings then finds no JSON object. Reproduced deterministically. This is a PIPELINE-CONFIG finding, not a seat-quality finding.",
+    "catch_rate": "0/16 (pipeline inoperable as shipped on a non-trivial diff)"
+  },
+  "run_B_fair_config": {
+    "config": "qwen36-workhorse, temperature=0.0, thinking OFF (chat_template_kwargs.enable_thinking=false), max_tokens=8192, diff rendered without truncation, fed in 4 subsystem groups that keep cross-file finding pairs together.",
+    "findings": [
+      {"grp": "G1", "id": "F1", "file": "states.py", "verdict": "OVER-FLAG(wrong)", "note": "Flags QUEUED->CANCELLED / RUNNING->TIMED_OUT as suspicious; gold Checks-that-PASSED explicitly verifies the transition table is CORRECT (states.py deliberately pinned). False positive on verified-correct code. Also the INVERSE of gold G06 (which is that QUEUED->FAILED is illegal and the sweep ignores the refusal)."},
+      {"grp": "G1", "id": "F2", "file": "_serve_planning.py", "verdict": "CATCH G10", "note": "Boot sweep FAILs RUNNING runs -> false failures for active/approved runs. Matches gold G10 (RT-08 violation) squarely."},
+      {"grp": "G1", "id": "F3", "file": "_serve_planning.py", "verdict": "CATCH G07", "note": "rearm is a log-only stub, leaves PAUSED runs stuck after boot. Matches gold G07 squarely."},
+      {"grp": "G1", "id": "F4", "file": "serve.py", "verdict": "CATCH G01", "note": "compose/sweep/rearm called with kwargs that do not match the signatures -> TypeError. Matches the gold CRITICAL G01 squarely (seat even cited both file:line sites). Severity auto-downgraded to medium by S3 (both refuters returned 'refuted') but the defect is surfaced in the record."},
+      {"grp": "G1", "id": "F5", "file": "planner.py", "verdict": "OVER-FLAG(nit)", "note": "checkpoint_cleared path has no test — a mild speculative test-coverage note; brushes gold C2's 'checkpoint_cleared unreachable' but framed as a test gap, not the defect. Low value."},
+      {"grp": "G2", "id": "F1", "file": "checkpoint.py", "verdict": "OVER-FLAG(nit)", "note": "Rejection handler 'ignores stage_label' — speculative; not a gold finding, no clear failing input."},
+      {"grp": "G2", "id": "F2", "file": "escalation.py", "verdict": "CATCH G11", "note": "read-then-CAS race in escalation phase evaluation (phase-1 lacks the CAS guard phase-2 uses). Matches the CAS-guard half of gold G11 (missed the 'escalated request_id never persisted' half)."},
+      {"grp": "G2", "id": "F3", "file": "checkpoint.py", "verdict": "CATCH L02(low)", "note": "Direct access to private _store._connection bypasses encapsulation. Matches gold LOW L02."},
+      {"grp": "G2", "id": "F4", "file": "gate_adapters.py", "verdict": "OVER-FLAG(nit)", "note": "list_paused_builds efficiency nit — not in the gold set."},
+      {"grp": "G2", "id": "F5", "file": "checkpoint.py", "verdict": "OVER-FLAG(nit)", "note": "test-coverage note (coach_evidence=None + clock) — speculative, not gold."},
+      {"grp": "G3", "id": "F1", "file": "run_store.py", "verdict": "OVER-FLAG(wrong)", "note": "'record_queued duplicate detection not atomic, allows duplicate rows' — gold Checks-that-PASSED verifies the pre-check + IntegrityError insert-race recovery is CORRECT (ASSUM-014). False positive on verified-correct code."},
+      {"grp": "G3", "id": "F2", "file": "run_store.py", "verdict": "OVER-FLAG(wrong)", "note": "'transition doesn't handle run deleted between read and CAS' — runs are never deleted; speculative race on a non-existent code path."},
+      {"grp": "G3", "id": "F3", "file": "run_store.py", "verdict": "OVER-FLAG(nit)", "note": "Two SELECTs 'wasted I/O' efficiency nit — reframes the (correct) idempotency path as a cost problem."},
+      {"grp": "G3", "id": "F4", "file": "run_store.py", "verdict": "OVER-FLAG(nit/scoping)", "note": "'No tests for SqlitePlanningRunStore' — an artifact of the src-only scoping (test files were not in the seat's payload; tests DO exist, gold confirms 142 planning tests pass). Named as a scoping artifact."},
+      {"grp": "G4", "id": "F1", "file": "planning_consumer.py", "verdict": "OVER-FLAG(near-miss G15)", "note": "Flags RT-03 correlation_id validation as unsafe, but via 'path traversal / Unicode' — gold Checks-that-PASSED verifies '/' and '..' ARE rejected. Right surface (RT-03/correlation_id), WRONG mechanism; gold G15 is about DOTS fragmenting the NATS subject past jarvis's 4-token gate. Not a clean catch; partly a false positive."},
+      {"grp": "G4", "id": "F2", "file": "handoff.py", "verdict": "OVER-FLAG(nit)", "note": "KeyError on missing correlation_id — speculative defensive nit, not gold."},
+      {"grp": "G4", "id": "F3", "file": "handoff.py", "verdict": "OVER-FLAG(nit)", "note": "String-concat efficiency nit — not gold."},
+      {"grp": "G4", "id": "F4", "file": "planning_consumer.py", "verdict": "OVER-FLAG(near-miss G12)", "note": "'No test for record_queued raising non-DuplicateRun' fingers the store-failure PATH (gold G12) but as a test gap, not the defect (that it acks and drops the message). Not a clean catch."},
+      {"grp": "G4", "id": "F5", "file": "handoff.py", "verdict": "OVER-FLAG(nit)", "note": "TerminalRegistry.get()->None AttributeError — speculative, not gold."}
+    ],
+    "serious_catches": ["G01", "G07", "G10", "G11"],
+    "serious_catches_unambiguous": ["G01", "G07", "G10"],
+    "low_catches": ["L02"],
+    "serious_missed": ["G02", "G03", "G04", "G05", "G06", "G08", "G09", "G12", "G13", "G14", "G15", "G16"],
+    "catch_rate_serious_unambiguous": "3/16 = 18.8%",
+    "catch_rate_serious_incl_partial": "4/16 = 25.0%",
+    "over_flag_of_emissions": "14/19 emitted findings map to NO gold finding = 73.7%",
+    "affirmatively_wrong_of_emissions": "3/19 flag code the gold review verified CORRECT (G1-F1, G3-F1, G3-F2) = 15.8% (near-miss G4-F1 partly wrong too)",
+    "reachability_note": "Of the 16 serious gold findings, ~11 are structurally OUT OF REACH for a diff-only seat: 6 need cross-repo contract knowledge the diff does not carry (G04/G08/G14/G16 need nats-core payload schemas + jarvis reply behavior; part of G12/G15), and 5 are whole-system 'absence' findings that need repo-wide 'is X called anywhere?' grep, not a diff (G02/G03/G05/G09/G13). Only ~5 gold findings are diff-local-reachable (G01, G06, G07, G10, G11). On THAT reachable subset the seat caught 4/5 (80%) — it missed only G06 and, worse, inverted it (G1-F1 called the correct transitions suspicious). This reframing is the load-bearing honest signal: the seat is competent on defects it can SEE, but the gold set is dominated by findings a diff-scoped seat cannot reach."
+  }
+}

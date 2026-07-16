@@ -1,9 +1,13 @@
 # DCL Held-Out Suite — Authoring Calibration Gate (Phase D / D4)
 
-**Status:** **PROPOSED — awaiting Rich's freeze-by-commit.** Nothing here gates anything
-yet. Between now and the freeze the numbers below are Rich's to amend; **after the freeze,
-thresholds may only ever be *raised*** (never lowered), and any instrument revision reopens
-this doc BEFORE the next freeze, never silently (the po-/gc-heldout lineage).
+**Status:** **FROZEN 2026-07-16 (Rich, attended in-session — this commit IS the freeze;
+close-out moment #4).** Thresholds frozen exactly as proposed (authoring tasks ≥2/3 reps
+compile-clean each, repair task 3/3 — §5). From here, **thresholds may only ever be
+*raised*** (never lowered), and any instrument revision reopens this doc BEFORE the next
+re-freeze, never silently (the po-/gc-heldout lineage). *Mechanics note, honest:* the
+coordinator's staged freeze commands were flawed (the doc was already committed unchanged,
+so there was nothing to stage); this status flip + commit executes Rich's written in-session
+freeze declaration of the same evening.
 **Date:** 2026-07-16 (Phase-D coordinator session; built to
 `ai-transition/docs/dcl-adoption-phase-d-design-2026-07-16.md` §4).
 **Repo:** fleet-evals · new suite `dcl-heldout` (tasks `dcl-held-001-author-stats`,

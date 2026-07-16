@@ -1,0 +1,19 @@
+[task]
+id = "dcl-held-002-author-version"
+suite = "dcl-heldout"
+mode = "document-authoring"
+phase = "DCL adoption (Phase D / D4) — author the /version capability"
+schema = "a DCL 1.0 capability document, graded by the vendored DCL compiler (harness/dcl/bin/dcl-check.mjs)"
+artifact = "response.dcl"
+reps = 3
+timeout_seconds = 900
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+instruction_source = "instruction.md + input/feature-brief.md — distilled READ-ONLY from api_test features/version-endpoint/version-endpoint.feature + qa/pass-bar-TASK-B70F-*.yaml (FEAT-B70F) into a self-contained authoring brief; same shape as dcl-held-001"
+checker_source = "harness/dcl/bin/dcl-check.mjs + dcl.wasm — the ONE vendored checker home, upstream github.com/russelleast/Capability-Language @ 4f9fbe56 (Apache-2.0); shas in harness/dcl/bin/SHA256SUMS"
+oracle_source = "solution/response.dcl = a hand-authored reference capability for GET /version; graded ok:true / zero errors through the vendored checker (verified at build time)"
+false_green_guard = "test/fixtures/broken.dcl — a known-bad file (undeclared actor/shape + a when-branch naming an undeclared outcome) the grader MUST keep failing (ok:false, exit 1)"

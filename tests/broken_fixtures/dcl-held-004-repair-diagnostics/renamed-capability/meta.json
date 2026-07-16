@@ -1,0 +1,5 @@
+{
+  "expect_fail": [
+    "test_repair_preserves_declared_semantics"
+  ]
+}

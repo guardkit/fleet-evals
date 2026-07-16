@@ -1,0 +1,38 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "unknown actor kind machine",
+      "code": "DCL_SEM_ACTOR_KIND_UNKNOWN",
+      "line": 8,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "unknown effect kind in_memory",
+      "code": "DCL_SEM_EFFECT_KIND_UNKNOWN",
+      "line": 10,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "outcome has no explicit causation",
+      "code": "DCL_SEM_OUTCOME_CAUSE_REQUIRED",
+      "line": 26,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 42,
+      "column": 5
+    }
+  ],
+  "diagnosticCount": 4,
+  "errorCount": 4,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

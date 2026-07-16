@@ -1,0 +1,5 @@
+{
+  "expect_fail": [
+    "test_candidate_compiles_zero_errors"
+  ]
+}

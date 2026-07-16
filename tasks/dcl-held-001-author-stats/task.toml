@@ -1,0 +1,19 @@
+[task]
+id = "dcl-held-001-author-stats"
+suite = "dcl-heldout"
+mode = "document-authoring"
+phase = "DCL adoption (Phase D / D4) — the promoted DCL SPIKE authoring task"
+schema = "a DCL 1.0 capability document, graded by the vendored DCL compiler (harness/dcl/bin/dcl-check.mjs)"
+artifact = "response.dcl"
+reps = 3
+timeout_seconds = 900
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+instruction_source = "instruction.md + input/ — carried from spike/dcl-authoring (the SAME self-contained /stats planning inputs S2 used: the Request, the 8 scenarios, the machine pass-bar) + a DCL syntax few-shot; the promoted, suite-owned copy per Phase-D design §4"
+checker_source = "harness/dcl/bin/dcl-check.mjs + dcl.wasm — the ONE vendored checker home (byte-identical to spike/dcl-authoring/bin/), upstream github.com/russelleast/Capability-Language @ 4f9fbe56 (Apache-2.0); shas in harness/dcl/bin/SHA256SUMS"
+oracle_source = "solution/response.dcl = the S2 hand-authored capability.dcl (spike/dcl-authoring/solution/response.dcl, copied verbatim); the gate must grade it ok:true / zero errors on a bare run"
+false_green_guard = "test/fixtures/broken.dcl — a known-bad file (undeclared actor/shape + a when-branch naming an undeclared outcome) the grader MUST keep failing (ok:false, exit 1)"

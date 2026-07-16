@@ -1,0 +1,19 @@
+[task]
+id = "dcl-held-004-repair-diagnostics"
+suite = "dcl-heldout"
+mode = "document-authoring"
+phase = "DCL adoption (Phase D / D4) — compile-repair a rejected capability (the seat near-miss class)"
+schema = "a repaired DCL 1.0 capability document, graded by the vendored DCL compiler (harness/dcl/bin/dcl-check.mjs)"
+artifact = "response.dcl"
+reps = 3
+timeout_seconds = 900
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+instruction_source = "instruction.md + input/broken.dcl + input/diagnostics.json — a rejected GET /stats capability plus the checker's verbatim diagnostics; the planted defects include the seat near-miss class (invented enum literals outside DCL v1.0's closed vocabulary — actor kind `machine`, effect kind `in_memory`; see spike/dcl-authoring/seat-attempt/SEAT-RESULT.md) plus an undeclared-outcome typo"
+checker_source = "harness/dcl/bin/dcl-check.mjs + dcl.wasm — the ONE vendored checker home, upstream github.com/russelleast/Capability-Language @ 4f9fbe56 (Apache-2.0); shas in harness/dcl/bin/SHA256SUMS; input/diagnostics.json is the checker's verbatim envelope on input/broken.dcl"
+oracle_source = "solution/response.dcl = the reference repair (is system / drop the unexpressible in-memory effect / point the when branch at the declared outcome); graded ok:true / zero errors AND preserves the declared capability/intent/outcome/event names, verified at build time"
+gate_contract = "test/ gates: G1 compile-clean + a semantic-preservation floor (the repair still declares capability GetStats, intent StatsRequest, outcome StatsRetrieved, event StatsRetrievedEvent); the false-green guard is the task's own broken input, which the compile gate MUST reject"

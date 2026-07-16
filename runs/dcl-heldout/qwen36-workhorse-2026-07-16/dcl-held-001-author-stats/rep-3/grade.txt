@@ -1,0 +1,20 @@
+..F..                                                                    [100%]
+=================================== FAILURES ===================================
+_____________________ test_candidate_compiles_zero_errors ______________________
+
+response_path = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/runs/dcl-heldout/qwen36-workhorse-2026-07-16/dcl-held-001-author-stats/rep-3/response.dcl')
+
+    def test_candidate_compiles_zero_errors(response_path):
+        """G1: the candidate DCL compiles clean (ok:true, zero errors, exit 0)."""
+        findings = dcl_gates.compile_findings(response_path)
+>       assert findings == [], f"G1 compile gate: {findings}"
+E       AssertionError: G1 compile gate: ["response.dcl: checker ok is not true; error diagnostics: [{'severity': 'error', 'message': 'idempotency value must be valid', 'code': 'DCL_SEM_POLICY_CONCERN_VALUE_INVALID', 'line': 13, 'column': 5}, {'severity': 'error', 'message': 'same lifecycle source step and transition trigger lead to multiple target steps', 'code': 'DCL_SEM_AMBIGUOUS_LIFECYCLE_TRANSITION', 'line': 68, 'column': 5}]", "response.dcl: errorCount != 0: [{'severity': 'error', 'message': 'idempotency value must be valid', 'code': 'DCL_SEM_POLICY_CONCERN_VALUE_INVALID', 'line': 13, 'column': 5}, {'severity': 'error', 'message': 'same lifecycle source step and transition trigger lead to multiple target steps', 'code': 'DCL_SEM_AMBIGUOUS_LIFECYCLE_TRANSITION', 'line': 68, 'column': 5}]", 'response.dcl: checker exit code 1 (expected 0)']
+E       assert ["response.dc...(expected 0)'] == []
+E         
+E         Left contains 3 more items, first extra item: "response.dcl: checker ok is not true; error diagnostics: [{'severity': 'error', 'message': 'idempotency value must be...on trigger lead to multiple target steps', 'code': 'DCL_SEM_AMBIGUOUS_LIFECYCLE_TRANSITION', 'line': 68, 'column': 5}]"
+E         Use -v to get more diff
+
+tasks/dcl-held-001-author-stats/test/test_gate_dcl_held_001.py:35: AssertionError
+=========================== short test summary info ============================
+FAILED tasks/dcl-held-001-author-stats/test/test_gate_dcl_held_001.py::test_candidate_compiles_zero_errors
+1 failed, 4 passed in 0.18s

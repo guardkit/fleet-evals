@@ -130,16 +130,35 @@ def structural_findings(source: str, required_blocks: tuple[str, ...] = REQUIRED
 
 # --- Semantic-preservation floor (the repair task) ------------------------------------
 
+# DCL v1.0 has ``//`` line comments only (no block comments — verified against the
+# spike corpus). A declaration named ONLY in a comment does not exist in the
+# capability, so the floor must be blind to comment text.
+_LINE_COMMENT = re.compile(r"//.*$", re.MULTILINE)
+
+
+def strip_comments(source: str) -> str:
+    """Return ``source`` with ``//`` line comments removed. DCL v1.0 carries no
+    block comments and no string literals bearing ``//``, so stripping from each
+    ``//`` to end of line is exact for the language."""
+    return _LINE_COMMENT.sub("", source)
+
+
 def declaration_findings(source: str, declarations: tuple[tuple[str, str], ...]) -> list[str]:
     """The repair task's semantic-preservation floor. ``declarations`` is a
     tuple of (keyword, name) pairs the repaired file must still DECLARE — e.g.
     ``("capability", "GetStats")`` requires ``capability GetStats`` to appear as
     a declaration (keyword followed by the name on a word boundary), so a repair
     that renames or drops the capability/intent/outcome/event fails LOUD rather
-    than greening a semantics-changing rewrite."""
+    than greening a semantics-changing rewrite.
+
+    The match is over NON-COMMENT source only: a declaration named merely in a
+    ``//`` comment (e.g. an oracle-style ``// preserved: capability GetStats``)
+    does not satisfy the floor, so a candidate that renames the real declaration
+    while leaving the old name in a stale comment fails LOUD."""
+    code = strip_comments(source)
     findings: list[str] = []
     for keyword, name in declarations:
         pattern = re.compile(rf"\b{re.escape(keyword)}\s+{re.escape(name)}\b")
-        if not pattern.search(source):
+        if not pattern.search(code):
             findings.append(f"semantic-preservation floor: missing declaration `{keyword} {name}`")
     return findings

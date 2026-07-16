@@ -168,7 +168,7 @@ FLOOR_BROKEN = {
     "dcl-held-001-author-stats": {"invented-actor-kind", "undeclared-outcome", "valid-but-not-a-capability"},
     "dcl-held-002-author-version": {"invented-actor-kind", "undeclared-outcome", "valid-but-not-a-capability"},
     "dcl-held-003-author-uptime": {"invented-actor-kind", "undeclared-outcome", "valid-but-not-a-capability"},
-    "dcl-held-004-repair-diagnostics": {"still-broken-actor-kind", "renamed-capability"},
+    "dcl-held-004-repair-diagnostics": {"still-broken-actor-kind", "renamed-capability", "renamed-with-stale-comment"},
 }
 FLOOR_GOOD = {
     "dcl-held-001-author-stats": {"minimal-capability"},

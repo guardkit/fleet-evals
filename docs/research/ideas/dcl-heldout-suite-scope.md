@@ -1,7 +1,9 @@
 # DCL Held-Out Suite — Authoring Calibration Gate (Phase D / D4)
 
-**Status:** **FROZEN 2026-07-16 (Rich, attended in-session — this commit IS the freeze;
-close-out moment #4).** Thresholds frozen exactly as proposed (authoring tasks ≥2/3 reps
+**Status:** **RE-FROZEN 2026-07-17 (amendment §10 — the machine-chain authoring PROTOCOL
+changed on Rich's written in-session decisions; THRESHOLDS UNCHANGED; original freeze
+`8d2d676`).** Prior status, retained for the record: **FROZEN 2026-07-16 (Rich, attended
+in-session — that commit was the freeze; close-out moment #4).** Thresholds frozen exactly as proposed (authoring tasks ≥2/3 reps
 compile-clean each, repair task 3/3 — §5). From here, **thresholds may only ever be
 *raised*** (never lowered), and any instrument revision reopens this doc BEFORE the next
 re-freeze, never silently (the po-/gc-heldout lineage). *Mechanics note, honest:* the
@@ -249,3 +251,53 @@ python3 -m pytest tests/test_dcl_verifier_integrity.py -q   # three-sided batter
 PO_EVAL_OUTPUT_DIR=<rep-dir> python3 -m pytest tasks/<task>/test -q   # compiler-graded, per rep
 # then apply §3 verbatim in RESULTS-dcl-heldout-<date>.md (frozen-thresholds SHA recorded)
 ```
+
+---
+
+## 10. AMENDMENT + RE-FREEZE (2026-07-17) — the machine-chain authoring protocol
+
+**Why reopened (never silently):** §3.2's own text said "any change to the instrument reopens
+this doc before the next freeze." Two written in-session decisions by Rich on 2026-07-17
+changed the instrument's *protocol* (not its thresholds):
+
+1. *"I don't have any plans to ever hand author any DCL"* — machine authoring is DCL's ONLY
+   durable author (DF-027 rider). This gate is therefore the adoption's critical path, not an
+   optimization.
+2. *"yes to b"* — a seat + **bounded compile→repair loop** is an accepted machine-chain
+   authoring protocol.
+
+**The protocol of record (authoring tasks `dcl-held-001/-002/-003`):**
+
+- **Standing vocabulary reference:** the runner appends `harness/dcl/vocab-reference.md` to
+  the task instruction — the compiler-verified closed vocabulary at the pinned upstream commit
+  (`4f9fbe56`, v1.0.6), verified by 227 accept/reject probes through the vendored checker
+  (receipt: `harness/dcl/vocab-probes-receipt.md`; the reference's own skeleton compiles with
+  zero diagnostics). Only compiler-verified facts appear in it.
+- **≤ 1 bounded compile→repair pass:** if the first generation compiles dirty, exactly ONE
+  second call is made carrying the checker's verbatim diagnostics envelope plus the first
+  attempt; the **graded candidate is the final response**. Both attempts and the checker
+  envelope are persisted per rep; each rep records `zero_shot_clean` vs `repaired_clean`
+  (informational split — the bar does not distinguish them).
+- **Repair task `dcl-held-004`: protocol UNCHANGED** (its input already carries diagnostics;
+  no second loop).
+
+**Thresholds: UNCHANGED, verbatim §3.2** (≥2/3 reps compile-clean on every authoring task AND
+3/3 on the repair task). Rise-only law continues.
+
+**Baselines and variants:** the 2026-07-16 zero-shot run (`runs/dcl-heldout/
+qwen36-workhorse-2026-07-16/`, verdict NOT-YET) **stands as the zero-shot baseline record** —
+it is not re-judged under this protocol. Informational calibration variants are sanctioned
+under `calibration/dcl-authoring-variants/` (vocab-only and loop-only, so each intervention's
+contribution is measured) — **numbers, not bar verdicts**; the bar verdict of record is the
+full protocol above.
+
+**Known instrument limits (honest, from the 227-probe extraction):** the WASM checker's
+language-version gate is inert (a `language dcl 9.9` header still compiles); unknown FIELD
+TYPES pass silently in the default context (the vocabulary reference is the only guard for
+type discipline); `retry` requires `idempotency` on the same target; `circuit_breaker` may
+only govern effects. None of these change the gates; they bound what "compile-clean" proves.
+
+**Re-freeze mechanics:** executed by this commit on Rich's written in-session decisions of
+2026-07-17 (the `8d2d676` precedent: the written declaration is the authority; the commit is
+its execution). After this re-freeze: thresholds only ever rise; any further instrument change
+reopens this doc first.

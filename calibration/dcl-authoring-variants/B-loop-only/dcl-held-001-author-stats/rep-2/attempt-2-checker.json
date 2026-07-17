@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "message": "source file should declare language dcl 1.0",
+      "code": "DCL_VERSION_DECL_MISSING",
+      "line": 1,
+      "column": 1
+    }
+  ],
+  "diagnosticCount": 1,
+  "errorCount": 0,
+  "warningCount": 1,
+  "infoCount": 0,
+  "sourceCount": 1
+}

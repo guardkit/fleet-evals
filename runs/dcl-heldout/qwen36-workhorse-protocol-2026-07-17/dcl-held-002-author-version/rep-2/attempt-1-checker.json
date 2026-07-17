@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 19,
+      "column": 5
+    }
+  ],
+  "diagnosticCount": 1,
+  "errorCount": 0,
+  "warningCount": 1,
+  "infoCount": 0,
+  "sourceCount": 1
+}

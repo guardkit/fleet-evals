@@ -1,0 +1,66 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 9,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 10,
+      "column": 1
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 18,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 19,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 31,
+      "column": 31
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 31,
+      "column": 35
+    },
+    {
+      "severity": "warning",
+      "message": "non-terminal lifecycle state has no outgoing transition",
+      "code": "DCL_SEM_LIFECYCLE_DEAD_END",
+      "line": 49,
+      "column": 3
+    },
+    {
+      "severity": "warning",
+      "message": "lifecycle state is not reachable from the initial state by declared transitions",
+      "code": "DCL_SEM_LIFECYCLE_STATE_UNREACHABLE",
+      "line": 49,
+      "column": 3
+    }
+  ],
+  "diagnosticCount": 8,
+  "errorCount": 4,
+  "warningCount": 4,
+  "infoCount": 0,
+  "sourceCount": 1
+}

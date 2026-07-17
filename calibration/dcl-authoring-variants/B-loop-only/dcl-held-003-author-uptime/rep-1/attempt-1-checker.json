@@ -1,0 +1,59 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 13,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 13,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 14,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 14,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 36,
+      "column": 33
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 36,
+      "column": 37
+    },
+    {
+      "severity": "error",
+      "message": "same lifecycle source step and transition trigger lead to multiple target steps",
+      "code": "DCL_SEM_AMBIGUOUS_LIFECYCLE_TRANSITION",
+      "line": 70,
+      "column": 5
+    }
+  ],
+  "diagnosticCount": 7,
+  "errorCount": 3,
+  "warningCount": 4,
+  "infoCount": 0,
+  "sourceCount": 1
+}

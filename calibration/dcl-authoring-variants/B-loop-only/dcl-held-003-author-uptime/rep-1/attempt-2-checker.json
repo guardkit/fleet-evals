@@ -1,0 +1,24 @@
+{
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "message": "non-terminal lifecycle state has no outgoing transition",
+      "code": "DCL_SEM_LIFECYCLE_DEAD_END",
+      "line": 60,
+      "column": 3
+    },
+    {
+      "severity": "warning",
+      "message": "lifecycle state is not reachable from the initial state by declared transitions",
+      "code": "DCL_SEM_LIFECYCLE_STATE_UNREACHABLE",
+      "line": 60,
+      "column": 3
+    }
+  ],
+  "diagnosticCount": 2,
+  "errorCount": 0,
+  "warningCount": 2,
+  "infoCount": 0,
+  "sourceCount": 1
+}

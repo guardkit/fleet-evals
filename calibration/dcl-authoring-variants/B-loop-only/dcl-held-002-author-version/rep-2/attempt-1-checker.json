@@ -1,0 +1,59 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "unknown effect kind io",
+      "code": "DCL_SEM_EFFECT_KIND_UNKNOWN",
+      "line": 5,
+      "column": 1
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 13,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 13,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 14,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 14,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 56,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "wait condition signal kind must be event or outcome",
+      "code": "DCL_SEM_LIFECYCLE_WAIT_SIGNAL_KIND",
+      "line": 62,
+      "column": 16
+    }
+  ],
+  "diagnosticCount": 7,
+  "errorCount": 3,
+  "warningCount": 4,
+  "infoCount": 0,
+  "sourceCount": 1
+}

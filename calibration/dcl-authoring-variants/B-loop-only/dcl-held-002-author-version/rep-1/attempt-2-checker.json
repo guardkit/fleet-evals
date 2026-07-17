@@ -1,0 +1,24 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "unexpected character '",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 28,
+      "column": 31
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character '",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 28,
+      "column": 35
+    }
+  ],
+  "diagnosticCount": 2,
+  "errorCount": 2,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

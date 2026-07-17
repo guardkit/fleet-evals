@@ -1,0 +1,22 @@
+...F.                                                                    [100%]
+=================================== FAILURES ===================================
+_______________________ test_candidate_structural_floor ________________________
+
+response_path = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/calibration/dcl-authoring-variants/B-loop-only/dcl-held-001-author-stats/rep-2/response.dcl')
+
+    def test_candidate_structural_floor(response_path):
+        """G2: a light structural floor — a capability with an intent, at least one
+        outcome, and a lifecycle."""
+        source = response_path.read_text(encoding="utf-8")
+        findings = dcl_gates.structural_findings(source)
+>       assert findings == [], f"G2 structural floor: {findings}"
+E       AssertionError: G2 structural floor: ["structural floor: missing block(s) ['capability ', 'intent ', 'outcome', 'lifecycle']"]
+E       assert ["structural ...'lifecycle']"] == []
+E         
+E         Left contains one more item: "structural floor: missing block(s) ['capability ', 'intent ', 'outcome', 'lifecycle']"
+E         Use -v to get more diff
+
+tasks/dcl-held-001-author-stats/test/test_gate_dcl_held_001.py:43: AssertionError
+=========================== short test summary info ============================
+FAILED tasks/dcl-held-001-author-stats/test/test_gate_dcl_held_001.py::test_candidate_structural_floor
+1 failed, 4 passed in 0.18s

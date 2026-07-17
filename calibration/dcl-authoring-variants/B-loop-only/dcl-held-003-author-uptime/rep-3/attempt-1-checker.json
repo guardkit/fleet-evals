@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 13,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 13,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 14,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 14,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "non-terminal lifecycle state has no outgoing transition",
+      "code": "DCL_SEM_LIFECYCLE_DEAD_END",
+      "line": 60,
+      "column": 3
+    },
+    {
+      "severity": "warning",
+      "message": "lifecycle state is not reachable from the initial state by declared transitions",
+      "code": "DCL_SEM_LIFECYCLE_STATE_UNREACHABLE",
+      "line": 60,
+      "column": 3
+    }
+  ],
+  "diagnosticCount": 6,
+  "errorCount": 0,
+  "warningCount": 6,
+  "infoCount": 0,
+  "sourceCount": 1
+}

@@ -1,0 +1,45 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 17,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "authentication value must be valid",
+      "code": "DCL_SEM_POLICY_CONCERN_VALUE_INVALID",
+      "line": 23,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 23,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 23,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unsupported observation type",
+      "code": "DCL_SEM_OBSERVE_TYPE_UNSUPPORTED",
+      "line": 50,
+      "column": 5
+    }
+  ],
+  "diagnosticCount": 5,
+  "errorCount": 3,
+  "warningCount": 2,
+  "infoCount": 0,
+  "sourceCount": 1
+}

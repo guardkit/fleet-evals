@@ -1,0 +1,20 @@
+..F..                                                                    [100%]
+=================================== FAILURES ===================================
+_____________________ test_candidate_compiles_zero_errors ______________________
+
+response_path = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/calibration/dcl-authoring-variants/B-loop-only/dcl-held-002-author-version/rep-1/response.dcl')
+
+    def test_candidate_compiles_zero_errors(response_path):
+        """G1: the candidate DCL compiles clean (ok:true, zero errors, exit 0)."""
+        findings = dcl_gates.compile_findings(response_path)
+>       assert findings == [], f"G1 compile gate: {findings}"
+E       AssertionError: G1 compile gate: ['response.dcl: checker ok is not true; error diagnostics: [{\'severity\': \'error\', \'message\': "unexpected character \'", \'code\': \'DCL_LEX_UNEXPECTED_CHAR\', \'line\': 28, \'column\': 31}, {\'severity\': \'error\', \'message\': "unexpected character \'", \'code\': \'DCL_LEX_UNEXPECTED_CHAR\', \'line\': 28, \'column\': 35}]', 'response.dcl: errorCount != 0: [{\'severity\': \'error\', \'message\': "unexpected character \'", \'code\': \'DCL_LEX_UNEXPECTED_CHAR\', \'line\': 28, \'column\': 31}, {\'severity\': \'error\', \'message\': "unexpected character \'", \'code\': \'DCL_LEX_UNEXPECTED_CHAR\', \'line\': 28, \'column\': 35}]', 'response.dcl: checker exit code 1 (expected 0)']
+E       assert ["response.dc...(expected 0)'] == []
+E         
+E         Left contains 3 more items, first extra item: 'response.dcl: checker ok is not true; error diagnostics: [{\'severity\': \'error\', \'message\': "unexpected characte...error\', \'message\': "unexpected character \'", \'code\': \'DCL_LEX_UNEXPECTED_CHAR\', \'line\': 28, \'column\': 35}]'
+E         Use -v to get more diff
+
+tasks/dcl-held-002-author-version/test/test_gate_dcl_held_002.py:30: AssertionError
+=========================== short test summary info ============================
+FAILED tasks/dcl-held-002-author-version/test/test_gate_dcl_held_002.py::test_candidate_compiles_zero_errors
+1 failed, 4 passed in 0.20s

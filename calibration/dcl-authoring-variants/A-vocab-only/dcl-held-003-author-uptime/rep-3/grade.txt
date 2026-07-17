@@ -1,0 +1,20 @@
+..F..                                                                    [100%]
+=================================== FAILURES ===================================
+_____________________ test_candidate_compiles_zero_errors ______________________
+
+response_path = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/calibration/dcl-authoring-variants/A-vocab-only/dcl-held-003-author-uptime/rep-3/response.dcl')
+
+    def test_candidate_compiles_zero_errors(response_path):
+        """G1: the candidate DCL compiles clean (ok:true, zero errors, exit 0)."""
+        findings = dcl_gates.compile_findings(response_path)
+>       assert findings == [], f"G1 compile gate: {findings}"
+E       AssertionError: G1 compile gate: ["response.dcl: checker ok is not true; error diagnostics: [{'severity': 'error', 'message': 'expected declaration', 'code': 'DCL_PARSE_EXPECTED_DECLARATION', 'line': 9, 'column': 1}, {'severity': 'error', 'message': 'expected declaration', 'code': 'DCL_PARSE_EXPECTED_DECLARATION', 'line': 10, 'column': 3}, {'severity': 'error', 'message': 'expected declaration', 'code': 'DCL_PARSE_EXPECTED_DECLARATION', 'line': 11, 'column': 3}, {'severity': 'error', 'message': 'expected declaration', 'code': 'DCL_PARSE_EXPECTED_DECLARATION', 'line': 12, 'column': 3}, {'severity': 'error', 'message': 'unexpected }', 'code': 'DCL_PARSE_UNEXPECTED_TOKEN', 'line': 13, 'column': 1}]", "response.dcl: errorCount != 0: [{'severity': 'error', 'message': 'expected declaration', 'code': 'DCL_PARSE_EXPECTED_DECLARATION', 'line': 9, 'column': 1}, {'severity': 'error', 'message': 'expected declaration', 'code': 'DCL_PARSE_EXPECTED_DECLARATION', 'line': 10, 'column': 3}, {'severity': 'error', 'message': 'expected declaration', 'code': 'DCL_PARSE_EXPECTED_DECLARATION', 'line': 11, 'column': 3}, {'severity': 'error', 'message': 'expected declaration', 'code': 'DCL_PARSE_EXPECTED_DECLARATION', 'line': 12, 'column': 3}, {'severity': 'error', 'message': 'unexpected }', 'code': 'DCL_PARSE_UNEXPECTED_TOKEN', 'line': 13, 'column': 1}]", 'response.dcl: checker exit code 1 (expected 0)']
+E       assert ["response.dc...(expected 0)'] == []
+E         
+E         Left contains 3 more items, first extra item: "response.dcl: checker ok is not true; error diagnostics: [{'severity': 'error', 'message': 'expected declaration', 'c...: 3}, {'severity': 'error', 'message': 'unexpected }', 'code': 'DCL_PARSE_UNEXPECTED_TOKEN', 'line': 13, 'column': 1}]"
+E         Use -v to get more diff
+
+tasks/dcl-held-003-author-uptime/test/test_gate_dcl_held_003.py:30: AssertionError
+=========================== short test summary info ============================
+FAILED tasks/dcl-held-003-author-uptime/test/test_gate_dcl_held_003.py::test_candidate_compiles_zero_errors
+1 failed, 4 passed in 0.20s

@@ -388,6 +388,10 @@ def build_arg_parser() -> argparse.ArgumentParser:
                     help="generation timeout (s); default = task.toml timeout_seconds")
     ap.add_argument("--freeze-commit", required=True,
                     help="the frozen dcl-heldout-suite-scope.md commit sha (stamped into config.json)")
+    ap.add_argument("--refreeze-commit", default=None,
+                    help="OPTIONAL: the §10 re-freeze commit sha (the amendment that set the "
+                         "machine-chain authoring protocol of record). Additive — when omitted, "
+                         "config.json is byte-identical to the pre-amendment default.")
     # §10 protocol (additive, opt-in — defaults leave behaviour byte-identical)
     ap.add_argument("--vocab-ref", type=Path, default=None,
                     help="append this file (the compiler-verified vocabulary reference) to the "
@@ -483,6 +487,7 @@ def main(argv: list[str] | None = None) -> int:
         },
         "freeze_commit": args.freeze_commit,
         "wall_time": wall_time,
+        **({"refreeze_commit": args.refreeze_commit} if args.refreeze_commit else {}),
         "usage": raw.get("usage"),
         "finish_reason": finish_reason,
         "generation_timeout_s": timeout,

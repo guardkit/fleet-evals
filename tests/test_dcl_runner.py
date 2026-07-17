@@ -57,15 +57,29 @@ class _Handler(BaseHTTPRequestHandler):
         if self.path == "/v1/chat/completions":
             cfg = self.server.cfg  # type: ignore[attr-defined]
             self.server.chat_hits += 1  # type: ignore[attr-defined]
+            # record the /running hit count at call time so a test can prove a probe
+            # preceded THIS seat call (single-slot law, both attempts).
+            self.server.running_at_chat.append(self.server.running_hits)  # type: ignore[attr-defined]
             length = int(self.headers.get("Content-Length", 0))
-            self.rfile.read(length)
+            raw = self.rfile.read(length)
+            try:
+                self.server.posted.append(json.loads(raw))  # type: ignore[attr-defined]
+            except json.JSONDecodeError:
+                self.server.posted.append(None)  # type: ignore[attr-defined]
             if cfg["chat_status"] != 200:
                 self._send(cfg["chat_status"], {"error": "boom"})
                 return
+            # a per-call queue (content, finish) takes precedence, so a repair run can
+            # return a DIFFERENT second answer; else fall back to the single content.
+            queue = cfg.get("chat_queue")
+            if queue:
+                content, finish = queue.pop(0)
+            else:
+                content, finish = cfg["chat_content"], cfg["chat_finish"]
             self._send(200, {
                 "choices": [{
-                    "message": {"role": "assistant", "content": cfg["chat_content"]},
-                    "finish_reason": cfg["chat_finish"],
+                    "message": {"role": "assistant", "content": content},
+                    "finish_reason": finish,
                 }],
                 "usage": {"prompt_tokens": 10, "completion_tokens": 20, "total_tokens": 30},
             })
@@ -84,6 +98,8 @@ class MockSeat:
         }
         self.httpd.running_hits = 0
         self.httpd.chat_hits = 0
+        self.httpd.running_at_chat = []  # running_hits observed at each chat call
+        self.httpd.posted = []           # parsed request bodies, in call order
         self._t = threading.Thread(target=self.httpd.serve_forever, daemon=True)
         self._t.start()
 
@@ -298,3 +314,154 @@ def test_main_refuses_missing_freeze_commit(tmp_path, seat):
     with pytest.raises(SystemExit):
         rdh.main(["--task-dir", str(REAL_TASK_001), "--out", str(out),
                   "--endpoint", seat.endpoint, "--rep", "1"])
+
+
+# --- §10: default shape is byte-preserved (no new flags) -------------------------------
+
+# the committed 07-16 config.json key set (finish_reason=="stop" => no finish_reason_note)
+_COMMITTED_CONFIG_KEYS = {
+    "suite", "task_id", "rep", "model", "endpoint", "sampling", "prompt_sha256",
+    "prompt", "freeze_commit", "wall_time", "usage", "finish_reason",
+    "generation_timeout_s", "transport_retries", "single_slot_probe", "runner",
+}
+
+
+def test_default_run_matches_committed_shape(tmp_path, seat):
+    """Without the §10 flags the runner emits the committed 07-16 artifact shape:
+    no vocab_ref key, no repair_loop/zero_shot_clean/repaired_clean/attempts, and
+    exactly one seat call — proving the additive flags default to byte-identical."""
+    seat.configure(chat_content="language dcl 1.0\n", chat_finish="stop")
+    out = tmp_path / "rep-1"
+    rc = rdh.main(_argv(REAL_TASK_001, out, seat.endpoint))
+    assert rc == 0
+    cfg = json.loads((out / "config.json").read_text(encoding="utf-8"))
+    assert set(cfg.keys()) == _COMMITTED_CONFIG_KEYS
+    # the §10-only artifacts must NOT appear on a default run
+    for name in ("attempt-1.dcl", "attempt-1-checker.json", "raw-response-2.json",
+                 "attempt-2-checker.json"):
+        assert not (out / name).exists()
+    # prompt_sha256 == the no-vocab composition
+    assert cfg["prompt_sha256"] == rdh.compose_prompt(REAL_TASK_001)[2]
+    assert seat.httpd.chat_hits == 1
+
+
+# --- §10: --vocab-ref inclusion + sha coverage ----------------------------------------
+
+def test_vocab_ref_appended_and_sha_covers_full_prompt(tmp_path, seat):
+    vocab = tmp_path / "vocab-reference.md"
+    vocab_body = "# CLOSED VOCAB\nactor kinds: human, system\nSENTINEL-VOCAB-LINE\n"
+    vocab.write_text(vocab_body, encoding="utf-8")
+    out = tmp_path / "rep-1"
+    argv = _argv(REAL_TASK_001, out, seat.endpoint) + ["--vocab-ref", str(vocab)]
+    rc = rdh.main(argv)
+    assert rc == 0
+
+    no_vocab_sha = rdh.compose_prompt(REAL_TASK_001)[2]
+    with_vocab_sha = rdh.compose_prompt(REAL_TASK_001, vocab)[2]
+    assert with_vocab_sha != no_vocab_sha  # appending the ref changes the prompt
+
+    cfg = json.loads((out / "config.json").read_text(encoding="utf-8"))
+    # prompt_sha256 covers the FULL composed prompt (instruction + inputs + vocab)
+    assert cfg["prompt_sha256"] == with_vocab_sha
+    # vocab_ref path + sha recorded (sha = of the vocab file content)
+    assert cfg["vocab_ref"]["path"] == str(vocab.resolve())
+    import hashlib
+    assert cfg["vocab_ref"]["sha256"] == hashlib.sha256(vocab_body.encode("utf-8")).hexdigest()
+    # the vocab text actually reached the model, under the delimiter
+    sent_user = seat.httpd.posted[0]["messages"][1]["content"]
+    assert "SENTINEL-VOCAB-LINE" in sent_user
+    assert rdh.VOCAB_DELIM in sent_user
+
+
+def test_vocab_ref_missing_file_refuses(tmp_path, seat):
+    out = tmp_path / "rep-1"
+    argv = _argv(REAL_TASK_001, out, seat.endpoint) + [
+        "--vocab-ref", str(tmp_path / "does-not-exist.md")]
+    with pytest.raises(rdh.Refusal):
+        rdh.main(argv)
+
+
+# --- §10: bounded (<=1) compile->repair loop ------------------------------------------
+
+def _fake_checker(verdicts: dict):
+    """A stand-in for the vendored checker keyed on the candidate filename, so the
+    loop's firing decision is controlled without invoking real node/WASM."""
+    def fake(path):
+        ok = verdicts[str(path).rsplit("/", 1)[-1]]
+        diags = [] if ok else [{"severity": "error", "code": "DCL_BAD", "message": "nope"}]
+        return {"ok": ok, "diagnostics": diags, "diagnosticCount": len(diags),
+                "errorCount": 0 if ok else 1, "warningCount": 0, "infoCount": 0,
+                "sourceCount": 1}
+    return fake
+
+
+def _repair_argv(task_dir, out, endpoint):
+    return _argv(task_dir, out, endpoint) + ["--repair-loop"]
+
+
+def test_repair_loop_not_fired_on_clean_first(tmp_path, seat, monkeypatch):
+    monkeypatch.setattr(rdh, "run_response_checker",
+                        _fake_checker({"attempt-1.dcl": True}))
+    seat.configure(chat_content="language dcl 1.0\nCLEAN\n", chat_finish="stop")
+    out = tmp_path / "rep-1"
+    rc = rdh.main(_repair_argv(REAL_TASK_001, out, seat.endpoint))
+    assert rc == 0
+    # exactly ONE seat call; no second call
+    assert seat.httpd.chat_hits == 1
+    assert not (out / "raw-response-2.json").exists()
+    assert not (out / "attempt-2-checker.json").exists()
+    cfg = json.loads((out / "config.json").read_text(encoding="utf-8"))
+    assert cfg["repair_loop"] is True
+    assert cfg["zero_shot_clean"] is True
+    assert cfg["repaired_clean"] is None
+    assert cfg["attempts"] == 1
+    assert (out / "attempt-1.dcl").read_text(encoding="utf-8") == "language dcl 1.0\nCLEAN\n"
+    assert (out / "response.dcl").read_text(encoding="utf-8") == "language dcl 1.0\nCLEAN\n"
+    # single-slot probe preceded the one call (preflight probe only)
+    assert seat.httpd.running_hits == 1
+    assert seat.httpd.running_at_chat == [1]
+
+
+def test_repair_loop_fires_once_then_repaired_clean(tmp_path, seat, monkeypatch):
+    # attempt 1 compiles dirty; the repaired FINAL compiles clean
+    monkeypatch.setattr(rdh, "run_response_checker",
+                        _fake_checker({"attempt-1.dcl": False, "response.dcl": True}))
+    seat.configure(chat_queue=[("DIRTY-ONE\n", "stop"), ("REPAIRED-CLEAN\n", "stop")])
+    out = tmp_path / "rep-1"
+    rc = rdh.main(_repair_argv(REAL_TASK_001, out, seat.endpoint))
+    assert rc == 0
+    # exactly TWO seat calls — never a third (loop bounded at 1)
+    assert seat.httpd.chat_hits == 2
+    # graded candidate = the FINAL response
+    assert (out / "response.dcl").read_text(encoding="utf-8") == "REPAIRED-CLEAN\n"
+    assert (out / "attempt-1.dcl").read_text(encoding="utf-8") == "DIRTY-ONE\n"
+    assert (out / "raw-response-2.json").is_file()
+    assert (out / "attempt-1-checker.json").is_file()
+    assert (out / "attempt-2-checker.json").is_file()
+    cfg = json.loads((out / "config.json").read_text(encoding="utf-8"))
+    assert cfg["zero_shot_clean"] is False
+    assert cfg["repaired_clean"] is True
+    assert cfg["attempts"] == 2
+    # the repair call's user message carried attempt 1 + the verbatim checker envelope
+    repair_user = seat.httpd.posted[1]["messages"][1]["content"]
+    assert "DIRTY-ONE" in repair_user
+    assert "DCL_BAD" in repair_user  # the checker diagnostic, verbatim
+    # a single-slot probe preceded EACH call: preflight(1) then pre-repair(2)
+    assert seat.httpd.running_hits == 2
+    assert seat.httpd.running_at_chat == [1, 2]
+
+
+def test_repair_loop_dirty_second_recorded_honestly(tmp_path, seat, monkeypatch):
+    # both attempts compile dirty -> still exactly two calls, honestly recorded
+    monkeypatch.setattr(rdh, "run_response_checker",
+                        _fake_checker({"attempt-1.dcl": False, "response.dcl": False}))
+    seat.configure(chat_queue=[("DIRTY-ONE\n", "stop"), ("STILL-DIRTY\n", "stop")])
+    out = tmp_path / "rep-1"
+    rc = rdh.main(_repair_argv(REAL_TASK_001, out, seat.endpoint))
+    assert rc == 0
+    assert seat.httpd.chat_hits == 2  # never a third call
+    assert (out / "response.dcl").read_text(encoding="utf-8") == "STILL-DIRTY\n"
+    cfg = json.loads((out / "config.json").read_text(encoding="utf-8"))
+    assert cfg["zero_shot_clean"] is False
+    assert cfg["repaired_clean"] is False  # honest: the repair did NOT land clean
+    assert cfg["attempts"] == 2

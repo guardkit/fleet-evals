@@ -174,8 +174,34 @@ def slot_ready(payload, alias: str) -> bool:
     return False
 
 
-def probe_single_slot(endpoint: str, alias: str, timeout: float = PROBE_TIMEOUT_S) -> dict:
-    """Refuse loudly unless <base>/running shows `alias` in state `ready`."""
+def probe_single_slot(endpoint: str, alias: str, timeout: float = PROBE_TIMEOUT_S,
+                      mode: str = "running") -> dict:
+    """Refuse loudly unless the seat proves ready.
+
+    mode="running": llama-swap's /running must show `alias` in state ready (the fleet law).
+    mode="health":  a bare llama.cpp llama-server (ad-hoc candidate probe, 2026-07-18
+    addition) has no /running; GET /health must answer HTTP 200 {"status":"ok"}.
+    """
+    if mode == "health":
+        url = probe_base(endpoint) + "/health"
+        try:
+            req = urllib.request.Request(url, method="GET")
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                raw = resp.read().decode("utf-8")
+        except (urllib.error.URLError, OSError, TimeoutError) as exc:
+            raise Refusal(
+                f"REFUSING to run — health probe GET {url} failed ({exc!r}); "
+                f"cannot prove the candidate server is up."
+            )
+        try:
+            payload = json.loads(raw)
+        except json.JSONDecodeError:
+            raise Refusal(f"REFUSING to run — health probe {url} returned non-JSON:\n{raw}")
+        if payload.get("status") != "ok":
+            raise Refusal(
+                f"REFUSING to run — health probe {url} not ok (got: {raw})."
+            )
+        return {"probe_url": url, "raw": payload}
     url = probe_base(endpoint) + "/running"
     try:
         req = urllib.request.Request(url, method="GET")
@@ -358,7 +384,7 @@ def preflight(task_dir: Path, out: Path, endpoint: str, model: str, *,
             raise Refusal(f"REFUSING to run --repair-loop — missing vendored checker {DCL_CHECKER}")
 
     # single-slot law (last, right before the call)
-    receipt = probe_single_slot(endpoint, model)
+    receipt = probe_single_slot(endpoint, model, mode=probe_mode)
     _ = probe
     return toml, receipt
 
@@ -396,6 +422,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     ap.add_argument("--vocab-ref", type=Path, default=None,
                     help="append this file (the compiler-verified vocabulary reference) to the "
                          "composed user prompt under a delimiter; prompt_sha256 covers it (§10)")
+    ap.add_argument("--probe", choices=["running", "health"], default="running",
+                    help="single-slot probe mode: llama-swap /running (default) or bare "
+                         "llama-server /health (ad-hoc candidate probes)")
     ap.add_argument("--repair-loop", action="store_true",
                     help="bounded (<=1) compile->repair pass: if attempt 1 compiles dirty, make "
                          "exactly ONE second call carrying the checker's verbatim diagnostics; the "
@@ -438,7 +467,8 @@ def main(argv: list[str] | None = None) -> int:
     vocab_ref = args.vocab_ref.resolve() if args.vocab_ref is not None else None
 
     toml, probe_receipt = preflight(task_dir, out, args.endpoint, args.model,
-                                    repair_loop=args.repair_loop, vocab_ref=vocab_ref)
+                                    repair_loop=args.repair_loop, vocab_ref=vocab_ref,
+                                    probe_mode=args.probe)
     timeout = args.timeout
     if timeout is None:
         timeout = float(toml.get("task", {}).get("timeout_seconds", 900))
@@ -536,7 +566,7 @@ def main(argv: list[str] | None = None) -> int:
                 + "\n"
             )
             # single-slot probe before the SECOND call too (repo law, both attempts)
-            probe_single_slot(args.endpoint, args.model)
+            probe_single_slot(args.endpoint, args.model, mode=args.probe)
             t1 = time.time()
             try:
                 raw2 = with_transport_retries(lambda: call_model(

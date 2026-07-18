@@ -318,7 +318,8 @@ def load_task_toml(task_dir: Path) -> dict:
 
 
 def preflight(task_dir: Path, out: Path, endpoint: str, model: str, *,
-              repair_loop: bool = False, vocab_ref: Path | None = None) -> tuple[dict, dict]:
+              repair_loop: bool = False, vocab_ref: Path | None = None,
+              probe_mode: str = "running") -> tuple[dict, dict]:
     """Refuse loudly on any precondition miss; never degrade. Returns
     (task.toml dict, single-slot probe receipt).
 

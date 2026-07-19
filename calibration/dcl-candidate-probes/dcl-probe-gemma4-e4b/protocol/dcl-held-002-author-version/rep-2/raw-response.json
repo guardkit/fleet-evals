@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor Service is system\n\nshape VersionMetadata {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\n\nshape GetVersionRequest {\n  // Represents the context of a GET request, no body payload required\n}\n\noutcome VersionRetrieved is VersionMetadata\n\noutcome MethodNotAllowed\n\npolicy ReadOnlyPolicy {\n  security {\n    authentication allow\n  }\n  availability {\n    dependency_tolerance required\n  }\n}\n\ncapability GetVersion {\n  intent GetVersionRequest from Service\n\n  outcomes {\n    VersionRetrieved\n    MethodNotAllowed\n  }\n\n  effects {}\n\n  events {}\n\n  policies {\n    ReadOnlyPolicy governs capability\n  }\n\n  observe {\n    capability duration as version_retrieval_time\n  }\n\n  lifecycle {\n    begin Pending\n    end Completed\n    step Pending {\n      kind active\n      deadline 500ms causing outcome MethodNotAllowed\n    }\n    move Pending to Completed on outcome VersionRetrieved\n  }\n\n  when {\n    // If the request is a GET, it succeeds and returns metadata\n    // We model the success path as the default/otherwise case, assuming the intent\n    // is only invoked for valid requests.\n    otherwise then VersionRetrieved\n    // If the request is not a GET (e.g., POST, PUT), it fails immediately\n    // This models the \"method-not-allowed\" requirement.\n    MethodNotAllowed violated then MethodNotAllowed\n  }\n}",
+        "reasoning_content": "The user wants me to write a DCL v1.0 capability document for the `api_test /version` endpoint.\nThis endpoint is read-only, public, and returns metadata: `version`, `commit`, and `service`.\n\nI need to define:\n1.  **Actors/Shapes/Events/Effects/Outcomes**: Based on the feature brief.\n2.  **Intent**: What the service accepts (the request shape).\n3.  **Outcomes**: What the service produces (the successful response).\n4.  **Lifecycle**: How the process flows (it's simple, likely instantaneous).\n5.  **Policies**: What governs it (read-only, no database interaction, public access).\n\n**Feature Analysis (`GET /version`):**\n*   **Request**: `GET /version`. No authentication required.\n*   **Response Shape**: JSON with `version: Text`, `commit: Text`, `service: Text`.\n*   **Behavior**: Returns metadata.\n*   **Constraints**: Read-only. No database interaction.\n*   **Pass-bar**: HTTP 200, correct JSON structure. `POST/PUT/PATCH/DELETE` rejected (Method Not Allowed). No degradation on DB failure (since it doesn't touch the DB).\n\n**DCL Mapping Strategy:**\n\n1.  **Shapes**: Define the input (request) and output (response).\n    *   Input Shape (Request): Since it's a GET, the input shape might be empty or represent the request context (e.g., `GETRequest`). Since the brief implies no input data is needed for the metadata retrieval, I'll use a minimal shape or rely on the intent structure.\n    *   Output Shape (Response): `VersionMetadata`.\n2.  **Actors**: The service itself (`System`) is the actor providing the capability. The caller is likely a `System` or `human` (if testing manually), but since it's a public API, I'll model the capability from the `System` actor representing the API service.\n3.  **Capability**: `GetVersion`.\n4.  **Intent**: `GetVersionRequest` from `System`.\n5.  **Outcomes**: `VersionRetrieved` (Success), `MethodNotAllowed` (Failure for non-GET).\n6.  **Effects**: None, as it touches no database or external service.\n7.  **Events**: None.\n8.  **Policies**:\n    *   Security: `authentication allow` (since no auth is required).\n    *   Availability: `dependency_tolerance required` (since it must not degrade if dependencies fail, even if there are none listed, this confirms the read-only nature).\n    *   Performance: Maybe a simple latency constraint, but since it's metadata retrieval, I'll keep it minimal.\n9.  **Lifecycle**: Very simple, likely instantaneous.\n\n**Detailed Implementation Steps:**\n\n**1. Declarations:**\n*   `actor Service` is `system`.\n*   `shape VersionMetadata` (output).\n*   `shape GetVersionRequest` (input, minimal/empty).\n*   `outcome VersionRetrieved`.\n*   `outcome MethodNotAllowed`.\n*   `policy ReadOnlyPolicy`.\n\n**2. Policy Definition (`ReadOnlyPolicy`):**\n*   Must govern the capability.\n*   Security: `authentication allow`.\n*   Availability: `dependency_tolerance required` (to satisfy the \"no degradation\" requirement).\n\n**3. Capability Definition (`GetVersion`):**\n*   `intent GetVersionRequest from Service`.\n*   `outcomes { VersionRetrieved MethodNotAllowed }`.\n*   `effects {}`.\n*   `events {}`.\n*   `policies { ReadOnlyPolicy governs capability }`.\n*   `observe {}` (Maybe observe the capability duration).\n*   `when {}` (Define transitions based on the request type/method).\n*   `lifecycle {}` (Simple, immediate transition).\n\nLet's refine the shapes and outcomes.\n\n*   **Shape `VersionMetadata`**:\n    *   `version: Text required`\n    *   `commit: Text required`\n    *   `service: Text required`\n*   **Shape `GetVersionRequest`**: Since the request is GET, it carries no body data. I can define it as empty or just represent the method type if the DCL allows, but usually, the intent shape represents the payload. I will use a minimal shape to represent the request context.\n*   **Outcomes**:\n    *   `VersionRetrieved` (Success, carries `VersionMetadata`).\n    *   `MethodNotAllowed` (Failure, no payload needed).\n\nLet's start writing the DCL structure."
+      }
+    }
+  ],
+  "created": 1784432010,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1362,
+    "prompt_tokens": 4560,
+    "total_tokens": 5922,
+    "prompt_tokens_details": {
+      "cached_tokens": 4555
+    }
+  },
+  "id": "chatcmpl-cRTLjBl7YBDwvo3SeRUhlsT7LtVXCrXc",
+  "timings": {
+    "cache_n": 4555,
+    "prompt_n": 5,
+    "prompt_ms": 52.229,
+    "prompt_per_token_ms": 10.4458,
+    "prompt_per_second": 95.73225602634551,
+    "predicted_n": 1362,
+    "predicted_ms": 26183.206,
+    "predicted_per_token_ms": 19.22408663729809,
+    "predicted_per_second": 52.01807601406795
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor ApiTestService is system\n\nshape StatsRequest {\n  // No input required; this is a read-only endpoint\n}\n\nevent StatsUpdated is {\n  requestsServed: Integer required\n  firstRequestAt: Text required\n}\n\noutcome StatsResponse {\n  service: Text required\n  requestsServed: Integer required\n  firstRequestAt: Text optional\n}\n\npolicy StatsReadiness {\n  reliability {\n    timeout 10 seconds\n    idempotency required\n    retry {\n      attempts 1\n      backoff constant\n    }\n  }\n}\n\ncapability GetStats {\n  intent StatsRequest from ApiTestService\n\n  outcomes {\n    StatsResponse\n  }\n\n  effects {\n    // No effects; the endpoint is read-only\n  }\n\n  events {\n    emits StatsUpdated\n  }\n\n  policies {\n    StatsReadiness governs capability\n    StatsReadiness governs event StatsUpdated\n  }\n\n  observe {\n    capability duration\n    outcome StatsResponse count as stats_requests_served\n    event StatsUpdated count as stats_updates_emitted\n  }\n\n  when {\n    // No conditions; the endpoint always returns valid stats\n    otherwise then StatsResponse\n  }\n\n  lifecycle {\n    begin Active\n    step Active\n    end Active\n    // Lifecycle is stable; no transitions needed\n  }\n}"
+      }
+    }
+  ],
+  "created": 1784431291,
+  "model": "dcl-probe-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 276,
+    "prompt_tokens": 1339,
+    "total_tokens": 1615,
+    "prompt_tokens_details": {
+      "cached_tokens": 1338
+    }
+  },
+  "id": "chatcmpl-taqcq6Znl0nuUqdcBuA50qnTAOM4c2I1",
+  "timings": {
+    "cache_n": 1338,
+    "prompt_n": 1,
+    "prompt_ms": 18.643,
+    "prompt_per_token_ms": 18.643,
+    "prompt_per_second": 53.639435713136294,
+    "predicted_n": 276,
+    "predicted_ms": 4275.889,
+    "predicted_per_token_ms": 15.492351449275363,
+    "predicted_per_second": 64.54798054860639
+  }
+}

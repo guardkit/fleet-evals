@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor system is system\n\nshape StatsReport {\n  service: Text required\n  requests_served: Integer required\n  first_request_at: Text required\n}\n\ncapability GetStats {\n  intent void\n\n  outcomes {\n    StatsReport\n  }\n\n  policies {\n    DataIntegrity governs capability\n  }\n\n  observe {\n    capability duration\n    outcome StatsReport count as stats_reports_served\n  }\n\n  lifecycle {\n    begin Starting\n    step Running\n    end Running\n    move Starting to Running on capability initialized\n  }\n}\n\npolicy DataIntegrity {\n  consistency {\n    read_only required\n    state_persistence required\n  }\n}",
+        "reasoning_content": "The user wants me to write a DCL (Declarative Capability Language) v1.0 capability document for the `GET /stats` endpoint of the `api_test` service.\n\nI must model:\n1.  **Intent**: What the capability consumes (the request).\n2.  **Outcomes**: What it produces.\n3.  **Events**: What it emits (if any).\n4.  **Policy**: What governs it.\n5.  **Lifecycle**: How it behaves over time.\n\nThe feature brief describes a read-only endpoint that tracks service metrics:\n*   `service` (configured app name, string)\n*   `requests_served` (process-lifetime count, integer)\n*   `first_request_at` (UTC ISO-8601 time, nullable until first request)\n\nLet's define the components:\n\n**1. Actors/Effects/Events/Outcomes:**\n*   **Actor**: The caller (e.g., `system` or `human` if monitoring is external, but since it's an API endpoint, `system` seems appropriate for the caller/monitor). Let's use `system`.\n*   **Effects**: None needed for persistence or external notification, as the state is internal (in-process counters).\n*   **Events**: None explicitly mentioned as being emitted *by* the capability, but the state changes internally.\n*   **Outcomes**: The successful return of the statistics data.\n\n**2. Shapes:**\n*   **Input Shape (Request)**: Since it's a GET request, the input is minimal, perhaps just identifying the service context, but the brief doesn't specify request parameters. We model the *intent* based on the service context. Let's assume the service name is configured externally, but the capability itself doesn't consume it as a parameter. If we must define an input shape, it should be empty or represent the context. Given the nature of the endpoint, the input is effectively `void` or `context`. Let's define a shape for the returned data structure, which acts as the outcome payload.\n*   **Output Shape (Response)**:\n    *   `service`: Text (non-empty string)\n    *   `requests_served`: Integer\n    *   `first_request_at`: Text (UTC ISO-8601, nullable)\n\n**3. Capability Definition:**\n*   **Intent**: `void` (or a minimal context shape).\n*   **Outcomes**: `StatsReport` (the output shape).\n*   **Rule**: Read-only nature (implicit in the capability definition, but we must ensure the model reflects this).\n*   **Policies**: None specific mentioned, but reliability/consistency might apply to the data integrity. Since it's in-process, maybe `Consistency`.\n*   **Lifecycle**: The capability is always available once the service starts. It transitions from `Starting` to `Running`.\n\n**Refining the DCL structure:**\n\n*   **Actors**: `system`\n*   **Shapes**: `StatsReport` (the response structure).\n*   **Outcomes**: `StatsReport`\n*   **Intent**: `void` (since the GET request has no parameters).\n\nLet's implement the `StatsReport` shape and the `GetStats` capability.\n\n*Self-Correction/Refinement:* The DCL syntax requires all referenced types (shapes, outcomes, actors) to be declared.\n\n**Implementation Plan:**\n1. Declare `language dcl 1.0`.\n2. Declare `actor system`.\n3. Declare `shape StatsReport` with `service`, `requests_served`, `first_request_at`.\n4. Declare the `capability GetStats`.\n5. Set `intent` to `void`.\n6. Set `outcomes` to `StatsReport`.\n7. Define `lifecycle` (e.g., `Starting` -> `Running`).\n8. Define `policies` (e.g., `DataIntegrity` governs the capability).\n\nLet's ensure the types match the requirements:\n*   `service`: Text (non-empty string)\n*   `requests_served`: Integer\n*   `first_request_at`: Text (UTC ISO-8601)\n\nI will use a simple policy for data integrity since the state is internal and critical.\n\nLet's write the code."
+      }
+    }
+  ],
+  "created": 1784431499,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1107,
+    "prompt_tokens": 1435,
+    "total_tokens": 2542,
+    "prompt_tokens_details": {
+      "cached_tokens": 1430
+    }
+  },
+  "id": "chatcmpl-gKjQDXqXRN7Kfn3RcIMt43kl8pNkLn7j",
+  "timings": {
+    "cache_n": 1430,
+    "prompt_n": 5,
+    "prompt_ms": 40.738,
+    "prompt_per_token_ms": 8.1476,
+    "prompt_per_second": 122.7355294810742,
+    "predicted_n": 1107,
+    "predicted_ms": 20661.3,
+    "predicted_per_token_ms": 18.664227642276423,
+    "predicted_per_second": 53.57842923726968
+  }
+}

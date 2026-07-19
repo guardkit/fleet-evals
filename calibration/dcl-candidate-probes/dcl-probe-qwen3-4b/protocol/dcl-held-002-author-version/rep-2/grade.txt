@@ -1,0 +1,20 @@
+..F..                                                                    [100%]
+=================================== FAILURES ===================================
+_____________________ test_candidate_compiles_zero_errors ______________________
+
+response_path = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/calibration/dcl-candidate-probes/dcl-probe-qwen3-4b/protocol/dcl-held-002-author-version/rep-2/response.dcl')
+
+    def test_candidate_compiles_zero_errors(response_path):
+        """G1: the candidate DCL compiles clean (ok:true, zero errors, exit 0)."""
+        findings = dcl_gates.compile_findings(response_path)
+>       assert findings == [], f"G1 compile gate: {findings}"
+E       AssertionError: G1 compile gate: ['response.dcl: checker ok is not true; error diagnostics: [{\'severity\': \'error\', \'message\': \'undefined actor\', \'code\': \'DCL_SEM_UNKNOWN_ACTOR\', \'line\': 26, \'column\': 3}, {\'severity\': \'error\', \'message\': \'undefined shape\', \'code\': \'DCL_SEM_UNKNOWN_SHAPE\', \'line\': 26, \'column\': 3}, {\'severity\': \'error\', \'message\': \'unexpected character /\', \'code\': \'DCL_LEX_UNEXPECTED_CHAR\', \'line\': 26, \'column\': 14}, {\'severity\': \'error\', \'message\': \'expected from\', \'code\': \'DCL_PARSE_EXPECTED_TOKEN\', \'line\': 26, \'column\': 15}, {\'severity\': \'error\', \'message\': \'unknown capability section\', \'code\': \'DCL_PARSE_UNKNOWN_CAPABILITY_SECTION\', \'line\': 26, \'column\': 28}, {\'severity\': \'error\', \'message\': \'unexpected character "\', \'code\': \'DCL_LEX_UNEXPECTED_CHAR\', \'line\': 34, \'column\': 29}, {\'severity\': \'error\', \'message\': \'unexpected character "\', \'code\': \'DCL_LEX_UNEXPECTED_CHAR\', \'line\': 34, \'column\': 33}, {\'severity\': \'error\', \'message\': \'terminal lifecycle step must not declare a non-terminal kind\', \'code\': \'DCL_SEM_LIFECYCLE_TERMINAL_KIND_CONFLICT\', \'line\': 64, \'column\': 5}]', 'response.dcl: errorCount != 0: [{\'severity\': \'error\', \'message\': \'undefined actor\', \'code\': \'DCL_SEM_UNKNOWN_ACTOR\', \'line\': 26, \'column\': 3}, {\'severity\': \'error\', \'message\': \'undefined shape\', \'code\': \'DCL_SEM_UNKNOWN_SHAPE\', \'line\': 26, \'column\': 3}, {\'severity\': \'error\', \'message\': \'unexpected character /\', \'code\': \'DCL_LEX_UNEXPECTED_CHAR\', \'line\': 26, \'column\': 14}, {\'severity\': \'error\', \'message\': \'expected from\', \'code\': \'DCL_PARSE_EXPECTED_TOKEN\', \'line\': 26, \'column\': 15}, {\'severity\': \'error\', \'message\': \'unknown capability section\', \'code\': \'DCL_PARSE_UNKNOWN_CAPABILITY_SECTION\', \'line\': 26, \'column\': 28}, {\'severity\': \'error\', \'message\': \'unexpected character "\', \'code\': \'DCL_LEX_UNEXPECTED_CHAR\', \'line\': 34, \'column\': 29}, {\'severity\': \'error\', \'message\': \'unexpected character "\', \'code\': \'DCL_LEX_UNEXPECTED_CHAR\', \'line\': 34, \'column\': 33}, {\'severity\': \'error\', \'message\': \'terminal lifecycle step must not declare a non-terminal kind\', \'code\': \'DCL_SEM_LIFECYCLE_TERMINAL_KIND_CONFLICT\', \'line\': 64, \'column\': 5}]', 'response.dcl: checker exit code 1 (expected 0)']
+E       assert ["response.dc...(expected 0)'] == []
+E         
+E         Left contains 3 more items, first extra item: "response.dcl: checker ok is not true; error diagnostics: [{'severity': 'error', 'message': 'undefined actor', 'code':...p must not declare a non-terminal kind', 'code': 'DCL_SEM_LIFECYCLE_TERMINAL_KIND_CONFLICT', 'line': 64, 'column': 5}]"
+E         Use -v to get more diff
+
+tasks/dcl-held-002-author-version/test/test_gate_dcl_held_002.py:30: AssertionError
+=========================== short test summary info ============================
+FAILED tasks/dcl-held-002-author-version/test/test_gate_dcl_held_002.py::test_candidate_compiles_zero_errors
+1 failed, 4 passed in 0.19s

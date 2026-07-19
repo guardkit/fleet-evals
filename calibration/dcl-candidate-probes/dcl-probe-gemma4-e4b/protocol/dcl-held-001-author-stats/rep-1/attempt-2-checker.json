@@ -1,0 +1,38 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 11,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "undefined shape",
+      "code": "DCL_SEM_UNKNOWN_SHAPE",
+      "line": 20,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "expected from",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 20,
+      "column": 15
+    },
+    {
+      "severity": "error",
+      "message": "expected actor",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 20,
+      "column": 23
+    }
+  ],
+  "diagnosticCount": 4,
+  "errorCount": 4,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

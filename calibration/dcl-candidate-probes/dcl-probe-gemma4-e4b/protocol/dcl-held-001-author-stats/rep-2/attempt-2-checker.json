@@ -1,0 +1,24 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 11,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "terminal lifecycle step must not declare a non-terminal kind",
+      "code": "DCL_SEM_LIFECYCLE_TERMINAL_KIND_CONFLICT",
+      "line": 40,
+      "column": 9
+    }
+  ],
+  "diagnosticCount": 2,
+  "errorCount": 2,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

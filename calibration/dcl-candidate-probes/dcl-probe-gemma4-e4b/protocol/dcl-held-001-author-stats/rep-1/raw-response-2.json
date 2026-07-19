@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor api_test is system\n\nshape StatsResponse {\n  service: Text required\n  requests_served: Number required\n  first_request_at: DateTime required\n}\n\noutcome StatsAvailable is StatsResponse\n\npolicy ServiceAvailability {\n  availability {\n    dependency_tolerance allowed\n  }\n}\n\ncapability GetStats {\n  intent from api_test\n\n  outcomes {\n    StatsAvailable\n  }\n\n  effects {}\n\n  events {}\n\n  policies {\n    ServiceAvailability governs capability\n  }\n\n  observe {\n    capability duration as stats_read_latency\n  }\n\n  lifecycle {\n    begin Active\n    end Active\n  }\n\n  when {\n    otherwise then StatsAvailable\n  }\n}",
+        "reasoning_content": "The user wants me to rewrite a DCL capability definition for the `GET /stats` endpoint, ensuring it compiles cleanly against the provided DCL 1.0 specification and resolves the errors from the previous attempt.\n\nThe previous attempt failed with:\n1. `DCL_SEM_UNKNOWN_SHAPE` (Line 18, Column 3): `StatsAvailable is StatsResponse`\n2. `DCL_PARSE_EXPECTED_TOKEN` (Line 18, Column 15): `intent from api_test`\n3. `DCL_PARSE_EXPECTED_IDENTIFIER` (Line 18, Column 23): `intent from api_test`\n\nLet's address these issues based on the DCL 1.0 syntax reference.\n\n**1. Shape Definition:**\nThe response shape is `StatsResponse`. It must be declared first.\n```dcl\nshape StatsResponse {\n  service: Text required\n  requests_served: Number required\n  first_request_at: DateTime required\n}\n```\nThe outcome should reference this shape, but the syntax for outcomes needs to be correct.\n\n**2. Intent/Actor/Capability Structure:**\nThe previous attempt used: `intent from api_test`.\nThe reference shows: `intent OrderInput from Customer`.\nIf the capability is purely functional (like a read endpoint), the intent might be empty or represent the request itself. Since the request is just a GET call, the intent might be modeled as a simple trigger or perhaps just `intent from system` if we model the service itself as the actor performing the action, or if the request is the input.\n\nThe feature brief describes the endpoint as returning data, not consuming complex input, but it is triggered by a request. Since the request itself is the trigger, and the service is running, I should model the capability as being triggered by a system request.\n\nLet's define the capability structure:\n\n*   **Actor:** `api_test` is `system`. (This seems appropriate for the service itself or the caller, but since the service *provides* the capability, let's stick to `system` for the service context.)\n*   **Intent:** Since the request is read-only and stateless (in terms of input parameters), the intent might be modeled as a simple trigger from the system. The syntax `intent from Actor` is valid if the input shape is implicit or empty.\n*   **Outcomes:** The outcome should represent the successful return of the data, which is the `StatsResponse` shape.\n\nLet's refine the capability definition based on the successful syntax examples.\n\n**Refining the Capability:**\n\n*   **Intent:** The request is the trigger. I will use `intent from system` to signify the service responding to a system request.\n*   **Outcomes:** The successful outcome is `StatsAvailable`, which is the `StatsResponse` shape.\n*   **Lifecycle:** Since it's a read-only endpoint, the lifecycle is effectively instantaneous or always active. I'll use a simple `active` lifecycle.\n*   **Policies:** The feature brief mentions \"Statistics remain available when the database is unavailable\" and \"read-only.\" This suggests `availability` and `governance` policies. I'll use `dependency_tolerance allowed` under `availability`.\n*   **When/Rules:** Since it's read-only, the success is the default path.\n\n**Reviewing the previous attempt's errors:**\n\n1. `DCL_SEM_UNKNOWN_SHAPE`: Fix by ensuring `StatsResponse` is declared correctly.\n2. `DCL_PARSE_EXPECTED_TOKEN` / `DCL_PARSE_EXPECTED_IDENTIFIER`: The syntax `intent from api_test` is likely incorrect if `api_test` is not defined as an actor *before* the capability, or if the intent structure requires a specific shape/actor pairing.\n\nIf I define `actor api_test is system`, then `intent from api_test` should work, but the previous attempt failed. Let's ensure the actor is defined first.\n\nLet's structure the final DCL file.\n\n---\n*Self-Correction/Refinement on Intent:*\nThe previous attempt used `actor api_test is system`.\nThe previous attempt used `intent from api_test`.\nIf I define the actor, this syntax should be valid according to the reference: `intent OrderInput from Customer`. If `OrderInput` is omitted, it implies an empty input shape.\n\nLet's ensure all declarations are present and correct.\n\n1. Define `actor api_test is system`.\n2. Define `shape StatsResponse`.\n3. Define `capability GetStats`.\n4. Use `intent from api_test` (assuming the compiler accepts this as an empty input intent when the actor is defined).\n5. Use `outcome StatsAvailable is StatsResponse`.\n\nLet's write the final code."
+      }
+    }
+  ],
+  "created": 1784431803,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1219,
+    "prompt_tokens": 5190,
+    "total_tokens": 6409,
+    "prompt_tokens_details": {
+      "cached_tokens": 4694
+    }
+  },
+  "id": "chatcmpl-mi8gIZaaTer3kxu0XN8XiqSzmsQuQaR7",
+  "timings": {
+    "cache_n": 4694,
+    "prompt_n": 496,
+    "prompt_ms": 142.964,
+    "prompt_per_token_ms": 0.28823387096774195,
+    "prompt_per_second": 3469.4048851459106,
+    "predicted_n": 1219,
+    "predicted_ms": 23386.87,
+    "predicted_per_token_ms": 19.18529122231337,
+    "predicted_per_second": 52.12326403661542
+  }
+}

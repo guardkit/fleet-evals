@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor ApiService is system\n\nshape UptimeRequest {\n  // Represents the GET /uptime request, which is read-only and requires no input payload.\n}\n\nshape UptimeResponse {\n  service: Text required\n  started_at: DateTime required\n  uptime_seconds: Number required\n}\n\noutcome UptimeSuccess is UptimeResponse\noutcome UptimeRejected\n\npolicy AvailabilityTolerance {\n  availability {\n    dependency_tolerance allowed\n  }\n}\n\ncapability GetUptime {\n  intent UptimeRequest from ApiService\n\n  outcomes {\n    UptimeSuccess\n    UptimeRejected\n  }\n\n  // Rule to enforce read-only nature (Behavior 4)\n  rule ReadOnlyConstraint: input is not mutating\n\n  effects {}\n\n  policies {\n    AvailabilityTolerance governs capability\n  }\n\n  observe {\n    capability duration as uptime_read_duration\n  }\n\n  lifecycle {\n    begin Pending\n    end Success\n    end Rejected\n    move Pending to Success on outcome UptimeSuccess\n    move Pending to Rejected on outcome UptimeRejected\n  }\n\n  when {\n    // Successful read operation\n    otherwise then UptimeSuccess\n\n    // Mutation attempt rejection (Behavior 4)\n    ReadOnlyConstraint violated then UptimeRejected\n  }\n}",
+        "reasoning_content": "The user wants me to author a DCL (Declarative Capability Language) v1.0 capability document for the `GET /uptime` endpoint of the `api_test` service.\n\nThis capability must model:\n1.  **Intent:** What it consumes (the request shape).\n2.  **Outcomes:** What it produces (the successful result).\n3.  **Events:** What it emits (if any, though likely none for a simple read).\n4.  **Policies:** What governs it (e.g., availability, performance).\n5.  **Lifecycle:** Its state transitions.\n\n**Feature Analysis (`GET /uptime`):**\n*   **Request:** `GET /uptime`. It's read-only. It consumes no input parameters for the core functionality, but the service itself is the actor/context.\n*   **Response Shape:** `service` (Text), `started_at` (DateTime/Date), `uptime_seconds` (Number).\n*   **Behaviors:**\n    1. Returns the three fields.\n    2. Uptime increases between requests.\n    3. `started_at` is stable.\n    4. Mutating verbs are rejected (read-only).\n    5. Available even if DB is down (no DB dependency).\n*   **Machine Pass-Bar:**\n    *   HTTP 200 with correct fields.\n    *   `uptime_seconds` non-negative and increasing.\n    *   Mutating verb rejected.\n    *   No degradation on DB failure.\n\n**DCL Modeling Strategy:**\n\n1.  **Actor/Context:** The service itself (`api_test`). Since it's a read operation, we model the capability execution by the service/system.\n2.  **Input/Intent:** Since it's a simple GET, the input shape might be empty, or we can model the request itself as the intent. Let's define a `UptimeRequest` shape, even if it's empty, to satisfy the `intent` requirement.\n3.  **Output/Outcome:** The successful result must be modeled as an `Outcome`. Let's define `UptimeSuccess`.\n4.  **Policies:**\n    *   Must be available even if DB is down -> `availability` policy, `dependency_tolerance allowed` (or `required` if we model the dependency, but since it explicitly states *no* DB dependency, we ensure tolerance).\n    *   Performance/Reliability might be relevant, but the brief doesn't specify latency/retry requirements, only functional correctness. Let's focus on availability and read-only nature.\n5.  **Lifecycle:** Simple, since it's a read operation, it likely transitions immediately to a successful state upon execution.\n\n**Step-by-step DCL construction:**\n\n1.  **Define Shapes/Outcomes:**\n    *   `UptimeResponse` shape: `service: Text required`, `started_at: DateTime required`, `uptime_seconds: Number required`.\n    *   `UptimeSuccess` outcome.\n    *   `UptimeFailure` outcome (for rejected/error cases, e.g., mutation attempt).\n\n2.  **Define Capability:** `GetUptime`\n    *   `intent`: `UptimeRequest` from `system` (the service).\n    *   `outcomes`: `UptimeSuccess`, `UptimeFailure`.\n    *   `rules`: Model the read-only constraint (e.g., a rule that rejects mutation attempts).\n    *   `effects`: None needed, as it's read-only and doesn't persist or notify.\n    *   `policies`: `AvailabilityTolerance` governing the capability.\n    *   `lifecycle`: Simple transition.\n\n**Refining the Model:**\n\n*   **Input:** The request itself. Let's assume the service is the actor, and the request is the trigger.\n*   **Read-Only Constraint:** This is best modeled as a rule or a specific failure outcome triggered by a mutating verb attempt.\n*   **Uptime Increase:** This is a behavioral property, not easily modeled as a simple DCL state transition, but the outcome structure must support the data.\n\nLet's proceed with the structure.\n\n---\n*Self-Correction/Refinement on Policies:*\nThe feature requires: \"Uptime remains available when the database is unavailable.\"\nThis maps to `availability` policy, specifically `dependency_tolerance allowed`.\n\n*Self-Correction/Refinement on Lifecycle:*\nSince it's a simple read, the lifecycle should be very short.\n`begin Pending` -> `move Pending to Success on outcome UptimeSuccess`.\n\n*Final Check on Requirements:*\n1. DCL v1.0.\n2. One capability.\n3. `intent` present.\n4. At least one `outcome` present.\n5. `lifecycle` present.\n6. Compiles clean.\n\nI will use `system` as the actor for the API service itself.\nI will use `DateTime` for `started_at`.\nI will use `Number` for `uptime_seconds`."
+      }
+    }
+  ],
+  "created": 1784432277,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1386,
+    "prompt_tokens": 4579,
+    "total_tokens": 5965,
+    "prompt_tokens_details": {
+      "cached_tokens": 4574
+    }
+  },
+  "id": "chatcmpl-YepV7A79WaqvFCJ9ZzyeAleOAEqjASus",
+  "timings": {
+    "cache_n": 4574,
+    "prompt_n": 5,
+    "prompt_ms": 55.313,
+    "prompt_per_token_ms": 11.0626,
+    "prompt_per_second": 90.39466309909062,
+    "predicted_n": 1386,
+    "predicted_ms": 27285.963,
+    "predicted_per_token_ms": 19.686841991341993,
+    "predicted_per_second": 50.79534850941489
+  }
+}

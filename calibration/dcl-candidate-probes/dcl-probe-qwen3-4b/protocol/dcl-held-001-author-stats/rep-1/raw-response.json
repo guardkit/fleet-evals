@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor Service is system\n\nshape StatsRequest {\n  // No input required; this is a read-only endpoint\n}\n\nevent StatsRequested is {\n  // No payload needed; just a request event\n}\n\neffect IncrementRequestCount is persistence\neffect RecordFirstRequestTime is persistence\n\npolicy StatsReliability {\n  reliability {\n    timeout 10 seconds\n    idempotency required\n    backoff exponential\n  }\n}\n\ncapability GetStats {\n  intent StatsRequest from Service\n\n  outcomes {\n    StatsResponseProvided\n  }\n\n  effects {\n    IncrementRequestCount\n    RecordFirstRequestTime\n  }\n\n  events {\n    emits StatsRequested\n  }\n\n  policies {\n    StatsReliability governs capability\n    StatsReliability governs effect IncrementRequestCount\n    StatsReliability governs effect RecordFirstRequestTime\n    StatsReliability governs lifecycle\n  }\n\n  observe {\n    capability duration as stats_query_duration\n    effect IncrementRequestCount count failures as request_count_failures\n    effect RecordFirstRequestTime count failures as first_request_time_failures\n    lifecycle transitions\n  }\n\n  when {\n    otherwise then StatsResponseProvided\n  }\n\n  lifecycle {\n    begin Pending\n    step Pending\n    end Ready\n    move Pending to Ready on outcome StatsResponseProvided\n  }\n}"
+      }
+    }
+  ],
+  "created": 1784431350,
+  "model": "dcl-probe-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 274,
+    "prompt_tokens": 4369,
+    "total_tokens": 4643,
+    "prompt_tokens_details": {
+      "cached_tokens": 1333
+    }
+  },
+  "id": "chatcmpl-3vKWi1KgUa7rrPBM5vJbtflKk0bT8FPB",
+  "timings": {
+    "cache_n": 1333,
+    "prompt_n": 3036,
+    "prompt_ms": 722.039,
+    "prompt_per_token_ms": 0.23782575757575758,
+    "prompt_per_second": 4204.75902271207,
+    "predicted_n": 274,
+    "predicted_ms": 4781.406,
+    "predicted_per_token_ms": 17.45038686131387,
+    "predicted_per_second": 57.30531981597045
+  }
+}

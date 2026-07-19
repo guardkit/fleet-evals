@@ -1,0 +1,45 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 20,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 21,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "undefined shape",
+      "code": "DCL_SEM_UNKNOWN_SHAPE",
+      "line": 26,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 34,
+      "column": 29
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 34,
+      "column": 33
+    }
+  ],
+  "diagnosticCount": 5,
+  "errorCount": 3,
+  "warningCount": 2,
+  "infoCount": 0,
+  "sourceCount": 1
+}

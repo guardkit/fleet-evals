@@ -1,0 +1,52 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 12,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 13,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "unexpected }",
+      "code": "DCL_PARSE_UNEXPECTED_TOKEN",
+      "line": 14,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 15,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "authentication value must be valid",
+      "code": "DCL_SEM_POLICY_CONCERN_VALUE_INVALID",
+      "line": 20,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "undefined shape",
+      "code": "DCL_SEM_UNKNOWN_SHAPE",
+      "line": 39,
+      "column": 3
+    }
+  ],
+  "diagnosticCount": 6,
+  "errorCount": 6,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

@@ -1,0 +1,38 @@
+{
+  "suite": "dcl-heldout",
+  "task_id": "dcl-held-004-repair-diagnostics",
+  "rep": 1,
+  "model": "dcl-probe-qwen3-4b",
+  "endpoint": "http://127.0.0.1:9000/v1/chat/completions",
+  "sampling": {
+    "temperature": 0.3,
+    "top_p": 0.9,
+    "max_tokens": 16384
+  },
+  "prompt_sha256": "bd63d3192654a611e1f2fe811e46908f158f2c9071ca3edc8f5cc70377c2cd54",
+  "prompt": {
+    "system": "Output ONLY the DCL source. No prose, no explanation, no markdown fences.",
+    "system_sha256": "419e455b26af1d3014e28100f6e6520c1fbdba10d05941adbbd0e2d0163d7316",
+    "user_sha256": "bd63d3192654a611e1f2fe811e46908f158f2c9071ca3edc8f5cc70377c2cd54",
+    "composition": "instruction.md verbatim + referenced input/ files inlined in first-appearance order (deterministic)"
+  },
+  "freeze_commit": "8d2d6762c38ef0a3aab1c8d5904dd456e008500b",
+  "wall_time": 4.25,
+  "refreeze_commit": "8a3b9d187fce64cd642b48040ec2f99b84b358fe",
+  "usage": {
+    "completion_tokens": 256,
+    "prompt_tokens": 1091,
+    "total_tokens": 1347,
+    "prompt_tokens_details": {
+      "cached_tokens": 28
+    }
+  },
+  "finish_reason": "stop",
+  "generation_timeout_s": 900.0,
+  "transport_retries": 2,
+  "single_slot_probe": {
+    "url": "http://127.0.0.1:9000/running",
+    "ok": true
+  },
+  "runner": "harness/run_dcl_heldout.py (never grades; grading = tasks/<task>/test)"
+}

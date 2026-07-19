@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor Client is client\nactor Service is system\n\nshape UptimeRequest {\n  // Minimal request context for GET /uptime\n}\n\nshape UptimeResponse {\n  service: Text required\n  started_at: Text required\n  uptime_seconds: Decimal required\n}\n\noutcome UptimeRetrieved\n\ncapability GetUptime {\n  intent UptimeRequest from Client\n\n  outcomes {\n    UptimeRetrieved\n  }\n\n  // The capability is inherently read-only, enforced by the nature of the operation\n  // and the lack of state modification effects.\n  when {\n    // If any attempt to mutate the state were detected (e.g., through an effect),\n    // it would be rejected. Since we have no effects, the operation is read-only.\n    otherwise then UptimeRetrieved\n  }\n\n  // No external effects are involved (read-only, internal process state)\n  effects {}\n\n  // No events are emitted for this synchronous read operation\n  events {}\n\n  // No specific policies govern this simple read operation\n  policies {}\n\n  observe {\n    // Observe the successful retrieval of the response shape\n    outcome UptimeRetrieved count as successful_reads\n  }\n\n  lifecycle {\n    begin Pending\n    step Pending\n    step Completed\n    end Completed\n    move Pending to Completed on outcome UptimeRetrieved\n  }\n}",
+        "reasoning_content": "The user wants me to write a DCL (Declarative Capability Language) v1.0 capability document for the `GET /uptime` endpoint of an `api_test` service.\n\nI must ensure the DCL compiles cleanly and includes:\n1.  A `capability` declaration.\n2.  An `intent`.\n3.  At least one `outcome`.\n4.  A `lifecycle`.\n\nThe feature is read-only, returns specific data (`service`, `started_at`, `uptime_seconds`), and has specific behaviors (read-only, uptime increases, stable start time, no DB dependency).\n\nLet's break down the components:\n\n**1. Actors/Services:**\nThe service itself is the actor. Let's use `System` or `Service`.\nThe caller is likely a `Client` or `System` making a request.\n\n**2. Shapes (Input/Output):**\n*   **Input Shape (Request):** Since it's a `GET` request, the input might be minimal (e.g., just the request context, or perhaps empty if we model the request parameters). Let's define a shape for the request context, even if it's simple.\n*   **Output Shape (Response):** This must contain `service`, `started_at`, and `uptime_seconds`.\n\n**3. Outcomes:**\nSince it's a read-only operation that should always succeed (unless the service itself crashes, which we don't model here), the primary outcome is successful retrieval.\n*   `UptimeRetrieved`\n\n**4. Events:**\nSince it's a synchronous read operation, it might not emit complex events, but we need to define the capability's flow.\n\n**5. Lifecycle:**\nIt starts, executes, and ends successfully.\n\n**6. Policies/Effects:**\n*   **Policies:** Since it's read-only and relies on internal state (process time), we might model a `ReadOnly` policy or simply rely on the `when` clause to enforce read-only behavior.\n*   **Effects:** None, as it doesn't modify external state (no persistence, no notification).\n\n**Modeling the specifics:**\n\n*   **Input Shape (`UptimeRequest`):** Minimal, perhaps just a context identifier.\n*   **Output Shape (`UptimeResponse`):**\n    *   `service: Text required`\n    *   `started_at: Text required` (ISO-8601)\n    *   `uptime_seconds: Decimal required`\n\n*   **Capability (`GetUptime`):**\n    *   `intent UptimeRequest from Client` (or System)\n    *   `outcomes { UptimeRetrieved }`\n    *   `when` clause: Must ensure read-only nature.\n    *   `lifecycle`: Simple transition from `Pending` to `Completed`.\n\nLet's refine the DCL structure.\n\n---\n*Self-Correction/Refinement:*\nThe DCL structure requires all referenced types (actors, shapes, outcomes, effects, events) to be declared.\n\n**Actors:** `Client` (the requester), `Service` (the API implementation).\n**Shapes:** `UptimeRequest`, `UptimeResponse`.\n**Outcomes:** `UptimeRetrieved`.\n**Lifecycle States:** `Pending`, `Completed`.\n\nI will use `system` for the service actor and `client` for the requester actor, adhering to the closed vocabulary if possible, or using generic terms like `System`.\n\nLet's proceed with the implementation."
+      }
+    }
+  ],
+  "created": 1784431654,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1074,
+    "prompt_tokens": 1315,
+    "total_tokens": 2389,
+    "prompt_tokens_details": {
+      "cached_tokens": 1310
+    }
+  },
+  "id": "chatcmpl-md4CnutXdllsLUGqcC4LFlpzpDAUQovW",
+  "timings": {
+    "cache_n": 1310,
+    "prompt_n": 5,
+    "prompt_ms": 37.132,
+    "prompt_per_token_ms": 7.426399999999999,
+    "prompt_per_second": 134.65474523322203,
+    "predicted_n": 1074,
+    "predicted_ms": 19966.79,
+    "predicted_per_token_ms": 18.591052141527,
+    "predicted_per_second": 53.78931716114608
+  }
+}

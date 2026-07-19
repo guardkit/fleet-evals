@@ -1,0 +1,20 @@
+..F..                                                                    [100%]
+=================================== FAILURES ===================================
+_____________________ test_candidate_compiles_zero_errors ______________________
+
+response_path = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/calibration/dcl-candidate-probes/dcl-probe-gemma4-e4b/protocol/dcl-held-003-author-uptime/rep-1/response.dcl')
+
+    def test_candidate_compiles_zero_errors(response_path):
+        """G1: the candidate DCL compiles clean (ok:true, zero errors, exit 0)."""
+        findings = dcl_gates.compile_findings(response_path)
+>       assert findings == [], f"G1 compile gate: {findings}"
+E       AssertionError: G1 compile gate: ["response.dcl: checker ok is not true; error diagnostics: [{'severity': 'error', 'message': 'expected declaration', 'code': 'DCL_PARSE_EXPECTED_DECLARATION', 'line': 19, 'column': 1}, {'severity': 'error', 'message': 'expected declaration', 'code': 'DCL_PARSE_EXPECTED_DECLARATION', 'line': 22, 'column': 1}, {'severity': 'error', 'message': 'unexpected character =', 'code': 'DCL_LEX_UNEXPECTED_CHAR', 'line': 51, 'column': 43}]", "response.dcl: errorCount != 0: [{'severity': 'error', 'message': 'expected declaration', 'code': 'DCL_PARSE_EXPECTED_DECLARATION', 'line': 19, 'column': 1}, {'severity': 'error', 'message': 'expected declaration', 'code': 'DCL_PARSE_EXPECTED_DECLARATION', 'line': 22, 'column': 1}, {'severity': 'error', 'message': 'unexpected character =', 'code': 'DCL_LEX_UNEXPECTED_CHAR', 'line': 51, 'column': 43}]", 'response.dcl: checker exit code 1 (expected 0)']
+E       assert ["response.dc...(expected 0)'] == []
+E         
+E         Left contains 3 more items, first extra item: "response.dcl: checker ok is not true; error diagnostics: [{'severity': 'error', 'message': 'expected declaration', 'c...severity': 'error', 'message': 'unexpected character =', 'code': 'DCL_LEX_UNEXPECTED_CHAR', 'line': 51, 'column': 43}]"
+E         Use -v to get more diff
+
+tasks/dcl-held-003-author-uptime/test/test_gate_dcl_held_003.py:30: AssertionError
+=========================== short test summary info ============================
+FAILED tasks/dcl-held-003-author-uptime/test/test_gate_dcl_held_003.py::test_candidate_compiles_zero_errors
+1 failed, 4 passed in 0.18s

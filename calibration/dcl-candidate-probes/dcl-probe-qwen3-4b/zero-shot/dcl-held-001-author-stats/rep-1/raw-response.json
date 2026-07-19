@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor Service is system\n\neffect RecordRequestCount is persistence\neffect RecordFirstRequestTime is persistence\n\npolicy StatsReliability {\n  reliability {\n    retry {\n      attempts 0\n    }\n    idempotency required\n    timeout 10 seconds\n  }\n}\n\nshape StatsRequest {\n  // No input fields; this is a read-only endpoint\n}\n\nevent StatsUpdated is {\n  service: Text required\n  requests_served: Integer required\n  first_request_at: DateTime required\n}\n\ncapability GetStats {\n  intent StatsRequest from Service\n\n  outcomes {\n    StatsResponse\n  }\n\n  effects {\n    RecordRequestCount\n    RecordFirstRequestTime\n  }\n\n  events {\n    emits StatsUpdated\n  }\n\n  policies {\n    StatsReliability governs capability\n    StatsReliability governs effect RecordRequestCount\n    StatsReliability governs effect RecordFirstRequestTime\n    StatsReliability governs lifecycle\n  }\n\n  observe {\n    capability duration\n    outcome StatsResponse count as stats_requests_served\n    event StatsUpdated count as stats_updates_emitted\n    lifecycle transitions\n  }\n\n  when {\n    // No conditions to trigger outcomes; the outcome is always StatsResponse\n    otherwise then StatsResponse\n  }\n\n  lifecycle {\n    begin Pending\n    step Pending\n    step Active\n    end Active\n    // No transitions required since the endpoint is read-only and state is process-lifetime\n    // The lifecycle remains active after first request\n    move Pending to Active on outcome StatsResponse\n  }\n}"
+      }
+    }
+  ],
+  "created": 1784431286,
+  "model": "dcl-probe-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 321,
+    "prompt_tokens": 1339,
+    "total_tokens": 1660,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "id": "chatcmpl-LWWTlNaMWXwRwjnyH2S9FndWwZoUIefy",
+  "timings": {
+    "cache_n": 0,
+    "prompt_n": 1339,
+    "prompt_ms": 384.928,
+    "prompt_per_token_ms": 0.28747423450336074,
+    "prompt_per_second": 3478.5726161775706,
+    "predicted_n": 321,
+    "predicted_ms": 5396.645,
+    "predicted_per_token_ms": 16.81197819314642,
+    "predicted_per_second": 59.481400017974124
+  }
+}

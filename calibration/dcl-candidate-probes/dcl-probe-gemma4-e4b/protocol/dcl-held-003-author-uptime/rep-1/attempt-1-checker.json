@@ -1,0 +1,31 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 20,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 21,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character =",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 39,
+      "column": 43
+    }
+  ],
+  "diagnosticCount": 3,
+  "errorCount": 3,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

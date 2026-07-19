@@ -1,0 +1,45 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 15,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 17,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "authentication value must be valid",
+      "code": "DCL_SEM_POLICY_CONCERN_VALUE_INVALID",
+      "line": 21,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "otherwise branch must appear last",
+      "code": "DCL_SEM_OTHERWISE_NOT_LAST",
+      "line": 62,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown rule",
+      "code": "DCL_SEM_UNKNOWN_RULE",
+      "line": 65,
+      "column": 5
+    }
+  ],
+  "diagnosticCount": 5,
+  "errorCount": 5,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

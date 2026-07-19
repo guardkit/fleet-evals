@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```dcl\nlanguage dcl 1.0\n\nactor PublicUser is human\n\nshape VersionResponse {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\n\nevent MethodNotAllowed is {\n  method: Text required\n  path: Text required\n}\n\noutcome VersionReturned\noutcome MethodNotAllowedError\n\npolicy ReadOnlyAccess {\n  reliability {\n    retry {\n      attempts 0\n    }\n    idempotency required\n    timeout 10 seconds\n  }\n}\n\ncapability GetVersion {\n  intent GET from PublicUser\n\n  outcomes {\n    VersionReturned\n    MethodNotAllowedError\n  }\n\n  rule ValidRequest: input.method is \"GET\"\n\n  effects {\n    // No effects \u2014 this is a read-only endpoint\n  }\n\n  events {\n    emits MethodNotAllowed on input.method is not \"GET\"\n  }\n\n  policies {\n    ReadOnlyAccess governs capability\n    ReadOnlyAccess governs outcome MethodNotAllowedError\n  }\n\n  observe {\n    capability duration\n    outcome VersionReturned count as version_requests_succeeded\n    event MethodNotAllowed count failures as method_not_allowed_errors\n    lifecycle transitions\n  }\n\n  when {\n    ValidRequest then VersionReturned\n    otherwise then MethodNotAllowedError\n  }\n\n  lifecycle {\n    begin Pending\n    step Pending\n    end Success\n    move Pending to Success on outcome VersionReturned\n    move Pending to Failed on outcome MethodNotAllowedError\n  }\n}\n```"
+      }
+    }
+  ],
+  "created": 1784431301,
+  "model": "dcl-probe-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 290,
+    "prompt_tokens": 1204,
+    "total_tokens": 1494,
+    "prompt_tokens_details": {
+      "cached_tokens": 38
+    }
+  },
+  "id": "chatcmpl-IndnTBzwvrYeSwqSGXWU0tD6pUskbqXm",
+  "timings": {
+    "cache_n": 38,
+    "prompt_n": 1166,
+    "prompt_ms": 270.757,
+    "prompt_per_token_ms": 0.23221012006861064,
+    "prompt_per_second": 4306.4445240566265,
+    "predicted_n": 290,
+    "predicted_ms": 4451.727,
+    "predicted_per_token_ms": 15.350782758620689,
+    "predicted_per_second": 65.1432578862091
+  }
+}

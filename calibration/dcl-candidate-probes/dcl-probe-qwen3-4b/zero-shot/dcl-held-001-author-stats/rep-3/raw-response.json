@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor ServiceMonitor is system\n\neffect RecordRequestCount is persistence\neffect LogFirstRequestTime is logging\n\npolicy StatsReliability {\n  reliability {\n    retry {\n      attempts 0\n    }\n    idempotency required\n    timeout 10 seconds\n  }\n}\n\nshape StatsRequest {\n  // No input; this is a read-only endpoint\n}\n\nevent RequestCountUpdated is {\n  count: Integer required\n}\n\ncapability GetStats {\n  intent StatsRequest from ServiceMonitor\n\n  outcomes {\n    StatsResponse\n  }\n\n  rule RequestCountUpdated: true\n\n  effects {\n    RecordRequestCount\n    LogFirstRequestTime after RecordRequestCount\n  }\n\n  events {\n    emits RequestCountUpdated\n  }\n\n  policies {\n    StatsReliability governs capability\n    StatsReliability governs effect RecordRequestCount\n    StatsReliability governs lifecycle\n  }\n\n  observe {\n    capability duration\n    outcome StatsResponse count as stats_responses_served\n    effect RecordRequestCount count as request_counts_recorded\n    lifecycle transitions\n  }\n\n  when {\n    RequestCountUpdated then StatsResponse\n    otherwise then StatsResponse\n  }\n\n  lifecycle {\n    begin Active\n    step Active\n    end Active\n    move Active to Active on outcome StatsResponse\n  }\n}"
+      }
+    }
+  ],
+  "created": 1784431296,
+  "model": "dcl-probe-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 270,
+    "prompt_tokens": 1339,
+    "total_tokens": 1609,
+    "prompt_tokens_details": {
+      "cached_tokens": 1338
+    }
+  },
+  "id": "chatcmpl-HAiCo2XXMBFeuSdz7rh1Jdu11uKDZduT",
+  "timings": {
+    "cache_n": 1338,
+    "prompt_n": 1,
+    "prompt_ms": 16.456,
+    "prompt_per_token_ms": 16.456,
+    "prompt_per_second": 60.768108896451146,
+    "predicted_n": 270,
+    "predicted_ms": 4221.358,
+    "predicted_per_token_ms": 15.63465925925926,
+    "predicted_per_second": 63.96046011733665
+  }
+}

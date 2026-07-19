@@ -1,0 +1,87 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 20,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 21,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "backoff requires retry",
+      "code": "DCL_SEM_POLICY_CONCERN_PARAM_REQUIRED",
+      "line": 22,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "undefined actor",
+      "code": "DCL_SEM_UNKNOWN_ACTOR",
+      "line": 27,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "undefined shape",
+      "code": "DCL_SEM_UNKNOWN_SHAPE",
+      "line": 27,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character /",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 27,
+      "column": 14
+    },
+    {
+      "severity": "error",
+      "message": "expected from",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 27,
+      "column": 15
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 27,
+      "column": 28
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 35,
+      "column": 29
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 35,
+      "column": 33
+    },
+    {
+      "severity": "error",
+      "message": "terminal lifecycle step must not declare a non-terminal kind",
+      "code": "DCL_SEM_LIFECYCLE_TERMINAL_KIND_CONFLICT",
+      "line": 65,
+      "column": 5
+    }
+  ],
+  "diagnosticCount": 11,
+  "errorCount": 9,
+  "warningCount": 2,
+  "infoCount": 0,
+  "sourceCount": 1
+}

@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nshape StatsResponse {\n  service: Text required\n  requests_served: Number required\n  first_request_at: DateTime required\n}\n\nactor api_test is system\n\npolicy HighAvailability {\n  availability {\n    dependency_tolerance allowed\n  }\n}\n\ncapability GetStats {\n  intent from api_test\n\n  outcomes {\n    StatsAvailable is StatsResponse\n  }\n\n  effects {}\n\n  events {}\n\n  policies {\n    HighAvailability governs capability\n  }\n\n  observe {\n    capability duration as stats_read_latency\n  }\n\n  lifecycle {\n    begin Active\n    end Active\n  }\n\n  when {\n    otherwise then StatsAvailable\n  }\n}",
+        "reasoning_content": "The user wants me to write a DCL v1.0 capability document for the `GET /stats` endpoint of the `api_test` service.\nThis capability must model the intent, outcomes, produced results, emitted events, governing policies, and lifecycle of this read-only endpoint.\n\nI must ensure:\n1.  It compiles cleanly (`ok:true` with zero error diagnostics).\n2.  It declares a `capability` with an `intent`, at least one `outcome`, and a `lifecycle`.\n3.  I must use the provided closed vocabulary.\n4.  The feature is read-only (GET /stats).\n\n### Feature Analysis (`GET /stats`)\n*   **Request:** None explicitly defined as input, as it's a GET request with no body parameters. The intent is to *retrieve* statistics.\n*   **Output/Shape:** JSON with three fields: `service` (string), `requests_served` (integer), `first_request_at` (UTC ISO-8601 time).\n*   **Behavior:** Read-only.\n*   **State/Metrics:**\n    *   `service`: Configured app name (String).\n    *   `requests_served`: Process-lifetime count (Integer). Must increase.\n    *   `first_request_at`: Time of first request (DateTime). Stable once set.\n*   **Constraints/Policies:**\n    *   Must be available even if DB is down (No storage dependency, high availability/dependency tolerance).\n    *   Read-only (POST /stats rejected).\n    *   The count increases (monotonicity).\n    *   The service must track state internally (in-process).\n\n### DCL Modeling Strategy\n\n1.  **Shapes:** Define the output structure.\n2.  **Actors/Effects/Events:** Since it's a read operation, there are no external effects or events emitted *by* the capability, only data produced. I might use a `system` actor to represent the service itself.\n3.  **Capability:** Define the capability `GetStats`.\n4.  **Intent:** Since it's a GET, the intent is usually modeled as a request/query, perhaps taking no input shape, or a simple `Query` shape.\n5.  **Outcomes:** The successful retrieval of stats.\n6.  **Lifecycle:** Since it's a simple read, the lifecycle is likely instantaneous or represents the state of the service providing the stats.\n7.  **Policies:** Focus on Availability (since it must work without DB) and Performance (since it's a quick read).\n\n---\n### Step 1: Define Shapes and Types\n\nThe output shape is:\n```json\n{\n  \"service\": \"string\",\n  \"requests_served\": \"integer\",\n  \"first_request_at\": \"DateTime\"\n}\n```\nI will define a shape for the response.\n\n```dcl\nshape StatsResponse {\n  service: Text required\n  requests_served: Number required\n  first_request_at: DateTime required\n}\n```\n\n### Step 2: Define Actors, Effects, Events\n\n*   **Actor:** The service itself. `api_test` is a system component.\n*   **Effects:** None needed, as it's read-only and in-process.\n*   **Events:** None emitted.\n\n### Step 3: Define Capability and Intent\n\nThe capability is `GetStats`.\nThe intent is a query, perhaps taking no input shape, or using a generic `Query` shape if needed, but since the request is just \"GET /stats\", I'll model the intent as a simple query without input shape, or use a dummy input shape if the compiler requires it, but DCL allows `intent Shape from Actor` or `intent from Actor`. Since it's a read, I'll use `intent from system`.\n\n```dcl\ncapability GetStats {\n  intent from system\n  // ...\n}\n```\n\n### Step 4: Outcomes and Rules\n\nThe primary outcome is success.\n\n```dcl\noutcomes {\n  StatsAvailable\n}\n```\n\nSince it's read-only, the `when` block will be simple: `otherwise then StatsAvailable`.\n\n### Step 5: Policies\n\n*   **Availability:** Must function even if DB is down. This suggests `dependency_tolerance allowed` or `required` depending on how we frame the dependency. Since it *must* work without DB, we assert that the dependency on external storage is allowed/tolerated.\n*   **Performance:** It should be fast.\n\nLet's define an Availability policy.\n\n```dcl\npolicy HighAvailability {\n  availability {\n    dependency_tolerance allowed\n  }\n}\n```\nThis policy governs the capability.\n\n### Step 6: Lifecycle\n\nSince it's a stateless read operation, the lifecycle is trivial, perhaps just `begin` and `end`.\n\n```dcl\nlifecycle {\n  begin Active\n  end Active\n}\n```\n\n### Step 7: Observe\n\nWe can observe the capability's duration or the system's state, but since the capability itself is the action, observing its duration is most relevant.\n\n```dcl\nobserve {\n  capability duration as stats_read_latency\n}\n```\n\n### Reviewing Constraints\n\n1.  **Intent, Outcome, Lifecycle:** Present.\n2.  **Read-only:** Modeled by lack of effects/mutating outcomes.\n3.  **No DB dependency:** Handled by `HighAvailability` policy.\n4.  **Monotonicity/Stability:** These are internal state constraints, which DCL doesn't model well for internal counters, but the capability itself represents the *act* of reading the stable state.\n\nLet's assemble the final DCL structure. I need to ensure all declared types are used correctly.\n\nI will use `system` as the actor kind for the service.\n\n---\n*Self-Correction/Refinement:* The DCL example uses `intent Shape from Actor`. If I use `intent from system`, I am implying the intent is just the *act* of querying. If I want to model the *response*, I should perhaps model the capability as producing the `StatsResponse` shape, although DCL usually ties outcomes to shapes. Since the request is a GET, the outcome is the successful delivery of the stats. I will stick to the simple `intent from system` and use the `StatsResponse` shape implicitly via the outcome, or perhaps define the outcome as the shape itself if the compiler allows it (the reference suggests `outcome Accepted [is {\u2026} | is Shape]`). I will define the outcome as the shape.\n\nLet's refine the outcome definition.\n\n```dcl\noutcomes {\n  StatsAvailable is StatsResponse\n}\n```\nThis seems the most robust way to model the output payload.\n\nFinal check on syntax and required elements. Everything looks compliant with the DCL 1.0 reference."
+      }
+    }
+  ],
+  "created": 1784431779,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1665,
+    "prompt_tokens": 4699,
+    "total_tokens": 6364,
+    "prompt_tokens_details": {
+      "cached_tokens": 1430
+    }
+  },
+  "id": "chatcmpl-sB62xIwbkJBjRFeDBzSxhH6eVOQ8X7LD",
+  "timings": {
+    "cache_n": 1430,
+    "prompt_n": 3269,
+    "prompt_ms": 852.656,
+    "prompt_per_token_ms": 0.260830835117773,
+    "prompt_per_second": 3833.9025351372657,
+    "predicted_n": 1665,
+    "predicted_ms": 32009.383,
+    "predicted_per_token_ms": 19.224854654654656,
+    "predicted_per_second": 52.015997934105755
+  }
+}

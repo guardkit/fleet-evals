@@ -1,0 +1,20 @@
+..F..                                                                    [100%]
+=================================== FAILURES ===================================
+_____________________ test_candidate_compiles_zero_errors ______________________
+
+response_path = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/calibration/dcl-candidate-probes/dcl-probe-qwen3-4b/zero-shot/dcl-held-001-author-stats/rep-3/response.dcl')
+
+    def test_candidate_compiles_zero_errors(response_path):
+        """G1: the candidate DCL compiles clean (ok:true, zero errors, exit 0)."""
+        findings = dcl_gates.compile_findings(response_path)
+>       assert findings == [], f"G1 compile gate: {findings}"
+E       AssertionError: G1 compile gate: ["response.dcl: checker ok is not true; error diagnostics: [{'severity': 'error', 'message': 'unknown effect kind logging', 'code': 'DCL_SEM_EFFECT_KIND_UNKNOWN', 'line': 6, 'column': 1}, {'severity': 'error', 'message': 'retry attempts must be a positive integer', 'code': 'DCL_SEM_POLICY_CONCERN_VALUE_INVALID', 'line': 11, 'column': 7}, {'severity': 'error', 'message': 'unknown v0.2 causation decision', 'code': 'DCL_SEM_CAUSATION_DECISION_UNKNOWN', 'line': 58, 'column': 5}, {'severity': 'error', 'message': 'when branch references unknown outcome', 'code': 'DCL_SEM_UNKNOWN_OUTCOME', 'line': 58, 'column': 5}, {'severity': 'error', 'message': 'expected then', 'code': 'DCL_PARSE_EXPECTED_TOKEN', 'line': 58, 'column': 30}, {'severity': 'error', 'message': 'expected outcome', 'code': 'DCL_PARSE_EXPECTED_IDENTIFIER', 'line': 58, 'column': 43}]", "response.dcl: errorCount != 0: [{'severity': 'error', 'message': 'unknown effect kind logging', 'code': 'DCL_SEM_EFFECT_KIND_UNKNOWN', 'line': 6, 'column': 1}, {'severity': 'error', 'message': 'retry attempts must be a positive integer', 'code': 'DCL_SEM_POLICY_CONCERN_VALUE_INVALID', 'line': 11, 'column': 7}, {'severity': 'error', 'message': 'unknown v0.2 causation decision', 'code': 'DCL_SEM_CAUSATION_DECISION_UNKNOWN', 'line': 58, 'column': 5}, {'severity': 'error', 'message': 'when branch references unknown outcome', 'code': 'DCL_SEM_UNKNOWN_OUTCOME', 'line': 58, 'column': 5}, {'severity': 'error', 'message': 'expected then', 'code': 'DCL_PARSE_EXPECTED_TOKEN', 'line': 58, 'column': 30}, {'severity': 'error', 'message': 'expected outcome', 'code': 'DCL_PARSE_EXPECTED_IDENTIFIER', 'line': 58, 'column': 43}]", 'response.dcl: checker exit code 1 (expected 0)']
+E       assert ["response.dc...(expected 0)'] == []
+E         
+E         Left contains 3 more items, first extra item: "response.dcl: checker ok is not true; error diagnostics: [{'severity': 'error', 'message': 'unknown effect kind loggi...severity': 'error', 'message': 'expected outcome', 'code': 'DCL_PARSE_EXPECTED_IDENTIFIER', 'line': 58, 'column': 43}]"
+E         Use -v to get more diff
+
+tasks/dcl-held-001-author-stats/test/test_gate_dcl_held_001.py:35: AssertionError
+=========================== short test summary info ============================
+FAILED tasks/dcl-held-001-author-stats/test/test_gate_dcl_held_001.py::test_candidate_compiles_zero_errors
+1 failed, 4 passed in 0.19s

@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor SystemClient is system\n\nshape VersionInfo {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\n\noutcome VersionRetrieved is VersionInfo\n\noutcome MethodNotAllowed\n\noutcome ServiceError\n\ncapability GetVersion {\n  intent SystemClient\n\n  outcomes {\n    VersionRetrieved\n    MethodNotAllowed\n    ServiceError\n  }\n\n  // Since this is a GET request, the primary rule is that the method must be GET.\n  // We model the successful path based on the GET request.\n  rule IsGetRequest: input is GET\n\n  // No effects are needed as it is read-only and non-persistent.\n  effects {}\n\n  // No events are emitted.\n  events {}\n\n  // No specific policies needed beyond general system constraints.\n  policies {}\n\n  observe {\n    // Observe the successful retrieval of version info\n    outcome VersionRetrieved count as successful_version_retrievals\n    // Observe failures\n    outcome MethodNotAllowed count as method_not_allowed_count\n    outcome ServiceError count as service_errors\n  }\n\n  when {\n    // If the request is not GET, it results in MethodNotAllowed\n    IsGetRequest violated then MethodNotAllowed\n    // If the service fails to retrieve the data (e.g., internal error), it results in ServiceError\n    // (We assume this is handled internally if the rule passes, but we must define the failure path)\n    // For simplicity, we assume if the rule passes and no error is explicitly thrown, it succeeds.\n    otherwise then VersionRetrieved\n  }\n\n  lifecycle {\n    begin Pending\n    step Pending\n    end Complete\n    end Failed\n    move Pending to Complete on outcome VersionRetrieved\n    move Pending to Failed on outcome MethodNotAllowed\n    move Pending to Failed on outcome ServiceError\n  }\n}",
+        "reasoning_content": "The user wants me to write a DCL (Declarative Capability Language) v1.0 capability document for the `GET /version` endpoint of an `api_test` service.\n\nThis capability must model:\n1.  **Intent**: The input/request.\n2.  **Outcomes**: The possible results.\n3.  **Events**: Any emitted events.\n4.  **Policy**: Governing rules (e.g., reliability, security).\n5.  **Lifecycle**: State transitions.\n\nThe feature brief specifies:\n*   **Endpoint**: `GET /version`.\n*   **Input**: A request (which is essentially just the invocation of the endpoint).\n*   **Output/Response**: JSON containing `version` (string), `commit` (string), `service` (string).\n*   **Behavior 1**: Returns version, commit, service.\n*   **Behavior 2**: Non-GET methods are rejected (Method Not Allowed).\n*   **Behavior 3**: Response shape is fixed (`version`, `commit`, `service`).\n*   **Behavior 4**: No authentication required (public, read-only).\n*   **Pass-bar**: `GET /version` returns 200 + metadata. Mutating verbs are rejected. No DB dependency.\n\nLet's structure the DCL components.\n\n**1. Actors and Effects:**\n*   Actor: The client making the request (e.g., `system` or `human`, but since it's public, maybe just `system` or a generic client). Let's use `system` for the caller.\n*   Effects: Since it's read-only and touches no database, it should have no persistence effects. It is a simple service call.\n\n**2. Shapes and Events:**\n*   **Input Shape (Request):** Since it's a simple GET, the input shape might be minimal or represent the request context.\n*   **Output Shape (Response):** Needs `version: Text`, `commit: Text`, `service: Text`.\n*   **Outcome/Event:** The successful response is the primary outcome.\n\n**3. Capability Definition:**\n*   **Intent:** The request itself.\n*   **Outcomes:** Success (e.g., `VersionRetrieved`), Failure (e.g., `MethodNotAllowed`, `ServiceUnavailable`).\n*   **Rule/When:** Define the successful path.\n*   **Lifecycle:** Simple transition from `Pending` to `Complete` (or `Success`/`Failure`).\n\n**Refining the Model:**\n\n*   **Actor:** `Client` (or `system`).\n*   **Shape (Response):** `VersionInfo`\n    *   `version: Text required`\n    *   `commit: Text required`\n    *   `service: Text required`\n*   **Capability:** `GetVersion`\n*   **Intent:** `Client` makes a request (we can model this implicitly or use a minimal input shape).\n*   **Outcomes:**\n    *   `VersionRetrieved` (Success)\n    *   `MethodNotAllowed` (Failure for non-GET)\n    *   `ServiceError` (General failure, though the brief implies robustness)\n*   **Lifecycle:**\n    *   `begin Pending`\n    *   `step Pending`\n    *   `end Success` (or `Complete`)\n    *   `end Failed`\n    *   Transitions based on outcomes.\n\nSince the capability models the *intent* and *responsibility*, the successful outcome should carry the `VersionInfo` shape.\n\nLet's draft the DCL structure.\n\n---\n*Self-Correction/Review against constraints:*\n1.  Must compile `ok:true` with zero errors.\n2.  Must declare a `capability` with `intent`, at least one `outcome`, and a `lifecycle`.\n3.  All referenced types (actors, shapes, outcomes, effects) must be declared.\n\nI will use `system` as the actor, as it represents the service itself or the caller interacting with the service contract.\n\nLet's start writing the code."
+      }
+    }
+  ],
+  "created": 1784431565,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1302,
+    "prompt_tokens": 1296,
+    "total_tokens": 2598,
+    "prompt_tokens_details": {
+      "cached_tokens": 1291
+    }
+  },
+  "id": "chatcmpl-3QintRhy8SLviJpNAuIF7elgZ1Xx3NRP",
+  "timings": {
+    "cache_n": 1291,
+    "prompt_n": 5,
+    "prompt_ms": 36.926,
+    "prompt_per_token_ms": 7.3852,
+    "prompt_per_second": 135.40594702919353,
+    "predicted_n": 1302,
+    "predicted_ms": 24215.197,
+    "predicted_per_token_ms": 18.598461597542244,
+    "predicted_per_second": 53.76788799199114
+  }
+}

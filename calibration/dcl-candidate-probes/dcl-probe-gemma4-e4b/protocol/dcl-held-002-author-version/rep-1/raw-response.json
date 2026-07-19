@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor Client is system\n\nshape VersionRequest {}\nshape VersionResponse {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\n\noutcome Success\noutcome Failure\n\ncapability GetVersion {\n  intent VersionRequest from Client\n\n  outcomes {\n    Success\n    Failure\n  }\n\n  policies {\n    // Behavior 4: No authentication required\n    security {\n      authentication allow\n    }\n    // Pass-bar: NO degradation when DB is down (dependency_tolerance allowed)\n    availability {\n      dependency_tolerance allowed\n    }\n    // General operational reliability\n    reliability {\n      timeout 10 seconds\n    }\n  }\n\n  observe {\n    capability duration as version_read_time\n  }\n\n  lifecycle {\n    begin Pending\n    end Completed\n    step Pending {\n      kind active\n      deadline 10 seconds causing outcome Failure\n    }\n    move Pending to Completed on outcome Success\n    move Pending to Completed on outcome Failure\n  }\n\n  when {\n    // Success is the default outcome if no policy or deadline violation occurs\n    otherwise then Success\n  }\n}",
+        "reasoning_content": "The user wants me to write a DCL 1.0 capability document for the `GET /version` endpoint of the `api_test` service.\nThis endpoint is read-only and returns metadata: `version`, `commit`, and `service`.\n\nI need to define:\n1.  **Actors**: Who calls it? (A client/system).\n2.  **Shapes**: The input request and the output response.\n3.  **Events/Outcomes**: What happens.\n4.  **Effects**: Does it interact with external systems? (No, it's read-only and touches no database).\n5.  **Policies**: What rules govern it? (Read-only access, no degradation).\n6.  **Lifecycle**: How does it proceed? (Simple success/failure).\n\nLet's analyze the requirements from `feature-brief.md`:\n\n**Request:** `GET /version`.\n**Input Shape:** None (it's a GET request, no body).\n**Output Shape:** JSON with `version` (Text), `commit` (Text), `service` (Text).\n**Behavior 1:** Returns the metadata.\n**Behavior 2:** Mutating verbs are rejected (This is a constraint on the capability/policy, but since we are modeling the successful GET, we focus on the success path).\n**Behavior 3:** Response is valid JSON with exactly `version`, `commit`, `service`.\n**Behavior 4:** Access without authentication succeeds (Public/Read-only).\n**Pass-bar:**\n*   `GET /version` returns HTTP 200 with metadata.\n*   `POST /version` is rejected as method-not-allowed.\n*   **Degradation:** NO degradation when the database is down (touches no database).\n\n### DCL Construction Plan\n\n1.  **Define Shapes**:\n    *   `VersionResponse`: `version: Text`, `commit: Text`, `service: Text`.\n    *   `VersionRequest`: Empty (or just a placeholder for the GET request structure, but since DCL focuses on data flow, an empty shape is fine if the intent is empty).\n\n2.  **Define Actors**:\n    *   `Client`: A system or human accessing the API. Let's use `system`.\n\n3.  **Define Capability**: `GetVersion`\n    *   `intent`: `VersionRequest` from `Client`.\n    *   `outcomes`: `Success` (HTTP 200), `Failure` (e.g., HTTP 500/404).\n    *   `effects`: None (since it touches no database/external state).\n    *   `events`: None (it's a synchronous read).\n    *   `policies`:\n        *   Security: `authentication allow` (Behavior 4).\n        *   Availability: `dependency_tolerance required allowed` (Behavior 4/Pass-bar: NO degradation).\n        *   Performance/Reliability: Standard operational policies.\n    *   `when`: Map input/policy state to outcomes.\n    *   `lifecycle`: Simple start -> success/failure.\n\n### Refining the DCL structure\n\n**Shapes:**\n```dcl\nshape VersionResponse {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\nshape VersionRequest {} // Empty input for GET\n```\n\n**Actors:**\n```dcl\nactor Client is system\n```\n\n**Outcomes:**\n```dcl\noutcome Success\noutcome Failure\n```\n\n**Capability:**\n```dcl\ncapability GetVersion {\n  intent VersionRequest from Client\n\n  outcomes {\n    Success\n    Failure\n  }\n\n  // No effects, no events\n\n  policies {\n    // Behavior 4: No authentication required\n    security {\n      authentication allow\n    }\n    // Pass-bar: NO degradation when DB is down (dependency_tolerance allowed)\n    availability {\n      dependency_tolerance allowed\n    }\n    // General reliability\n    reliability {\n      timeout 5 seconds\n    }\n  }\n\n  observe {\n    capability duration as version_read_time\n  }\n\n  lifecycle {\n    begin Pending\n    end Completed\n    step Pending {\n      kind active\n      deadline 10 seconds causing outcome Failure\n    }\n    move Pending to Completed on outcome Success\n    move Pending to Completed on outcome Failure\n  }\n\n  when {\n    // Assuming success is the default path if no failures occur\n    otherwise then Success\n    // If the timeout occurs, it causes Failure\n    // (The deadline handles the timeout failure path)\n  }\n}\n```\n\nI need to ensure all declared types are present and the structure is clean. The `when` block needs to be robust. If the deadline causes `Failure`, that outcome must be declared.\n\nLet's finalize the code structure, ensuring the `intent` uses the empty shape and the `when` block correctly handles the success/failure path.\n\nThe `when` block must cover all outcomes.\n1. `otherwise then Success` (Default success)\n2. `deadline 10 seconds causing outcome Failure` (Handled by lifecycle/when interaction, but the outcome must be present).\n\nIf I use `otherwise then Success`, I must ensure that the `Failure` outcome is caused by something else, like the deadline.\n\nLet's stick to the simple lifecycle model:\nStart -> Active (10s deadline)\nIf successful -> Success\nIf deadline expires -> Failure\n\nThe `when` block:\n```dcl\n  when {\n    // If the deadline is hit, it causes Failure.\n    // The deadline itself is a causation mechanism.\n    // If the operation completes successfully before the deadline, it's Success.\n    otherwise then Success\n  }\n```\nThis is usually sufficient, as the deadline failure is implicitly handled by the lifecycle transition mechanism in DCL.\n\nI will use the finalized structure."
+      }
+    }
+  ],
+  "created": 1784431946,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1543,
+    "prompt_tokens": 4560,
+    "total_tokens": 6103,
+    "prompt_tokens_details": {
+      "cached_tokens": 1291
+    }
+  },
+  "id": "chatcmpl-jCJP049TawJZHVHjZ7WWHjWC8NgovuIx",
+  "timings": {
+    "cache_n": 1291,
+    "prompt_n": 3269,
+    "prompt_ms": 819.436,
+    "prompt_per_token_ms": 0.25066870602630775,
+    "prompt_per_second": 3989.3292459691784,
+    "predicted_n": 1543,
+    "predicted_ms": 29646.43,
+    "predicted_per_token_ms": 19.21349967595593,
+    "predicted_per_second": 52.04673884848867
+  }
+}

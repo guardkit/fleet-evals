@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor System is system\n\nshape StatsResponse {\n  service: Text required\n  requests_served: Integer required\n  first_request_at: Text required\n}\n\ncapability GetStats {\n  intent from System\n\n  outcomes {\n    StatsResponse\n  }\n\n  // Since this is a read-only endpoint, the lifecycle is minimal.\n  lifecycle {\n    begin Active\n    step Active\n    end Active\n  }\n\n  // Policy governing the read-only nature (GET only)\n  policies {\n    ReadAccess governs capability\n  }\n\n  // The capability itself represents the successful execution of the GET /stats request.\n  when {\n    otherwise then StatsResponse\n  }\n}\n\npolicy ReadAccess {\n  // Ensures that only read operations are permitted on this capability\n  read_only required\n}",
+        "reasoning_content": "The user wants me to write a DCL (Declarative Capability Language) v1.0 capability document for the `GET /stats` endpoint of the `api_test` service.\n\nI must model:\n1.  **Intent**: What the endpoint accepts (the request).\n2.  **Outcomes**: What the endpoint produces (the response data).\n3.  **Events**: Any events emitted (if applicable).\n4.  **Policy**: Governing rules (e.g., read-only nature).\n5.  **Lifecycle**: How the capability progresses (though for a simple GET endpoint, this might be minimal).\n6.  **Effects**: Any external interactions (should be none, as it's in-process stats).\n\nConstraints:\n*   Must compile `ok:true` with zero errors.\n*   Must declare a `capability` with an `intent`, at least one `outcome`, and a `lifecycle`.\n*   Only emit the DCL source.\n\n**Analyzing the Feature (`GET /stats`):**\n\n*   **Request (Input):** It's a GET request. It takes no parameters.\n*   **Response (Output/Outcome):** JSON with three fields:\n    1.  `service`: configured app name (string).\n    2.  `requests_served`: process-lifetime count (integer).\n    3.  `first_request_at`: UTC ISO-8601 time (string/datetime, potentially null).\n*   **Behavior/Policy:**\n    *   Read-only (GET only).\n    *   In-process state tracking.\n    *   Must be available even if external dependencies (like DB) fail.\n    *   The state (counts, time) is mutable internally but read externally.\n\n**Modeling in DCL:**\n\n1.  **Actors/Effects/Events/Outcomes:**\n    *   Actors: `System` (the service itself).\n    *   Effects: None needed, as it's purely internal state reading.\n    *   Events: None explicitly mentioned, but perhaps an internal state change event could be modeled if we were tracking the *setting* of `first_request_at`, but for a simple read endpoint, this is likely unnecessary.\n    *   Outcomes: The structure of the response.\n\n2.  **Shapes:**\n    *   `StatsResponse`: Defines the structure of the output.\n\n3.  **Capability:**\n    *   `intent`: Since it's a GET request with no parameters, the intent shape can be empty or represent the request itself (e.g., `RequestStats`).\n    *   `outcomes`: The `StatsResponse`.\n    *   `lifecycle`: Since it's a read operation, the lifecycle is likely simple (e.g., `Active` -> `Active`).\n\n**Drafting the DCL Structure:**\n\n*   Define `StatsResponse` shape.\n*   Define the capability `GetStats`.\n*   Set `intent` (empty/minimal).\n*   Set `outcomes` (StatsResponse).\n*   Set `lifecycle` (simple, perhaps just `Active`).\n\nLet's refine the types:\n*   `service`: Text (non-empty string).\n*   `requests_served`: Integer.\n*   `first_request_at`: Text (UTC ISO-8601 time, potentially null).\n\nI need to ensure all referenced types (`Text`, `Integer`, `Boolean`, `System`, etc.) are declared or implicitly available (standard DCL vocabulary).\n\nLet's proceed with the implementation."
+      }
+    }
+  ],
+  "created": 1784431518,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 962,
+    "prompt_tokens": 1435,
+    "total_tokens": 2397,
+    "prompt_tokens_details": {
+      "cached_tokens": 1430
+    }
+  },
+  "id": "chatcmpl-oTXrHMcPJvT4Mg7AKFIa58RIpntmHdJ7",
+  "timings": {
+    "cache_n": 1430,
+    "prompt_n": 5,
+    "prompt_ms": 43.122,
+    "prompt_per_token_ms": 8.6244,
+    "prompt_per_second": 115.95009507907797,
+    "predicted_n": 962,
+    "predicted_ms": 17944.057,
+    "predicted_per_token_ms": 18.652865904365907,
+    "predicted_per_second": 53.6110646549997
+  }
+}

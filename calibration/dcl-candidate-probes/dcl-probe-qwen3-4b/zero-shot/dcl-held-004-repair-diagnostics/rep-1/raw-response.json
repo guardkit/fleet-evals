@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\n// A DCL capability for api_test's GET /stats endpoint, authored zero-shot and\n// REJECTED by the compiler. Repair it to compile clean while preserving the\n// declared capability semantics (the same capability / intent / outcome / event\n// names it is trying to express).\n\nactor Client is human\n\neffect ReadProcessStats is persistence\n\nshape StatsRequest {\n  method: Text required\n  path: Text required\n}\n\nevent StatsRetrievedEvent is {\n  service: Text required\n  requestsServed: Number required\n  firstRequestAt: Text required\n}\n\ncapability GetStats {\n  intent StatsRequest from Client\n\n  outcome StatsRetrieved\n\n  effects {\n    ReadProcessStats\n  }\n\n  events {\n    emits StatsRetrievedEvent\n  }\n\n  observe {\n    outcome StatsRetrieved count as stats_requests_served\n    effect ReadProcessStats count failures as stats_read_failures\n  }\n\n  when {\n    always StatsRetrieved\n  }\n\n  lifecycle {\n    begin Pending\n    step Active waits for event StatsRetrievedEvent\n    end Served\n    move Pending to Active on outcome StatsRetrieved\n    move Active to Served on event StatsRetrievedEvent\n  }\n}"
+      }
+    }
+  ],
+  "created": 1784431334,
+  "model": "dcl-probe-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 256,
+    "prompt_tokens": 1091,
+    "total_tokens": 1347,
+    "prompt_tokens_details": {
+      "cached_tokens": 28
+    }
+  },
+  "id": "chatcmpl-6YdFnJxjhIyU6O7S0uGYUhKKNddK5C7U",
+  "timings": {
+    "cache_n": 28,
+    "prompt_n": 1063,
+    "prompt_ms": 242.206,
+    "prompt_per_token_ms": 0.22785136406396989,
+    "prompt_per_second": 4388.826040643089,
+    "predicted_n": 256,
+    "predicted_ms": 3935.474,
+    "predicted_per_token_ms": 15.3729453125,
+    "predicted_per_second": 65.0493434844189
+  }
+}

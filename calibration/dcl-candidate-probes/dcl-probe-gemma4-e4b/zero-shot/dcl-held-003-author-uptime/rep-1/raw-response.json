@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor system is system\n\nshape UptimeResponse {\n  service: Text required\n  started_at: Text required\n  uptime_seconds: Decimal required\n}\n\nshape UptimeRequest {\n  // GET /uptime requires no body input\n}\n\noutcome UptimeAvailable\noutcome UnsupportedOperation\n\npolicy ReadOnlyPolicy {\n  // Enforces that the capability is read-only\n  constraint mutability is false\n}\n\ncapability GetUptime {\n  intent UptimeRequest from system\n\n  outcomes {\n    UptimeAvailable\n    UnsupportedOperation\n  }\n\n  effects {}\n\n  events {}\n\n  policies {\n    ReadOnlyPolicy governs capability\n  }\n\n  observe {\n    capability duration\n    outcome UptimeAvailable count as successful_reads\n    outcome UnsupportedOperation count as rejected_reads\n  }\n\n  when {\n    // If the request attempts a mutating verb, it fails immediately.\n    // This models the \"Attempting to modify the uptime resource is rejected\" requirement.\n    input.verb is mutating then UnsupportedOperation\n    otherwise then UptimeAvailable\n  }\n\n  lifecycle {\n    begin Pending\n    step Completed\n    end Completed\n    move Pending to Completed on outcome UptimeAvailable\n    move Pending to Completed on outcome UnsupportedOperation\n  }\n}",
+        "reasoning_content": "The user wants me to write a DCL (Declarative Capability Language) v1.0 capability document for the `GET /uptime` endpoint of an `api_test` service.\n\nI need to ensure the DCL compiles cleanly and meets all requirements:\n1.  Declare `capability` with `intent`, at least one `outcome`, and a `lifecycle`.\n2.  Model the feature's intent, shape, outcomes, events, policy, and lifecycle.\n3.  The feature is read-only and returns `service`, `started_at`, and `uptime_seconds`.\n\nLet's break down the components based on the feature brief.\n\n**1. Actors and Effects:**\n*   Actor: The caller (e.g., `system` or `client`). Since it's an API test, `system` seems appropriate for the caller.\n*   Effects: None are explicitly mentioned for state change or external interaction (like persistence or notification). It's a read operation.\n\n**2. Shape (Input):**\n*   Since it's a `GET` request, the input shape should likely be empty or represent the request context (e.g., `RequestContext`). Given the brief focuses on the *response* structure, the input shape might be minimal or implicit. Let's define a simple input shape if needed, but often for GETs, the input is just the request itself. Let's assume a minimal input shape representing the request context.\n\n**3. Shape (Output/Response):**\n*   The response must contain: `service` (Text), `started_at` (Text/DateTime), `uptime_seconds` (Decimal).\n*   Let's define `UptimeResponse`.\n\n**4. Intent:**\n*   The capability intent should be the input shape (or the request context).\n\n**5. Outcomes:**\n*   The operation is successful (HTTP 200). Let's define `UptimeAvailable`.\n*   It must handle rejection of mutating verbs (read-only constraint). Let's define `UnsupportedOperation`.\n\n**6. Events:**\n*   Since it's a simple read, it might not emit complex events, but we need to define the structure if we use events in the lifecycle. For a simple read, we might not need external events.\n\n**7. Policies:**\n*   The feature is read-only and highly available (no DB dependency). We can model a policy ensuring read-only access.\n\n**8. Lifecycle:**\n*   A simple read operation usually has a very short lifecycle, perhaps just `Pending` -> `Completed` (or `Success`/`Failure`). Since the operation is instantaneous, the lifecycle should reflect immediate availability.\n\n**Refining the DCL structure:**\n\n*   **Actors:** `system` (the caller).\n*   **Shapes:**\n    *   `UptimeResponse`: `service: Text required`, `started_at: Text required`, `uptime_seconds: Decimal required`.\n    *   `UptimeRequest`: Minimal input shape (or empty).\n*   **Outcomes:**\n    *   `UptimeAvailable`\n    *   `UnsupportedOperation`\n*   **Capability:** `GetUptime`\n\nLet's start drafting the DCL code.\n\n*Self-Correction/Refinement:* The DCL syntax requires all referenced types to be declared. I must ensure `Text`, `Decimal`, `system`, etc., are used correctly.\n\n**Drafting the code structure:**\n\n1.  `language dcl 1.0`\n2.  Define `actor system`.\n3.  Define `shape UptimeResponse`.\n4.  Define `shape UptimeRequest` (minimal).\n5.  Define `outcome UptimeAvailable` and `outcome UnsupportedOperation`.\n6.  Define `capability GetUptime`.\n    *   `intent UptimeRequest from system`\n    *   `outcomes { UptimeAvailable, UnsupportedOperation }`\n    *   `effects {}` (none)\n    *   `events {}` (none)\n    *   `policies {}` (e.g., ReadOnlyPolicy)\n    *   `observe {}` (maybe track success/failure)\n    *   `when {}` (logic for success/failure)\n    *   `lifecycle {}` (simple transition)\n\nLet's implement the `ReadOnlyPolicy` concept.\n\nThe capability must model the *intent* of the endpoint.\n\nThe `uptime_seconds` must be non-negative and increasing (this is a behavioral constraint, best modeled in the `when` clause or observation, but since the capability itself is the definition, we focus on the contract).\n\nLet's proceed with the implementation."
+      }
+    }
+  ],
+  "created": 1784431613,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1295,
+    "prompt_tokens": 1315,
+    "total_tokens": 2610,
+    "prompt_tokens_details": {
+      "cached_tokens": 42
+    }
+  },
+  "id": "chatcmpl-bbrWI3RrdMQqhFipgpWtSiKmzJ5roi7Z",
+  "timings": {
+    "cache_n": 42,
+    "prompt_n": 1273,
+    "prompt_ms": 325.22,
+    "prompt_per_token_ms": 0.2554752553024352,
+    "prompt_per_second": 3914.2734149191315,
+    "predicted_n": 1295,
+    "predicted_ms": 24229.113,
+    "predicted_per_token_ms": 18.70973976833977,
+    "predicted_per_second": 53.44809774918298
+  }
+}

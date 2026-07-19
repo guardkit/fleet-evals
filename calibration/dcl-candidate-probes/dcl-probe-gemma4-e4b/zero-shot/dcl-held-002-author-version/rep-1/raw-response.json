@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor ApiService is system\n\nshape VersionResponse {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\n\nshape VersionRequest {}\n\noutcome VersionSuccess\n\noutcome MethodNotAllowed\n\ncapability GetVersion {\n  intent VersionRequest from ApiService\n\n  outcomes {\n    VersionSuccess\n    MethodNotAllowed\n  }\n\n  effects {}\n\n  events {}\n\n  policies {\n    // Enforce read-only nature\n    ReadWriteConstraint governs capability\n    // Enforce no database dependency\n    NoDatabaseDependency governs capability\n    // Enforce public access (no auth required)\n    PublicAccess governs capability\n  }\n\n  observe {\n    capability duration\n    outcome VersionSuccess count as successful_versions\n    outcome MethodNotAllowed count as rejected_methods\n  }\n\n  when {\n    // If the request is a GET, it succeeds with the version data\n    is_get then VersionSuccess\n    // If the request is not GET, it is rejected\n    is_not_get then MethodNotAllowed\n  }\n\n  lifecycle {\n    begin Initial\n    end Complete\n    move Initial to Complete on outcome VersionSuccess\n    move Initial to Complete on outcome MethodNotAllowed\n  }\n}\n\n// --- Policy Definitions ---\n\npolicy ReadWriteConstraint {\n  // This policy ensures that only GET requests are allowed for this capability\n  // (modeled via the 'when' clause in the capability itself, but declared here for completeness)\n  enforce {\n    method is GET\n  }\n}\n\npolicy NoDatabaseDependency {\n  // This policy ensures the endpoint is non-blocking and independent of external state\n  dependency_down_degradation required\n}\n\npolicy PublicAccess {\n  // This policy ensures no authentication is required\n  authentication required none\n}\n\n// --- Utility Definitions (for compilation) ---\n\n// Helper predicate to check HTTP method\npredicate is_get {\n  method is GET\n}\n\npredicate is_not_get {\n  method is not GET\n}",
+        "reasoning_content": "The user wants me to write a DCL (Declarative Capability Language) v1.0 capability document for the `GET /version` endpoint of the `api_test` service.\n\nThis capability must model:\n1.  **Intent**: What the service accepts (the request).\n2.  **Outcomes**: What the service produces (the successful response).\n3.  **Events**: Any events emitted (if applicable).\n4.  **Policies**: Governing rules (e.g., read-only nature, reliability).\n5.  **Lifecycle**: The state transitions.\n\nConstraints:\n*   Must compile `ok:true` with zero errors.\n*   Must declare a `capability` with `intent`, at least one `outcome`, and a `lifecycle`.\n*   Must declare all referenced types (`actor`, `shape`, `event`, `outcome`).\n*   The output must be *only* the DCL source.\n\nAnalyzing the feature brief (`GET /version`):\n\n**1. Request/Intent:**\n*   Method: `GET`\n*   Path: `/version`\n*   Input: None (read-only, no authentication required).\n*   *Modeling:* The intent shape should be empty or represent the request structure, but since it's read-only and public, an empty shape or a simple request type is appropriate.\n\n**2. Response/Outcome:**\n*   Success: HTTP 200, JSON body.\n*   Body fields: `version` (string), `commit` (string), `service` (string).\n*   *Modeling:* Define a shape for the response data. Define an outcome representing success.\n\n**3. Behavior Constraints (Policies/Rules):**\n*   Read-only: `POST`, `PUT`, `PATCH`, `DELETE` must be rejected (Method Not Allowed).\n*   No database interaction: `dependency_down_degradation`.\n*   Public access: No authentication required.\n\n**4. Lifecycle:**\n*   Since it's a simple read operation, the lifecycle is likely very short: `begin` -> `end`.\n\n**Structuring the DCL:**\n\n*   **Actors/Effects:** The service itself is the actor. It uses no external effects (like persistence or notification).\n*   **Shapes:**\n    *   `VersionResponse`: `{ version: Text required, commit: Text required, service: Text required }`\n    *   `VersionRequest`: (Empty, since it's GET with no body).\n*   **Outcomes:**\n    *   `VersionSuccess`: Represents the successful return of the `VersionResponse`.\n    *   `MethodNotAllowed`: Represents the rejection of mutating verbs.\n*   **Capability:** `GetVersion`\n\nLet's start drafting the DCL structure.\n\n---\n*Self-Correction/Refinement:*\n1.  The capability should model the successful path (`GET /version`).\n2.  The rejection of other methods (`POST`, etc.) is a constraint on the *interface* or *policy*, but the core capability models the intended successful behavior. I will model the successful path and use policies to enforce the read-only nature.\n3.  Since the input is empty, the `intent` shape will be empty.\n\n**Drafting the code.** (Ensuring all types are declared.)"
+      }
+    }
+  ],
+  "created": 1784431540,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1154,
+    "prompt_tokens": 1296,
+    "total_tokens": 2450,
+    "prompt_tokens_details": {
+      "cached_tokens": 42
+    }
+  },
+  "id": "chatcmpl-dapFWcSyTGeXfJLkLzz0o9acPPSTQ2rf",
+  "timings": {
+    "cache_n": 42,
+    "prompt_n": 1254,
+    "prompt_ms": 369.134,
+    "prompt_per_token_ms": 0.2943652312599681,
+    "prompt_per_second": 3397.1403338624996,
+    "predicted_n": 1154,
+    "predicted_ms": 21433.298,
+    "predicted_per_token_ms": 18.573048526863083,
+    "predicted_per_second": 53.84145734361553
+  }
+}

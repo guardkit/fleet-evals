@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nshape StatsResponse {\n  service: Text required\n  requests_served: Number required\n  first_request_at: Date required\n}\n\noutcome StatsAvailable\n\npolicy StatAvailability {\n  availability {\n    dependency_tolerance allowed\n  }\n}\n\ncapability GetStats {\n  intent StatsResponse\n\n  outcomes {\n    StatsAvailable\n  }\n\n  effects {}\n\n  events {}\n\n  policies {\n    StatAvailability governs capability\n  }\n\n  observe {\n    capability duration as stats_retrieval_duration\n  }\n\n  lifecycle {\n    begin Pending\n    end Running\n    step Pending {\n      kind active\n      deadline 1 second causing outcome StatsAvailable\n    }\n    move Pending to Running on outcome StatsAvailable\n  }\n\n  when {\n    otherwise then StatsAvailable\n  }\n}",
+        "reasoning_content": "The user wants me to write a DCL v1.0 capability document for the `GET /stats` endpoint of the `api_test` service.\nThis capability must model the intent, outcomes, lifecycle, policies, and observations based on the provided feature brief.\nI must output ONLY the DCL source code.\n\n**Feature Analysis (`GET /stats`):**\n1.  **Request:** `GET /stats`. It returns JSON with three fields: `service` (string), `requests_served` (integer), `first_request_at` (UTC ISO-8601 time).\n2.  **Behavior/Constraints:**\n    *   Returns service name, count, and first time. (Scenario 1)\n    *   Count increases. (Scenario 2)\n    *   First time is stable once set. (Scenario 3)\n    *   Freshly started service counts itself (at least one served). (Scenario 4)\n    *   Count never decreases. (Scenario 5)\n    *   Read-only (POST rejected). (Scenario 6)\n    *   No database dependency (available when DB is down). (Scenario 7)\n    *   Restart starts a fresh count (process-lifetime). (Scenario 8)\n3.  **Goal:** Model the read operation and its state management (counting, timing).\n\n**DCL Modeling Strategy:**\n\n1.  **Shapes/Types:** Need a shape for the response payload.\n2.  **Actors/Effects/Events:** Since this is a read-only endpoint, it primarily interacts with internal state (counting/timing) and produces a result (Outcome). It doesn't require external effects like `persistence` or `notification`.\n3.  **Intent:** The intent is the request itself.\n4.  **Outcomes:** The successful return of stats. Since it's read-only, the primary outcome is the successful delivery of the data.\n5.  **Lifecycle:** The capability represents the service's ability to provide stats. It should reflect the state of the service (e.g., Initializing -> Running).\n6.  **Policies:** Since it's in-memory and read-only, the main policy concern is availability/degradation tolerance (Scenario 7).\n7.  **When/Rules:** The capability should always succeed if the service is running, as it relies only on in-memory state.\n\n**Detailed Implementation Steps:**\n\n**1. Define Types/Shapes:**\n*   `StatsResponse`: Must contain `service: Text`, `requests_served: Number`, `first_request_at: Date`.\n\n**2. Define Capability:**\n*   `StatsCapability`:\n    *   `intent`: `StatsResponse` (The request input is the definition of the response).\n    *   `outcomes`: `StatsAvailable` (Success).\n    *   `rules`: None needed, as the logic is inherent in the state management.\n    *   `effects`: None (In-memory state).\n    *   `events`: None (It's a synchronous read).\n    *   `policies`: Need to enforce availability/degradation tolerance.\n    *   `observe`: Track the capability's duration or state.\n    *   `when`: Always succeeds if the service is running.\n    *   `lifecycle`: Define the operational state.\n\n**3. Policies:**\n*   The feature requires \"Statistics remain available when the database is unavailable.\" This maps to `dependency_tolerance allowed` under the `availability` family.\n\n**4. Lifecycle:**\n*   The service starts in a `Pending` state, transitions to `Running` when initialized, and stays there.\n\nLet's start writing the DCL structure.\n\n*Self-Correction/Refinement:* The DCL structure requires all referenced types (shapes, outcomes) to be declared.\n\n*   **Shape:** `StatsResponse`\n*   **Outcome:** `StatsAvailable`\n*   **Policy:** `StatAvailability`\n\nLet's ensure the types match the closed vocabulary (e.g., `Text`, `Number`, `Date`).\n\nThe capability models the *ability* to serve the stats.\n\n---\n*Constructing the DCL code.* (Ensuring strict adherence to syntax and closed vocabulary.)"
+      }
+    }
+  ],
+  "created": 1784431825,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1108,
+    "prompt_tokens": 4699,
+    "total_tokens": 5807,
+    "prompt_tokens_details": {
+      "cached_tokens": 4694
+    }
+  },
+  "id": "chatcmpl-iuMEcuIj7BU14d7JLBKq4nri8oAaNUvT",
+  "timings": {
+    "cache_n": 4694,
+    "prompt_n": 5,
+    "prompt_ms": 51.775,
+    "prompt_per_token_ms": 10.355,
+    "prompt_per_second": 96.57170449058427,
+    "predicted_n": 1108,
+    "predicted_ms": 21223.726,
+    "predicted_per_token_ms": 19.154987364620936,
+    "predicted_per_second": 52.205724857171646
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nshape VersionResponse {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\n\nshape Request {\n  method: Text required\n  path: Text required\n}\n\nactor Service is system\n\npolicy ReadAccessPolicy {\n  security {\n    authentication allow\n    authorization allow\n  }\n}\n\npolicy DegradationPolicy {\n  availability {\n    dependency_tolerance allowed\n  }\n}\n\ncapability GetVersion {\n  intent Request from Service\n\n  outcomes {\n    VersionSuccess is VersionResponse\n    MethodRejected\n  }\n\n  effects {}\n\n  events {}\n\n  policies {\n    ReadAccessPolicy governs capability\n    DegradationPolicy governs capability\n  }\n\n  observe {\n    capability duration as version_lookup_time\n  }\n\n  when {\n    // If the method is GET and the path is /version, success.\n    method is \"GET\" and path is \"/version\" then VersionSuccess\n    // All other methods/paths are rejected as method not allowed.\n    otherwise then MethodRejected\n  }\n\n  lifecycle {\n    begin Pending\n    end Completed\n    step Pending {\n      kind active\n    }\n    move Pending to Completed on outcome VersionSuccess\n    move Pending to Completed on outcome MethodRejected\n  }\n}",
+        "reasoning_content": "The user wants me to write a DCL v1.0 capability document for the `GET /version` endpoint of the `api_test` service.\nThis endpoint is read-only and returns metadata: `version`, `commit`, and `service`.\n\nI need to define:\n1.  **Actors/Shapes/Events/Effects/Policies**: Declare all necessary components.\n2.  **Capability**: Define the `intent`, `outcomes`, `rules`, `effects`, `events`, `policies`, `observe`, `when`, and `lifecycle`.\n\n**Feature Analysis (`GET /version`):**\n1.  **Request:** `GET /version`. No authentication required.\n2.  **Consumption (Input):** None (it's a read-only query, no input shape needed for the capability intent).\n3.  **Production (Output/Outcome):** Success (HTTP 200) with metadata (`version`, `commit`, `service`). Failure (e.g., 405 Method Not Allowed, or internal error).\n4.  **Behavior:** Returns metadata.\n5.  **Constraints:**\n    *   Only `GET` is allowed. Others are rejected (405).\n    *   No database interaction (Degradation must be allowed/handled).\n    *   No authentication required.\n\n**DCL Modeling Strategy:**\n\n1.  **Shapes:** Define the response shape.\n2.  **Actors:** The service itself acts as the provider, but since it's a public endpoint, we can model the requestor as a generic `system` or `human` (though the request itself is the trigger). Let's use `system` as the requester/caller.\n3.  **Intent:** The capability is triggered by a request, but since there's no input shape, the intent might be empty or based on a simple trigger event. Let's define a simple request shape or use a trigger event.\n4.  **Outcomes:** `Success` (200) and `Rejected` (e.g., 405).\n5.  **Effects/Events:** Since it's read-only and doesn't touch the DB, there are no persistence effects. It might emit a simple event upon successful retrieval, but usually, for a simple status check, we focus on outcomes.\n6.  **Policies:** Since it's read-only and non-critical, we need to ensure it handles dependency failure gracefully (`dependency_tolerance allowed`). Since it's public, security policies are minimal (no authentication required).\n7.  **Lifecycle:** Simple, immediate execution.\n\n**Step 1: Define Shapes, Actors, Effects, Events, Policies.**\n\n*   **Shape:** `VersionResponse` (contains `version`, `commit`, `service`).\n*   **Actor:** `System` (the service provider).\n*   **Effects:** None needed (no DB interaction).\n*   **Events:** None strictly necessary, but maybe a `VersionRetrieved` event on success. Let's keep it simple and rely on outcomes.\n*   **Policies:**\n    *   `ReadAccessPolicy`: Governs security (no auth required).\n    *   `DegradationPolicy`: Governs availability (DB down degradation allowed).\n\n**Step 2: Define Capability.**\n\n*   **Intent:** Triggered by a request (no input shape).\n*   **Outcomes:** `VersionSuccess`, `MethodRejected`.\n*   **Rules:** None specific, the outcome is determined by the method/status.\n*   **Effects:** None.\n*   **Policies:** Apply `DegradationPolicy` and `ReadAccessPolicy`.\n*   **When:** Map the conditions to outcomes.\n*   **Lifecycle:** Simple `begin` -> `end`.\n\nLet's refine the structure based on the feature brief:\n\n*   **Success Case (GET /version):** Returns `VersionResponse`.\n*   **Failure Case (POST/PUT/PATCH/DELETE /version):** Rejected as method not allowed.\n\nI will use a generic `Request` shape to trigger the capability, even if it's empty, to satisfy the `intent` requirement.\n\n---\n*Self-Correction/Refinement:*\n1.  The capability models the *responsibility* of the endpoint.\n2.  The input should model the request. Since the request is just `GET /version`, the input shape can be empty or minimal.\n3.  The outcome must carry the data if successful.\n\nLet's proceed with the DCL structure."
+      }
+    }
+  ],
+  "created": 1784432076,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1268,
+    "prompt_tokens": 4560,
+    "total_tokens": 5828,
+    "prompt_tokens_details": {
+      "cached_tokens": 4555
+    }
+  },
+  "id": "chatcmpl-OXxO2uFrNj8NWXaIO9aL9u1rMtYO4a6y",
+  "timings": {
+    "cache_n": 4555,
+    "prompt_n": 5,
+    "prompt_ms": 52.661,
+    "prompt_per_token_ms": 10.5322,
+    "prompt_per_second": 94.94692466910996,
+    "predicted_n": 1268,
+    "predicted_ms": 24242.552,
+    "predicted_per_token_ms": 19.11873186119874,
+    "predicted_per_second": 52.30472435410265
+  }
+}

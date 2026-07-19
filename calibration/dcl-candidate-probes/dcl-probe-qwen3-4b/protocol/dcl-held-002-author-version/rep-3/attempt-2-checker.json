@@ -1,0 +1,353 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "undefined shape",
+      "code": "DCL_SEM_UNKNOWN_SHAPE",
+      "line": 19,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "outcome has no explicit causation",
+      "code": "DCL_SEM_OUTCOME_CAUSE_REQUIRED",
+      "line": 22,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "outcome has no explicit causation",
+      "code": "DCL_SEM_OUTCOME_CAUSE_REQUIRED",
+      "line": 23,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 27,
+      "column": 29
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 27,
+      "column": 33
+    },
+    {
+      "severity": "error",
+      "message": "policy target effect is not used by this capability",
+      "code": "DCL_SEM_POLICY_TARGET_UNKNOWN",
+      "line": 39,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "undefined policy",
+      "code": "DCL_SEM_UNKNOWN_POLICY",
+      "line": 39,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "expected governs",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 39,
+      "column": 17
+    },
+    {
+      "severity": "error",
+      "message": "expected policy target",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 39,
+      "column": 18
+    },
+    {
+      "severity": "error",
+      "message": "policy target effect is not used by this capability",
+      "code": "DCL_SEM_POLICY_TARGET_UNKNOWN",
+      "line": 40,
+      "column": 7
+    },
+    {
+      "severity": "error",
+      "message": "undefined policy",
+      "code": "DCL_SEM_UNKNOWN_POLICY",
+      "line": 40,
+      "column": 7
+    },
+    {
+      "severity": "error",
+      "message": "expected governs",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 40,
+      "column": 15
+    },
+    {
+      "severity": "error",
+      "message": "policy target effect is not used by this capability",
+      "code": "DCL_SEM_POLICY_TARGET_UNKNOWN",
+      "line": 41,
+      "column": 7
+    },
+    {
+      "severity": "error",
+      "message": "undefined policy",
+      "code": "DCL_SEM_UNKNOWN_POLICY",
+      "line": 41,
+      "column": 7
+    },
+    {
+      "severity": "error",
+      "message": "expected governs",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 41,
+      "column": 19
+    },
+    {
+      "severity": "error",
+      "message": "expected policy target",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 41,
+      "column": 27
+    },
+    {
+      "severity": "error",
+      "message": "policy target effect is not used by this capability",
+      "code": "DCL_SEM_POLICY_TARGET_UNKNOWN",
+      "line": 42,
+      "column": 7
+    },
+    {
+      "severity": "error",
+      "message": "undefined policy",
+      "code": "DCL_SEM_UNKNOWN_POLICY",
+      "line": 42,
+      "column": 7
+    },
+    {
+      "severity": "error",
+      "message": "expected governs",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 42,
+      "column": 15
+    },
+    {
+      "severity": "error",
+      "message": "expected policy target",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 42,
+      "column": 26
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 44,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 44,
+      "column": 17
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 44,
+      "column": 25
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 45,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 45,
+      "column": 17
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 48,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "capability must declare at least one intent",
+      "code": "DCL_SEM_CAPABILITY_INTENT_REQUIRED",
+      "line": 49,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "expected {",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 49,
+      "column": 25
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 49,
+      "column": 28
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 50,
+      "column": 22
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 50,
+      "column": 28
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 50,
+      "column": 37
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 50,
+      "column": 40
+    },
+    {
+      "severity": "error",
+      "message": "outcome has no explicit causation",
+      "code": "DCL_SEM_OUTCOME_CAUSE_REQUIRED",
+      "line": 51,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 51,
+      "column": 29
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 51,
+      "column": 35
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 51,
+      "column": 38
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 54,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 55,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 56,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unexpected }",
+      "code": "DCL_PARSE_UNEXPECTED_TOKEN",
+      "line": 57,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 59,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 60,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 61,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 62,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 63,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 64,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unexpected }",
+      "code": "DCL_PARSE_UNEXPECTED_TOKEN",
+      "line": 65,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "unexpected }",
+      "code": "DCL_PARSE_UNEXPECTED_TOKEN",
+      "line": 66,
+      "column": 1
+    }
+  ],
+  "diagnosticCount": 49,
+  "errorCount": 49,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

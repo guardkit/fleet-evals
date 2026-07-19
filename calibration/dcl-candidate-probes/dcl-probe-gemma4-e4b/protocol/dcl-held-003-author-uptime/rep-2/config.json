@@ -1,0 +1,48 @@
+{
+  "suite": "dcl-heldout",
+  "task_id": "dcl-held-003-author-uptime",
+  "rep": 2,
+  "model": "dcl-probe-gemma4-e4b",
+  "endpoint": "http://127.0.0.1:9000/v1/chat/completions",
+  "sampling": {
+    "temperature": 0.3,
+    "top_p": 0.9,
+    "max_tokens": 16384
+  },
+  "prompt_sha256": "8e931502ea429e6f93689b7f155c9defa7e22715194e3d68bfd6c034bbe6709a",
+  "prompt": {
+    "system": "Output ONLY the DCL source. No prose, no explanation, no markdown fences.",
+    "system_sha256": "419e455b26af1d3014e28100f6e6520c1fbdba10d05941adbbd0e2d0163d7316",
+    "user_sha256": "8e931502ea429e6f93689b7f155c9defa7e22715194e3d68bfd6c034bbe6709a",
+    "composition": "instruction.md verbatim + referenced input/ files inlined in first-appearance order (deterministic)"
+  },
+  "freeze_commit": "8d2d6762c38ef0a3aab1c8d5904dd456e008500b",
+  "wall_time": 42.13,
+  "refreeze_commit": "8a3b9d187fce64cd642b48040ec2f99b84b358fe",
+  "usage": {
+    "completion_tokens": 2183,
+    "prompt_tokens": 4579,
+    "total_tokens": 6762,
+    "prompt_tokens_details": {
+      "cached_tokens": 4574
+    }
+  },
+  "finish_reason": "stop",
+  "generation_timeout_s": 900.0,
+  "transport_retries": 2,
+  "single_slot_probe": {
+    "url": "http://127.0.0.1:9000/running",
+    "ok": true
+  },
+  "runner": "harness/run_dcl_heldout.py (never grades; grading = tasks/<task>/test)",
+  "vocab_ref": {
+    "path": "/home/richardwoollcott/Projects/appmilla_github/fleet-evals/harness/dcl/vocab-reference.md",
+    "sha256": "25121afe7415b15cba161fa2f3e728dad7095675f214a298317b51bb0e8fee2b"
+  },
+  "repair_wall_time": 29.83,
+  "repair_finish_reason": "stop",
+  "repair_loop": true,
+  "zero_shot_clean": false,
+  "repaired_clean": false,
+  "attempts": 2
+}

@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor Service is system\n\nshape StatsRequest {\n  // No input required; this is a read-only endpoint\n}\n\nevent StatsRequested is {\n  // No payload needed; request is read-only\n}\n\neffect UpdateRequestCount is persistence\neffect RecordFirstRequestTime is persistence\n\npolicy StatsReliability {\n  reliability {\n    timeout 10 seconds\n    idempotency required\n    backoff exponential\n  }\n}\n\ncapability GetStats {\n  intent StatsRequest from Service\n\n  outcomes {\n    StatsResponseProvided\n  }\n\n  effects {\n    UpdateRequestCount\n    RecordFirstRequestTime\n  }\n\n  events {\n    emits StatsRequested\n  }\n\n  policies {\n    StatsReliability governs capability\n    StatsReliability governs effect UpdateRequestCount\n    StatsReliability governs effect RecordFirstRequestTime\n    StatsReliability governs lifecycle\n  }\n\n  observe {\n    capability duration as stats_query_duration\n    effect UpdateRequestCount count failures as request_count_failures\n    effect RecordFirstRequestTime count failures as first_request_time_failures\n    lifecycle transitions\n  }\n\n  when {\n    otherwise then StatsResponseProvided\n  }\n\n  lifecycle {\n    begin Pending\n    step Pending\n    step StatsReady waits for event StatsRequested\n    end Ready\n    end Failed\n    move Pending to Ready on outcome StatsResponseProvided\n    move Pending to Failed on outcome StatsResponseProvided\n  }\n}"
+      }
+    }
+  ],
+  "created": 1784431361,
+  "model": "dcl-probe-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 300,
+    "prompt_tokens": 4369,
+    "total_tokens": 4669,
+    "prompt_tokens_details": {
+      "cached_tokens": 4363
+    }
+  },
+  "id": "chatcmpl-WwegnQPwaZ0dUDr7jFmrbyYEnpAmNKWc",
+  "timings": {
+    "cache_n": 4363,
+    "prompt_n": 6,
+    "prompt_ms": 23.414,
+    "prompt_per_token_ms": 3.9023333333333334,
+    "prompt_per_second": 256.25694029213287,
+    "predicted_n": 300,
+    "predicted_ms": 5265.291,
+    "predicted_per_token_ms": 17.55097,
+    "predicted_per_second": 56.97690782902597
+  }
+}

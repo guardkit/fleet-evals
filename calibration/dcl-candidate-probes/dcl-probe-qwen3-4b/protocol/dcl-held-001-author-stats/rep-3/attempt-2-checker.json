@@ -1,0 +1,31 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "observation target effect is not used by this capability",
+      "code": "DCL_SEM_OBSERVE_TARGET_UNKNOWN",
+      "line": 44,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "observation target effect is not used by this capability",
+      "code": "DCL_SEM_OBSERVE_TARGET_UNKNOWN",
+      "line": 45,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "terminal lifecycle step must not declare a non-terminal kind",
+      "code": "DCL_SEM_LIFECYCLE_TERMINAL_KIND_CONFLICT",
+      "line": 51,
+      "column": 5
+    }
+  ],
+  "diagnosticCount": 3,
+  "errorCount": 3,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

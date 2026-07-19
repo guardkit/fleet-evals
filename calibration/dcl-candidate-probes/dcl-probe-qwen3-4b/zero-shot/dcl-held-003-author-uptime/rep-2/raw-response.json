@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```dcl\nlanguage dcl 1.0\n\nactor ApiTestService is system\n\nshape UptimeRequest {\n  // No input required for GET /uptime; read-only\n}\n\nevent UptimeFetched is {\n  service: Text required\n  started_at: Text required\n  uptime_seconds: Number required\n}\n\noutcome UptimeResponse {\n  service: Text required\n  started_at: Text required\n  uptime_seconds: Number required\n}\n\ncapability GetUptime {\n  intent UptimeRequest from ApiTestService\n\n  outcomes {\n    UptimeResponse\n  }\n\n  effects {\n    // No effects; read-only endpoint\n  }\n\n  events {\n    emits UptimeFetched\n  }\n\n  policies {\n    // No policy needed for read-only endpoint; default reliability is sufficient\n    // Policy governs lifecycle and outcomes\n    reliability {\n      retry {\n        attempts 0\n      }\n      idempotency required\n      timeout 10 seconds\n    } governs capability\n    reliability governs lifecycle\n  }\n\n  observe {\n    capability duration\n    outcome UptimeResponse count as uptime_requests_served\n    event UptimeFetched count as uptime_fetched_events\n    lifecycle transitions\n  }\n\n  when {\n    // No conditions to evaluate; always returns UptimeResponse\n    otherwise then UptimeResponse\n  }\n\n  lifecycle {\n    begin Ready\n    step Ready\n    end Ready\n    // No transitions needed; endpoint is always ready\n  }\n}\n```"
+      }
+    }
+  ],
+  "created": 1784431323,
+  "model": "dcl-probe-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 305,
+    "prompt_tokens": 1223,
+    "total_tokens": 1528,
+    "prompt_tokens_details": {
+      "cached_tokens": 1222
+    }
+  },
+  "id": "chatcmpl-Jgiel7Cbj83ySNE7rbzYPyVwgIkGCSH9",
+  "timings": {
+    "cache_n": 1222,
+    "prompt_n": 1,
+    "prompt_ms": 15.134,
+    "prompt_per_token_ms": 15.134,
+    "prompt_per_second": 66.07638430025109,
+    "predicted_n": 305,
+    "predicted_ms": 4737.766,
+    "predicted_per_token_ms": 15.533659016393441,
+    "predicted_per_second": 64.3763326428532
+  }
+}

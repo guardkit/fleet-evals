@@ -1,0 +1,122 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "policy target effect is not used by this capability",
+      "code": "DCL_SEM_POLICY_TARGET_UNKNOWN",
+      "line": 37,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "undefined policy",
+      "code": "DCL_SEM_UNKNOWN_POLICY",
+      "line": 37,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "expected governs",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 37,
+      "column": 17
+    },
+    {
+      "severity": "error",
+      "message": "expected policy target",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 37,
+      "column": 18
+    },
+    {
+      "severity": "error",
+      "message": "policy target effect is not used by this capability",
+      "code": "DCL_SEM_POLICY_TARGET_UNKNOWN",
+      "line": 38,
+      "column": 7
+    },
+    {
+      "severity": "error",
+      "message": "undefined policy",
+      "code": "DCL_SEM_UNKNOWN_POLICY",
+      "line": 38,
+      "column": 7
+    },
+    {
+      "severity": "error",
+      "message": "expected governs",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 38,
+      "column": 15
+    },
+    {
+      "severity": "error",
+      "message": "policy target effect is not used by this capability",
+      "code": "DCL_SEM_POLICY_TARGET_UNKNOWN",
+      "line": 39,
+      "column": 7
+    },
+    {
+      "severity": "error",
+      "message": "undefined policy",
+      "code": "DCL_SEM_UNKNOWN_POLICY",
+      "line": 39,
+      "column": 7
+    },
+    {
+      "severity": "error",
+      "message": "expected governs",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 39,
+      "column": 19
+    },
+    {
+      "severity": "error",
+      "message": "expected policy target",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 39,
+      "column": 27
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 41,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 41,
+      "column": 13
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 42,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 43,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "expected {",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 43,
+      "column": 22
+    }
+  ],
+  "diagnosticCount": 16,
+  "errorCount": 16,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

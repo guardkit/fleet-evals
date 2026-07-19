@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```dcl\nlanguage dcl 1.0\n\nactor PublicClient is human\n\neffect EmitMethodNotAllowed is notification\n\nshape VersionRequest {\n  method: Text required\n}\n\nevent MethodNotAllowed is {\n  method: Text required\n}\n\noutcome VersionResponse {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\n\ncapability GetVersion {\n  intent VersionRequest from PublicClient\n\n  outcomes {\n    VersionResponse\n  }\n\n  rule ValidGet: input.method is \"GET\"\n  rule InvalidMethod: input.method is not \"GET\"\n\n  effects {\n    EmitMethodNotAllowed after InvalidMethod\n  }\n\n  events {\n    emits MethodNotAllowed\n  }\n\n  policies {\n    // No policy needed for read-only endpoint; default reliability is sufficient\n    // No policy governs effects or outcomes as they are stateless and non-idempotent\n  }\n\n  observe {\n    capability duration\n    outcome VersionResponse count as version_responses_served\n    event MethodNotAllowed count failures as method_not_allowed_errors\n  }\n\n  when {\n    ValidGet then VersionResponse\n    InvalidMethod then EmitMethodNotAllowed\n    otherwise then VersionResponse\n  }\n\n  lifecycle {\n    begin Ready\n    end Ready\n    // No transitions needed as the endpoint is stateless and always available\n  }\n}\n```"
+      }
+    }
+  ],
+  "created": 1784431306,
+  "model": "dcl-probe-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 267,
+    "prompt_tokens": 1204,
+    "total_tokens": 1471,
+    "prompt_tokens_details": {
+      "cached_tokens": 1203
+    }
+  },
+  "id": "chatcmpl-5x4mgbPhtKfPqttJp4JUP045XwnESZAW",
+  "timings": {
+    "cache_n": 1203,
+    "prompt_n": 1,
+    "prompt_ms": 15.067,
+    "prompt_per_token_ms": 15.067,
+    "prompt_per_second": 66.37021304838389,
+    "predicted_n": 267,
+    "predicted_ms": 4107.476,
+    "predicted_per_token_ms": 15.383805243445691,
+    "predicted_per_second": 65.00342302669573
+  }
+}

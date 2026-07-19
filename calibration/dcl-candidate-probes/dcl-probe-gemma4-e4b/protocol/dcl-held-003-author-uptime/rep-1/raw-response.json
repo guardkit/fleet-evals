@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nshape UptimeRequest {\n  // Since GET /uptime is read-only, the input shape is minimal, perhaps just context.\n  // We assume the request context implies read-only intent.\n}\n\nshape UptimeResponse {\n  service: Text required\n  started_at: DateTime required\n  uptime_seconds: Number required\n}\n\n// We use 'system' as the actor representing the API service itself or the caller context.\nactor System is system\n\n// No effects are needed as this is a read-only, self-contained query.\n\n// Outcomes\noutcome UptimeSuccess\noutcome UptimeRejected\n\n// Policy for robustness (ensuring availability, though trivial here)\npolicy HighAvailability {\n  availability {\n    dependency_tolerance allowed\n  }\n}\n\ncapability GetUptime {\n  intent UptimeRequest from System\n\n  outcomes {\n    UptimeSuccess\n    UptimeRejected\n  }\n\n  // Rule 1: Uptime must be non-negative.\n  rule NonNegativeUptime: uptime_seconds >= 0\n\n  // Policy application: Ensure the capability is robust against external failures (like DB down).\n  policies {\n    HighAvailability governs capability\n  }\n\n  // Lifecycle: Simple synchronous request/response cycle.\n  lifecycle {\n    begin Pending\n    end Completed\n    step Pending {\n      kind active\n      // Assume immediate processing for a simple GET request\n    }\n    move Pending to Completed on outcome UptimeSuccess\n    move Pending to Completed on outcome UptimeRejected\n  }\n\n  // Causation logic:\n  when {\n    // If the request is valid and read-only, it succeeds.\n    // We model the successful path based on the NonNegativeUptime rule passing.\n    NonNegativeUptime violated then UptimeRejected // If the output violates the rule, it's rejected.\n    // We assume any other valid request path leads to success.\n    otherwise then UptimeSuccess\n  }\n}",
+        "reasoning_content": "The user wants me to write a DCL v1.0 capability document for the `GET /uptime` endpoint of an `api_test` service.\nThis capability must model the intent, outcomes, outcomes, events, policies, lifecycle, and rules based on the provided feature brief.\nThe output must be *only* the DCL source code, compiling cleanly.\n\n**Feature Analysis (`GET /uptime`):**\n1.  **Request:** Read-only access to uptime metrics.\n2.  **Output Shape:** `service` (Text), `started_at` (DateTime/Date), `uptime_seconds` (Number).\n3.  **Behavior 1:** Returns service name, start time, uptime.\n4.  **Behavior 2:** Uptime increases across requests; start time is stable.\n5.  **Behavior 3:** Uptime is non-negative.\n6.  **Behavior 4:** Mutating attempts are rejected (read-only).\n7.  **Behavior 5:** Available even if DB is down (no DB dependency).\n\n**DCL Modeling Strategy:**\n\n1.  **Actors/Effects/Shapes/Events/Outcomes:** Define the necessary components.\n2.  **Intent:** The input shape for the request. Since it's a GET request, the input is essentially empty or represents the request context (e.g., `System` actor requesting data).\n3.  **Outcomes:** What can happen? Success (200 OK), Failure (e.g., 400/500/405).\n4.  **Rules/When:** Enforce read-only nature, non-negative uptime.\n5.  **Policies:** Ensure availability (no DB dependency).\n6.  **Lifecycle:** Model the request/response cycle.\n\n**Step 1: Define Shapes, Actors, Effects, Events, Outcomes.**\n\n*   **Shape (Input):** `UptimeRequest` (Since it's a GET, the input might be empty, but let's define it for structure).\n    *   `UptimeRequest` is empty or just carries context.\n*   **Shape (Output):** `UptimeResponse`.\n    *   `service: Text required`\n    *   `started_at: DateTime required`\n    *   `uptime_seconds: Number required`\n*   **Actor:** `System` (The service itself, or an external caller). Let's use `system` as the actor making the request.\n*   **Effects:** None needed, as it's read-only and doesn't modify state or notify others.\n*   **Events:** None needed, as it's a synchronous query.\n*   **Outcomes:**\n    *   `UptimeSuccess` (HTTP 200)\n    *   `UptimeRejected` (HTTP 405/400 - e.g., mutation attempt, invalid request)\n    *   `UptimeUnavailable` (HTTP 503 - though the brief says no degradation, we might need a failure state if the service itself fails, but let's focus on the core read-only nature).\n\n**Step 2: Define Policies.**\n\n*   The feature requires availability even if the DB is down. This translates to `dependency_tolerance allowed` or `forbidden` depending on how we model the dependency. Since there is *no* database dependency, we don't need to model a dependency failure, but we must ensure the capability is robust.\n*   Let's define a policy for high availability/robustness, even if it's trivial.\n\n**Step 3: Define Capability `GetUptime`.**\n\n*   **Intent:** `UptimeRequest` from `system`.\n*   **Outcomes:** `UptimeSuccess`, `UptimeRejected`.\n*   **Rules:**\n    *   Ensure `uptime_seconds` is non-negative.\n    *   Ensure mutation is rejected.\n*   **When:**\n    *   If the request is valid and read-only -> `UptimeSuccess`.\n    *   If the request is mutating or invalid -> `UptimeRejected`.\n*   **Lifecycle:** Simple synchronous flow.\n\n**Refining the Model based on constraints:**\n\n1.  **Read-only enforcement:** We can model this by having a rule that checks for a mutation flag (if we put it in the input shape) or by defining the intent as read-only. Since the input shape is simple, let's rely on the `when` block logic.\n2.  **Uptime increase:** This is a behavioral constraint, not easily modeled as a DCL outcome transition, but we can model the state of the response.\n3.  **No DB dependency:** This is covered by the lack of `persistence` effects and the policy structure.\n\nLet's structure the DCL.\n\n---\n*Self-Correction/Refinement:* The DCL syntax requires all referenced types to be declared. I must define `UptimeRequest` and `UptimeResponse` shapes.\n\nLet's start writing the DCL."
+      }
+    }
+  ],
+  "created": 1784432144,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1533,
+    "prompt_tokens": 4579,
+    "total_tokens": 6112,
+    "prompt_tokens_details": {
+      "cached_tokens": 1310
+    }
+  },
+  "id": "chatcmpl-eBgZC8MYodnqLlsd5QvXuk4EwPGxERij",
+  "timings": {
+    "cache_n": 1310,
+    "prompt_n": 3269,
+    "prompt_ms": 852.018,
+    "prompt_per_token_ms": 0.26063566840012237,
+    "prompt_per_second": 3836.773401500907,
+    "predicted_n": 1533,
+    "predicted_ms": 29545.443,
+    "predicted_per_token_ms": 19.272956947162427,
+    "predicted_per_second": 51.886174121674195
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "undefined shape",
+      "code": "DCL_SEM_UNKNOWN_SHAPE",
+      "line": 18,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "expected from",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 18,
+      "column": 15
+    },
+    {
+      "severity": "error",
+      "message": "expected actor",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 18,
+      "column": 23
+    }
+  ],
+  "diagnosticCount": 3,
+  "errorCount": 3,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

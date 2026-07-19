@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor System is system\n\nshape UptimeResponse {\n  service: Text required\n  started_at: DateTime required\n  uptime_seconds: Number required\n}\n\nshape UptimeRequest {}\n\noutcome UptimeAvailable is UptimeResponse\noutcome UptimeUnavailable\n\npolicy HighAvailability {\n  availability {\n    dependency_tolerance allowed\n  }\n}\n\npolicy FastResponse {\n  performance {\n    latency 99.9% under 100ms\n  }\n}\n\ncapability GetUptime {\n  intent UptimeRequest from System\n\n  outcomes {\n    UptimeAvailable\n    UptimeUnavailable\n  }\n\n  rules {\n    NonNegativeUptime: uptime_seconds >= 0\n  }\n\n  effects {}\n  events {}\n\n  policies {\n    HighAvailability governs capability\n    FastResponse governs capability\n  }\n\n  observe {\n    capability duration as uptime_query_duration\n  }\n\n  lifecycle {\n    begin Pending\n    end Available\n    end Failed\n    step Pending {\n      kind active\n    }\n    move Pending to Available on outcome UptimeAvailable\n    move Pending to Failed on outcome UptimeUnavailable\n  }\n\n  when {\n    NonNegativeUptime violated then UptimeUnavailable\n    otherwise then UptimeAvailable\n  }\n}",
+        "reasoning_content": "The user wants me to rewrite a DCL capability document for the `GET /uptime` feature, fixing all compilation errors from the provided previous attempt.\n\nThe feature requirements are:\n1. Read-only endpoint.\n2. Returns `service` (Text), `started_at` (UTC ISO-8601/DateTime), `uptime_seconds` (Number).\n3. Uptime increases across requests.\n4. `started_at` is stable.\n5. Uptime is non-negative.\n6. Read-only (mutating verbs rejected).\n7. No database dependency (availability is guaranteed).\n\nLet's analyze the errors in the previous attempt and plan the fixes.\n\n**Previous Attempt Errors Analysis:**\n\n1. `DCL_PARSE_EXPECTED_DECLARATION` (Lines 13, 14, 15): This suggests that `outcomes` or `rules` were used incorrectly, or that the structure was wrong. In DCL, `outcomes` should declare named outcomes, and if they carry data, they should be defined as a shape or a named outcome with a shape payload.\n2. `DCL_PARSE_UNEXPECTED_TOKEN` (Line 16): Likely related to the structure of the outcomes block.\n3. `DCL_LEX_UNEXPECTED_CHAR` (Line 26, 39): Related to syntax errors, likely in policy definitions (e.g., using `%` or `=` incorrectly).\n4. `DCL_SEM_LIFECYCLE_TERMINAL_KIND_CONFLICT` (Line 56): The lifecycle step `Active` was defined as terminal implicitly (due to `end Active` or lack of further moves/waits), but it contained `kind active`. This is fine if it's the only step, but the structure needs refinement.\n5. `DCL_SEM_LIFECYCLE_UNKNOWN_STATE` (Lines 60, 61): The transitions `move Active to Success` and `move Active to Failure` reference states (`Success`, `Failure`) that were never declared in the lifecycle.\n6. `DCL_SEM_LIFECYCLE_UNKNOWN_STATE` (Lines 60, 61): Same as above.\n\n**Plan for Correction:**\n\n1. **Shapes/Outcomes:** Define the response shape (`UptimeResponse`). Define outcomes (`UptimeAvailable`, `UptimeUnavailable`). Since the response contains data, `UptimeAvailable` should carry the shape.\n2. **Lifecycle:** Define proper lifecycle states (`Pending`, `Available`, `Failed`).\n3. **Rules:** Implement the non-negative uptime rule.\n4. **Policies:** Use `availability` policy to ensure no degradation (since there is no DB dependency). Use `performance` policy for the 100ms budget.\n5. **When/Causation:** Map rules and policies to outcomes.\n6. **Refinement:** Ensure all declarations are present and correctly structured according to DCL 1.0 syntax.\n\n---\n**Step 1: Define Declarations (Shapes, Actors, Outcomes)**\n\n*   Actor: `System` (system)\n*   Shape: `UptimeResponse` (service: Text, started_at: DateTime, uptime_seconds: Number)\n*   Outcomes: `UptimeAvailable` (payload: `UptimeResponse`), `UptimeUnavailable` (no payload needed, represents failure/rejection).\n\n**Step 2: Define Policies**\n\n*   Availability: Since the feature states \"Uptime remains available when the database is unavailable,\" we need to ensure dependency tolerance is allowed/not required. Since there is no DB, we can model this as a general availability guarantee.\n    *   Policy: `HighAvailability` -> `availability { dependency_tolerance allowed }`\n*   Performance: `latency 99.9% under 100ms`.\n    *   Policy: `FastResponse` -> `performance { latency 99.9% under 100ms }`\n\n**Step 3: Define Capability Structure**\n\n*   `intent`: Empty request shape (since it's a GET, no input body is expected).\n*   `effects`/`events`: None (read-only).\n*   `rules`: `NonNegativeUptime: uptime_seconds >= 0`.\n*   `policies`: Attach `HighAvailability` and `FastResponse`.\n*   `observe`: Track duration.\n*   `lifecycle`: Needs proper states and transitions.\n\n**Step 4: Lifecycle Implementation**\n\n*   States: `Pending`, `Available`, `Failed`.\n*   Start: `Pending`.\n*   Transition: `Pending` -> `Available` on `UptimeAvailable`.\n*   Transition: `Pending` -> `Failed` on `UptimeUnavailable`.\n*   End: `Available` (Success) and `Failed` (Failure).\n\nLet's construct the final DCL source. I must ensure the syntax for outcomes carrying shapes is correct, and the lifecycle transitions use declared states.\n\n*Self-Correction on Outcomes/Rules:* The rule `NonNegativeUptime` applies to the data in `UptimeResponse`. When the outcome `UptimeAvailable` is reached, the rule must pass. If it fails, `UptimeUnavailable` is reached.\n\n*Self-Correction on Lifecycle:* The previous attempt used `Active` as a state name, which is not a declared state. I must use declared state names (`Pending`, `Available`, `Failed`).\n\nLet's start writing the code, ensuring strict adherence to DCL 1.0 syntax."
+      }
+    }
+  ],
+  "created": 1784432249,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1503,
+    "prompt_tokens": 5572,
+    "total_tokens": 7075,
+    "prompt_tokens_details": {
+      "cached_tokens": 4574
+    }
+  },
+  "id": "chatcmpl-R7lc7UJsxkKUiodx03vuYPix37zflncD",
+  "timings": {
+    "cache_n": 4574,
+    "prompt_n": 998,
+    "prompt_ms": 308.157,
+    "prompt_per_token_ms": 0.30877454909819635,
+    "prompt_per_second": 3238.608890922484,
+    "predicted_n": 1503,
+    "predicted_ms": 29480.253,
+    "predicted_per_token_ms": 19.614273453093812,
+    "predicted_per_second": 50.98328023168593
+  }
+}

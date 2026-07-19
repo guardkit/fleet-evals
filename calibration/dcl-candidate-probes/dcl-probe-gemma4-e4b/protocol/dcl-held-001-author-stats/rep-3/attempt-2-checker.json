@@ -1,0 +1,24 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "undefined actor",
+      "code": "DCL_SEM_UNKNOWN_ACTOR",
+      "line": 24,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "policy HighAvailability cannot produce state degraded because no matching concern is present",
+      "code": "DCL_SEM_POLICY_CAUSATION_CONCERN_MISSING",
+      "line": 56,
+      "column": 5
+    }
+  ],
+  "diagnosticCount": 2,
+  "errorCount": 2,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

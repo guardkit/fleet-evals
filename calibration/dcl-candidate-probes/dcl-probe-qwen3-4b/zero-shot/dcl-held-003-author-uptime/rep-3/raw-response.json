@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor ApiTestService is system\n\nshape UptimeRequest {\n  // No input required for GET /uptime; it is read-only\n}\n\nevent UptimeResponseSent is {\n  service: Text required\n  started_at: Text required\n  uptime_seconds: Number required\n}\n\noutcome UptimeDataAvailable {\n  // Outcome indicating successful retrieval of uptime data\n}\n\ncapability GetUptime {\n  intent UptimeRequest from ApiTestService\n\n  outcomes {\n    UptimeDataAvailable\n  }\n\n  rule UptimeValid: input.uptime_seconds >= 0\n  rule UptimeIncreases: input.uptime_seconds > previous_input.uptime_seconds\n\n  effects {\n    // No effects for read-only endpoint\n  }\n\n  events {\n    emits UptimeResponseSent\n  }\n\n  policies {\n    // No policy needed for read-only endpoint; default reliability is sufficient\n    // Policy governs lifecycle and outcome observation\n    reliability {\n      retry {\n        attempts 0\n        backoff none\n      }\n      idempotency required\n      timeout 10 seconds\n    } governs capability\n    reliability governs event UptimeResponseSent\n  }\n\n  observe {\n    capability duration\n    outcome UptimeDataAvailable count as uptime_requests_succeeded\n    event UptimeResponseSent count as uptime_responses_sent\n    lifecycle transitions\n  }\n\n  when {\n    UptimeValid violated then UptimeDataAvailable\n    UptimeIncreases violated then UptimeDataAvailable\n    otherwise then UptimeDataAvailable\n  }\n\n  lifecycle {\n    begin Pending\n    step Pending\n    step Ready\n    end Ready\n    move Pending to Ready on outcome UptimeDataAvailable\n  }\n}"
+      }
+    }
+  ],
+  "created": 1784431329,
+  "model": "dcl-probe-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 350,
+    "prompt_tokens": 1223,
+    "total_tokens": 1573,
+    "prompt_tokens_details": {
+      "cached_tokens": 1222
+    }
+  },
+  "id": "chatcmpl-8OKhyLcHNl2JBE6k63ILHtcnS0ZII5D2",
+  "timings": {
+    "cache_n": 1222,
+    "prompt_n": 1,
+    "prompt_ms": 17.958,
+    "prompt_per_token_ms": 17.958,
+    "prompt_per_second": 55.685488361732936,
+    "predicted_n": 350,
+    "predicted_ms": 5402.322,
+    "predicted_per_token_ms": 15.435205714285715,
+    "predicted_per_second": 64.78695642355268
+  }
+}

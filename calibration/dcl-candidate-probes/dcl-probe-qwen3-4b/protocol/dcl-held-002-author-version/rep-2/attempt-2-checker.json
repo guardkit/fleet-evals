@@ -1,0 +1,80 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 20,
+      "column": 5
+    },
+    {
+      "severity": "warning",
+      "message": "policy concern is already effective at this boundary",
+      "code": "DCL_SEM_REDUNDANT_POLICY",
+      "line": 21,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "undefined actor",
+      "code": "DCL_SEM_UNKNOWN_ACTOR",
+      "line": 26,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "undefined shape",
+      "code": "DCL_SEM_UNKNOWN_SHAPE",
+      "line": 26,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character /",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 26,
+      "column": 14
+    },
+    {
+      "severity": "error",
+      "message": "expected from",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 26,
+      "column": 15
+    },
+    {
+      "severity": "error",
+      "message": "unknown capability section",
+      "code": "DCL_PARSE_UNKNOWN_CAPABILITY_SECTION",
+      "line": 26,
+      "column": 28
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 34,
+      "column": 29
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 34,
+      "column": 33
+    },
+    {
+      "severity": "error",
+      "message": "terminal lifecycle step must not declare a non-terminal kind",
+      "code": "DCL_SEM_LIFECYCLE_TERMINAL_KIND_CONFLICT",
+      "line": 64,
+      "column": 5
+    }
+  ],
+  "diagnosticCount": 10,
+  "errorCount": 8,
+  "warningCount": 2,
+  "infoCount": 0,
+  "sourceCount": 1
+}

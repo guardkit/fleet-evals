@@ -1,0 +1,388 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 16,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "expected declaration",
+      "code": "DCL_PARSE_EXPECTED_DECLARATION",
+      "line": 17,
+      "column": 1
+    },
+    {
+      "severity": "error",
+      "message": "outcome has no explicit causation",
+      "code": "DCL_SEM_OUTCOME_CAUSE_REQUIRED",
+      "line": 36,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "outcome has no explicit causation",
+      "code": "DCL_SEM_OUTCOME_CAUSE_REQUIRED",
+      "line": 37,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 54,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 54,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 54,
+      "column": 15
+    },
+    {
+      "severity": "error",
+      "message": "expected then",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 54,
+      "column": 16
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 54,
+      "column": 19
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 54,
+      "column": 25
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 54,
+      "column": 25
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 54,
+      "column": 33
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character /",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 54,
+      "column": 34
+    },
+    {
+      "severity": "error",
+      "message": "expected then",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 54,
+      "column": 35
+    },
+    {
+      "severity": "error",
+      "message": "unexpected character \"",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 54,
+      "column": 42
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 54,
+      "column": 49
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 54,
+      "column": 49
+    },
+    {
+      "severity": "error",
+      "message": "expected causation decision",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 54,
+      "column": 63
+    },
+    {
+      "severity": "error",
+      "message": "expected then",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 55,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 55,
+      "column": 20
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 55,
+      "column": 20
+    },
+    {
+      "severity": "error",
+      "message": "expected causation decision",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 55,
+      "column": 34
+    },
+    {
+      "severity": "error",
+      "message": "expected then",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 56,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "expected outcome",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 56,
+      "column": 4
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 58,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 58,
+      "column": 3
+    },
+    {
+      "severity": "error",
+      "message": "expected causation decision",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 58,
+      "column": 13
+    },
+    {
+      "severity": "error",
+      "message": "expected then",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 58,
+      "column": 14
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 59,
+      "column": 11
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 59,
+      "column": 11
+    },
+    {
+      "severity": "error",
+      "message": "expected causation decision",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 59,
+      "column": 18
+    },
+    {
+      "severity": "error",
+      "message": "expected then",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 60,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 61,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 61,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "expected then",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 61,
+      "column": 18
+    },
+    {
+      "severity": "error",
+      "message": "expected outcome",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 61,
+      "column": 19
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 62,
+      "column": 7
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 62,
+      "column": 7
+    },
+    {
+      "severity": "error",
+      "message": "expected then",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 62,
+      "column": 18
+    },
+    {
+      "severity": "error",
+      "message": "expected outcome",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 63,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 64,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 64,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "expected then",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 64,
+      "column": 18
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 64,
+      "column": 31
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 64,
+      "column": 31
+    },
+    {
+      "severity": "error",
+      "message": "expected then",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 64,
+      "column": 42
+    },
+    {
+      "severity": "error",
+      "message": "expected outcome",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 64,
+      "column": 56
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 65,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 65,
+      "column": 5
+    },
+    {
+      "severity": "error",
+      "message": "expected then",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 65,
+      "column": 18
+    },
+    {
+      "severity": "error",
+      "message": "unknown v0.2 causation decision",
+      "code": "DCL_SEM_CAUSATION_DECISION_UNKNOWN",
+      "line": 65,
+      "column": 31
+    },
+    {
+      "severity": "error",
+      "message": "when branch references unknown outcome",
+      "code": "DCL_SEM_UNKNOWN_OUTCOME",
+      "line": 65,
+      "column": 31
+    },
+    {
+      "severity": "error",
+      "message": "expected then",
+      "code": "DCL_PARSE_EXPECTED_TOKEN",
+      "line": 65,
+      "column": 42
+    },
+    {
+      "severity": "error",
+      "message": "expected outcome",
+      "code": "DCL_PARSE_EXPECTED_IDENTIFIER",
+      "line": 65,
+      "column": 56
+    }
+  ],
+  "diagnosticCount": 54,
+  "errorCount": 54,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

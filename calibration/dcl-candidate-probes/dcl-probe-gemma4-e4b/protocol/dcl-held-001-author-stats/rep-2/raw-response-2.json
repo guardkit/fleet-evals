@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor System is system\n\nshape StatsResponse {\n  service: Text required\n  requests_served: Number required\n  first_request_at: Date required\n}\n\noutcome StatsAvailable\n\npolicy ReadOnlyAccess {\n  availability {\n    dependency_tolerance required\n  }\n}\n\ncapability GetStats {\n  intent StatsResponse from System\n\n  outcomes {\n    StatsAvailable\n  }\n\n  effects {}\n\n  events {}\n\n  policies {\n    ReadOnlyAccess governs capability\n  }\n\n  observe {\n    capability duration as stats_retrieval_duration\n  }\n\n  lifecycle {\n    begin Running\n    end Running\n    step Running {\n      kind active\n      deadline 1 second causing outcome StatsAvailable\n    }\n  }\n\n  when {\n    otherwise then StatsAvailable\n  }\n}",
+        "reasoning_content": "The user wants me to rewrite a DCL capability definition for the `GET /stats` endpoint, fixing specific compilation errors from a previous attempt, while maintaining the intended semantics derived from the feature brief.\n\nThe previous attempt failed with:\n1. `DCL_PARSE_EXPECTED_DECLARATION` at line 9, column 1 (likely because `outcome StatsAvailable` was used without being declared as a top-level outcome, or perhaps the structure was wrong).\n2. `DCL_PARSE_EXPECTED_TOKEN` at line 18, column 23 (likely related to the `intent` structure).\n3. `DCL_PARSE_EXPECTED_IDENTIFIER` at line 19, column 1 (likely related to the capability definition structure).\n\nLet's analyze the required structure based on the provided DCL reference and the feature brief.\n\n**Feature Requirements Summary:**\n1. **Endpoint:** `GET /stats` (Read-only).\n2. **Input:** None (It's a GET request).\n3. **Output/Shape:** JSON with `service` (string), `requests_served` (integer), `first_request_at` (UTC ISO-8601 time).\n4. **Behavior:** Read-only, counts requests (process-lifetime), never decreases, stable, available even if DB is down.\n5. **Policy:** Must handle availability (no DB dependency).\n6. **Lifecycle:** Simple, likely a single successful state since it's a read operation.\n\n**Fixing the Errors (Focusing on Structure):**\n\n1. **Intent/Input:** Since it's a GET request, the input shape should be empty or represent the request context, but the DCL structure requires an `intent`. If the input is empty, I should define a shape for the response and use it in the `intent` definition, or define a simple input shape if the compiler requires it, although typically for GETs, the intent is often modeled as an empty shape or a context. The reference shows `intent OrderInput from Customer`. Since this is a service endpoint, the actor is likely `system`. I will use an empty input shape if possible, or just model the response shape as the intent payload.\n\n2. **Outcomes:** The previous attempt used `outcome StatsAvailable` without declaring it. I must declare all outcomes.\n\n3. **Capability Structure:** The overall structure needs to adhere strictly to the DCL v1.0 syntax.\n\n**Step 1: Define Shapes, Actors, Outcomes, and Effects.**\n\n*   **Actor:** `system` (since it's an API service).\n*   **Shape (Response):** `StatsResponse` (matches the required JSON structure).\n*   **Outcome:** `StatsAvailable` (the successful result).\n*   **Effects:** None needed, as it's read-only and doesn't persist or notify.\n*   **Policies:** Availability is key (Requirement 7: \"Statistics remain available when the database is unavailable\").\n\n**Step 2: Construct the Capability.**\n\n*   **Intent:** The capability takes no input, but produces the `StatsResponse`. I will model the intent as producing the response shape from the `system` actor.\n*   **Rules/When:** Since it's a read operation, the success is generally guaranteed unless a policy fails.\n*   **Lifecycle:** Simple, perhaps just `begin` -> `end`.\n\nLet's refine the `intent` structure. If the endpoint takes no input, the intent shape should be empty, or the capability should be defined to produce the response shape. Given the example `intent OrderInput from Customer`, I will define a minimal input shape if the compiler requires it, but since the request is GET, I'll assume the intent is simply the output shape, or an empty shape.\n\nIf I use an empty shape for input:\n```dcl\nshape EmptyInput {}\ncapability GetStats {\n  intent EmptyInput from system\n  // ...\n}\n```\nHowever, the previous attempt used `intent StatsResponse`, which suggests the compiler might allow the response shape to define the intent payload, even if it's a GET. Let's stick to the structure that defines the *payload* of the capability call.\n\nThe previous attempt failed on `expected from` in the intent line. This suggests the syntax `intent Shape` is incomplete. It must be `intent Shape from Actor`.\n\nLet's use the structure:\n```dcl\ncapability GetStats {\n  intent StatsResponse from system\n  // ...\n}\n```\nThis addresses the `DCL_PARSE_EXPECTED_TOKEN` error (missing `from Actor`).\n\nThe previous attempt failed on `expected declaration` for `outcome StatsAvailable`. I must declare it as a top-level outcome.\n\nLet's write the final DCL source.\n\n---\n*Self-Correction/Review:*\n1. **Declaration Check:** All shapes (`StatsResponse`), actors (`system`), outcomes (`StatsAvailable`), effects (none), policies (`StatAvailability`) are declared.\n2. **Intent Check:** `intent StatsResponse from system` (Fixes the token error).\n3. **Lifecycle Check:** Simple lifecycle is sufficient for a read operation.\n4. **Policy Check:** `StatAvailability` governs the capability (ensuring no DB dependency/degradation).\n5. **Read-Only Check:** No `effects` are used.\n6. **Compilation:** The structure looks sound and adheres to the DCL v1.0 syntax and constraints.\n\nI will use `Number` for the count, `Text` for the service name, and `Date` for the timestamp, as per the built-in types. The feature brief specifies UTC ISO-8601 time, which maps to `Date` or `DateTime`. I'll use `Date` as it's standard for time representation in DCL."
+      }
+    }
+  ],
+  "created": 1784431853,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1448,
+    "prompt_tokens": 5216,
+    "total_tokens": 6664,
+    "prompt_tokens_details": {
+      "cached_tokens": 4694
+    }
+  },
+  "id": "chatcmpl-oXm2IfNGhLXo7g9uZAQpvTFP5tTSG40l",
+  "timings": {
+    "cache_n": 4694,
+    "prompt_n": 522,
+    "prompt_ms": 169.002,
+    "prompt_per_token_ms": 0.32375862068965516,
+    "prompt_per_second": 3088.720843540313,
+    "predicted_n": 1448,
+    "predicted_ms": 27877.682,
+    "predicted_per_token_ms": 19.252542817679558,
+    "predicted_per_second": 51.941190806323135
+  }
+}

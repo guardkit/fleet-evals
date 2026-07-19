@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor System is system\n\nshape UptimeResponse {\n  service: Text required\n  started_at: Text required\n  uptime_seconds: Decimal required\n}\n\noutcome UptimeAvailable\n\ncapability GetUptime {\n  intent () from System\n\n  outcomes {\n    UptimeAvailable\n  }\n\n  rule UptimeValid: outcome.uptime_seconds >= 0\n\n  effects {}\n\n  events {}\n\n  policies {}\n\n  observe {\n    capability duration\n    outcome UptimeAvailable count as successful_uptime_reads\n  }\n\n  when {\n    UptimeValid violated then {}\n    otherwise then UptimeAvailable\n  }\n\n  lifecycle {\n    begin Idle\n    step Idle\n    step Active waits for outcome UptimeAvailable\n    end Active\n    end Idle\n    move Idle to Active on intent\n    move Active to Idle on outcome UptimeAvailable\n  }\n}",
+        "reasoning_content": "The user wants me to write a DCL (Declarative Capability Language) v1.0 capability document for the `GET /uptime` endpoint of the `api_test` service.\n\nI need to ensure the DCL compiles cleanly and meets all requirements:\n1.  Declare `capability` with `intent`, at least one `outcome`, and a `lifecycle`.\n2.  Model the intent (input shape).\n3.  Model the outcomes (results).\n4.  Model the behavior (read-only, stable, non-negative, no external dependencies).\n5.  Model the lifecycle (simple, since it's a read operation).\n\nLet's analyze the feature requirements:\n*   **Endpoint:** `GET /uptime`\n*   **Input:** None (it's a GET request).\n*   **Output/Shape:** `service` (Text), `started_at` (Text/DateTime), `uptime_seconds` (Decimal/Number).\n*   **Behavior:** Read-only. Returns current state. State is stable (`started_at`) but dynamic (`uptime_seconds`).\n*   **Constraints:** Non-negative uptime. No database dependency.\n\n**DCL Structure Planning:**\n\n1.  **Actors/Effects:**\n    *   Actor: `System` (since it's a service endpoint).\n    *   Effects: None required, as it's read-only and doesn't rely on external state persistence/notification.\n\n2.  **Shapes:**\n    *   Input Shape: Empty/None, as it's a GET request.\n    *   Output Shape: `UptimeResponse` (containing `service`, `started_at`, `uptime_seconds`).\n\n3.  **Outcomes:**\n    *   `UptimeAvailable`: Successful response.\n    *   `UnsupportedOperation`: If a mutating verb is attempted (though the capability models the GET request, we should account for the read-only nature).\n\n4.  **Capability Definition:**\n    *   `intent`: `() from System` (or similar, representing no input).\n    *   `outcomes`: `UptimeAvailable`, `UnsupportedOperation`.\n    *   `rule`: Define success conditions.\n    *   `effects`: None.\n    *   `events`: None.\n    *   `policies`: None needed for this simple read operation.\n    *   `observe`: Track successful calls.\n    *   `when`: Define transitions.\n    *   `lifecycle`: Simple, perhaps just `Active` or `Completed`.\n\n**Refining Shapes and Types:**\n\n*   `UptimeResponse`:\n    *   `service: Text required`\n    *   `started_at: Text required` (ISO-8601)\n    *   `uptime_seconds: Decimal required`\n\n**Refining the Capability Logic:**\n\nSince the capability models the *successful execution* of the GET request, the primary outcome is `UptimeAvailable`.\n\n*   **Intent:** No input needed.\n*   **Outcome:** `UptimeAvailable`.\n*   **Lifecycle:** Simple, perhaps `Idle` -> `Active` -> `Completed`.\n\nLet's start drafting the DCL code.\n\n---\n*Self-Correction/Review against constraints:*\n1.  *Compile clean?* Yes, all types must be declared.\n2.  *Capability declared?* Yes.\n3.  *Intent present?* Yes.\n4.  *At least one outcome?* Yes (`UptimeAvailable`).\n5.  *Lifecycle present?* Yes.\n6.  *Models read-only nature?* Yes, by defining the capability around the successful read operation and potentially modeling the rejection of mutations if necessary, though focusing on the successful path is usually sufficient for capability modeling.\n\nI will use `System` as the actor and define the necessary shapes and outcomes."
+      }
+    }
+  ],
+  "created": 1784431633,
+  "model": "dcl-probe-gemma4-e4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 1035,
+    "prompt_tokens": 1315,
+    "total_tokens": 2350,
+    "prompt_tokens_details": {
+      "cached_tokens": 1310
+    }
+  },
+  "id": "chatcmpl-e6FusULBmYyDPJPZvPj8QJ7SodSSkdL8",
+  "timings": {
+    "cache_n": 1310,
+    "prompt_n": 5,
+    "prompt_ms": 36.392,
+    "prompt_per_token_ms": 7.2784,
+    "prompt_per_second": 137.39283358979995,
+    "predicted_n": 1035,
+    "predicted_ms": 19211.765,
+    "predicted_per_token_ms": 18.562091787439613,
+    "predicted_per_second": 53.87323861186101
+  }
+}

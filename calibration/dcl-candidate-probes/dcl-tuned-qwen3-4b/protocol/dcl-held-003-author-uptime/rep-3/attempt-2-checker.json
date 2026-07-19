@@ -1,0 +1,17 @@
+{
+  "ok": false,
+  "diagnostics": [
+    {
+      "severity": "error",
+      "message": "unexpected character =",
+      "code": "DCL_LEX_UNEXPECTED_CHAR",
+      "line": 32,
+      "column": 34
+    }
+  ],
+  "diagnosticCount": 1,
+  "errorCount": 1,
+  "warningCount": 0,
+  "infoCount": 0,
+  "sourceCount": 1
+}

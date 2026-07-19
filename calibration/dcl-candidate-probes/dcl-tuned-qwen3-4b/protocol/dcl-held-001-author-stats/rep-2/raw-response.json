@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor ApiTest is system\n\nshape StatsRequest {\n  // No input fields \u2014 this is a GET endpoint\n}\n\nevent StatsRequested is {\n  // No payload\n}\n\neffect PersistStats is persistence\n\npolicy StatsReliability {\n  reliability {\n    timeout 30 seconds\n    idempotency required\n  }\n}\n\ncapability GetStats {\n  intent StatsRequest from ApiTest\n\n  outcomes {\n    StatsResponse\n  }\n\n  rules {\n    // No rules needed \u2014 this is a read-only endpoint\n  }\n\n  effects {\n    PersistStats\n  }\n\n  events {\n    emits StatsRequested\n  }\n\n  policies {\n    StatsReliability governs capability\n  }\n\n  observe {\n    capability duration as get_stats_duration\n  }\n\n  when {\n    otherwise then StatsResponse\n  }\n\n  lifecycle {\n    begin Pending\n    step Pending\n    end step Completed\n    move Pending to Completed on outcome StatsResponse\n  }\n}\n"
+      }
+    }
+  ],
+  "created": 1784452744,
+  "model": "dcl-tuned-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 198,
+    "prompt_tokens": 4369,
+    "total_tokens": 4567,
+    "prompt_tokens_details": {
+      "cached_tokens": 4368
+    }
+  },
+  "id": "chatcmpl-zTkk3RAwnImHDqKAxDdHlh3AAFdqyGqF",
+  "timings": {
+    "cache_n": 4368,
+    "prompt_n": 1,
+    "prompt_ms": 18.826,
+    "prompt_per_token_ms": 18.826,
+    "prompt_per_second": 53.118028258791036,
+    "predicted_n": 198,
+    "predicted_ms": 3305.772,
+    "predicted_per_token_ms": 16.695818181818183,
+    "predicted_per_second": 59.895237784094
+  }
+}

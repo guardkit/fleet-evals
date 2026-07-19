@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor ApiTest is system\n\nshape UptimeRequest {\n  service: Text required\n  started_at: DateTime required\n  uptime_seconds: Number required\n}\n\nevent UptimeRequested is {\n  service: Text required\n}\n\neffect PersistUptime is persistence\n\npolicy UptimeReliability {\n  reliability {\n    timeout 30 seconds\n    idempotency required\n  }\n}\n\ncapability GetUptime {\n  intent UptimeRequest from ApiTest\n\n  outcomes {\n    UptimeProvided\n  }\n\n  rules {\n    ValidUptime: uptime_seconds >= 0\n  }\n\n  effects {\n    PersistUptime\n  }\n\n  events {\n    emits UptimeRequested\n  }\n\n  policies {\n    UptimeReliability governs capability\n  }\n\n  observe {\n    capability duration as uptime_duration\n  }\n\n  when {\n    ValidUptime violated then UptimeProvided\n    otherwise then UptimeProvided\n  }\n\n  lifecycle {\n    begin step Started\n    end step Completed\n    step Started {\n      kind active\n    }\n    move Started to Completed on outcome UptimeProvided\n  }\n}\n"
+      }
+    }
+  ],
+  "created": 1784452782,
+  "model": "dcl-tuned-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 237,
+    "prompt_tokens": 4253,
+    "total_tokens": 4490,
+    "prompt_tokens_details": {
+      "cached_tokens": 4252
+    }
+  },
+  "id": "chatcmpl-WoA11Ys52Tm9XKWi52p8z7Sj87GeH8Ux",
+  "timings": {
+    "cache_n": 4252,
+    "prompt_n": 1,
+    "prompt_ms": 17.837,
+    "prompt_per_token_ms": 17.837,
+    "prompt_per_second": 56.06323933396872,
+    "predicted_n": 237,
+    "predicted_ms": 4004.43,
+    "predicted_per_token_ms": 16.89632911392405,
+    "predicted_per_second": 59.184453218060995
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor Requester is human\n\nshape VersionRequest {\n  method: Method required\n}\n\nevent VersionResponse is {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\n\nevent MethodNotAllowed is {\n  method: Method required\n}\n\noutcome VersionReturned\noutcome MethodNotAllowedResponse\n\npolicy VersionEndpointReliability {\n  reliability {\n    timeout 10 seconds\n  }\n}\n\ncapability ApiVersionEndpoint {\n  intent VersionRequest from Requester\n\n  outcomes {\n    VersionReturned\n    MethodNotAllowedResponse\n  }\n\n  rule MethodIsGet: input.method is \"GET\"\n\n  effects {\n    return VersionResponse\n  }\n\n  events {\n    emits VersionResponse\n    emits MethodNotAllowed\n  }\n\n  policies {\n    VersionEndpointReliability governs capability\n  }\n\n  observe {\n    capability duration\n    outcome VersionReturned count as version_requests_succeeded\n    event MethodNotAllowed count failures as method_not_allowed_failures\n  }\n\n  when {\n    MethodIsGet violated then MethodNotAllowedResponse\n    otherwise then VersionReturned\n  }\n\n  lifecycle {\n    begin Pending\n    step Pending\n    step Completed\n    end Completed\n    move Pending to Completed on outcome VersionReturned\n  }\n}\n"
+      }
+    }
+  ],
+  "created": 1784451567,
+  "model": "dcl-tuned-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 254,
+    "prompt_tokens": 1204,
+    "total_tokens": 1458,
+    "prompt_tokens_details": {
+      "cached_tokens": 1203
+    }
+  },
+  "id": "chatcmpl-vrapLRGDUTQX3aH3FJwrLZZKcwC9hZRc",
+  "timings": {
+    "cache_n": 1203,
+    "prompt_n": 1,
+    "prompt_ms": 17.595,
+    "prompt_per_token_ms": 17.595,
+    "prompt_per_second": 56.834327934072185,
+    "predicted_n": 254,
+    "predicted_ms": 3887.567,
+    "predicted_per_token_ms": 15.30538188976378,
+    "predicted_per_second": 65.3364945221523
+  }
+}

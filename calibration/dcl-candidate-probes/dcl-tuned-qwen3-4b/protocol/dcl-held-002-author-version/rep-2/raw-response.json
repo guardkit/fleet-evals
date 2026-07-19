@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor Requester is human\n\nshape VersionResponse {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\n\nevent VersionRequested is {\n  method: Text required\n}\n\neffect ReturnVersion is persistence\n\npolicy VersionReliability {\n  reliability {\n    timeout 30 seconds\n    idempotency required\n  }\n}\n\ncapability GetVersion {\n  intent VersionResponse from Requester\n\n  outcomes {\n    VersionReturned\n  }\n\n  rules {\n    ValidResponse: version is not null and commit is not null and service is not null\n  }\n\n  effects {\n    ReturnVersion\n  }\n\n  events {\n    emits VersionRequested\n  }\n\n  policies {\n    VersionReliability governs capability\n  }\n\n  observe {\n    capability duration as get_version_duration\n  }\n\n  when {\n    ValidResponse violated then VersionReturned\n    otherwise then VersionReturned\n  }\n\n  lifecycle {\n    begin step Started\n    end step Completed\n    step Started {\n      kind active\n    }\n    move Started to Completed on outcome VersionReturned\n  }\n}\n"
+      }
+    }
+  ],
+  "created": 1784452758,
+  "model": "dcl-tuned-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 226,
+    "prompt_tokens": 4234,
+    "total_tokens": 4460,
+    "prompt_tokens_details": {
+      "cached_tokens": 4233
+    }
+  },
+  "id": "chatcmpl-L17uxtTiA9ARpcu7ZQA5OE8GjdzqRsEB",
+  "timings": {
+    "cache_n": 4233,
+    "prompt_n": 1,
+    "prompt_ms": 18.651,
+    "prompt_per_token_ms": 18.651,
+    "prompt_per_second": 53.61642807356174,
+    "predicted_n": 226,
+    "predicted_ms": 3756.924,
+    "predicted_per_token_ms": 16.623557522123892,
+    "predicted_per_second": 60.1555953753656
+  }
+}

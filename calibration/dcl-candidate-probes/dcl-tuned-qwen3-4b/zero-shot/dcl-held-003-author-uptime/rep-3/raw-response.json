@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor ApiTest is system\n\neffect ReturnUptime is response\n\nshape UptimeRequest {\n  method: Method required\n  path: Path required\n}\n\nevent UptimeRequested is {\n  method: Method required\n  path: Path required\n}\n\noutcome UptimeResponse {\n  service: Text required\n  started_at: DateTime required\n  uptime_seconds: Decimal required\n}\n\npolicy UptimeReliability {\n  reliability {\n    timeout 10 seconds\n  }\n}\n\ncapability ApiTestUptime {\n  intent UptimeRequest from ApiTest\n\n  outcomes {\n    UptimeResponse\n  }\n\n  rule UptimeRequest.method is \"GET\" and UptimeRequest.path is \"/uptime\"\n\n  effects {\n    ReturnUptime\n  }\n\n  events {\n    emits UptimeRequested\n  }\n\n  policies {\n    UptimeReliability governs capability\n  }\n\n  observe {\n    capability duration\n    outcome UptimeResponse count as uptime_responses\n    lifecycle transitions\n  }\n\n  when {\n    UptimeRequest.method is not \"GET\" then UptimeResponse\n    UptimeRequest.path is not \"/uptime\" then UptimeResponse\n    otherwise then UptimeResponse\n  }\n\n  lifecycle {\n    begin Pending\n    step Pending\n    end Ready\n    move Pending to Ready on outcome UptimeResponse\n  }\n}\n"
+      }
+    }
+  ],
+  "created": 1784451588,
+  "model": "dcl-tuned-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 277,
+    "prompt_tokens": 1223,
+    "total_tokens": 1500,
+    "prompt_tokens_details": {
+      "cached_tokens": 1222
+    }
+  },
+  "id": "chatcmpl-MCPRuL4PVcAfU8c7XMk7lPZs4mgt3TD4",
+  "timings": {
+    "cache_n": 1222,
+    "prompt_n": 1,
+    "prompt_ms": 20.336,
+    "prompt_per_token_ms": 20.336,
+    "prompt_per_second": 49.173878835562554,
+    "predicted_n": 277,
+    "predicted_ms": 4952.177,
+    "predicted_per_token_ms": 17.877895306859205,
+    "predicted_per_second": 55.934995861416105
+  }
+}

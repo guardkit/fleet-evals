@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor Requester is human\n\nshape VersionInput {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\n\nevent VersionResponseSent is {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\n\noutcome VersionResponse is {\n  version: Text required\n  commit: Text required\n  service: Text required\n}\n\npolicy VersionEndpointReliability {\n  reliability {\n    timeout 30 seconds\n  }\n}\n\ncapability ApiVersionEndpoint {\n  intent VersionInput from Requester\n\n  outcomes {\n    VersionResponse\n  }\n\n  rule RequestMethodIsGet: input.method is \"GET\"\n\n  effects {\n    // No effects \u2014 this is a read-only endpoint\n  }\n\n  events {\n    emits VersionResponseSent\n  }\n\n  policies {\n    VersionEndpointReliability governs capability\n  }\n\n  observe {\n    capability duration\n    outcome VersionResponse count as version_responses\n    event VersionResponseSent count failures as version_response_sent_failures\n  }\n\n  when {\n    RequestMethodIsGet violated then VersionResponse\n    otherwise then VersionResponse\n  }\n\n  lifecycle {\n    begin Pending\n    step Pending\n    end Ready\n    move Pending to Ready on outcome VersionResponse\n  }\n}\n"
+      }
+    }
+  ],
+  "created": 1784451572,
+  "model": "dcl-tuned-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 264,
+    "prompt_tokens": 1204,
+    "total_tokens": 1468,
+    "prompt_tokens_details": {
+      "cached_tokens": 1203
+    }
+  },
+  "id": "chatcmpl-7lkV1REEwKIICiSgMBKvnsZmbYZbCPhJ",
+  "timings": {
+    "cache_n": 1203,
+    "prompt_n": 1,
+    "prompt_ms": 15.93,
+    "prompt_per_token_ms": 15.93,
+    "prompt_per_second": 62.77463904582549,
+    "predicted_n": 264,
+    "predicted_ms": 4105.095,
+    "predicted_per_token_ms": 15.549602272727274,
+    "predicted_per_second": 64.31032655760707
+  }
+}

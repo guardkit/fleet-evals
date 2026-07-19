@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor Requester is human\n\nshape UptimeRequest {\n  // No fields \u2014 this is a read-only endpoint\n}\n\nevent UptimeResponseSent is {\n  service: Text required\n  started_at: DateTime required\n  uptime_seconds: Number required\n}\n\neffect PersistUptime is persistence\n\npolicy UptimeReliability {\n  reliability {\n    timeout 30 seconds\n    idempotency required\n  }\n}\n\ncapability GetUptime {\n  intent UptimeRequest from Requester\n\n  outcomes {\n    UptimeProvided\n  }\n\n  rules {\n    // No rules \u2014 the endpoint is read-only\n  }\n\n  effects {\n    PersistUptime\n  }\n\n  events {\n    emits UptimeResponseSent\n  }\n\n  policies {\n    UptimeReliability governs capability\n  }\n\n  observe {\n    capability duration as uptime_request_duration\n  }\n\n  lifecycle {\n    begin step Started\n    end step Completed\n    step Started {\n      kind active\n    }\n    move Started to Completed on outcome UptimeProvided\n  }\n\n  when {\n    otherwise then UptimeProvided\n  }\n}\n"
+      }
+    }
+  ],
+  "created": 1784452777,
+  "model": "dcl-tuned-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 235,
+    "prompt_tokens": 4253,
+    "total_tokens": 4488,
+    "prompt_tokens_details": {
+      "cached_tokens": 4247
+    }
+  },
+  "id": "chatcmpl-7bsfTBoUgKDgggjstcIHGBDHrTopueeV",
+  "timings": {
+    "cache_n": 4247,
+    "prompt_n": 6,
+    "prompt_ms": 25.992,
+    "prompt_per_token_ms": 4.332,
+    "prompt_per_second": 230.84025854108955,
+    "predicted_n": 235,
+    "predicted_ms": 3914.74,
+    "predicted_per_token_ms": 16.65846808510638,
+    "predicted_per_second": 60.02952941957832
+  }
+}

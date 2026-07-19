@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "language dcl 1.0\n\nactor Client is system\n\neffect ReadProcessStats is persistence\n\nshape StatsRequest {\n  method: Text required\n  path: Text required\n}\n\nevent StatsRetrievedEvent is {\n  service: Text required\n  requestsServed: Number required\n  firstRequestAt: Text required\n}\n\ncapability GetStats {\n  intent StatsRequest from Client\n\n  outcome StatsRetrieved\n\n  effects {\n    ReadProcessStats\n  }\n\n  events {\n    emits StatsRetrievedEvent\n  }\n\n  observe {\n    outcome StatsRetrieved count as stats_requests_served\n    effect ReadProcessStats count failures as stats_read_failures\n  }\n\n  when {\n    always StatsRetrieved\n  }\n\n  lifecycle {\n    begin Pending\n    step Active waits for event StatsRetrievedEvent\n    end Served\n    move Pending to Active on outcome StatsRetrieved\n    move Active to Served on event StatsRetrievedEvent\n  }\n}\n"
+      }
+    }
+  ],
+  "created": 1784452734,
+  "model": "dcl-tuned-qwen3-4b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 198,
+    "prompt_tokens": 1091,
+    "total_tokens": 1289,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "id": "chatcmpl-89p7XtEowzCNDOayJour5YmArK9j9LYV",
+  "timings": {
+    "cache_n": 0,
+    "prompt_n": 1091,
+    "prompt_ms": 239.466,
+    "prompt_per_token_ms": 0.21949220898258479,
+    "prompt_per_second": 4555.970367400801,
+    "predicted_n": 198,
+    "predicted_ms": 2896.062,
+    "predicted_per_token_ms": 14.626575757575758,
+    "predicted_per_second": 68.36870205126824
+  }
+}

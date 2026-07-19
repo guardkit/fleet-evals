@@ -20,6 +20,14 @@ grading, same reference rows as `COMPARISON-2026-07-19.md`.
 
 ## Verdict: **BAR MET**
 
+**First-attempt breakdown (Rich's question, answered from the per-rep checker artifacts):**
+every one of the tuned model's 7 protocol passes was a **clean FIRST-attempt compile — the
+§10 repair loop contributed zero passes** (it fired only on the 2 uptime misses and rescued
+neither). Stock is the inverse: attempt-1 clean 0/9, repair fired on all 9 reps, rescuing
+only its 2 passes. The tune did exactly the mission's stated job — move first attempts from
+dirty to clean. ("First time" = with the vocab reference in the prompt, the §10/production
+shape; zero-shot remains 0/9 for every candidate including the 35B.)
+
 - **Protocol authoring 7/9 vs stock 2/9** — 3.5×, with clean 3/3 sweeps on
   `dcl-held-001-author-stats` (stock 2/3) and `dcl-held-002-author-version` (stock 0/3 —
   stock never passed it once). `dcl-held-003-author-uptime`, the hardest task (stock 0/3),

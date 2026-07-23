@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-08\",\n      \"locus\": \"bundle.json \u2014 bdd=null + gates-green standing against bdd-step-definition-missing\"\n    }\n  ],\n  \"ground_truth_source\": \"coach_correct\"\n}"
+      }
+    }
+  ],
+  "created": 1784834035,
+  "model": "qav-ft-v2",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 83,
+    "prompt_tokens": 794,
+    "total_tokens": 877,
+    "prompt_tokens_details": {
+      "cached_tokens": 604
+    }
+  },
+  "id": "chatcmpl-MG5bTwiOlWF2DqjHKTWZZlI6yObqFAEH",
+  "timings": {
+    "cache_n": 604,
+    "prompt_n": 190,
+    "prompt_ms": 153.572,
+    "prompt_per_token_ms": 0.8082736842105264,
+    "prompt_per_second": 1237.2046987732137,
+    "predicted_n": 83,
+    "predicted_ms": 1286.755,
+    "predicted_per_token_ms": 15.503072289156627,
+    "predicted_per_second": 64.50334368236376
+  }
+}

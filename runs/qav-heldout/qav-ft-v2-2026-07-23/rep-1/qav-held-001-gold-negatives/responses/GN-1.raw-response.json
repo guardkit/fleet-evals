@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-03\",\n      \"locus\": \"bundle.json \u2014 bdd_authoring_sweep +++x \u2014 bdd null + tests passed + gates report pass \u2014 bdd-authoring-sweep report claims 2 created, 0 deleted, 0 undefined, 0 skipped; bdd null means no bdd file exists on disk while gates report bdd creation/deletion/undefined/skipped counts > 0\"\n    }\n  ],\n  \"ground_truth_source\": \"coach_correct\"\n}"
+      }
+    }
+  ],
+  "created": 1784834034,
+  "model": "qav-ft-v2",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 139,
+    "prompt_tokens": 790,
+    "total_tokens": 929,
+    "prompt_tokens_details": {
+      "cached_tokens": 1
+    }
+  },
+  "id": "chatcmpl-mkuSi9H9089wkkUaukrWGsBRgm44Lvsw",
+  "timings": {
+    "cache_n": 1,
+    "prompt_n": 789,
+    "prompt_ms": 584.377,
+    "prompt_per_token_ms": 0.7406552598225602,
+    "prompt_per_second": 1350.155806953388,
+    "predicted_n": 139,
+    "predicted_ms": 2162.88,
+    "predicted_per_token_ms": 15.560287769784173,
+    "predicted_per_second": 64.26616363367361
+  }
+}

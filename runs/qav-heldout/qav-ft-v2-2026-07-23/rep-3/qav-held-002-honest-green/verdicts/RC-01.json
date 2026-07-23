@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-12",
+      "locus": "bundle.json \u2014 search endpoint green claim vacuous (tests_run=0, signal_abs-ent)"
+    }
+  ],
+  "ground_truth_source": "harness/run_po_eval.py \u2014 narrative false-green (RC-01)"
+}

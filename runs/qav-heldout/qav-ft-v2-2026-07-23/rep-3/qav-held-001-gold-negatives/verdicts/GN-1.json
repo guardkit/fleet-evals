@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "bundle.json \u2014 bdd.feature_file_path + null = undefined step definition (bdd_authoring_sweep=null, bdd.feature_file_path exists)"
+    }
+  ],
+  "bundle_id": "GN-1"
+}

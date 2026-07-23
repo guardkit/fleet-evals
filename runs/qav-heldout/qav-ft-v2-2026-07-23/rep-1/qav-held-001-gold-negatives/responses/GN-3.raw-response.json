@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-12\",\n      \"locus\": \"wiring.call_sites.call_site_missing_kwarg_definitionx\"\n    }\n  ],\n  \"bundle_id\": \"GN-3\",\n  \"ground_truth_source\": \"coach_correct\"\n}"
+      }
+    }
+  ],
+  "created": 1784834037,
+  "model": "qav-ft-v2",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 90,
+    "prompt_tokens": 784,
+    "total_tokens": 874,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-QfJALCY5Z3gZ7SohrdlzadGaAwooLJMz",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 181,
+    "prompt_ms": 127.86,
+    "prompt_per_token_ms": 0.7064088397790055,
+    "prompt_per_second": 1415.6108243391209,
+    "predicted_n": 90,
+    "predicted_ms": 1400.469,
+    "predicted_per_token_ms": 15.560766666666668,
+    "predicted_per_second": 64.26418578347682
+  }
+}

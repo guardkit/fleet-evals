@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-03\",\n      \"locus\": \"bundle.json \u2014 bdd.feature_file_path + null = undefined step definition (bdd_authoring_sweep=null, bdd.feature_file_path exists)\"\n    }\n  ],\n  \"bundle_id\": \"GN-1\"\n}"
+      }
+    }
+  ],
+  "created": 1784834058,
+  "model": "qav-ft-v2",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 96,
+    "prompt_tokens": 790,
+    "total_tokens": 886,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-U6paWGkgRboFsiDaPajUkuYrlI2qUAEC",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 187,
+    "prompt_ms": 127.564,
+    "prompt_per_token_ms": 0.6821604278074866,
+    "prompt_per_second": 1465.930826879057,
+    "predicted_n": 96,
+    "predicted_ms": 1481.053,
+    "predicted_per_token_ms": 15.427635416666668,
+    "predicted_per_second": 64.81874720215954
+  }
+}

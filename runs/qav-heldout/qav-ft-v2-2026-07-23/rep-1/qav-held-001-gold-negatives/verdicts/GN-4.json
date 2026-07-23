@@ -1,0 +1,11 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-12",
+      "locus": "wiring.py null + call-site kwargs drift (git diff 1ad98c0)"
+    }
+  ],
+  "bundle_id": "GN-4",
+  "ground_truth_source": "coach_correct"
+}

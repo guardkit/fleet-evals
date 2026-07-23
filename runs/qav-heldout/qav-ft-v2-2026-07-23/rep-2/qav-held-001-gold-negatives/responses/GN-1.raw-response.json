@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-03\",\n      \"locus\": \"tests_passed=True + bdd_authoring_sweep=None \u2014 BDD-authoring-sweep report claims no new step-definitions declared while bdd null implies no step-definitions exist to report on\"\n    }\n  ],\n  \"bundle_id\": \"GN-1\"\n}"
+      }
+    }
+  ],
+  "created": 1784834046,
+  "model": "qav-ft-v2",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 103,
+    "prompt_tokens": 790,
+    "total_tokens": 893,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-4JIlIJGbfdl8RLZLRa2gVJxG870eX7oJ",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 187,
+    "prompt_ms": 127.245,
+    "prompt_per_token_ms": 0.6804545454545455,
+    "prompt_per_second": 1469.6058784235136,
+    "predicted_n": 103,
+    "predicted_ms": 1609.478,
+    "predicted_per_token_ms": 15.626000000000001,
+    "predicted_per_second": 63.995904262127226
+  }
+}

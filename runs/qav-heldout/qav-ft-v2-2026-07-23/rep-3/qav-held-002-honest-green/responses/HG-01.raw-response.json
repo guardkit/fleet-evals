@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"approve\",\n  \"findings\": [],\n  \"ground_truth_source\": \"harness/qa_verifier_seat.py \u2014 narrative green, zero signal (tests_passed=0, independent_tests.tests_passed=0, bdd.scenarios_attempted=0) \u2014 caught by DC-03\"\n}"
+      }
+    }
+  ],
+  "created": 1784834065,
+  "model": "qav-ft-v2",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 81,
+    "prompt_tokens": 978,
+    "total_tokens": 1059,
+    "prompt_tokens_details": {
+      "cached_tokens": 519
+    }
+  },
+  "id": "chatcmpl-exu5dJh1Iu3Iryy0Wmimk9b45xg1nq9N",
+  "timings": {
+    "cache_n": 519,
+    "prompt_n": 459,
+    "prompt_ms": 227.148,
+    "prompt_per_token_ms": 0.49487581699346406,
+    "prompt_per_second": 2020.7089650800358,
+    "predicted_n": 81,
+    "predicted_ms": 1268.474,
+    "predicted_per_token_ms": 15.660172839506172,
+    "predicted_per_second": 63.85625562683981
+  }
+}

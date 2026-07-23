@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-12\",\n      \"locus\": \"bundle.json \u2014 search endpoint green claim vacuous (tests_run=0, signal_abs-absent)\"\n    }\n  ],\n  \"ground_truth_source\": \"harness/run_po_eval.py \u2014 narrative false-green (RC-01)\"\n}"
+      }
+    }
+  ],
+  "created": 1784834054,
+  "model": "qav-ft-v2",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 101,
+    "prompt_tokens": 822,
+    "total_tokens": 923,
+    "prompt_tokens_details": {
+      "cached_tokens": 519
+    }
+  },
+  "id": "chatcmpl-mV4RZGJ7HQDIBCDFFo0cqClIHQ9JRriY",
+  "timings": {
+    "cache_n": 519,
+    "prompt_n": 303,
+    "prompt_ms": 184.887,
+    "prompt_per_token_ms": 0.6101881188118812,
+    "prompt_per_second": 1638.8388583296824,
+    "predicted_n": 101,
+    "predicted_ms": 1579.555,
+    "predicted_per_token_ms": 15.639158415841585,
+    "predicted_per_second": 63.942059630718774
+  }
+}

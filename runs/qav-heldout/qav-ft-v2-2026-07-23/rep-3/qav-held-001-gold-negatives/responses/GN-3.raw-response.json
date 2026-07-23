@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-12\",\n      \"locus\": \"wiring.call_sites.production.py311+kwargs_driftx3 \u2014 call sites still pass retired kwarg names while the service-free definition dropped them\"\n    }\n  ],\n  \"bundle_id\": \"GN-3\",\n  \"ground_truth_source\": \"coach_correct\"\n}"
+      }
+    }
+  ],
+  "created": 1784834061,
+  "model": "qav-ft-v2",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 108,
+    "prompt_tokens": 784,
+    "total_tokens": 892,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-adHcHAs2o6NluXWUt2m715rRoNllRLXu",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 181,
+    "prompt_ms": 131.012,
+    "prompt_per_token_ms": 0.7238232044198895,
+    "prompt_per_second": 1381.5528348548225,
+    "predicted_n": 108,
+    "predicted_ms": 1687.743,
+    "predicted_per_token_ms": 15.62725,
+    "predicted_per_second": 63.99078532691293
+  }
+}

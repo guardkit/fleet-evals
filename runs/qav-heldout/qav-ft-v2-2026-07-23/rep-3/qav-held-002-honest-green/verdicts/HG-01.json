@@ -1,0 +1,5 @@
+{
+  "verdict": "approve",
+  "findings": [],
+  "ground_truth_source": "harness/qa_verifier_seat.py \u2014 narrative green, zero signal (tests_passed=0, independent_tests.tests_passed=0, bdd.scenarios_attempted=0) \u2014 caught by DC-03"
+}

@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "bundle.json \u2014 bdd_authoring_sweep +++x \u2014 bdd null + tests passed + gates report pass \u2014 bdd-authoring-sweep report claims 2 created, 0 deleted, 0 undefined, 0 skipped; bdd null means no bdd file exists on disk while gates report bdd creation/deletion/undefined/skipped counts > 0"
+    }
+  ],
+  "ground_truth_source": "coach_correct"
+}

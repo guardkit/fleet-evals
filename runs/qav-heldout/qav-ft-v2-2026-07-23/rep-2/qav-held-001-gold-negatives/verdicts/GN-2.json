@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-08",
+      "locus": "bundle.json \u2014 bdd=null + gates-green \u2014 BDD step definition(s) absent while bdd-report claims green"
+    }
+  ],
+  "bundle_id": "GN-2"
+}

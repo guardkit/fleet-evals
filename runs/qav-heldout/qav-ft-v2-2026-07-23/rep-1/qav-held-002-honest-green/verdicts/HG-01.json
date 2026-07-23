@@ -1,0 +1,5 @@
+{
+  "verdict": "approve",
+  "findings": [],
+  "ground_truth_source": "harness/qa_verifier_seat_ground_truth.py"
+}

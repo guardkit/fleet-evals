@@ -1,0 +1,11 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-12",
+      "locus": "wiring.call_sites.production.py311+kwargs_driftx3 \u2014 call sites still pass retired kwarg names while the service-free definition dropped them"
+    }
+  ],
+  "bundle_id": "GN-3",
+  "ground_truth_source": "coach_correct"
+}

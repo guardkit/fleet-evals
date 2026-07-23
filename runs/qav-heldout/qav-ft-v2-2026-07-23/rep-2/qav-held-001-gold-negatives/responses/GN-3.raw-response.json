@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-12\",\n      \"locus\": \"wiring.call_sites.production.missing_kwargs + call_site_def_drift \u2014 call sites pass, production still passes (no run), wiring.call_sites.production.missing_kwargs not present\"\n    }\n  ],\n  \"bundle_id\": \"GN-3\",\n  \"ground_truth_source\": \"coach_correct\"\n}"
+      }
+    }
+  ],
+  "created": 1784834049,
+  "model": "qav-ft-v2",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 117,
+    "prompt_tokens": 784,
+    "total_tokens": 901,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-E3O3BlhsSdvkwWslwpFMpikfieMJNGkR",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 181,
+    "prompt_ms": 125.947,
+    "prompt_per_token_ms": 0.6958397790055248,
+    "prompt_per_second": 1437.112436183474,
+    "predicted_n": 117,
+    "predicted_ms": 1829.411,
+    "predicted_per_token_ms": 15.635991452991453,
+    "predicted_per_second": 63.95501065643533
+  }
+}

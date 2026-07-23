@@ -1,0 +1,11 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-12",
+      "locus": "wiring.call_sites.call_site_missing_kwarg_definitionx"
+    }
+  ],
+  "bundle_id": "GN-3",
+  "ground_truth_source": "coach_correct"
+}

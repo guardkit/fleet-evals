@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "tests_passed=True + bdd_authoring_sweep=None \u2014 BDD-authoring-sweep report claims no new step-definitions declared while bdd null implies no step-definitions exist to report on"
+    }
+  ],
+  "bundle_id": "GN-1"
+}

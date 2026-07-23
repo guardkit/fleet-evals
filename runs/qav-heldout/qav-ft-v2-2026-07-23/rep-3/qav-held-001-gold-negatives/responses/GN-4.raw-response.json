@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-12\",\n      \"locus\": \"wiring.py null + call-site kwargs drift (git diff 1ad98c0)\"\n    }\n  ],\n  \"bundle_id\": \"GN-4\",\n  \"ground_truth_source\": \"coach_correct\"\n}"
+      }
+    }
+  ],
+  "created": 1784834063,
+  "model": "qav-ft-v2",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 93,
+    "prompt_tokens": 792,
+    "total_tokens": 885,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-cq0DwIOo8iju66oGBWIP3Gp9yYqz6bJT",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 189,
+    "prompt_ms": 127.053,
+    "prompt_per_token_ms": 0.6722380952380952,
+    "prompt_per_second": 1487.5681802082595,
+    "predicted_n": 93,
+    "predicted_ms": 1457.427,
+    "predicted_per_token_ms": 15.671258064516127,
+    "predicted_per_second": 63.811086249945966
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "verdict": "approve",
+  "findings": [],
+  "ground_truth_source": "harness/qa_verifier_judge.py \u2014 narrative green, no signal absent"
+}

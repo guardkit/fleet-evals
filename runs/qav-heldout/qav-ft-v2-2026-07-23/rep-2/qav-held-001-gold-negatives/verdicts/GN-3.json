@@ -1,0 +1,11 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-12",
+      "locus": "wiring.call_sites.production.missing_kwargs + call_site_def_drift \u2014 call sites pass, production still passes (no run), wiring.call_sites.production.missing_kwargs not present"
+    }
+  ],
+  "bundle_id": "GN-3",
+  "ground_truth_source": "coach_correct"
+}

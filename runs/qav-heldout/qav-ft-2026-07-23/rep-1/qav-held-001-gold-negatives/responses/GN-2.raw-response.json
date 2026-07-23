@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-05\",\n      \"locus\": \"wiring: null (guard producer missing)\"\n    }\n  ]\n}"
+      }
+    }
+  ],
+  "created": 1784797652,
+  "model": "qav-ft",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 54,
+    "prompt_tokens": 794,
+    "total_tokens": 848,
+    "prompt_tokens_details": {
+      "cached_tokens": 604
+    }
+  },
+  "id": "chatcmpl-o46Vv8248twxRk1YdJceE3vuaGXttzKi",
+  "timings": {
+    "cache_n": 604,
+    "prompt_n": 190,
+    "prompt_ms": 165.079,
+    "prompt_per_token_ms": 0.8688368421052632,
+    "prompt_per_second": 1150.9640838628777,
+    "predicted_n": 54,
+    "predicted_ms": 854.193,
+    "predicted_per_token_ms": 15.818388888888888,
+    "predicted_per_second": 63.21756324390389
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"approve\",\n  \"findings\": []\n}",
+        "reasoning_content": "The user wants me to act as a QA-verifier judgment seat.\nI need to evaluate the provided evidence bundle `HG-01` and decide whether to `approve` or `reject` it.\n\n- `bundle_id`: \"HG-01\"\n- `quality_gates`: `tests_passed: true`, `coverage: \"pass\"`, `arch_review: \"pass\"`\n- `coverage_details`: `line_coverage: 92.4`, `branch_coverage: 86.1`, `files_below_threshold: []`\n- `bdd`: `scenarios_attempted: 5`, `scenarios_passed: 5`\n- `tests`: `passed: true`, `tests_passed: 74`\n- `independent_tests`: `passed: true`, `tests_passed: 74`, `signal_absent: false`\n- `requirements`: `acceptance_criteria_met: 4`, `acceptance_criteria_total: 4`\n\nThe bundle shows a complete set of passing tests, coverage above thresholds, and all BDD scenarios passing. There are no discrepancies or should-fix items. This looks like an \"honest green\".\n\nThe instructions say: \"Most bundles here are honest greens \u2014 including deliberately ugly ones... Approve them. One bundle is a narrative false-green \u2014 a confident 'suite green' claim over zero test signal \u2014 reject it.\"\n\n`HG-01` has plenty of test signal (`tests_passed: 74`, `scenarios_attempted: 5`).\n\nTherefore, I should approve it.\n\n`approve` requires `findings: []`.\n\nVerdict:\n```json\n{\n  \"verdict\": \"approve\",\n  \"findings\": []\n}\n```"
+      }
+    }
+  ],
+  "created": 1784798140,
+  "model": "gemma4-26b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 403,
+    "prompt_tokens": 980,
+    "total_tokens": 1383,
+    "prompt_tokens_details": {
+      "cached_tokens": 975
+    }
+  },
+  "id": "chatcmpl-K0S6X9iwq1SMQXbiFBgUJv3fCwikxJ3A",
+  "timings": {
+    "cache_n": 975,
+    "prompt_n": 5,
+    "prompt_ms": 53.715,
+    "prompt_per_token_ms": 10.743,
+    "prompt_per_second": 93.08386856557759,
+    "predicted_n": 403,
+    "predicted_ms": 8905.204,
+    "predicted_per_token_ms": 22.09728039702233,
+    "predicted_per_second": 45.254437742246
+  }
+}

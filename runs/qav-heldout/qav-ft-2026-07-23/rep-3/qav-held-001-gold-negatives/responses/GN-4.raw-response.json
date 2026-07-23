@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\":\n  [\n    {\n      \"class\": \"DC-12\",\n      \"locus\": \"wiring: null (wiring-fix 1ad98c0 calls kwargs not in signature)\"\n    }\n  ]\n}"
+      }
+    }
+  ],
+  "created": 1784797698,
+  "model": "qav-ft",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 68,
+    "prompt_tokens": 792,
+    "total_tokens": 860,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-CpCg1raZXbe878kqEMEn8lnZVNSJXFRJ",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 189,
+    "prompt_ms": 127.314,
+    "prompt_per_token_ms": 0.6736190476190476,
+    "prompt_per_second": 1484.5185918280786,
+    "predicted_n": 68,
+    "predicted_ms": 1077.949,
+    "predicted_per_token_ms": 15.852191176470589,
+    "predicted_per_second": 63.08276180041912
+  }
+}

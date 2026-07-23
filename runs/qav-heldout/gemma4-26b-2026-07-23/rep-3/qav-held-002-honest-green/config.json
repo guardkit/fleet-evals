@@ -1,0 +1,121 @@
+{
+  "suite": "qav-heldout",
+  "task_id": "qav-held-002-honest-green",
+  "rep": 3,
+  "model": "gemma4-26b",
+  "endpoint": "http://127.0.0.1:9000/v1/chat/completions",
+  "sampling": {
+    "temperature": 0.1,
+    "top_p": 0.9,
+    "max_tokens": 2048
+  },
+  "prompt": {
+    "system": "You are the QA-verifier judgment seat. Read the task instructions and the evidence bundle, then output ONLY the verdict JSON object the contract specifies \u2014 no prose, no explanation, no markdown fences.",
+    "system_sha256": "a7f5c6fa9059fc641d5c9b7db20272d0608da8ffc9c5949a245957634a8f5010",
+    "composition": "instruction.md verbatim + that bundle's bundle.json inlined under a stable delimiter (deterministic, per bundle)",
+    "contract": "verdict + findings[{class,locus}] (adf OUTPUT-CONTRACT.md \u00a73); instruction.md is operative",
+    "grammar": "none (the instruction.md verdict+findings contract is operative)"
+  },
+  "freeze_commit": "2165802",
+  "generation_timeout_s": 1800.0,
+  "transport_retries": 2,
+  "bundles": {
+    "HG-01": {
+      "bundle_sha256": "2288be4c9277f6ea86ab188da7c82c0cf67327c108b9ede178805c1b7b488f64",
+      "prompt_sha256": "5dc072bb3a5efe95899d7c517238a637688b9661f93f85a44624dace05921ee3",
+      "finish_reason": "stop",
+      "truncated": false,
+      "json_extracted": true,
+      "usage": {
+        "completion_tokens": 448,
+        "prompt_tokens": 980,
+        "total_tokens": 1428,
+        "prompt_tokens_details": {
+          "cached_tokens": 975
+        }
+      },
+      "wall_time": 10.1
+    },
+    "RC-01": {
+      "bundle_sha256": "3b1fe601b5430805220eb244289c8062b629641b75f76e6e274378e0aa2b2ee5",
+      "prompt_sha256": "6f2ab3874b551c3e25c75d4776247ff4775423fbd70d53f9979f738f21ec7b32",
+      "finish_reason": "stop",
+      "truncated": false,
+      "json_extracted": true,
+      "usage": {
+        "completion_tokens": 1688,
+        "prompt_tokens": 824,
+        "total_tokens": 2512,
+        "prompt_tokens_details": {
+          "cached_tokens": 819
+        }
+      },
+      "wall_time": 38.16
+    },
+    "UG-01": {
+      "bundle_sha256": "13b191637e27e463f511a6181fb6ba4ee0b075b6960e1beb627ecf1010132891",
+      "prompt_sha256": "e2d75cf30246af96f7dfd08b1adb5c47f6ec056bbee39da7e6cbd4b86744564c",
+      "finish_reason": "stop",
+      "truncated": false,
+      "json_extracted": true,
+      "usage": {
+        "completion_tokens": 480,
+        "prompt_tokens": 1032,
+        "total_tokens": 1512,
+        "prompt_tokens_details": {
+          "cached_tokens": 1031
+        }
+      },
+      "wall_time": 10.83
+    },
+    "UG-02": {
+      "bundle_sha256": "a4f0e3da8d17b200ce63f5a262b415412b05641c91e6a8b997fc194a7dca7b3e",
+      "prompt_sha256": "0291ceb459f00e704f8408a7304b7c284c5ade52243d2474ab80b76a58ed17d9",
+      "finish_reason": "stop",
+      "truncated": false,
+      "json_extracted": true,
+      "usage": {
+        "completion_tokens": 626,
+        "prompt_tokens": 971,
+        "total_tokens": 1597,
+        "prompt_tokens_details": {
+          "cached_tokens": 966
+        }
+      },
+      "wall_time": 14.06
+    }
+  },
+  "single_slot_probe": [
+    {
+      "bundle_id": null,
+      "url": "http://127.0.0.1:9000/running",
+      "ok": true,
+      "stage": "preflight"
+    },
+    {
+      "bundle_id": "HG-01",
+      "url": "http://127.0.0.1:9000/running",
+      "ok": true,
+      "stage": "per-bundle"
+    },
+    {
+      "bundle_id": "RC-01",
+      "url": "http://127.0.0.1:9000/running",
+      "ok": true,
+      "stage": "per-bundle"
+    },
+    {
+      "bundle_id": "UG-01",
+      "url": "http://127.0.0.1:9000/running",
+      "ok": true,
+      "stage": "per-bundle"
+    },
+    {
+      "bundle_id": "UG-02",
+      "url": "http://127.0.0.1:9000/running",
+      "ok": true,
+      "stage": "per-bundle"
+    }
+  ],
+  "runner": "harness/run_qav_heldout.py (never grades; grading = tasks/<task>/test)"
+}

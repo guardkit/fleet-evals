@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-05\",\n      \"locus\": \"wiring: null (missing call-site wiring check)\"\n    }\n  ]\n}"
+      }
+    }
+  ],
+  "created": 1784797688,
+  "model": "qav-ft",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 57,
+    "prompt_tokens": 784,
+    "total_tokens": 841,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-IDdT6jaBW27yFBhLBHedTMZAVmiPhyF3",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 181,
+    "prompt_ms": 127.428,
+    "prompt_per_token_ms": 0.7040220994475138,
+    "prompt_per_second": 1420.4099569953228,
+    "predicted_n": 57,
+    "predicted_ms": 895.844,
+    "predicted_per_token_ms": 15.716561403508774,
+    "predicted_per_second": 63.62714936975633
+  }
+}

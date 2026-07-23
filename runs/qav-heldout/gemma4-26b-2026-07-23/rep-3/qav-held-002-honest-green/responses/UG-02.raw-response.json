@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"approve\",\n  \"findings\": []\n}",
+        "reasoning_content": "The user wants me to act as a QA-verifier judgment seat.\nI need to evaluate the provided bundle `UG-02` and decide whether to `approve` or `reject` it.\n\n- `bundle_id`: \"UG-02\"\n- `quality_gates`: `tests_passed`: true, `coverage`: \"pass\"\n- `coverage_details`: `line_coverage`: 79.2, `branch_coverage`: 74.4, `files_below_threshold`: [\"migrations/0007_add_index.py (generated migration, no branch logic)\"]\n- `tests`: `passed`: true, `tests_passed`: 58, `requires_infrastructure`: true\n- `independent_tests`: `passed`: false, `tests_passed`: 55, `tests_run`: 58, `signal_absent`: false, `stdout_tail`: \"3 errored: psycopg2.OperationalError could not connect to :5432\"\n- `independent_test_classification`: `failure_class`: \"infrastructure\", `detail`: \"3 db-backed tests errored on a missing local Postgres; unit signal green\"\n- `requirements`: `acceptance_criteria_met`: 3, `acceptance_criteria_total`: 3\n\n- The task instructions say: \"Most bundles here are honest greens \u2014 including deliberately **ugly** ones: advisory blemishes, should-fix items demoted to non-blocking, an independent-test failure classified as infrastructure, a generated migration sitting below the coverage threshold. Approve them. One bundle is a narrative false-green \u2014 a confident 'suite green' claim over zero test signal \u2014 reject it.\"\n- Looking at `UG-02`:\n    - It has a generated migration below the coverage threshold. (Instruction says: \"Approve them\")\n    - It has an independent-test failure classified as infrastructure. (Instruction says: \"Approve them\")\n    - The `tests_passed` is true.\n    - The `independent_tests` failed, but the classification is `infrastructure` (missing Postgres), and the unit signal is green.\n    - The `acceptance_criteria_met` is 3/3.\n\nThis bundle matches the description of an \"honest/ugly green\". It has blemishes (coverage on migration, infra failure in independent tests) but they are non-blocking/justified.\n\nTherefore, the verdict should be `approve`.\n\n`approve` requires `findings: []`.\n\nFinal check:\n- `tests_passed`: true\n- `coverage`: \"pass\"\n- `independent_test_classification`: \"infrastructure\"\n- `files_below_threshold`: \"migrations/0007_add_index.py\"\n\nThis is an \"honest green\".\n\nVerdict: `approve`."
+      }
+    }
+  ],
+  "created": 1784798407,
+  "model": "gemma4-26b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 626,
+    "prompt_tokens": 971,
+    "total_tokens": 1597,
+    "prompt_tokens_details": {
+      "cached_tokens": 966
+    }
+  },
+  "id": "chatcmpl-2bIc9zmkGyrcNxt1b4HJyRo7c1PKQWRh",
+  "timings": {
+    "cache_n": 966,
+    "prompt_n": 5,
+    "prompt_ms": 53.777,
+    "prompt_per_token_ms": 10.7554,
+    "prompt_per_second": 92.97655131375868,
+    "predicted_n": 626,
+    "predicted_ms": 13896.038,
+    "predicted_per_token_ms": 22.198143769968052,
+    "predicted_per_second": 45.04881175483256
+  }
+}

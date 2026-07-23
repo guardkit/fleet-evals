@@ -1,0 +1,37 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"approve\",\n  \"findings\": []\n}",
+        "reasoning_content": "*   Task: Decide whether to `approve` or `reject` the bundle.\n    *   Goal: Approve \"honest/ugly greens\" (advisory blemishes, non-blocking issues, infra failures, low coverage on generated files) and reject \"narrative false-greens\" (claims of success with zero test signal).\n    *   Bundle ID: `UG-02`.\n\n    *   `quality_gates`: `tests_passed: true`, `coverage: \"pass\"`.\n    *   `coverage_details`: `line_coverage: 79.2`, `branch_coverage: 74.4`. `files_below_threshold` includes a generated migration (`migrations/0007_add_index.py`) which has no branch logic. This is an \"ugly green\" (low coverage on non-logic files).\n    *   `tests`: `passed: true`, `tests_passed: 58`.\n    *   `independent_tests`: `passed: false`, `tests_passed: 55`, `tests_run: 58`. `stdout_tail` shows `psycopg2.OperationalError` (connection error).\n    *   `independent_test_classification`: `failure_class: \"infrastructure\"`. The detail says \"3 db-backed tests errored on a missing local Postgres; unit signal green\". This is an \"ugly green\" (independent test failure classified as infrastructure).\n    *   `requirements`: `acceptance_criteria_met: 3`, `acceptance_criteria_total: 3`.\n\n    *   The bundle claims success (`tests_passed: true`).\n    *   There is actual test signal (58 tests run, 55 passed).\n    *   The failures are infrastructure-related (DB connection), not logic-related.\n    *   The coverage issue is on a generated migration file.\n    *   This fits the definition of an \"honest/ugly green\".\n\n    *   Verdict: `approve`.\n    *   Findings: `[]`."
+      }
+    }
+  ],
+  "created": 1784797932,
+  "model": "gemma4-26b",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 460,
+    "prompt_tokens": 971,
+    "total_tokens": 1431,
+    "prompt_tokens_details": {
+      "cached_tokens": 524
+    }
+  },
+  "id": "chatcmpl-qr6uulZ1X7wBG8bQ93CDqWe4IFgBugum",
+  "timings": {
+    "cache_n": 524,
+    "prompt_n": 447,
+    "prompt_ms": 228.649,
+    "prompt_per_token_ms": 0.5115190156599553,
+    "prompt_per_second": 1954.9615349290834,
+    "predicted_n": 460,
+    "predicted_ms": 10182.449,
+    "predicted_per_token_ms": 22.135758695652175,
+    "predicted_per_second": 45.17577254744904
+  }
+}

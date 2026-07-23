@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\":\n  [\n    {\n      \"class\": \"DC-12\",\n      \"locus\": \"wiring: null (wiring-fix 1ad98c0 calls non-existent kwarg 'user_id' in its call site)\"\n    }\n  ]\n}"
+      }
+    }
+  ],
+  "created": 1784797689,
+  "model": "qav-ft",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 78,
+    "prompt_tokens": 792,
+    "total_tokens": 870,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-Z9CKQeUVHmp3MV46EJAloCz1vWU3wFgo",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 189,
+    "prompt_ms": 128.219,
+    "prompt_per_token_ms": 0.6784074074074073,
+    "prompt_per_second": 1474.0405088169462,
+    "predicted_n": 78,
+    "predicted_ms": 1222.345,
+    "predicted_per_token_ms": 15.671089743589745,
+    "predicted_per_second": 63.811771635667505
+  }
+}

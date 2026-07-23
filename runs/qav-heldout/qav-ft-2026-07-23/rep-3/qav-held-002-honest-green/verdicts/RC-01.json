@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "tests.tests_passed == 0 and tests.tests_run == 0 while claims.contains('full suite green')"
+    }
+  ]
+}

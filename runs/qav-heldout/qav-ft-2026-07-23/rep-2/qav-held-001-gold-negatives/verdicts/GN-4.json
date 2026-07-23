@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-12",
+      "locus": "wiring: null (wiring-fix 1ad98c0 calls non-existent kwarg 'user_id' in its call site)"
+    }
+  ]
+}

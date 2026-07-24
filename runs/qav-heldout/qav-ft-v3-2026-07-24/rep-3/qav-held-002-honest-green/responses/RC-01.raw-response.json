@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-03\",\n      \"locus\": \"claims.Search endpoint implemented; full suite green \u2014 independent_tests.signal_absent true (tests_run 0) stands against it\"\n    }\n  ],\n  \"ground_truth_source\": \"seeded\"\n}"
+      }
+    }
+  ],
+  "created": 1784870249,
+  "model": "qav-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 88,
+    "prompt_tokens": 822,
+    "total_tokens": 910,
+    "prompt_tokens_details": {
+      "cached_tokens": 519
+    }
+  },
+  "id": "chatcmpl-aN63TDQtoLyryoUg50cbcBFRLZOZZICe",
+  "timings": {
+    "cache_n": 519,
+    "prompt_n": 303,
+    "prompt_ms": 182.419,
+    "prompt_per_token_ms": 0.6020429042904291,
+    "prompt_per_second": 1661.0111885275107,
+    "predicted_n": 88,
+    "predicted_ms": 1465.627,
+    "predicted_per_token_ms": 16.654852272727272,
+    "predicted_per_second": 60.04256198882799
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-08\",\n      \"locus\": \"wiring null and bdd null with green gates \u2014 the producer-side seam is unverified\"\n    }\n  ],\n  \"ground_truth_source\": \"coach_correct\"\n}"
+      }
+    }
+  ],
+  "created": 1784870232,
+  "model": "qav-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 79,
+    "prompt_tokens": 794,
+    "total_tokens": 873,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-xrcKvSpGMpCqUajMAcrj1mtEzDYGhtIZ",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 191,
+    "prompt_ms": 138.637,
+    "prompt_per_token_ms": 0.7258481675392671,
+    "prompt_per_second": 1377.6985941703874,
+    "predicted_n": 79,
+    "predicted_ms": 1293.35,
+    "predicted_per_token_ms": 16.37151898734177,
+    "predicted_per_second": 61.081687091661195
+  }
+}

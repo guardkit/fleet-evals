@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-05\",\n      \"locus\": \"wiring null + bdd null implies bdd/wiring never ran; a defect seam still exists\"\n    }\n  ],\n  \"wiring_status\": \"incomplete\"\n}"
+      }
+    }
+  ],
+  "created": 1784870221,
+  "model": "qav-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 76,
+    "prompt_tokens": 794,
+    "total_tokens": 870,
+    "prompt_tokens_details": {
+      "cached_tokens": 604
+    }
+  },
+  "id": "chatcmpl-eUTEaaU6m8u2wKoJ1vjnjkCLFEIkL3wW",
+  "timings": {
+    "cache_n": 604,
+    "prompt_n": 190,
+    "prompt_ms": 158.222,
+    "prompt_per_token_ms": 0.8327473684210527,
+    "prompt_per_second": 1200.8443832084033,
+    "predicted_n": 76,
+    "predicted_ms": 1235.656,
+    "predicted_per_token_ms": 16.25863157894737,
+    "predicted_per_second": 61.50579125581878
+  }
+}

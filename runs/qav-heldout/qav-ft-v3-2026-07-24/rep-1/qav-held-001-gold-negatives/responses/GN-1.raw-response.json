@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-03\",\n      \"locus\": \"bdd null drives bdd_authoring_sweep null under complete, a vacuous composition seam\"\n    }\n  ],\n  \"ground_truth_source\": \"coach_correct\"\n}"
+      }
+    }
+  ],
+  "created": 1784870220,
+  "model": "qav-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 80,
+    "prompt_tokens": 790,
+    "total_tokens": 870,
+    "prompt_tokens_details": {
+      "cached_tokens": 1
+    }
+  },
+  "id": "chatcmpl-LMSx1b6SlpWkwLVKUoX5XmoKfQZsPkFK",
+  "timings": {
+    "cache_n": 1,
+    "prompt_n": 789,
+    "prompt_ms": 601.408,
+    "prompt_per_token_ms": 0.7622408111533587,
+    "prompt_per_second": 1311.9213578801744,
+    "predicted_n": 80,
+    "predicted_ms": 1348.78,
+    "predicted_per_token_ms": 16.85975,
+    "predicted_per_second": 59.3128605109803
+  }
+}

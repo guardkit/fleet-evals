@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "tests_run=0 with collected 0 and independent_tests.signal_absent true \u2014 the green claim is a void"
+    }
+  ],
+  "ground_truth_source": "seeded"
+}

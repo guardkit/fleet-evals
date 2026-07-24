@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-08\",\n      \"locus\": \"bdd null + gates green = step definition missing (BDD hole)\"\n    }\n  ],\n  \"ground_truth_source\": \"coach_correct\"\n}"
+      }
+    }
+  ],
+  "created": 1784870241,
+  "model": "qav-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 74,
+    "prompt_tokens": 790,
+    "total_tokens": 864,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-QqqKaY8SinKvKZK7PSMEggCQU3UDSEkD",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 187,
+    "prompt_ms": 128.789,
+    "prompt_per_token_ms": 0.688711229946524,
+    "prompt_per_second": 1451.9873591688734,
+    "predicted_n": 74,
+    "predicted_ms": 1212.077,
+    "predicted_per_token_ms": 16.37941891891892,
+    "predicted_per_second": 61.05222687997545
+  }
+}

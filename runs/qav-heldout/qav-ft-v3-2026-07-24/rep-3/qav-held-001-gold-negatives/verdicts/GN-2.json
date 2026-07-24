@@ -1,0 +1,11 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-08",
+      "locus": "wiring null and bdd null with green gates \u2014 the producer-side wiring seam a defect-free run never exercises"
+    }
+  ],
+  "wiring": "DC-08",
+  "bdd": "DC-08"
+}

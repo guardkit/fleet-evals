@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-08\",\n      \"locus\": \"wiring null and bdd null with green gates \u2014 the producer-side wiring seam a defect-free run never exercises\"\n    }\n  ],\n  \"wiring\": \"DC-08\",\n  \"bdd\": \"DC-08\"\n}"
+      }
+    }
+  ],
+  "created": 1784870243,
+  "model": "qav-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 92,
+    "prompt_tokens": 794,
+    "total_tokens": 886,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-T07I6K4CqWYIJYFxO6EEo5UWm5mtlkko",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 191,
+    "prompt_ms": 143.801,
+    "prompt_per_token_ms": 0.7528848167539266,
+    "prompt_per_second": 1328.2244212488092,
+    "predicted_n": 92,
+    "predicted_ms": 1510.234,
+    "predicted_per_token_ms": 16.41558695652174,
+    "predicted_per_second": 60.91771208964968
+  }
+}

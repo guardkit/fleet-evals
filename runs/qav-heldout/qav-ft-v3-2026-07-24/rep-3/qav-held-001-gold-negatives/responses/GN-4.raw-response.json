@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-12\",\n      \"locus\": \"wiring null + gates green = disconnected call site (DC-12)\"\n    }\n  ],\n  \"ground_truth_source\": \"coach_correct\"\n}"
+      }
+    }
+  ],
+  "created": 1784870246,
+  "model": "qav-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 75,
+    "prompt_tokens": 792,
+    "total_tokens": 867,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-0T6ECYCWfz98FkeLr7dJFduHqtws8LgN",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 189,
+    "prompt_ms": 144.062,
+    "prompt_per_token_ms": 0.7622328042328043,
+    "prompt_per_second": 1311.9351390373588,
+    "predicted_n": 75,
+    "predicted_ms": 1224.767,
+    "predicted_per_token_ms": 16.330226666666668,
+    "predicted_per_second": 61.23613715914945
+  }
+}

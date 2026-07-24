@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-05\",\n      \"locus\": \"bdd null + gates green = bdd authoring sweep hole\"\n    }\n  ],\n  \"ground_truth_source\": \"coach_correct\"\n}"
+      }
+    }
+  ],
+  "created": 1784870231,
+  "model": "qav-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 73,
+    "prompt_tokens": 790,
+    "total_tokens": 863,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-6yHXCt1WIsjTTfrJ3yk10pouIL0QAs77",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 187,
+    "prompt_ms": 146.687,
+    "prompt_per_token_ms": 0.7844224598930482,
+    "prompt_per_second": 1274.8232631385195,
+    "predicted_n": 73,
+    "predicted_ms": 1213.279,
+    "predicted_per_token_ms": 16.6202602739726,
+    "predicted_per_second": 60.16752948002891
+  }
+}

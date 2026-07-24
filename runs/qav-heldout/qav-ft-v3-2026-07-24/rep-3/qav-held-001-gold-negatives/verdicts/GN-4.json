@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-12",
+      "locus": "wiring null + gates green = disconnected call site (DC-12)"
+    }
+  ],
+  "ground_truth_source": "coach_correct"
+}

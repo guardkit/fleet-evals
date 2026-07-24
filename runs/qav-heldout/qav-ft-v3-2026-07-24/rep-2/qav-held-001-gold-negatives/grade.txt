@@ -1,0 +1,41 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+________________________ test_gold_negatives_all_caught ________________________
+
+bundles = ['GN-1', 'GN-2', 'GN-3', 'GN-4']
+expected = {'GN-1': {'bundle': 'GN-1', 'dc_class': 'DC-08', 'gold_negative': True, 'ground_truth_source': 'operator_caught', ...}...-4': {'bundle': 'GN-4', 'dc_class': 'DC-03', 'gold_negative': True, 'ground_truth_source': 'merge_review_caught', ...}}
+anchors = {'groups': [{'alternates': ['bdd_authoring_sweep', 'absent signal', 'independent junit|no .{0,20}junit', '\\bbdd\\b[^....g. Matched case-insensitively over NFKC+casefold-normalized locus text, compiled by the frozen idea_gates instrument."}
+output_dir = PosixPath('runs/qav-heldout/qav-ft-v3-2026-07-24/rep-2/qav-held-001-gold-negatives')
+
+    def test_gold_negatives_all_caught(bundles, expected, anchors, output_dir):
+        """G-Q2 (must-catch, 100% — the QAV-FT deploy gate bar, WS4-S8): every one
+        of the four real gold negatives is rejected, ≥1 finding carries the owning
+        documented DC class, and the findings name the in-bundle signal (anchor
+        group = bundle id). 3 of 4 is a FAIL."""
+        groups = {g["id"]: g for g in qav_gates.compile_anchors(anchors)}
+        misses = []
+        for bundle_id in bundles:
+            row = expected[bundle_id]
+            if row["verdict"] != "reject":
+                continue
+            verdict = qav_gates.load_verdict(output_dir, bundle_id)
+            if verdict.get("verdict") != "reject":
+                misses.append(f"{bundle_id}: verdict={verdict.get('verdict')!r} (gold negative approved)")
+                continue
+            classes = {f.get("class") for f in verdict.get("findings") or [] if isinstance(f, dict)}
+            if row["dc_class"] not in classes:
+                misses.append(f"{bundle_id}: owning class {row['dc_class']} absent from {sorted(map(str, classes))}")
+            locus = qav_gates.normalize(qav_gates.verdict_locus_text(verdict))
+            if not qav_gates._first_match(groups[bundle_id], locus):
+                misses.append(f"{bundle_id}: findings never name the in-bundle signal")
+>       assert misses == [], misses
+E       AssertionError: ["GN-1: owning class DC-08 absent from ['DC-05']", "GN-2: owning class DC-03 absent from ['DC-08']", 'GN-2: findings n...nt from ['DC-05']", "GN-4: owning class DC-03 absent from ['DC-12']", 'GN-4: findings never name the in-bundle signal']
+E       assert ["GN-1: ownin...undle signal'] == []
+E         
+E         Left contains 6 more items, first extra item: "GN-1: owning class DC-08 absent from ['DC-05']"
+E         Use -v to get more diff
+
+tasks/qav-held-001-gold-negatives/test/test_gate_qav_held_001.py:38: AssertionError
+=========================== short test summary info ============================
+FAILED tasks/qav-held-001-gold-negatives/test/test_gate_qav_held_001.py::test_gold_negatives_all_caught
+1 failed, 1 passed in 0.02s

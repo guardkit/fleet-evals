@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-08",
+      "locus": "wiring null and bdd null with green gates \u2014 the producer-side seam is unverified"
+    }
+  ],
+  "ground_truth_source": "coach_correct"
+}

@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "bdd null drives bdd_authoring_sweep null under complete, a vacuous composition seam"
+    }
+  ],
+  "ground_truth_source": "coach_correct"
+}

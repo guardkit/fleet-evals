@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-05",
+      "locus": "bdd null + gates green = bdd authoring sweep hole"
+    }
+  ],
+  "ground_truth_source": "coach_correct"
+}

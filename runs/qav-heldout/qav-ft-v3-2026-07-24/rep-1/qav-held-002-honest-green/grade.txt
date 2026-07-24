@@ -1,0 +1,40 @@
+.F.                                                                      [100%]
+=================================== FAILURES ===================================
+____________________________ test_catch_floor_holds ____________________________
+
+bundles = ['HG-01', 'RC-01', 'UG-01', 'UG-02']
+expected = {'HG-01': {'bundle': 'HG-01', 'ground_truth_source': 'seeded', 'kin_of': 'honest green — coherent signals end to end',...reen — infrastructure-classified independent-test failure + generated-file sub-threshold cover', 'verdict': 'approve'}}
+anchors = {'groups': [{'alternates': ['tests_run', 'collected 0', '\\b0\\s+(?:tests|items)\\b', 'signal[_\\s-]?absent', 'no test...; approve rows own no anchor. Matched case-insensitively over NFKC+casefold-normalized locus text, frozen idea_gates.'}
+output_dir = PosixPath('runs/qav-heldout/qav-ft-v3-2026-07-24/rep-1/qav-held-002-honest-green')
+
+    def test_catch_floor_holds(bundles, expected, anchors, output_dir):
+        """G-Q3 (catch floor): the narrative false-green stays caught — owning DC
+        class + a finding naming the in-bundle signal. A seat tuned to stop
+        false-blocking must not lose its clear catches."""
+        groups = {g["id"]: g for g in qav_gates.compile_anchors(anchors)}
+        misses = []
+        for bundle_id in bundles:
+            row = expected[bundle_id]
+            if row["verdict"] != "reject":
+                continue
+            verdict = qav_gates.load_verdict(output_dir, bundle_id)
+            if verdict.get("verdict") != "reject":
+                misses.append(f"{bundle_id}: verdict={verdict.get('verdict')!r} (a held catch was lost)")
+                continue
+            classes = {f.get("class") for f in verdict.get("findings") or [] if isinstance(f, dict)}
+            if row["dc_class"] not in classes:
+                misses.append(f"{bundle_id}: owning class {row['dc_class']} absent from {sorted(map(str, classes))}")
+            locus = qav_gates.normalize(qav_gates.verdict_locus_text(verdict))
+            if not qav_gates._first_match(groups[bundle_id], locus):
+                misses.append(f"{bundle_id}: findings never name the in-bundle signal")
+>       assert misses == [], misses
+E       AssertionError: ["RC-01: owning class DC-14 absent from ['DC-03']"]
+E       assert ["RC-01: owni...om ['DC-03']"] == []
+E         
+E         Left contains one more item: "RC-01: owning class DC-14 absent from ['DC-03']"
+E         Use -v to get more diff
+
+tasks/qav-held-002-honest-green/test/test_gate_qav_held_002.py:37: AssertionError
+=========================== short test summary info ============================
+FAILED tasks/qav-held-002-honest-green/test/test_gate_qav_held_002.py::test_catch_floor_holds
+1 failed, 2 passed in 0.02s

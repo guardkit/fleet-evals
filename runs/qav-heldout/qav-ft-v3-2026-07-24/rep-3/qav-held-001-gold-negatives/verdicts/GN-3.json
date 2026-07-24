@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-05",
+      "locus": "wiring null + gates green = production call site unverified"
+    }
+  ],
+  "wiring": "DC-05"
+}

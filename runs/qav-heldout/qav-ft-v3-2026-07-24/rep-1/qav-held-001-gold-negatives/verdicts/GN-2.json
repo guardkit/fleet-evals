@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-05",
+      "locus": "wiring null + bdd null implies bdd/wiring never ran; a defect seam still exists"
+    }
+  ],
+  "wiring_status": "incomplete"
+}

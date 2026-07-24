@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-05\",\n      \"locus\": \"wiring null + gates green = production call site unverified\"\n    }\n  ],\n  \"wiring_status\": \"complete\"\n}"
+      }
+    }
+  ],
+  "created": 1784870223,
+  "model": "qav-ft-v3",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 68,
+    "prompt_tokens": 784,
+    "total_tokens": 852,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-KY9yPRbdEGH6XUFC7jpFlDVagVL6QnAP",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 181,
+    "prompt_ms": 138.838,
+    "prompt_per_token_ms": 0.7670607734806629,
+    "prompt_per_second": 1303.677667497371,
+    "predicted_n": 68,
+    "predicted_ms": 1136.656,
+    "predicted_per_token_ms": 16.715529411764706,
+    "predicted_per_second": 59.82460832477021
+  }
+}

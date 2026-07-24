@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-05",
+      "locus": "wiring null + runtime_parity null + bdd null \u2014 the producer is a vacuous seam, no production construction witnesses"
+    }
+  ],
+  "bundle_id": "GN-2"
+}

@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-05",
+      "locus": "wiring null + gathering_status complete + plan_audit blank"
+    }
+  ],
+  "bundle_id": "GN-3"
+}

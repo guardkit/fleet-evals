@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-03",
+      "locus": "bundle.tests.tests_passed true with zero tests run and independent_tests.signal_absent true \u2014 the claimed green is a vacuous composition seam, no test exercises the endpoint"
+    }
+  ],
+  "ground_truth_source": "seeded"
+}

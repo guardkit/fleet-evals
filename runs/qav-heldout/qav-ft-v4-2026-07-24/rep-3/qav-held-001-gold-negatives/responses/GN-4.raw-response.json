@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-12\",\n      \"locus\": \"bundle.tests.passed=True and gates.tests_passed=True with wiring null and gathering_status complete \u2014 the kwargs-call site is a dangling seam no test exercises\"\n    }\n  ],\n  \"bundle_id\": \"GN-4\"\n}"
+      }
+    }
+  ],
+  "created": 1784927266,
+  "model": "qav-ft-v4",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 95,
+    "prompt_tokens": 792,
+    "total_tokens": 887,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-90TTbOkQJkrW8kQfNp6cvMfVn2HLn0MT",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 189,
+    "prompt_ms": 129.811,
+    "prompt_per_token_ms": 0.6868306878306879,
+    "prompt_per_second": 1455.9628999083282,
+    "predicted_n": 95,
+    "predicted_ms": 1478.605,
+    "predicted_per_token_ms": 15.564263157894738,
+    "predicted_per_second": 64.24974891874436
+  }
+}

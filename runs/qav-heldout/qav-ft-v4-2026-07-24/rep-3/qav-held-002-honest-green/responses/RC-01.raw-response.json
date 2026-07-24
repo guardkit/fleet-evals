@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-03\",\n      \"locus\": \"bundle.tests.tests_passed true with zero tests run and independent_tests.signal_absent true \u2014 the claimed green is a vacuous composition seam, no test exercises the endpoint\"\n    }\n  ],\n  \"ground_truth_source\": \"seeded\"\n}"
+      }
+    }
+  ],
+  "created": 1784927269,
+  "model": "qav-ft-v4",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 97,
+    "prompt_tokens": 822,
+    "total_tokens": 919,
+    "prompt_tokens_details": {
+      "cached_tokens": 519
+    }
+  },
+  "id": "chatcmpl-wewN0WvRUDO8HRDV4mgqfzelj30B3Xj8",
+  "timings": {
+    "cache_n": 519,
+    "prompt_n": 303,
+    "prompt_ms": 185.453,
+    "prompt_per_token_ms": 0.6120561056105611,
+    "prompt_per_second": 1633.837144721304,
+    "predicted_n": 97,
+    "predicted_ms": 1510.885,
+    "predicted_per_token_ms": 15.576134020618557,
+    "predicted_per_second": 64.20078298480692
+  }
+}

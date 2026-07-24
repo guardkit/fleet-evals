@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-05",
+      "locus": "bundle.tests.passed=True and gates report pass, but wiring null and no production construction witnesses"
+    }
+  ],
+  "bundle_id": "GN-2"
+}

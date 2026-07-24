@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-05\",\n      \"locus\": \"bundle.tests.passed=True with bdd=null and the producer a step definition a scenario uses never exercised\"\n    }\n  ],\n  \"bundle_id\": \"GN-2\"\n}"
+      }
+    }
+  ],
+  "created": 1784927253,
+  "model": "qav-ft-v4",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 82,
+    "prompt_tokens": 794,
+    "total_tokens": 876,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-tBIgLqoqNGGH3BWmuNywys277zBegL4Y",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 191,
+    "prompt_ms": 128.861,
+    "prompt_per_token_ms": 0.6746649214659686,
+    "prompt_per_second": 1482.217272875424,
+    "predicted_n": 82,
+    "predicted_ms": 1276.278,
+    "predicted_per_token_ms": 15.564365853658536,
+    "predicted_per_second": 64.24932499032342
+  }
+}

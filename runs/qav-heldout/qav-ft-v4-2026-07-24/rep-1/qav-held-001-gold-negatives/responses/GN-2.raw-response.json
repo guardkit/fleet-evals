@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-05\",\n      \"locus\": \"wiring null + runtime_parity null + bdd null \u2014 the producer is a vacuous seam, no production construction witnesses\"\n    }\n  ],\n  \"bundle_id\": \"GN-2\"\n}"
+      }
+    }
+  ],
+  "created": 1784927242,
+  "model": "qav-ft-v4",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 83,
+    "prompt_tokens": 794,
+    "total_tokens": 877,
+    "prompt_tokens_details": {
+      "cached_tokens": 604
+    }
+  },
+  "id": "chatcmpl-lj3b3KLY6FnRItli6rwuNbI8FHQ9M6zI",
+  "timings": {
+    "cache_n": 604,
+    "prompt_n": 190,
+    "prompt_ms": 156.014,
+    "prompt_per_token_ms": 0.8211263157894737,
+    "prompt_per_second": 1217.8394246670168,
+    "predicted_n": 83,
+    "predicted_ms": 1281.457,
+    "predicted_per_token_ms": 15.439240963855424,
+    "predicted_per_second": 64.77002349669165
+  }
+}

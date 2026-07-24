@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-12",
+      "locus": "bundle.tests.passed=True and gates.tests_passed=True with wiring null and gathering_status complete \u2014 the kwargs-call site is a dangling seam no test exercises"
+    }
+  ],
+  "bundle_id": "GN-4"
+}

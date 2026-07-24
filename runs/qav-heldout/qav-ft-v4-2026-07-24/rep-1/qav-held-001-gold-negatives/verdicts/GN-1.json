@@ -1,0 +1,10 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-05",
+      "locus": "bundle.bdd null and bdd_authoring_sweep null while gates report pass"
+    }
+  ],
+  "ground_truth_source": "seeded"
+}

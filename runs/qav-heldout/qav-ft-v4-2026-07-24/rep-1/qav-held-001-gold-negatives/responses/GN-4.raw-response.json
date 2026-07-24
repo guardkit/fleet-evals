@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-12\",\n      \"locus\": \"bundle.tests.passed=True and gates.tests_passed=True with wiring null and gathering_status complete \u2014 the kwargs-call site is a dangling wire, no construction witnesses\"\n    }\n  ],\n  \"bundle_id\": \"GN-4\"\n}"
+      }
+    }
+  ],
+  "created": 1784927245,
+  "model": "qav-ft-v4",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 96,
+    "prompt_tokens": 792,
+    "total_tokens": 888,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-v4XoeVG8StBRCgKvOiEb3wqK8yc8fA2q",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 189,
+    "prompt_ms": 128.117,
+    "prompt_per_token_ms": 0.6778677248677248,
+    "prompt_per_second": 1475.2140621463195,
+    "predicted_n": 96,
+    "predicted_ms": 1482.706,
+    "predicted_per_token_ms": 15.444854166666666,
+    "predicted_per_second": 64.74648379382022
+  }
+}

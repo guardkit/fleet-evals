@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\n  \"verdict\": \"reject\",\n  \"findings\": [\n    {\n      \"class\": \"DC-05\",\n      \"locus\": \"bundle.tests.passed=True and gates report pass, but wiring null and no production construction witnesses\"\n    }\n  ],\n  \"bundle_id\": \"GN-2\"\n}"
+      }
+    }
+  ],
+  "created": 1784927263,
+  "model": "qav-ft-v4",
+  "system_fingerprint": "b9430-d48a56eff",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 79,
+    "prompt_tokens": 794,
+    "total_tokens": 873,
+    "prompt_tokens_details": {
+      "cached_tokens": 603
+    }
+  },
+  "id": "chatcmpl-LB4Jf3n556gA9cXXEv59YbfS9mDvUXw8",
+  "timings": {
+    "cache_n": 603,
+    "prompt_n": 191,
+    "prompt_ms": 130.182,
+    "prompt_per_token_ms": 0.6815811518324607,
+    "prompt_per_second": 1467.176721820221,
+    "predicted_n": 79,
+    "predicted_ms": 1226.091,
+    "predicted_per_token_ms": 15.520139240506328,
+    "predicted_per_second": 64.43241162360707
+  }
+}

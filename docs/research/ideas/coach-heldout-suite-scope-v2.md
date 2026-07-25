@@ -1,6 +1,6 @@
-# Coach Held-Out Suite v2 — bundle judgment + locus (DRAFT, not frozen)
+# Coach Held-Out Suite v2 — bundle judgment + locus (FROZEN)
 ## For Rich's 5-minute read · 2026-07-25 · the QAV-v2 pattern applied to the coach bar
-## DRAFT — the v1 frozen files (coach-heldout-suite-scope.md, `e3e4caf`) are BYTE-UNTOUCHED. Freeze = Rich's word.
+## **FROZEN 2026-07-25 (Rich — "freeze the v2 draft"):** judgment + locus graded, defect-class de-scoped to non-gating diagnostics. Pre-registration discipline: this freeze precedes any v2 grading run; thresholds now immutable. v1 files (coach-heldout-suite-scope.md, `e3e4caf`) BYTE-UNTOUCHED — v2 is strictly additive. Consumer: the updated-Gemma-4 coach tune (base SIGNED, ai-transition/docs/coach-retune-base-pick-2026-07-25.md).
 
 ## Why a v2 (the one-minute version)
 

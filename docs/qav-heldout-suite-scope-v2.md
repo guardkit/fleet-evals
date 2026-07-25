@@ -1,9 +1,10 @@
-# QAV held-out suite — scope **v2** — ⚠ DRAFT, NOT FROZEN — awaiting Rich's ratification
+# QAV held-out suite — scope **v2** — **FROZEN**
 
-**Status: DRAFT.** The frozen v1 (`docs/qav-heldout-suite-scope.md` @ `2165802`) is untouched
-and remains the bar of record for every sitting to date (v1–v4, all NO-DEPLOY, results stand).
-This page becomes binding only on Rich's explicit freeze; the v2 graders are built only after
-that freeze, against this text.
+**Status: FROZEN — ratified by Rich, 2026-07-25, with the word "frozen" (in-session, the
+post-park lane §7 `1cec8f8`).** The frozen v1 (`docs/qav-heldout-suite-scope.md` @ `2165802`)
+is untouched and remains the bar of record for every sitting graded before this freeze
+(v1–v4, all NO-DEPLOY, results stand). This page is binding from its freeze commit forward;
+the v2 graders are built against this text and never edited after this commit.
 
 ## The one-minute version
 

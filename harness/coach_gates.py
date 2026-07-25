@@ -150,6 +150,41 @@ def verdict_schema_findings(verdict: dict, bundle_id: str) -> list[dict]:
     return findings
 
 
+def verdict_schema_findings_v2(verdict: dict, bundle_id: str) -> list[dict]:
+    """v2 contract battery (coach-heldout-suite-scope-v2, FROZEN 2026-07-25):
+    verdict enum; approve ⇒ findings: []; reject ⇒ ≥1 finding with a non-empty
+    LOCUS. Defect-class is DE-SCOPED — it is not required to be an admissible DC
+    class here (recorded as a non-gating diagnostic by the v2 test batteries).
+    This aligns the bar with the shipped coach grammar (decision/issues + locus;
+    no class field) per Rich's QAV-consistent ruling. v1 helper untouched."""
+    findings: list[dict] = []
+    if "__load_error__" in verdict:
+        return [{"defect": "unloadable", "detail": f"{bundle_id}: {verdict['__load_error__']}"}]
+    value = verdict.get("verdict")
+    if value not in VERDICTS:
+        findings.append({"defect": "verdict_enum", "detail": f"{bundle_id}: verdict={value!r}"})
+    items = verdict.get("findings")
+    if not isinstance(items, list):
+        findings.append({"defect": "findings_shape", "detail": f"{bundle_id}: findings must be a list"})
+        return findings
+    for i, item in enumerate(items):
+        if not isinstance(item, dict):
+            findings.append({"defect": "finding_shape", "detail": f"{bundle_id}: findings[{i}] not an object"})
+            continue
+        # v2: class is NOT gated (de-scoped to diagnostic). Only locus is required.
+        locus = item.get("locus")
+        if not isinstance(locus, str) or not locus.strip():
+            findings.append({"defect": "finding_locus", "detail": f"{bundle_id}: findings[{i}].locus empty"})
+    if value == "approve" and items:
+        findings.append({
+            "defect": "approve_with_findings",
+            "detail": f"{bundle_id}: approve ⇒ findings: [] (v2 §G-C1)",
+        })
+    if value == "reject" and not items:
+        findings.append({"defect": "reject_without_findings", "detail": f"{bundle_id}: reject ⇒ ≥1 finding"})
+    return findings
+
+
 def verdict_locus_text(verdict: dict) -> str:
     """The anchor-matched surface of a verdict: every finding's class + locus."""
     parts: list[str] = []

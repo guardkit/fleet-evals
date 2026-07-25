@@ -1,0 +1,41 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+______________________ test_gold_negatives_all_caught_v2 _______________________
+
+bundles = ['GN-1', 'GN-2', 'GN-3', 'GN-4']
+expected = {'GN-1': {'bundle': 'GN-1', 'dc_class': 'DC-08', 'gold_negative': True, 'ground_truth_source': 'operator_caught', ...}...-4': {'bundle': 'GN-4', 'dc_class': 'DC-03', 'gold_negative': True, 'ground_truth_source': 'merge_review_caught', ...}}
+anchors = {'groups': [{'alternates': ['bdd_authoring_sweep', 'absent signal', 'independent junit|no .{0,20}junit', '\\bbdd\\b[^....g. Matched case-insensitively over NFKC+casefold-normalized locus text, compiled by the frozen idea_gates instrument."}
+output_dir = PosixPath('runs/qav-heldout/qav-ft-v4-2026-07-24/rep-2/qav-held-001-gold-negatives')
+
+    def test_gold_negatives_all_caught_v2(bundles, expected, anchors, output_dir):
+        """G-Q2 v2: every gold negative REJECTED with a finding whose locus fires
+        the bundle's anchor group. Class diagnostics recorded, not graded."""
+        groups = {g["id"]: g for g in qav_gates.compile_anchors(anchors)}
+        misses, diagnostics = [], []
+        for bundle_id in bundles:
+            row = expected[bundle_id]
+            if row["verdict"] != "reject":
+                continue
+            verdict = qav_gates.load_verdict(output_dir, bundle_id)
+            if verdict.get("verdict") != "reject":
+                misses.append(f"{bundle_id}: verdict={verdict.get('verdict')!r} (gold negative approved)")
+                continue
+            classes = sorted({str(f.get("class")) for f in verdict.get("findings") or [] if isinstance(f, dict)})
+            diagnostics.append(f"{bundle_id}: owning={row['dc_class']} said={classes}")
+            locus = qav_gates.normalize(qav_gates.verdict_locus_text(verdict))
+            if not qav_gates._first_match(groups[bundle_id], locus):
+                misses.append(f"{bundle_id}: findings never name the in-bundle signal")
+        print("CLASS DIAGNOSTICS (non-gating):", "; ".join(diagnostics))
+>       assert misses == [], misses
+E       AssertionError: ['GN-2: findings never name the in-bundle signal']
+E       assert ['GN-2: findi...undle signal'] == []
+E         
+E         Left contains one more item: 'GN-2: findings never name the in-bundle signal'
+E         Use -v to get more diff
+
+tasks/qav-held-001-gold-negatives/test_v2/test_gate_qav_held_001_v2.py:40: AssertionError
+----------------------------- Captured stdout call -----------------------------
+CLASS DIAGNOSTICS (non-gating): GN-1: owning=DC-08 said=['DC-05']; GN-2: owning=DC-03 said=['DC-05']; GN-3: owning=DC-03 said=['DC-05']; GN-4: owning=DC-03 said=['DC-12']
+=========================== short test summary info ============================
+FAILED tasks/qav-held-001-gold-negatives/test_v2/test_gate_qav_held_001_v2.py::test_gold_negatives_all_caught_v2
+1 failed, 1 passed in 0.02s

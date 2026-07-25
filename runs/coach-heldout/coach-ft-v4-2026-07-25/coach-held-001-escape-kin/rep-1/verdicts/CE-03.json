@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-05",
+      "locus": "plan_audit.variances: collect_conditions still passes weather_feed=None with a TODO to wire the Met feed; the guard no-ops on absent signal by design"
+    }
+  ]
+}

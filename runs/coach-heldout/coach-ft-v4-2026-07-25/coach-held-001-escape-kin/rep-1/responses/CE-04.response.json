@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n{\"verdict\": \"reject\", \"findings\": [{\"class\": \"DC-05\", \"locus\": \"independent_tests.stdout_tail: start_roster_sync() got an unexpected keyword argument 'retry_policy'\"}]}\n```"
+      }
+    }
+  ],
+  "created": 1785012482,
+  "model": "/home/richardwoollcott/fine-tuning/output/coach-gemma4-26b-moe-v4/gguf_gguf/gemma-4-26b-a4b-it.Q8_0.gguf",
+  "system_fingerprint": "b60-720d7fa",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 56,
+    "prompt_tokens": 824,
+    "total_tokens": 880,
+    "prompt_tokens_details": {
+      "cached_tokens": 315
+    }
+  },
+  "id": "chatcmpl-WgBe30hqFAwbBy7fZRDaDbcAk7nARjxM",
+  "timings": {
+    "cache_n": 315,
+    "prompt_n": 509,
+    "prompt_ms": 361.655,
+    "prompt_per_token_ms": 0.7105206286836935,
+    "prompt_per_second": 1407.4186724917395,
+    "predicted_n": 56,
+    "predicted_ms": 1184.231,
+    "predicted_per_token_ms": 21.146982142857144,
+    "predicted_per_second": 47.28807133067788
+  }
+}

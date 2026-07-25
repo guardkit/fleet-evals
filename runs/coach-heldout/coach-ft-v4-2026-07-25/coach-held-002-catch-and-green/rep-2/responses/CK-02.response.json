@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n{\"verdict\": \"reject\", \"findings\": [{\"class\": \"DC-05\", \"locus\": \"plan_audit.variances: tests/conftest.py injects a fake gateway into sys.modules before collection, ensuring the live gateway module is never imported; the claimed 'gateway path' green is a manufactured signal on a stubbed module\"}]}\n```"
+      }
+    }
+  ],
+  "created": 1785012507,
+  "model": "/home/richardwoollcott/fine-tuning/output/coach-gemma4-26b-moe-v4/gguf_gguf/gemma-4-26b-a4b-it.Q8_0.gguf",
+  "system_fingerprint": "b60-720d7fa",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 82,
+    "prompt_tokens": 786,
+    "total_tokens": 868,
+    "prompt_tokens_details": {
+      "cached_tokens": 781
+    }
+  },
+  "id": "chatcmpl-2juXjTAwtGRkdUEGDPOZQHoghOmSa44P",
+  "timings": {
+    "cache_n": 781,
+    "prompt_n": 5,
+    "prompt_ms": 192.634,
+    "prompt_per_token_ms": 38.526799999999994,
+    "prompt_per_second": 25.955957930583388,
+    "predicted_n": 82,
+    "predicted_ms": 1733.248,
+    "predicted_per_token_ms": 21.137170731707318,
+    "predicted_per_second": 47.310021416438964
+  }
+}

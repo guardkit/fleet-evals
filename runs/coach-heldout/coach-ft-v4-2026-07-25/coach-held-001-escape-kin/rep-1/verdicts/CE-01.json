@@ -1,0 +1,9 @@
+{
+  "verdict": "reject",
+  "findings": [
+    {
+      "class": "DC-14",
+      "locus": "bdd.pending: features/rsvp.feature:41 'When the waitlisted member is promoted' \u2014 StepDefinitionNotFoundError: no step definition matches this step"
+    }
+  ]
+}

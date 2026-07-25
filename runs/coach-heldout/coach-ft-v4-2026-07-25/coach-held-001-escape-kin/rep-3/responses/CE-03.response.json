@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n{\"verdict\": \"reject\", \"findings\": [{\"class\": \"DC-05\", \"locus\": \"plan_audit.variances: collect_conditions still passes weather_feed=None with a TODO to wire the Met feed; the guard no-ops on absent signal by design\"}]}\n```"
+      }
+    }
+  ],
+  "created": 1785012496,
+  "model": "/home/richardwoollcott/fine-tuning/output/coach-gemma4-26b-moe-v4/gguf_gguf/gemma-4-26b-a4b-it.Q8_0.gguf",
+  "system_fingerprint": "b60-720d7fa",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 68,
+    "prompt_tokens": 821,
+    "total_tokens": 889,
+    "prompt_tokens_details": {
+      "cached_tokens": 816
+    }
+  },
+  "id": "chatcmpl-tR8U9xslCNVjGDnyf82fha4rRbPcMKFO",
+  "timings": {
+    "cache_n": 816,
+    "prompt_n": 5,
+    "prompt_ms": 204.572,
+    "prompt_per_token_ms": 40.9144,
+    "prompt_per_second": 24.44127251041198,
+    "predicted_n": 68,
+    "predicted_ms": 1437.033,
+    "predicted_per_token_ms": 21.132838235294116,
+    "predicted_per_second": 47.31972056313251
+  }
+}

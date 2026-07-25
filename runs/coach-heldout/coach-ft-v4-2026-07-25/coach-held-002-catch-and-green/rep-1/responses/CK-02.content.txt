@@ -1,0 +1,3 @@
+```json
+{"verdict": "reject", "findings": [{"class": "DC-05", "locus": "plan_audit.variances: tests/conftest.py injects a fake gateway into sys.modules before collection, ensuring the live gateway module is never imported; the claimed 'gateway path' green is a manufactured signal on a stubbed module"}]}
+```

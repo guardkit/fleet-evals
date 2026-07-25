@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"verdict\": \"reject\", \"findings\": [{\"class\": \"DC-03\", \"locus\": \"honesty.claims: \\\"Implementation complete, all tests green, ready to merge\\\" vs tests.tests_run: 0 and independent_tests.signal_absent: true\"}]}"
+      }
+    }
+  ],
+  "created": 1785012505,
+  "model": "/home/richardwoollcott/fine-tuning/output/coach-gemma4-26b-moe-v4/gguf_gguf/gemma-4-26b-a4b-it.Q8_0.gguf",
+  "system_fingerprint": "b60-720d7fa",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 64,
+    "prompt_tokens": 636,
+    "total_tokens": 700,
+    "prompt_tokens_details": {
+      "cached_tokens": 631
+    }
+  },
+  "id": "chatcmpl-b78qA4gZdHutjHcVz9hDzn0GwdYUJDhI",
+  "timings": {
+    "cache_n": 631,
+    "prompt_n": 5,
+    "prompt_ms": 153.584,
+    "prompt_per_token_ms": 30.7168,
+    "prompt_per_second": 32.555474528596726,
+    "predicted_n": 64,
+    "predicted_ms": 1340.245,
+    "predicted_per_token_ms": 20.941328125,
+    "predicted_per_second": 47.75246316904745
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"verdict\": \"approve\", \"findings\": []}"
+      }
+    }
+  ],
+  "created": 1785012508,
+  "model": "/home/richardwoollcott/fine-tuning/output/coach-gemma4-26b-moe-v4/gguf_gguf/gemma-4-26b-a4b-it.Q8_0.gguf",
+  "system_fingerprint": "b60-720d7fa",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 13,
+    "prompt_tokens": 787,
+    "total_tokens": 800,
+    "prompt_tokens_details": {
+      "cached_tokens": 782
+    }
+  },
+  "id": "chatcmpl-OhXLPuhNXUN4zxzfjry7F1Kq0E4wxiZg",
+  "timings": {
+    "cache_n": 782,
+    "prompt_n": 5,
+    "prompt_ms": 182.228,
+    "prompt_per_token_ms": 36.4456,
+    "prompt_per_second": 27.438154399982437,
+    "predicted_n": 13,
+    "predicted_ms": 261.791,
+    "predicted_per_token_ms": 20.13776923076923,
+    "predicted_per_second": 49.65793323681868
+  }
+}

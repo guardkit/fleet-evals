@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n{\"verdict\": \"reject\", \"findings\": [{\"class\": \"DC-05\", \"locus\": \"plan_audit.variances: public_signature_change (SessionStore.__init__ signature change unexercised at call sites in trailhub/cli/serve.py and trailhub/worker/sync.py)\"}]}\n```"
+      }
+    }
+  ],
+  "created": 1785012479,
+  "model": "/home/richardwoollcott/fine-tuning/output/coach-gemma4-26b-moe-v4/gguf_gguf/gemma-4-26b-a4b-it.Q8_0.gguf",
+  "system_fingerprint": "b60-720d7fa",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 76,
+    "prompt_tokens": 852,
+    "total_tokens": 928,
+    "prompt_tokens_details": {
+      "cached_tokens": 315
+    }
+  },
+  "id": "chatcmpl-uDSP4vWBCvuynpDOS9HYCOoCbOgstCJp",
+  "timings": {
+    "cache_n": 315,
+    "prompt_n": 537,
+    "prompt_ms": 396.865,
+    "prompt_per_token_ms": 0.7390409683426443,
+    "prompt_per_second": 1353.1049601249795,
+    "predicted_n": 76,
+    "predicted_ms": 1592.284,
+    "predicted_per_token_ms": 20.951105263157896,
+    "predicted_per_second": 47.730178787201275
+  }
+}

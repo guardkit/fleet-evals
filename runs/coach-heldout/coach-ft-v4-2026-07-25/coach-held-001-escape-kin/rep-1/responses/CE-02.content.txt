@@ -1,0 +1,3 @@
+```json
+{"verdict": "reject", "findings": [{"class": "DC-05", "locus": "plan_audit.variances: public_signature_change (SessionStore.__init__ signature change unexercised at call sites in trailhub/cli/serve.py and trailhub/worker/sync.py)"}]}
+```

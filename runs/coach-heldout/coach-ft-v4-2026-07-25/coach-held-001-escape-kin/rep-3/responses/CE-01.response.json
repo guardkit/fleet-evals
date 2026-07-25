@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n{\"verdict\": \"reject\", \"findings\": [{\"class\": \"DC-14\", \"locus\": \"bdd.pending: features/rsvp.feature:41 'When the waitlisted member is promoted' \u2014 StepDefinitionNotFoundError: no step definition matches this step\"}]}\n```"
+      }
+    }
+  ],
+  "created": 1785012492,
+  "model": "/home/richardwoollcott/fine-tuning/output/coach-gemma4-26b-moe-v4/gguf_gguf/gemma-4-26b-a4b-it.Q8_0.gguf",
+  "system_fingerprint": "b60-720d7fa",
+  "object": "chat.completion",
+  "usage": {
+    "completion_tokens": 64,
+    "prompt_tokens": 871,
+    "total_tokens": 935,
+    "prompt_tokens_details": {
+      "cached_tokens": 866
+    }
+  },
+  "id": "chatcmpl-GQbcypUJiQeKDiTNELK0occJcHKNZ9ey",
+  "timings": {
+    "cache_n": 866,
+    "prompt_n": 5,
+    "prompt_ms": 196.714,
+    "prompt_per_token_ms": 39.3428,
+    "prompt_per_second": 25.417611354555344,
+    "predicted_n": 64,
+    "predicted_ms": 1359.572,
+    "predicted_per_token_ms": 21.2433125,
+    "predicted_per_second": 47.073637880156404
+  }
+}

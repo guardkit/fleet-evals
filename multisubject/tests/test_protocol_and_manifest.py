@@ -103,16 +103,22 @@ def test_registered_protocol_passes_gate(tmp_path):
     assert require_protocol(venue).name == "PROTOCOL.md"
 
 
-def test_shipped_venue_protocols_are_draft():
-    """The committed venue protocols must stay DRAFT until Rich's gate tap —
-    and must therefore refuse runs."""
+def test_shipped_venue_protocol_states():
+    """Protocol states as of Rich's 2026-08-07 gate tap: multisubject is
+    REGISTERED (runs permitted), bakeoff is still DRAFT (runs refused)."""
     from pathlib import Path
 
     repo = Path(__file__).resolve().parents[1]
-    for venue in ("study-tutor-multisubject", "study-tutor-bakeoff"):
-        with pytest.raises(SystemExit) as exc:
-            require_protocol(repo / "venues" / venue)
-        assert "DRAFT" in str(exc.value)
+    # Registered venue: require_protocol admits it without raising.
+    require_protocol(repo / "venues" / "study-tutor-multisubject")
+    protocol = (
+        repo / "venues" / "study-tutor-multisubject" / "PROTOCOL.md"
+    ).read_text()
+    assert "REGISTERED" in protocol and "2026-08-07" in protocol
+    # Untapped venue: still refused.
+    with pytest.raises(SystemExit) as exc:
+        require_protocol(repo / "venues" / "study-tutor-bakeoff")
+    assert "DRAFT" in str(exc.value)
 
 
 def test_update_manifest_merges_stages(tmp_path):

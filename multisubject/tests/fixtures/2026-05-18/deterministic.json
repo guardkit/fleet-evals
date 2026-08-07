@@ -1,0 +1,374 @@
+{
+  "summary": {
+    "base": {
+      "n": 16,
+      "inline_think_pct": 0.0,
+      "reasoning_present_pct": 0.0,
+      "leak_total": 0,
+      "asks_question_pct": 100.0,
+      "mean_visible_words": 212.3
+    },
+    "finetune": {
+      "n": 16,
+      "inline_think_pct": 62.5,
+      "reasoning_present_pct": 62.5,
+      "leak_total": 0,
+      "asks_question_pct": 100.0,
+      "mean_visible_words": 95.1
+    }
+  },
+  "per_item": [
+    {
+      "id": "socratic-01",
+      "category": "socratic",
+      "base": {
+        "visible_chars": 1083,
+        "visible_words": 196,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 393,
+        "visible_words": 69,
+        "inline_think": true,
+        "reasoning_present": true,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "socratic-02",
+      "category": "socratic",
+      "base": {
+        "visible_chars": 1481,
+        "visible_words": 260,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 483,
+        "visible_words": 81,
+        "inline_think": true,
+        "reasoning_present": true,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "essay-feedback-01",
+      "category": "essay_feedback",
+      "base": {
+        "visible_chars": 1998,
+        "visible_words": 347,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 677,
+        "visible_words": 122,
+        "inline_think": true,
+        "reasoning_present": true,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "essay-feedback-02",
+      "category": "essay_feedback",
+      "base": {
+        "visible_chars": 2239,
+        "visible_words": 379,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 628,
+        "visible_words": 109,
+        "inline_think": true,
+        "reasoning_present": true,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "quote-analysis-01",
+      "category": "quote_analysis",
+      "base": {
+        "visible_chars": 1567,
+        "visible_words": 275,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 500,
+        "visible_words": 85,
+        "inline_think": true,
+        "reasoning_present": true,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "quote-analysis-02",
+      "category": "quote_analysis",
+      "base": {
+        "visible_chars": 781,
+        "visible_words": 138,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 653,
+        "visible_words": 114,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "misconception-01",
+      "category": "misconception",
+      "base": {
+        "visible_chars": 621,
+        "visible_words": 107,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 486,
+        "visible_words": 89,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "misconception-02",
+      "category": "misconception",
+      "base": {
+        "visible_chars": 1634,
+        "visible_words": 276,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 587,
+        "visible_words": 106,
+        "inline_think": true,
+        "reasoning_present": true,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "exam-technique-01",
+      "category": "exam_technique",
+      "base": {
+        "visible_chars": 729,
+        "visible_words": 126,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 432,
+        "visible_words": 76,
+        "inline_think": true,
+        "reasoning_present": true,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "exam-technique-02",
+      "category": "exam_technique",
+      "base": {
+        "visible_chars": 873,
+        "visible_words": 165,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 578,
+        "visible_words": 106,
+        "inline_think": true,
+        "reasoning_present": true,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "scaffolding-01",
+      "category": "scaffolding",
+      "base": {
+        "visible_chars": 711,
+        "visible_words": 135,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 390,
+        "visible_words": 75,
+        "inline_think": true,
+        "reasoning_present": true,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "scaffolding-02",
+      "category": "scaffolding",
+      "base": {
+        "visible_chars": 1177,
+        "visible_words": 206,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 435,
+        "visible_words": 80,
+        "inline_think": true,
+        "reasoning_present": true,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "boundary-01",
+      "category": "boundary",
+      "base": {
+        "visible_chars": 717,
+        "visible_words": 123,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 462,
+        "visible_words": 82,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "boundary-02",
+      "category": "boundary",
+      "base": {
+        "visible_chars": 1041,
+        "visible_words": 183,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 550,
+        "visible_words": 96,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "tone-01",
+      "category": "tone",
+      "base": {
+        "visible_chars": 1337,
+        "visible_words": 250,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 676,
+        "visible_words": 121,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "id": "tone-02",
+      "category": "tone",
+      "base": {
+        "visible_chars": 1189,
+        "visible_words": 231,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      },
+      "finetune": {
+        "visible_chars": 610,
+        "visible_words": 111,
+        "inline_think": false,
+        "reasoning_present": false,
+        "leak_tokens": 0,
+        "asks_a_question": true,
+        "finish_reason": "stop"
+      }
+    }
+  ]
+}

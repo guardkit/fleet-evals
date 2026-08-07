@@ -47,3 +47,13 @@ failing their owning tests. Record graded runs with `RESULTS-po-heldout-TEMPLATE
 
 GuardKit kanban state lives in `tasks/{backlog,in_progress,in_review,blocked,completed}`
 alongside the eval task folders.
+
+## Resident venue: `multisubject/` — the study-tutor multi-subject eval (seeded 2026-08-07)
+
+Self-contained venue estate (own `pyproject.toml`; run its suite from inside the
+directory with `uv run pytest`). Lifts study-tutor's `scripts/eval/` harness with five
+generalisations (n-way candidates, per-subject rubrics, run manifests, `--run-dir`,
+code-enforced pre-registration), the 2026-05-18 evidence as golden-master fixtures, the
+seven subject prompts with sha256 provenance, the 17-probe set with the Chemistry
+mislabeling defect annotated, and 136 adversarially-reviewed golden items across 8
+subjects. PROTOCOL registered by Rich 2026-08-07. See `multisubject/README.md`.

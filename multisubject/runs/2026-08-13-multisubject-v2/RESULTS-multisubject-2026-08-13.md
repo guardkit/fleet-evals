@@ -73,3 +73,25 @@ host ⇒ the ADR-031 D4.2 licence conflict becomes moot FOR SERVING; the Lane 7 
 gains a measured bar (a refreshed fine-tune must beat base on THIS harness); the
 fine-tune's training recipe (short conversational turns) is the identified weakness —
 aqa_alignment and scaffolding are where it loses.
+
+---
+
+## Dated addendum — 2026-08-13, construct scope (Rich's challenge, accepted)
+
+Rich's question on reading the verdict: *"in real-world usage it's absolutely brilliant
+at tutoring — the way it holds a conversation and elicits interaction from the student —
+are the evals checking the correct behaviour?"* The honest answer: **this run measures
+single-turn reply quality, NOT conversational tutoring.** The construct mismatch
+systematically favours the base: the fine-tune was trained for short conversational
+turns by design (2026-05-18 RESULTS, verbatim), and the dimensions it lost on
+(aqa_alignment, scaffolding) reward single-reply comprehensiveness. The two instruments
+that historically moderated exactly this bias — the multi-turn track (2026-05-18:
+2–0–1, nearly level, vs 15–1 single-turn) and the length-neutral criterion track — did
+not run here. The eval also judged the BARE model; production is the Player–Coach loop.
+Rich's attended real-session receipts are evidence under law 8, not anecdote.
+
+**Re-scoped claim:** the base writes stronger standalone replies under subject prompts,
+and the fine-tune slips more on facts. **The serving ruling (queue item 3) must NOT be
+made on this run alone** — it waits for the multi-turn + criterion tracks and an
+engagement/elicitation dimension (protocol v3 extension, Rich's word same day: "yes
+please proceed with your recommendations").

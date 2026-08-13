@@ -22,13 +22,18 @@ candidates:
     # Checksum job result (2026-08-07) for the served file
     # /opt/llama-swap/models/gemma4-tutor/gemma-4-26b-a4b-it.Q4_K_M.gguf:
     gguf_sha256_local: 675424b0021ad7b78699e4bf1da404ca57c70f5c581a9ce11209fbe22b7a3144
-    gguf_sha256: null # UNVERIFIED — see provenance
-    provenance: ORIGIN-STATED (Rich, 2026-08-07, in-session) — "we fine-tuned
-    # it on the Dell ProMax GB10; the files are all on that machine, plus we
-    # backed it up to the whitestocks NAS." Byte-verification pending: checksum
-    # the NAS backup copy against gguf_sha256_local (weekend operator batch,
-    # with the base-seat registration). Until that checksum lands, scored runs
-    # treat provenance as stated-not-proven in the MANIFEST.
+    gguf_sha256: 675424b0021ad7b78699e4bf1da404ca57c70f5c581a9ce11209fbe22b7a3144  # VERIFIED — see provenance
+    provenance: VERIFIED (2026-08-13, Rich attended) — full chain of custody:
+    # (1) the GB10 quantisation output gcse-tutor-gemma4-26b-moe-2026-04-18/
+    # gguf_gguf/gemma-4-26b-a4b-it.Q4_K_M.gguf sha256 = 675424b0…3144, run by
+    # Rich on promaxgb10-41b1, BYTE-IDENTICAL to the served spark file;
+    # (2) the NAS backup's lora-adapter/adapter_model.safetensors sha256
+    # 8d440ba4…af7c5e is byte-identical to HF studytutor-gcse-26b-moe's — the
+    # training output, NAS backup, and HF repo are the same fine-tune.
+    # (Filename note: Unsloth names every quantised export after the BASE
+    # model — five different fine-tunes on the GB10 share this filename, which
+    # is why only checksums, never names, identify these artefacts.)
+    # Blocker 3 CLOSED.
     # HF RichWoollcott/studytutor-gcse-26b-moe is safetensors+LoRA only —
     # NO GGUF comparator exists, so the local checksum cannot be matched
     # against a published artefact. Provenance resolution (an operator act —

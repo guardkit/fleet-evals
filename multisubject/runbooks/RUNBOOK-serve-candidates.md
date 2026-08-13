@@ -197,3 +197,20 @@ Remove added model blocks + the `eval` matrix set from config.yaml, restart
 llama-swap, confirm `/v1/models` matches the pre-run list from Phase 0.1, and
 delete downloaded GGUFs only if disk pressure demands it (a kept base GGUF
 saves the next run 16 GB of download — note it in RESULTS either way).
+
+---
+
+## Blocker resolutions (2026-08-13, Rich attended — all three CLOSED)
+
+1. **CLOSED** — `gemma4-base` registered: HF `unsloth/gemma-4-26B-A4B-it-GGUF`
+   `UD-Q4_K_M` downloaded (sha256 verified vs upstream `f2c28b3d…f293f`), seat
+   live on `:9000` via `-watch-config` hot-reload (no restart needed), Gate 2.1
+   PASS (coherent warm-up, zero `<|channel>` tokens under the tutor jinja).
+2. **CLOSED at seed time** — every run pins `prompts/english.txt` by sha256.
+3. **CLOSED** — served-GGUF provenance PROVEN: the GB10's
+   `gcse-tutor-gemma4-26b-moe-2026-04-18` quantisation is byte-identical to the
+   served file (sha256 match, run by Rich on `promaxgb10-41b1`); adapter chain
+   NAS↔HF also sha-proven. Details in `candidates.yaml`.
+
+Phase 3 (matrix/keepalive discipline) remains a per-run act; Phase 1 gates are
+now all passable. The venue is **eval-ready**.

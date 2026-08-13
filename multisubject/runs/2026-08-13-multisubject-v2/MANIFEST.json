@@ -49,21 +49,47 @@
         "finetune"
       ],
       "subjects": [
-        "biology",
-        "chemistry",
-        "english",
         "french",
-        "history",
-        "maths",
-        "physics",
         "spanish"
       ],
       "tally": {
-        "base": 119,
-        "finetune": 14,
-        "tie": 3
+        "base": 31,
+        "finetune": 1,
+        "tie": 0
       },
-      "recorded_at": "2026-08-13T15:34:01+00:00"
+      "recorded_at": "2026-08-13T16:07:04+00:00"
+    },
+    "judge_resolve": {
+      "raw": "runs/2026-08-13-multisubject-v2/raw_judgements.jsonl",
+      "key": "runs/2026-08-13-multisubject-v2/blind_key.json",
+      "tally": {
+        "tie": 3,
+        "base": 114,
+        "finetune": 19
+      },
+      "recorded_at": "2026-08-13T16:16:47+00:00"
+    },
+    "aggregate": {
+      "judgements": "runs/2026-08-13-multisubject-v2/judgements.jsonl",
+      "deterministic": null,
+      "candidates": [
+        "base",
+        "finetune"
+      ],
+      "recorded_at": "2026-08-13T16:17:21+00:00"
+    },
+    "judge_agreement": {
+      "judge_A": "claude (fresh-context subagents; Sonnet 5 tier during the 2026-08-13 Fable/Mythos incident)",
+      "judge_B": "workhorse (Qwen3.6-35B; substituted for gpt-oss-120b on Rich's word \u2014 weights absent from host)",
+      "per_item_agreement": "114/136",
+      "agreement_set_tally": {
+        "base": 106,
+        "finetune": 7,
+        "tie": 1
+      },
+      "splits": 22,
+      "mfl_rejudged": "french+spanish re-judged on BOTH judges under corrected rubrics (AO structure error caught by fact-check before any verdict)",
+      "recorded_at": "2026-08-13T16:17:21+00:00"
     }
   }
 }

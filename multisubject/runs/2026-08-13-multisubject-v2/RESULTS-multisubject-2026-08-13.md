@@ -95,3 +95,46 @@ and the fine-tune slips more on facts. **The serving ruling (queue item 3) must 
 made on this run alone** — it waits for the multi-turn + criterion tracks and an
 engagement/elicitation dimension (protocol v3 extension, Rich's word same day: "yes
 please proceed with your recommendations").
+
+---
+
+## v3 extension results — 2026-08-13, same day: the three-instrument read
+
+Rich's construct challenge was tested, not deflected. All three instruments now in:
+
+| Instrument | What it measures | Verdict |
+|---|---|---|
+| Pairwise single-turn (2 judges) | best standalone reply | base 106 / ft 7 / tie 1 |
+| Criterion track (length-neutral, response scored alone) | pre-registered behaviours + red flags | base 73.9% vs ft 67.0%; flags 4 vs 12 — a MODEST gap |
+| **Multi-turn session (7 dims incl. engagement_elicitation)** | whole-conversation tutoring | **agreement set: base 20 / ft 0** (20/24 agreement) |
+
+**The engagement dimension itself — built for the fine-tune's claimed strength —
+scores base HIGHER on both judges** (Claude 4.17 vs 3.71; Qwen 4.92 vs 3.50).
+The pairwise blowout was inflated by the comparison format (the criterion track
+proves the underlying behaviour gap is ~7 points, not 15:1), but the DIRECTION
+survives every instrument, including the conversational one.
+
+**Honest limits that remain:** (1) scripted students cannot REWARD elicitation —
+the fixed turns mean judges score eliciting BEHAVIOUR, not its effect on a real
+student; (2) the bare model was judged, not the production Player–Coach loop;
+(3) Rich's positive real-session experience is evidence about THE SYSTEM with
+the fine-tune in it — and, crucially, **the base model has never been tried in
+that loop**. His experience and these results are compatible: the system may be
+great AND the base might make it better.
+
+**The named next evidence step (recommendation, Rich's to order):** a real-world
+attended trial — flip the serving seat to `gemma4-base` for a handful of Rich's
+own sessions in the real loop (one env/config change; trivially reversible) and
+judge by feel plus the phone receipts. That is the ONE instrument nobody has
+run, it is the construct closest to S0, and it converts the serving ruling from
+"trust the harness" into "I felt the difference myself."
+
+**Mid-run defects caught and voided (the receipts discipline working):** Judge
+B's first session run saw EMPTY transcripts (renderer assumed the wrong turn
+shape) and honestly tied all 24 with degenerate scores — caught by the
+all-tie anomaly + its own rationales, voided
+(`multiturn_raw-local.VOID-empty-render.jsonl` kept), renderer fixed, re-run;
+its second run died at item 20 on LaTeX-backslash JSON (escape repair +
+progressive writes added, resumed, completed). Scenario review also caught and
+fixed one internal inconsistency (history Putsch/Chancellor) BEFORE generation;
+the Elizabethan essay-phrasing taste-flag is recorded here for Rich's eyes.

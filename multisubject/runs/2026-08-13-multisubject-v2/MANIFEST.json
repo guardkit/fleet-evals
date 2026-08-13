@@ -109,10 +109,10 @@
     "generate_multiturn": {
       "venue": "venues/study-tutor-multisubject",
       "protocol_sha256": "4cd0841aed9416fd9788a64a917080ab295e5c16978c2f11ce8448a50670eb58",
-      "scenarios": "venues/study-tutor-multisubject/golden/multiturn/scenarios.jsonl",
-      "scenarios_sha256": "49c1cfd44f11c527a41d635bf2d06eef2d377ce4361524cc9019e974d071ff06",
-      "system_prompt": "venues/study-tutor-multisubject/prompts/english.txt",
-      "system_prompt_sha256": "81bb5327f19536f2349fa1820560ab14f897e3dbbab51f9424f4f9cdf601f111",
+      "scenarios": "venues/study-tutor-multisubject/golden/multiturn/physics.jsonl",
+      "scenarios_sha256": "ea95311a223c843022f6748cdcdf438bde011d2e30b9ced4aa205bd497642a32",
+      "system_prompt": "venues/study-tutor-multisubject/prompts/physics.txt",
+      "system_prompt_sha256": "81f4ff7f733d1c6f0441a1d45a25946fbe52702251dd95083b36f21f546256ed",
       "candidates": [
         {
           "name": "base",
@@ -130,7 +130,51 @@
       "temperature": 0.0,
       "max_tokens": 2048,
       "n_scenarios": 3,
-      "recorded_at": "2026-08-13T16:49:52+00:00"
+      "recorded_at": "2026-08-13T17:10:44+00:00"
+    },
+    "multiturn_prepare": {
+      "seed": 20260518,
+      "candidates": [
+        "base",
+        "finetune"
+      ],
+      "n_scenarios": 24,
+      "recorded_at": "2026-08-13T17:11:07+00:00"
+    },
+    "multiturn_judge_local": {
+      "judge_model": "workhorse",
+      "endpoint": "http://localhost:9000/v1",
+      "sessions": 24,
+      "dims": [
+        "socratic_stance",
+        "aqa_alignment",
+        "scaffolding",
+        "subject_accuracy",
+        "tone",
+        "reasoning_visibility",
+        "engagement_elicitation"
+      ],
+      "subjects": [
+        "biology",
+        "chemistry",
+        "english",
+        "french",
+        "history",
+        "maths",
+        "physics",
+        "spanish"
+      ],
+      "recorded_at": "2026-08-13T17:31:23+00:00"
+    },
+    "multiturn_resolve": {
+      "raw": "runs/2026-08-13-multisubject-v2/multiturn_raw-local.jsonl",
+      "key": "runs/2026-08-13-multisubject-v2/multiturn_key.json",
+      "tally": {
+        "tie": 0,
+        "base": 22,
+        "finetune": 2
+      },
+      "recorded_at": "2026-08-13T17:31:39+00:00"
     }
   }
 }

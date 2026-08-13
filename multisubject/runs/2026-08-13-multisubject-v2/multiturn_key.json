@@ -1,0 +1,105 @@
+{
+  "seed": 20260518,
+  "candidates": [
+    "base",
+    "finetune"
+  ],
+  "positions": {
+    "mt-biology-osmosis": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "mt-biology-genetics-probability": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "mt-biology-photosynthesis-practical": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "mt-chemistry-ionic-covalent": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "mt-chemistry-rates-discouraged": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "mt-chemistry-titration-practical": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "mt-macbeth-ladymacbeth": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "mt-inspector-stuck": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "mt-poetry-compare": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "mt-french-etre-verbs": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "mt-french-discouraged-writing": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "mt-french-speaking-nerves": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "mt-history-putsch-vs-chancellor": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "mt-history-coldwar-discouraged": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "mt-history-elizabethan-16marker": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "mt-maths-simultaneous-signs": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "mt-maths-circle-theorems": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "mt-maths-sine-cosine-rule": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "mt-physics-weight-vs-mass": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "mt-physics-specific-heat-anxiety": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "mt-physics-density-units": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "mt-spanish-tenses-stuck": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "mt-spanish-speaking-discouraged": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "mt-spanish-future-examprep": {
+      "A": "base",
+      "B": "finetune"
+    }
+  }
+}

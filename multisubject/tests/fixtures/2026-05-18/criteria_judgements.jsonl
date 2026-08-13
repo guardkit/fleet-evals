@@ -1,0 +1,16 @@
+{"id": "socratic-01", "category": "socratic", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0.5], "red_flags": [0, 0]}}
+{"id": "socratic-02", "category": "socratic", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0.5], "red_flags": [0, 0]}}
+{"id": "essay-feedback-01", "category": "essay_feedback", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "essay-feedback-02", "category": "essay_feedback", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}}
+{"id": "quote-analysis-01", "category": "quote_analysis", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "quote-analysis-02", "category": "quote_analysis", "base": {"behaviours": [0.5, 0.5, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0.5, 1], "red_flags": [0, 0, 0]}}
+{"id": "misconception-01", "category": "misconception", "base": {"behaviours": [1, 0.5, 0.5], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 0.5], "red_flags": [1, 0, 0]}}
+{"id": "misconception-02", "category": "misconception", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0.5], "red_flags": [0, 0]}}
+{"id": "exam-technique-01", "category": "exam_technique", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 0.5], "red_flags": [0, 0, 0]}}
+{"id": "exam-technique-02", "category": "exam_technique", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "scaffolding-01", "category": "scaffolding", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0.5, 0.5], "red_flags": [0, 0, 0]}}
+{"id": "scaffolding-02", "category": "scaffolding", "base": {"behaviours": [0.5, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0.5, 0.5, 0], "red_flags": [0, 0, 0]}}
+{"id": "boundary-01", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 1], "red_flags": [0, 0, 0]}}
+{"id": "boundary-02", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0.5], "red_flags": [0, 0, 0]}}
+{"id": "tone-01", "category": "tone", "base": {"behaviours": [1, 1, 0.5], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0.5, 0], "red_flags": [0, 0, 0]}}
+{"id": "tone-02", "category": "tone", "base": {"behaviours": [1, 1, 0.5], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0.5, 0.5], "red_flags": [0, 0, 0]}}

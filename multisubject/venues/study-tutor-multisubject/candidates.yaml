@@ -1,0 +1,32 @@
+# Candidates for the study-tutor multisubject venue (two-way seed pair).
+#
+# gguf_sha256 = the provenance-RESOLVED checksum, REQUIRED before any scored
+# run; null = unresolved. Values are copied into every run's MANIFEST.json.
+# Serving procedure + matrix-set/keepalive eviction discipline + the three
+# pinned blockers: runbooks/RUNBOOK-serve-candidates.md.
+candidates:
+  - name: base
+    model: gemma4-base
+    endpoint: http://localhost:9000/v1
+    gguf_sha256: null
+    status: NOT ON HOST — no gemma4-base seat and no base GGUF on this host; registration (~16 GB download + config block + llama-swap restart) is an OPERATOR ACT (scored-run blocker 1)
+
+  - name: finetune
+    model: gemma4-tutor
+    endpoint: http://localhost:9000/v1
+    # Checksum job result (2026-08-07) for the served file
+    # /opt/llama-swap/models/gemma4-tutor/gemma-4-26b-a4b-it.Q4_K_M.gguf:
+    gguf_sha256_local: 675424b0021ad7b78699e4bf1da404ca57c70f5c581a9ce11209fbe22b7a3144
+    gguf_sha256: null # UNVERIFIED — see provenance
+    provenance: ORIGIN-STATED (Rich, 2026-08-07, in-session) — "we fine-tuned
+    # it on the Dell ProMax GB10; the files are all on that machine, plus we
+    # backed it up to the whitestocks NAS." Byte-verification pending: checksum
+    # the NAS backup copy against gguf_sha256_local (weekend operator batch,
+    # with the base-seat registration). Until that checksum lands, scored runs
+    # treat provenance as stated-not-proven in the MANIFEST.
+    # HF RichWoollcott/studytutor-gcse-26b-moe is safetensors+LoRA only —
+    # NO GGUF comparator exists, so the local checksum cannot be matched
+    # against a published artefact. Provenance resolution (an operator act —
+    # e.g. re-quantise the merged safetensors and compare, or publish the
+    # original GGUF) is REQUIRED before any scored run (blocker 3). If the
+    # served file is actually the base GGUF, a run would be base-vs-base.

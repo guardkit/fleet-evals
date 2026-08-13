@@ -1,0 +1,21 @@
+{
+  "seed": 20260518,
+  "base_position": {
+    "socratic-01": "B",
+    "socratic-02": "A",
+    "essay-feedback-01": "B",
+    "essay-feedback-02": "A",
+    "quote-analysis-01": "B",
+    "quote-analysis-02": "B",
+    "misconception-01": "B",
+    "misconception-02": "B",
+    "exam-technique-01": "A",
+    "exam-technique-02": "B",
+    "scaffolding-01": "A",
+    "scaffolding-02": "B",
+    "boundary-01": "A",
+    "boundary-02": "A",
+    "tone-01": "B",
+    "tone-02": "B"
+  }
+}

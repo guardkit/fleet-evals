@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fleet-evals"
+version = "0.1.0"
+description = "The factory's judging estate — pre-registered, blinded, n-way model evaluation venues (seeded from study-tutor's base-vs-finetune harness)."
+# requires-python matches study-tutor's pyproject (the seed repo).
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "httpx>=0.27",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+# Only needed for the automated API judge (harness/judge/pairwise_api.py).
+api-judge = ["anthropic>=0.40"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["harness"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

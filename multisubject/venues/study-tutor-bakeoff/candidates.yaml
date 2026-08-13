@@ -1,0 +1,40 @@
+# Candidates for the study-tutor-bakeoff venue (Lane 7 n-way skeleton:
+# refreshed Gemma 4 fine-tune vs Qwen 3.6 fine-tune vs old fine-tune vs base).
+#
+# Every seat needs a provenance-RESOLVED gguf_sha256 before any scored run —
+# no checksum, no run. Values are copied into every run's MANIFEST.json.
+# Serving procedure + matrix-set/keepalive eviction discipline + the three
+# pinned blockers: runbooks/RUNBOOK-serve-candidates.md.
+candidates:
+  - name: gemma4-refresh
+    model: gemma4-tutor-r2 # placeholder seat name — NOT TRAINED YET (Lane 7 output)
+    endpoint: http://localhost:9000/v1
+    gguf_sha256: null # does not exist yet
+    status: NOT TRAINED — placeholder until the Lane 7 refresh lands
+
+  - name: qwen36-tutor
+    model: qwen36-tutor # placeholder seat name — NOT TRAINED YET (Lane 7 output)
+    endpoint: http://localhost:9000/v1
+    gguf_sha256: null # does not exist yet
+    status: NOT TRAINED — placeholder; base family = workhorse (Qwen3.6-35B-A3B) already servable on this host
+    leak_token_family: qwen # deterministic scorer must use the Qwen control-token leak list, not Gemma's
+
+  - name: gemma4-tutor
+    model: gemma4-tutor # the old (2026-05) fine-tune, currently serving
+    endpoint: http://localhost:9000/v1
+    # Local file /opt/llama-swap/models/gemma4-tutor/gemma-4-26b-a4b-it.Q4_K_M.gguf:
+    gguf_sha256_local: 675424b0021ad7b78699e4bf1da404ca57c70f5c581a9ce11209fbe22b7a3144
+    gguf_sha256: null # UNVERIFIED — see provenance
+    provenance: UNVERIFIED
+    # HF RichWoollcott/studytutor-gcse-26b-moe is safetensors+LoRA only —
+    # NO GGUF comparator exists, so the local checksum cannot be matched
+    # against a published artefact. Provenance resolution (an operator act —
+    # e.g. re-quantise the merged safetensors and compare, or publish the
+    # original GGUF) is REQUIRED before any scored run. If the served file is
+    # actually the base GGUF, this seat is a duplicate of gemma4-base.
+
+  - name: gemma4-base
+    model: gemma4-base # stock unsloth/gemma-4-26B-A4B-it
+    endpoint: http://localhost:9000/v1
+    gguf_sha256: null
+    status: NOT ON HOST — no seat, no GGUF; registration (~16 GB download + config block + llama-swap restart) is an OPERATOR ACT (scored-run blocker 1)

@@ -11,10 +11,12 @@ candidates:
     gguf_sha256: f2c28b3dc4776931ac6f879e11f203dec637ea0f14267a86ec8f6165f63f293f
     # Verified vs the HF upstream LFS sha (unsloth/gemma-4-26B-A4B-it-GGUF,
     # gemma-4-26B-A4B-it-UD-Q4_K_M.gguf) at download, 2026-08-13.
-    status: REGISTERED 2026-08-13 (Rich attended) — seat live on :9000 via config
-      hot-reload (-watch-config, no restart needed); served with the tutor's jinja
-      (the 2026-05-18 parity caveat); Gate 2.1 PASS (coherent warm-up, no <|channel>).
-      Blocker 1 CLOSED.
+    status: |
+      REGISTERED 2026-08-13 (Rich attended) — seat live on :9000 via config
+      hot-reload (-watch-config, no restart needed); served with the tutor's
+      jinja (the 2026-05-18 parity caveat); Gate 2.1 PASS (coherent warm-up,
+      no channel tokens). Blocker 1 CLOSED.
+
 
   - name: finetune
     model: gemma4-tutor
@@ -23,20 +25,16 @@ candidates:
     # /opt/llama-swap/models/gemma4-tutor/gemma-4-26b-a4b-it.Q4_K_M.gguf:
     gguf_sha256_local: 675424b0021ad7b78699e4bf1da404ca57c70f5c581a9ce11209fbe22b7a3144
     gguf_sha256: 675424b0021ad7b78699e4bf1da404ca57c70f5c581a9ce11209fbe22b7a3144  # VERIFIED — see provenance
-    provenance: VERIFIED (2026-08-13, Rich attended) — full chain of custody:
-    # (1) the GB10 quantisation output gcse-tutor-gemma4-26b-moe-2026-04-18/
-    # gguf_gguf/gemma-4-26b-a4b-it.Q4_K_M.gguf sha256 = 675424b0…3144, run by
-    # Rich on promaxgb10-41b1, BYTE-IDENTICAL to the served spark file;
-    # (2) the NAS backup's lora-adapter/adapter_model.safetensors sha256
-    # 8d440ba4…af7c5e is byte-identical to HF studytutor-gcse-26b-moe's — the
-    # training output, NAS backup, and HF repo are the same fine-tune.
-    # (Filename note: Unsloth names every quantised export after the BASE
-    # model — five different fine-tunes on the GB10 share this filename, which
-    # is why only checksums, never names, identify these artefacts.)
-    # Blocker 3 CLOSED.
-    # HF RichWoollcott/studytutor-gcse-26b-moe is safetensors+LoRA only —
-    # NO GGUF comparator exists, so the local checksum cannot be matched
-    # against a published artefact. Provenance resolution (an operator act —
-    # e.g. re-quantise the merged safetensors and compare, or publish the
-    # original GGUF) is REQUIRED before any scored run (blocker 3). If the
-    # served file is actually the base GGUF, a run would be base-vs-base.
+    provenance: |
+      VERIFIED (2026-08-13, Rich attended) — full chain of custody.
+      (1) The GB10 quantisation output gcse-tutor-gemma4-26b-moe-2026-04-18/
+      gguf_gguf/gemma-4-26b-a4b-it.Q4_K_M.gguf, sha256 run by Rich on
+      promaxgb10-41b1, is BYTE-IDENTICAL to the served spark file
+      (675424b0...3144).
+      (2) The NAS backup's lora-adapter/adapter_model.safetensors sha256
+      (8d440ba4...af7c5e) is byte-identical to HF studytutor-gcse-26b-moe's —
+      training output, NAS backup, and HF repo are the same fine-tune.
+      Filename note: Unsloth names every quantised export after the BASE
+      model — five different fine-tunes on the GB10 share this filename;
+      only checksums, never names, identify these artefacts.
+      Blocker 3 CLOSED.

@@ -3,9 +3,12 @@ You are judging two AI tutor responses to the same Year-10 student message.
 A strong GCSE tutor response:
 
 - guides with questions; it never simply hands over the finished answer
-- uses AQA modern-languages assessment-objective framing — the four equally
-  weighted skills AO1 (listening), AO2 (speaking), AO3 (reading), AO4
-  (writing) — and exam vocabulary (foundation/higher tier awareness)
+- uses AQA modern-languages assessment-objective framing — AO1 (understand
+  and respond to spoken language, 35%), AO2 (understand and respond to
+  written language, 45%), AO3 (accurate application of grammar and
+  vocabulary, 20%) — across the four equally weighted skill papers
+  (listening, speaking, reading, writing; 25% each), with foundation/higher
+  tier awareness
 - builds on what the student already attempted and is pitched for a 15-year-old
 - is linguistically accurate: correct Spanish grammar, spelling, gender and
   conjugation in any target-language content; translations are faithful

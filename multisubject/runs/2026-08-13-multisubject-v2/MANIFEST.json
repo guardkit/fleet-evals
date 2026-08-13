@@ -30,6 +30,40 @@
       "max_tokens": 2048,
       "n_items": 16,
       "recorded_at": "2026-08-13T14:26:11+00:00"
+    },
+    "judge_prepare": {
+      "seed": 20260518,
+      "candidates": [
+        "base",
+        "finetune"
+      ],
+      "n_items": 136,
+      "recorded_at": "2026-08-13T14:34:31+00:00"
+    },
+    "judge_local": {
+      "judge_model": "workhorse",
+      "endpoint": "http://localhost:9000/v1",
+      "seed": 20260518,
+      "candidates": [
+        "base",
+        "finetune"
+      ],
+      "subjects": [
+        "biology",
+        "chemistry",
+        "english",
+        "french",
+        "history",
+        "maths",
+        "physics",
+        "spanish"
+      ],
+      "tally": {
+        "base": 119,
+        "finetune": 14,
+        "tie": 3
+      },
+      "recorded_at": "2026-08-13T15:34:01+00:00"
     }
   }
 }

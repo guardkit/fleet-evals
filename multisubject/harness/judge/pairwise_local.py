@@ -32,7 +32,8 @@ from harness.common import (
 
 
 def judge(endpoint: str, model: str, rubric: str, item: dict,
-          resp_a: str, resp_b: str, *, timeout: float) -> dict:
+          resp_a: str, resp_b: str, *, timeout: float,
+          max_tokens: int = 3000, no_thinking: bool = False) -> dict:
     user = (
         f"STUDENT MESSAGE:\n{item['prompt']}\n\n"
         f"--- RESPONSE A ---\n{resp_a}\n\n"
@@ -40,13 +41,19 @@ def judge(endpoint: str, model: str, rubric: str, item: dict,
     )
     payload = {
         "model": model,
-        "max_tokens": 700,
+        "max_tokens": max_tokens,
         "temperature": 0,
         "messages": [
             {"role": "system", "content": rubric},
             {"role": "user", "content": user},
         ],
     }
+    if no_thinking:
+        # Qwen-family templates: unbounded thinking starves the content
+        # channel on complex judging payloads (measured 2026-08-13: 11k
+        # chars of reasoning, zero verdict at 3000 tokens). A blind
+        # single-pass verdict needs no thinking channel.
+        payload["chat_template_kwargs"] = {"enable_thinking": False}
     last_err: Exception | None = None
     for attempt in range(1, 4):
         try:
@@ -54,6 +61,14 @@ def judge(endpoint: str, model: str, rubric: str, item: dict,
                            timeout=timeout)
             r.raise_for_status()
             text = r.json()["choices"][0]["message"]["content"] or ""
+            # Reasoning models may emit an inline think block; strip it.
+            text = re.sub(r"<think>.*?</think>", "", text, flags=re.S).strip()
+            if not text:
+                # Reasoning consumed the whole budget before any answer —
+                # retryable (the retry loop bumps nothing, but temp-0 runs
+                # vary by scheduling; the real guard is the bigger default
+                # budget above).
+                raise json.JSONDecodeError("empty content", "", 0)
             match = re.search(r"```json\s*(.+?)```", text, re.S)
             return json.loads(match.group(1) if match else text)
         except (httpx.HTTPError, json.JSONDecodeError, KeyError) as exc:
@@ -77,6 +92,13 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--seed", type=int, default=20260518,
                     help="Seeds the A/B position randomisation.")
     ap.add_argument("--timeout", type=float, default=300.0)
+    ap.add_argument("--max-tokens", type=int, default=3000,
+                    help="Completion budget — must fit the judge model's "
+                         "reasoning trace PLUS the verdict (700 starved "
+                         "Qwen3.6's thinking channel).")
+    ap.add_argument("--no-thinking", action="store_true",
+                    help="Disable the judge model's thinking channel via "
+                         "chat_template_kwargs (Qwen-family templates).")
     ap.add_argument("--allow-draft-rubrics", action="store_true",
                     help="Permit STATUS: DRAFT rubrics (dry runs only).")
     args = ap.parse_args(argv)
@@ -106,7 +128,9 @@ def main(argv: list[str] | None = None) -> None:
         resp_b = r["responses"][positions["B"]]["visible"]
 
         verdict = judge(args.endpoint, args.model, rubrics[subject], r,
-                        resp_a, resp_b, timeout=args.timeout)
+                        resp_a, resp_b, timeout=args.timeout,
+                        max_tokens=args.max_tokens,
+                        no_thinking=args.no_thinking)
 
         w = verdict["winner"]
         winner = "tie" if w == "tie" else positions[w]

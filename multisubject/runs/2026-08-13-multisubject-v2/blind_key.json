@@ -1,0 +1,553 @@
+{
+  "seed": 20260518,
+  "candidates": [
+    "base",
+    "finetune"
+  ],
+  "positions": {
+    "biology-socratic-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "biology-socratic-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "biology-misconception-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "biology-misconception-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "biology-exam-technique-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "biology-exam-technique-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "biology-scaffolding-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "biology-scaffolding-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "biology-boundary-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "biology-boundary-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "biology-tone-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "biology-tone-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "biology-practical-method-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "biology-practical-method-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "biology-data-analysis-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "biology-data-analysis-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "chemistry-socratic-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "chemistry-socratic-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "chemistry-misconception-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "chemistry-misconception-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "chemistry-exam-technique-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "chemistry-exam-technique-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "chemistry-scaffolding-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "chemistry-scaffolding-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "chemistry-practical-method-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "chemistry-practical-method-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "chemistry-data-analysis-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "chemistry-data-analysis-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "chemistry-boundary-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "chemistry-boundary-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "chemistry-tone-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "chemistry-tone-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "socratic-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "socratic-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "essay-feedback-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "essay-feedback-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "quote-analysis-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "quote-analysis-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "misconception-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "misconception-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "exam-technique-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "exam-technique-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "scaffolding-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "scaffolding-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "boundary-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "boundary-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "tone-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "tone-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "english-socratic-03": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "english-essay-feedback-03": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "english-quote-analysis-03": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "english-misconception-03": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "english-exam-technique-03": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "english-scaffolding-03": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "english-boundary-03": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "english-tone-03": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "french-socratic-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "french-socratic-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "french-translation-support-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "french-translation-support-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "french-grammar-discovery-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "french-grammar-discovery-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "french-misconception-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "french-misconception-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "french-exam-technique-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "french-exam-technique-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "french-scaffolding-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "french-scaffolding-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "french-boundary-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "french-boundary-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "french-tone-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "french-tone-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "history-socratic-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "history-socratic-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "history-source-analysis-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "history-source-analysis-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "history-interpretation-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "history-interpretation-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "history-misconception-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "history-misconception-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "history-exam-technique-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "history-exam-technique-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "history-scaffolding-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "history-scaffolding-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "history-boundary-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "history-boundary-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "history-tone-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "history-tone-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "maths-socratic-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "maths-socratic-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "maths-problem-solving-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "maths-problem-solving-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "maths-method-feedback-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "maths-method-feedback-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "maths-misconception-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "maths-misconception-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "maths-exam-technique-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "maths-exam-technique-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "maths-scaffolding-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "maths-scaffolding-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "maths-boundary-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "maths-boundary-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "maths-tone-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "maths-tone-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "physics-socratic-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "physics-socratic-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "physics-misconception-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "physics-misconception-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "physics-exam-technique-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "physics-exam-technique-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "physics-scaffolding-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "physics-scaffolding-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "physics-boundary-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "physics-boundary-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "physics-tone-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "physics-tone-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "physics-practical-method-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "physics-practical-method-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "physics-data-analysis-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "physics-data-analysis-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "spanish-socratic-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "spanish-socratic-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "spanish-translation-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "spanish-translation-02": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "spanish-grammar-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "spanish-grammar-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "spanish-misconception-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "spanish-misconception-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "spanish-exam-technique-01": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "spanish-exam-technique-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "spanish-scaffolding-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "spanish-scaffolding-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "spanish-boundary-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "spanish-boundary-02": {
+      "A": "base",
+      "B": "finetune"
+    },
+    "spanish-tone-01": {
+      "A": "finetune",
+      "B": "base"
+    },
+    "spanish-tone-02": {
+      "A": "base",
+      "B": "finetune"
+    }
+  }
+}

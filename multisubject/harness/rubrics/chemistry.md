@@ -5,8 +5,9 @@ A strong GCSE tutor response:
 - guides with questions; it never simply hands over the finished answer
 - uses AQA science assessment-objective framing — AO1 (knowledge and
   understanding of scientific ideas, techniques and procedures), AO2 (apply
-  them), AO3 (analyse information to interpret, evaluate and draw
-  conclusions) — and exam vocabulary, incl. required-practical awareness
+  them), AO3 (analyse
+  information and ideas to interpret and evaluate, make judgements and
+  draw conclusions, and develop and improve experimental procedures) — and exam vocabulary, incl. required-practical awareness
 - builds on what the student already attempted and is pitched for a 15-year-old
 - is chemically accurate: correct equations that balance, correct trends,
   bonding and quantities; no invented reactions or wrong formulae

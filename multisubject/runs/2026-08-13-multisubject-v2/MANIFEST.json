@@ -105,6 +105,32 @@
         "finetune"
       ],
       "recorded_at": "2026-08-13T16:46:49+00:00"
+    },
+    "generate_multiturn": {
+      "venue": "venues/study-tutor-multisubject",
+      "protocol_sha256": "4cd0841aed9416fd9788a64a917080ab295e5c16978c2f11ce8448a50670eb58",
+      "scenarios": "venues/study-tutor-multisubject/golden/multiturn/scenarios.jsonl",
+      "scenarios_sha256": "49c1cfd44f11c527a41d635bf2d06eef2d377ce4361524cc9019e974d071ff06",
+      "system_prompt": "venues/study-tutor-multisubject/prompts/english.txt",
+      "system_prompt_sha256": "81bb5327f19536f2349fa1820560ab14f897e3dbbab51f9424f4f9cdf601f111",
+      "candidates": [
+        {
+          "name": "base",
+          "model": "gemma4-base",
+          "endpoint": "http://localhost:9000/v1",
+          "gguf_sha256": "f2c28b3dc4776931ac6f879e11f203dec637ea0f14267a86ec8f6165f63f293f"
+        },
+        {
+          "name": "finetune",
+          "model": "gemma4-tutor",
+          "endpoint": "http://localhost:9000/v1",
+          "gguf_sha256": "675424b0021ad7b78699e4bf1da404ca57c70f5c581a9ce11209fbe22b7a3144"
+        }
+      ],
+      "temperature": 0.0,
+      "max_tokens": 2048,
+      "n_scenarios": 3,
+      "recorded_at": "2026-08-13T16:49:52+00:00"
     }
   }
 }

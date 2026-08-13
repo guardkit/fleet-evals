@@ -29,7 +29,10 @@ Return ONLY a fenced ```json block of exactly this shape:
  "rationale": "<= 2 sentences"}
 ```
 
-Rubric status: `english.md` is the only production rubric (lifted VERBATIM
-from study-tutor `scripts/eval/judge_pairwise.py:42-65`). All other subjects
-are `STATUS: DRAFT` stubs — the harness refuses to judge with them unless
-`--allow-draft-rubrics` is passed (dry runs only).
+Rubric status: ALL EIGHT subjects are production rubrics as of 2026-08-13
+(Rich's word: "Finalise all 7 now"). `english.md` is lifted VERBATIM from
+study-tutor `scripts/eval/judge_pairwise.py:42-65`; the other seven follow
+its exact shape with each subject's real AQA specification code and
+assessment-objective structure (public spec facts — no assessment material,
+law 4). The `STATUS: DRAFT` refusal mechanism in `load_rubric` remains for
+any future subject added as a stub.

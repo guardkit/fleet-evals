@@ -1,0 +1,35 @@
+{
+  "schema": "fleet-evals/manifest/v1",
+  "created_at": "2026-08-13T14:06:40+00:00",
+  "repo_heads": {
+    "fleet-evals": "d1016d0ba1ee23f966981a9b1d1e0277255fabef"
+  },
+  "stages": {
+    "generate": {
+      "venue": "venues/study-tutor-multisubject",
+      "protocol_sha256": "2bfd28afcb01e4de2ee763716d0a14ca78d741249e785ad13d50471a925748eb",
+      "golden": "venues/study-tutor-multisubject/golden/physics.jsonl",
+      "golden_sha256": "afae7688d82dce7ec52295d263d3ecdd9861b0e5e1e61de3fea51b79e2169ba5",
+      "system_prompt": "venues/study-tutor-multisubject/prompts/physics.txt",
+      "system_prompt_sha256": "81f4ff7f733d1c6f0441a1d45a25946fbe52702251dd95083b36f21f546256ed",
+      "candidates": [
+        {
+          "name": "base",
+          "model": "gemma4-base",
+          "endpoint": "http://localhost:9000/v1",
+          "gguf_sha256": "f2c28b3dc4776931ac6f879e11f203dec637ea0f14267a86ec8f6165f63f293f"
+        },
+        {
+          "name": "finetune",
+          "model": "gemma4-tutor",
+          "endpoint": "http://localhost:9000/v1",
+          "gguf_sha256": "675424b0021ad7b78699e4bf1da404ca57c70f5c581a9ce11209fbe22b7a3144"
+        }
+      ],
+      "temperature": 0.0,
+      "max_tokens": 2048,
+      "n_items": 16,
+      "recorded_at": "2026-08-13T14:26:11+00:00"
+    }
+  }
+}

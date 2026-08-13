@@ -8,8 +8,13 @@ candidates:
   - name: base
     model: gemma4-base
     endpoint: http://localhost:9000/v1
-    gguf_sha256: null
-    status: NOT ON HOST — no gemma4-base seat and no base GGUF on this host; registration (~16 GB download + config block + llama-swap restart) is an OPERATOR ACT (scored-run blocker 1)
+    gguf_sha256: f2c28b3dc4776931ac6f879e11f203dec637ea0f14267a86ec8f6165f63f293f
+    # Verified vs the HF upstream LFS sha (unsloth/gemma-4-26B-A4B-it-GGUF,
+    # gemma-4-26B-A4B-it-UD-Q4_K_M.gguf) at download, 2026-08-13.
+    status: REGISTERED 2026-08-13 (Rich attended) — seat live on :9000 via config
+      hot-reload (-watch-config, no restart needed); served with the tutor's jinja
+      (the 2026-05-18 parity caveat); Gate 2.1 PASS (coherent warm-up, no <|channel>).
+      Blocker 1 CLOSED.
 
   - name: finetune
     model: gemma4-tutor

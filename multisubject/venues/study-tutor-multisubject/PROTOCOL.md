@@ -6,10 +6,12 @@
 > (`harness/common.py::require_protocol`). Changing this file after any
 > generation is a new protocol version and a new run.
 
-**Status:** REGISTERED — Rich's gate tap given 2026-08-07 (in-session, the
-spark master session; "Tap it — freeze as drafted"). Pre-registration is now
-BINDING: changing this file after any generation is a new protocol version.
-**Registered:** 2026-08-07
+**Status:** REGISTERED (v2) — Rich's gate tap given 2026-08-07 ("Tap it —
+freeze as drafted"); **amended v2 BEFORE any generation and re-registered on
+Rich's word 2026-08-13 ("amend: subscription + local judges")** — the judging
+clause only; no other clause changed. Pre-registration is BINDING: changing
+this file after any generation is a new protocol version.
+**Registered:** 2026-08-07 (v1) · 2026-08-13 (v2, judging amendment)
 **Venue:** `venues/study-tutor-multisubject/`
 
 This protocol supersedes-by-fixing the 2026-05-18 base-vs-finetune eval
@@ -76,14 +78,25 @@ logged as a caveat, not hidden.
 
 ## Judging
 
-- **Judge path: the API judge (`harness.judge.pairwise_api`), not the
-  executing session [fix #3].** The 2026-05-18 judge was the session running
-  the eval — a conflict of interest. A session judge MAY additionally run,
-  with concordance vs the API judge reported, but the registered verdict
-  comes from the API path.
-- **≥ 2 judges or ≥ 2 blinding seeds, agreement reported [fix #2].** Minimum:
-  the API judge run under two seeds (blinding seed 20260518 + one fresh
-  seed), with per-item win-agreement in RESULTS. Judge model id(s) are fixed
+- **Judge path [fix #3, AMENDED v2 — Rich, 2026-08-13: "amend: subscription
+  + local judges"]: two independent judges, NEITHER the executing session and
+  NEITHER a paid frontier API call.** The 2026-05-18 conflict was the same
+  context generating and judging; the integrity mechanism is the blinding
+  plus judge independence, not API spend. The registered judges:
+  - **Judge A — a fresh-context Claude subagent** (subscription usage): a
+    clean session that receives ONLY the blind pairs + the rubric — never the
+    identity key, never the generation logs, never this protocol's candidate
+    names. Its raw judgements are committed before the key is applied.
+  - **Judge B — `gpt-oss-120b` served locally on llama-swap `:9000`**: a
+    different model family from both candidates (no family bias), zero cost,
+    fully household.
+  The API judge (`harness.judge.pairwise_api`) is RETAINED as an explicitly
+  priced TIEBREAK option only — run it only on Rich's word, only over items
+  where A and B disagree, and record the spend in RESULTS.
+- **≥ 2 judges, agreement reported [fix #2]:** satisfied by A+B above —
+  per-item win-agreement between the two judges in RESULTS; the registered
+  verdict is their agreement set, with disagreements itemised (and either
+  carried as "split" honestly or tiebroken per the clause above). Judge model id(s) are fixed
   at registration time.
 - **Per-subject rubrics [fix #4]:** `harness/rubrics/<subject>.md`, selected
   by each item's `subject` field. The English-only rubric made

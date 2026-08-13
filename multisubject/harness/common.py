@@ -32,6 +32,13 @@ DIMS = [
     "subject_accuracy", "tone", "reasoning_visibility",
 ]
 
+#: Multi-turn judging adds a session-level dimension (PROTOCOL v3, Rich's
+#: word 2026-08-13): does the tutor DRAW THE STUDENT IN across the dialogue —
+#: eliciting attempts, building on the student's own words, sustaining
+#: momentum — rather than lecturing? Single-turn judging cannot see this;
+#: it is the construct Rich's real-session experience says matters most.
+MT_DIMS = DIMS + ["engagement_elicitation"]
+
 _THINK = re.compile(r"<think>.*?</think>", re.S)
 
 

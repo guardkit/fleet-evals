@@ -44,9 +44,13 @@ from harness.common import (
 def resolve_rows(raw: list[dict], positions: dict[str, dict[str, str]],
                  categories: dict[str, str] | None = None,
                  subjects: dict[str, str] | None = None,
+                 dims: list[str] | None = None,
                  ) -> tuple[list[dict], dict[str, int]]:
-    """Map blind labels back to candidate names; validate all six dimensions
-    on every labelled response (SystemExit on any missing)."""
+    """Map blind labels back to candidate names; validate every judging
+    dimension on every labelled response (SystemExit on any missing).
+    ``dims`` defaults to the single-turn six; multi-turn passes MT_DIMS
+    (the six + engagement_elicitation, PROTOCOL v3)."""
+    dims = dims or DIMS
     categories = categories or {}
     subjects = subjects or {}
     tally: dict[str, int] = {"tie": 0}
@@ -56,7 +60,7 @@ def resolve_rows(raw: list[dict], positions: dict[str, dict[str, str]],
             raise SystemExit(f"{j['id']}: not present in blind key")
         pos = positions[j["id"]]  # {label: candidate}
         for label in pos:
-            missing = [d for d in DIMS if d not in j.get(label, {})]
+            missing = [d for d in dims if d not in j.get(label, {})]
             if missing:
                 raise SystemExit(f"{j['id']}: response {label} missing {missing}")
 

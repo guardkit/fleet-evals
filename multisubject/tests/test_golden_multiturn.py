@@ -12,7 +12,7 @@ from util import FIXTURES, LEGACY_LABELS, make_run_dir, md_tables, read_jsonl, t
 def _resolve(tmp_path):
     run_dir = make_run_dir(
         tmp_path, "multiturn_raw_judgements.jsonl", "multiturn_key.json")
-    multiturn_resolve_main(["--run-dir", str(run_dir)])
+    multiturn_resolve_main(["--run-dir", str(run_dir), "--legacy-dims"])  # 2026-05-18 fixture predates the v3 seventh dimension
     return run_dir
 
 

@@ -28,16 +28,16 @@ import argparse
 import json
 
 from harness.common import (
-    DIMS, positions_from_key, read_jsonl, run_path, update_manifest,
+    DIMS as SINGLE_DIMS, MT_DIMS, positions_from_key, read_jsonl, run_path, update_manifest,
     write_jsonl,
 )
 from harness.judge.resolve import resolve_rows
 
 
 def render_table(resolved: list[dict], tally: dict[str, int],
-                 candidates: list[str]) -> str:
+                 candidates: list[str], dims: list[str] = MT_DIMS) -> str:
     n = max(len(resolved), 1)
-    dm = {c: {d: sum(r["scores"][c][d] for r in resolved) / n for d in DIMS}
+    dm = {c: {d: sum(r["scores"][c][d] for r in resolved) / n for d in dims}
           for c in candidates}
 
     out = []
@@ -62,7 +62,7 @@ def render_table(resolved: list[dict], tally: dict[str, int],
     header = "| Dimension | " + " | ".join(candidates) + (" | Δ |" if delta else " |")
     out.append(header)
     out.append("|---" * (len(candidates) + 1 + int(delta)) + "|")
-    for d in DIMS:
+    for d in dims:
         cells = [f"{dm[c][d]:.2f}" for c in candidates]
         if delta:
             cells.append(f"{dm[candidates[1]][d] - dm[candidates[0]][d]:+.2f}")
@@ -87,9 +87,14 @@ def main(argv: list[str] | None = None) -> None:
                     help="Override input (default: <run-dir>/multiturn_key.json).")
     ap.add_argument("--out", default=None,
                     help="Override output (default: <run-dir>/multiturn_judgements.jsonl).")
+    ap.add_argument("--legacy-dims", action="store_true",
+                    help="Validate/aggregate the single-turn six dimensions "
+                         "(pre-v3 runs, e.g. the 2026-05-18 golden master) "
+                         "instead of the multi-turn seven.")
     ap.add_argument("--table", default=None,
                     help="Override output (default: <run-dir>/multiturn_results-table.md).")
     args = ap.parse_args(argv)
+    dims = SINGLE_DIMS if args.legacy_dims else MT_DIMS
 
     raw_path = run_path(args.run_dir, args.raw, "multiturn_raw_judgements.jsonl")
     key_path = run_path(args.run_dir, args.key, "multiturn_key.json")
@@ -100,7 +105,7 @@ def main(argv: list[str] | None = None) -> None:
     positions = positions_from_key(key_data)
     raw = read_jsonl(raw_path)
 
-    resolved, tally = resolve_rows(raw, positions)
+    resolved, tally = resolve_rows(raw, positions, dims=dims)
     # Stable candidate order: from the key when present, else first item.
     candidates = key_data.get("candidates") or list(
         next(iter(positions.values())).values())
@@ -111,7 +116,7 @@ def main(argv: list[str] | None = None) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     write_jsonl(out_path, resolved)
 
-    text = render_table(resolved, tally, candidates)
+    text = render_table(resolved, tally, candidates, dims=dims)
     table_path.write_text(text, encoding="utf-8")
     print(text)
 

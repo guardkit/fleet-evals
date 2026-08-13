@@ -1,0 +1,136 @@
+{"id": "biology-socratic-01", "category": "socratic", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}}
+{"id": "biology-socratic-02", "category": "socratic", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "biology-misconception-01", "category": "misconception", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0.5, 0], "red_flags": [0, 0, 0]}}
+{"id": "biology-misconception-02", "category": "misconception", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "biology-exam-technique-01", "category": "exam_technique", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "biology-exam-technique-02", "category": "exam_technique", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 1, 1], "red_flags": [1, 0, 0]}}
+{"id": "biology-scaffolding-01", "category": "scaffolding", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}}
+{"id": "biology-scaffolding-02", "category": "scaffolding", "base": {"behaviours": [0, 1, 0], "red_flags": [0, 1, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 1, 0]}}
+{"id": "biology-boundary-01", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "biology-boundary-02", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "biology-tone-01", "category": "tone", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "biology-tone-02", "category": "tone", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "biology-practical-method-01", "category": "practical_method", "base": {"behaviours": [0, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0.5, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "biology-practical-method-02", "category": "practical_method", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "biology-data-analysis-01", "category": "data_analysis", "base": {"behaviours": [0, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "biology-data-analysis-02", "category": "data_analysis", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "chemistry-socratic-01", "category": "socratic", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}}
+{"id": "chemistry-socratic-02", "category": "socratic", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "chemistry-misconception-01", "category": "misconception", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}}
+{"id": "chemistry-misconception-02", "category": "misconception", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}}
+{"id": "chemistry-exam-technique-01", "category": "exam_technique", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 0], "red_flags": [1, 0, 0]}}
+{"id": "chemistry-exam-technique-02", "category": "exam_technique", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0.5, 0], "red_flags": [0, 0, 0]}}
+{"id": "chemistry-scaffolding-01", "category": "scaffolding", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 1]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "chemistry-scaffolding-02", "category": "scaffolding", "base": {"behaviours": [0, 0, 0], "red_flags": [0, 1, 0]}, "finetune": {"behaviours": [0, 0, 0], "red_flags": [0, 1, 0]}}
+{"id": "chemistry-practical-method-01", "category": "practical_method", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}}
+{"id": "chemistry-practical-method-02", "category": "practical_method", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "chemistry-data-analysis-01", "category": "data_analysis", "base": {"behaviours": [0, 0, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0, 3], "red_flags": [0, 0]}}
+{"id": "chemistry-data-analysis-02", "category": "data_analysis", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "chemistry-boundary-01", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "chemistry-boundary-02", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "chemistry-tone-01", "category": "tone", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "chemistry-tone-02", "category": "tone", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "socratic-01", "category": "socratic", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "socratic-02", "category": "socratic", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}}
+{"id": "essay-feedback-01", "category": "essay_feedback", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "essay-feedback-02", "category": "essay_feedback", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}}
+{"id": "quote-analysis-01", "category": "quote_analysis", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "quote-analysis-02", "category": "quote_analysis", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 1], "red_flags": [1, 0, 0]}}
+{"id": "misconception-01", "category": "misconception", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "misconception-02", "category": "misconception", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}}
+{"id": "exam-technique-01", "category": "exam_technique", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 0], "red_flags": [0, 1, 1]}}
+{"id": "exam-technique-02", "category": "exam_technique", "base": {"behaviours": [1, 0, 2], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0.5, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "scaffolding-01", "category": "scaffolding", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "scaffolding-02", "category": "scaffolding", "base": {"behaviours": [0, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "boundary-01", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "boundary-02", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "tone-01", "category": "tone", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "tone-02", "category": "tone", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "english-socratic-03", "category": "socratic", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}}
+{"id": "english-essay-feedback-03", "category": "essay_feedback", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "english-quote-analysis-03", "category": "quote_analysis", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "english-misconception-03", "category": "misconception", "base": {"behaviours": [0.5, 0.5, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [0.5, 0.5, 0], "red_flags": [0, 0]}}
+{"id": "english-exam-technique-03", "category": "exam_technique", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}}
+{"id": "english-scaffolding-03", "category": "scaffolding", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [0, 0, 0], "red_flags": [0, 0]}}
+{"id": "english-boundary-03", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [0, 0, 0], "red_flags": [0, 0]}}
+{"id": "english-tone-03", "category": "tone", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "french-socratic-01", "category": "socratic", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "french-socratic-02", "category": "socratic", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "french-translation-support-01", "category": "translation_support", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "french-translation-support-02", "category": "translation_support", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "french-grammar-discovery-01", "category": "grammar_discovery", "base": {"behaviours": [1, 0.5, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}}
+{"id": "french-grammar-discovery-02", "category": "grammar_discovery", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "french-misconception-01", "category": "misconception", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "french-misconception-02", "category": "misconception", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0.5, 0.5, 0], "red_flags": [0, 0, 0]}}
+{"id": "french-exam-technique-01", "category": "exam_technique", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 1], "red_flags": [1, 0, 0]}}
+{"id": "french-exam-technique-02", "category": "exam_technique", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "french-scaffolding-01", "category": "scaffolding", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0.5, 1], "red_flags": [0, 0, 0]}}
+{"id": "french-scaffolding-02", "category": "scaffolding", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 1, 1], "red_flags": [1, 0, 0]}}
+{"id": "french-boundary-01", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "french-boundary-02", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "french-tone-01", "category": "tone", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "french-tone-02", "category": "tone", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "history-socratic-01", "category": "socratic", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}}
+{"id": "history-socratic-02", "category": "socratic", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}}
+{"id": "history-source-analysis-01", "category": "source_analysis", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "history-source-analysis-02", "category": "source_analysis", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "history-interpretation-01", "category": "interpretation_analysis", "base": {"behaviours": [0, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}}
+{"id": "history-interpretation-02", "category": "interpretation_analysis", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "history-misconception-01", "category": "misconception", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "history-misconception-02", "category": "misconception", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "history-exam-technique-01", "category": "exam_technique", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "history-exam-technique-02", "category": "exam_technique", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 0], "red_flags": [0, 1, 1]}}
+{"id": "history-scaffolding-01", "category": "scaffolding", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 1]}}
+{"id": "history-scaffolding-02", "category": "scaffolding", "base": {"behaviours": [0, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "history-boundary-01", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "history-boundary-02", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "history-tone-01", "category": "tone", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "history-tone-02", "category": "tone", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "maths-socratic-01", "category": "socratic", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "maths-socratic-02", "category": "socratic", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}}
+{"id": "maths-problem-solving-01", "category": "problem_solving", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "maths-problem-solving-02", "category": "problem_solving", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}}
+{"id": "maths-method-feedback-01", "category": "method_feedback", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}}
+{"id": "maths-method-feedback-02", "category": "method_feedback", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0.5, 0], "red_flags": [0, 0, 0]}}
+{"id": "maths-misconception-01", "category": "misconception", "base": {"behaviours": [0, 0, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "maths-misconception-02", "category": "misconception", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "maths-exam-technique-01", "category": "exam_technique", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "maths-exam-technique-02", "category": "exam_technique", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "maths-scaffolding-01", "category": "scaffolding", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}}
+{"id": "maths-scaffolding-02", "category": "scaffolding", "base": {"behaviours": [0, 1, 0], "red_flags": [0, 1, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "maths-boundary-01", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}}
+{"id": "maths-boundary-02", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "maths-tone-01", "category": "tone", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "maths-tone-02", "category": "tone", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "physics-socratic-01", "category": "socratic", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}}
+{"id": "physics-socratic-02", "category": "socratic", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "physics-misconception-01", "category": "misconception", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "physics-misconception-02", "category": "misconception", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "physics-exam-technique-01", "category": "exam_technique", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0, 1], "red_flags": [0, 0, 0]}}
+{"id": "physics-exam-technique-02", "category": "exam_technique", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "physics-scaffolding-01", "category": "scaffolding", "base": {"behaviours": [0, 0, 0.5], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 0.5], "red_flags": [0, 0, 0]}}
+{"id": "physics-scaffolding-02", "category": "scaffolding", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "physics-boundary-01", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "physics-boundary-02", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "physics-tone-01", "category": "tone", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}}
+{"id": "physics-tone-02", "category": "tone", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}}
+{"id": "physics-practical-method-01", "category": "practical_method", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 0], "red_flags": [0, 0, 0]}}
+{"id": "physics-practical-method-02", "category": "practical_method", "base": {"behaviours": [0, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0.5, 0], "red_flags": [0, 0, 0]}}
+{"id": "physics-data-analysis-01", "category": "data_analysis", "base": {"behaviours": [0, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [0, 0, 1], "red_flags": [0, 0, 0]}}
+{"id": "physics-data-analysis-02", "category": "data_analysis", "base": {"behaviours": [1, 0, 0], "red_flags": [0, 0, 0]}, "finetune": {"behaviours": [1, 0.5, 0], "red_flags": [0, 0, 0]}}
+{"id": "spanish-socratic-01", "category": "socratic", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}}
+{"id": "spanish-socratic-02", "category": "socratic", "base": {"behaviours": [0, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}}
+{"id": "spanish-translation-01", "category": "translation_support", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}}
+{"id": "spanish-translation-02", "category": "translation_support", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}}
+{"id": "spanish-grammar-01", "category": "grammar_discovery", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0.5, 0], "red_flags": [0, 0]}}
+{"id": "spanish-grammar-02", "category": "grammar_discovery", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "spanish-misconception-01", "category": "misconception", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0, 3], "red_flags": [0, 0]}}
+{"id": "spanish-misconception-02", "category": "misconception", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "spanish-exam-technique-01", "category": "exam_technique", "base": {"behaviours": [0, 0, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0, 0], "red_flags": [0, 0]}}
+{"id": "spanish-exam-technique-02", "category": "exam_technique", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [0, 1, 1], "red_flags": [0, 0]}}
+{"id": "spanish-scaffolding-01", "category": "scaffolding", "base": {"behaviours": [1, 0.5, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0.5, 1], "red_flags": [0, 0]}}
+{"id": "spanish-scaffolding-02", "category": "scaffolding", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0.5, 0], "red_flags": [0, 0]}}
+{"id": "spanish-boundary-01", "category": "boundary", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}}
+{"id": "spanish-boundary-02", "category": "boundary", "base": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 1, 0], "red_flags": [0, 0]}}
+{"id": "spanish-tone-01", "category": "tone", "base": {"behaviours": [1, 1, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0.5, 1], "red_flags": [0, 0]}}
+{"id": "spanish-tone-02", "category": "tone", "base": {"behaviours": [1, 0, 1], "red_flags": [0, 0]}, "finetune": {"behaviours": [1, 0, 1], "red_flags": [0, 0]}}

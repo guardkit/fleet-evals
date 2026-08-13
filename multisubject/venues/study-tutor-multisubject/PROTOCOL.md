@@ -134,3 +134,30 @@ committed before any generation; no post-hoc re-scoring may change it.
 judge model, repo HEADs) and a RESULTS write-up from
 `runbooks/templates/RESULTS-template.md`. Probe-track outputs additionally
 stamp `preset_id` per row.
+
+---
+
+## v3 amendment — the multi-turn + criterion extension (registered 2026-08-13, Rich: "yes please proceed with your recommendations")
+
+Registered BEFORE any multi-turn generation (the single-turn phase's
+artefacts are untouched; per this protocol's own rule the multi-turn phase
+is scoped as its own generation). Motivation, on the record: Rich's
+construct challenge — the fine-tune is trained for conversation; single-turn
+judging structurally favours single-reply comprehensiveness; 2026-05-18's
+own multi-turn track was nearly level (2–0–1) where single-turn was 15–1.
+
+1. **Multi-turn track across all 8 subjects**: 3 scripted 5-turn scenarios
+   per subject (English's 2026-05-18 trio + 21 new, adversarially reviewed);
+   generation via `run_multiturn_eval` under the same parity rule; blind
+   session-level judging by the SAME two v2 judges.
+2. **Seventh dimension `engagement_elicitation`** (multi-turn only) — defined
+   in `harness/rubrics/_multiturn.md`; the six single-turn dimensions are
+   re-read at session level per the same addendum. Pre-v3 runs replay under
+   `--legacy-dims`.
+3. **The length-neutral criterion track** (fix #7's producer, now built):
+   every response scored ALONE against its item's pre-registered
+   behaviours/red-flags — no A/B contrast, no candidate names shown.
+4. **Decision rule addendum:** the serving ruling (study-tutor queue item 3)
+   requires the single-turn verdict AND the multi-turn verdict AND the
+   criterion table, read together; a split between them is itself a finding
+   to bring to Rich, not something any aggregate may average away.

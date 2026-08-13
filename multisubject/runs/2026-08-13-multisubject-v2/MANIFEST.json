@@ -90,6 +90,21 @@
       "splits": 22,
       "mfl_rejudged": "french+spanish re-judged on BOTH judges under corrected rubrics (AO structure error caught by fact-check before any verdict)",
       "recorded_at": "2026-08-13T16:17:21+00:00"
+    },
+    "criteria_producer": {
+      "judge_model": "workhorse",
+      "endpoint": "http://localhost:9000/v1",
+      "items": 136,
+      "note": "length-neutral: each response scored ALONE vs pre-registered behaviours/flags; no candidate names shown to the judge",
+      "recorded_at": "2026-08-13T16:46:49+00:00"
+    },
+    "score_criteria": {
+      "judgements": "runs/2026-08-13-multisubject-v2/criteria_judgements.jsonl",
+      "candidates": [
+        "base",
+        "finetune"
+      ],
+      "recorded_at": "2026-08-13T16:46:49+00:00"
     }
   }
 }

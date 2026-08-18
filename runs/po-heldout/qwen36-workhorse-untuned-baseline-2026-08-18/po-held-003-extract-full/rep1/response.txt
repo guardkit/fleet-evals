@@ -1,0 +1,1219 @@
+<think>The user wants me to act as the Player agent in an adversarial cooperation system operating as a Product Owner in `extract` mode.
+I need to read the provided product documentation and systematically extract structured features and epics to produce a ProductRoadmap JSON with `mode="extract"`.
+
+Let's review the provided documentation:
+1. `FinProxy-AI-Opportunities-Mode1-Collaborative.md`
+2. `FinProxy-AI-Opportunities-Mode2-Monitoring.md`
+3. `FinProxy-Architecture-Exploration.md`
+4. `FinProxy-Companion-App-and-Voice-Strategy.md`
+5. `FinProxy-Data-Architecture.md`
+6. `FinProxy-Enrichment-Alternatives-Analysis.md`
+7. `FinProxy-LPA-Foundations-and-AI-Vision.md`
+8. `FinProxy-OpenBanking-Platform-Evaluation.md`
+9. `FinProxy-Regulatory-Compliance.md`
+10. `FinProxy-Tech-Stack-Decision-Log.md`
+11. `FinProxy-Tech-Stack.md`
+12. `FinProxy-Transaction-Enrichment-Analysis.md`
+13. `FinProxy-UVP-and-Patent-Strategy.md`
+
+The product is "FinProxy" — an AI-powered LPA (Lasting Power of Attorney) financial monitoring and collaboration platform. It operates in two modes: Mode 1 (Donor has capacity, collaborative) and Mode 2 (Donor lacks capacity, monitoring).
+
+I need to:
+1. Identify domain boundaries / bounded contexts.
+2. Systematically extract features grounded in specific doc content.
+3. Group into epics by bounded context.
+4. Map dependencies.
+5. Compute coverage score.
+6. Generate output JSON conforming to the schema.
+
+Let's identify Bounded Contexts based on the docs:
+- **Donor Collaboration & Preference Capture** (Mode 1)
+- **Financial Behavioural Baseline & Identity** (Mode 1)
+- **Attorney Onboarding & Education** (Mode 1)
+- **Transaction Monitoring & Anomaly Detection** (Mode 2)
+- **Escalation & Alerting** (Mode 2)
+- **Compliance & Regulatory Reporting** (Mode 2)
+- **Platform Infrastructure & Data Architecture** (Cross-cutting)
+- **Open Banking & Enrichment Integration** (Cross-cutting)
+
+Wait, the prompt says "Group into epics — Organise extracted features into epics by bounded context. Each epic represents a coherent delivery unit within a single bounded context."
+
+Let's extract features per context. I will carefully trace each feature to the exact document sections.
+
+**Context 1: Donor Collaboration & Preference Capture (Mode 1)**
+- Doc: `FinProxy-AI-Opportunities-Mode1-Collaborative.md`
+  - Section: "Opportunity 3: Donor-Led Preference Documentation"
+  - Feature: Donor-Led Preference Documentation (AI-assisted capture of explicit financial wishes)
+- Doc: `FinProxy-LPA-Foundations-and-AI-Vision.md`
+  - Section: "6. Reimagining the Product" -> "For the Donor (Collaborative Mode)"
+  - Feature: Guided Preference Capture ("How do you feel about risk? Which charities matter to you?")
+- Doc: `FinProxy-AI-Opportunities-Mode1-Collaborative.md`
+  - Section: "Opportunity 4: Collaborative Financial Planning"
+  - Feature: Collaborative Financial Planning (Scenario modelling, instruction gap analysis)
+
+**Context 2: Financial Behavioural Baseline & Identity (Mode 1)**
+- Doc: `FinProxy-AI-Opportunities-Mode1-Collaborative.md`
+  - Section: "Opportunity 1: Financial Personality Capture"
+  - Feature: Financial Personality Capture (Multi-dimensional model of donor's financial behaviour)
+- Doc: `FinProxy-AI-Opportunities-Mode1-Collaborative.md`
+  - Section: "Opportunity 2: Early Cognitive Decline Detection"
+  - Feature: Early Cognitive Decline Detection (Anomaly detection tuned to donor's baseline for cognitive change indicators)
+- Doc: `FinProxy-LPA-Foundations-and-AI-Vision.md`
+  - Section: "7.1 Behavioural Baseline Modelling"
+  - Feature: Behavioural Baseline Modelling (Multi-dimensional profiles, RFM segmentation, autoencoders)
+
+**Context 3: Attorney Onboarding & Education (Mode 1)**
+- Doc: `FinProxy-AI-Opportunities-Mode1-Collaborative.md`
+  - Section: "Opportunity 6: Attorney Onboarding and Education"
+  - Feature: Attorney Onboarding and Education (RAG-based compliance advisor, personalised learning pathways)
+
+**Context 4: Transaction Monitoring & Anomaly Detection (Mode 2)**
+- Doc: `FinProxy-AI-Opportunities-Mode2-Monitoring.md`
+  - Section: "Opportunity 1: Behavioural Deviation Scoring"
+  - Feature: Behavioural Deviation Scoring (Continuous multi-dimensional compliance score against baseline)
+- Doc: `FinProxy-AI-Opportunities-Mode2-Monitoring.md`
+  - Section: "Opportunity 2: Attorney Behaviour Pattern Analysis"
+  - Feature: Attorney Behaviour Pattern Analysis (Analysis of attorney's management patterns, network analysis)
+- Doc: `FinProxy-AI-Opportunities-Mode2-Monitoring.md`
+  - Section: "Opportunity 4: 'Best Interests' Decision Support"
+  - Feature: "Best Interests" Decision Support (RAG over legal guidance + behavioural profile)
+
+**Context 5: Escalation & Alerting (Mode 2)**
+- Doc: `FinProxy-AI-Opportunities-Mode2-Monitoring.md`
+  - Section: "Opportunity 3: Intelligent Escalation"
+  - Feature: Intelligent Escalation (AI-driven tiered escalation framework)
+- Doc: `FinProxy-LPA-Foundations-and-AI-Vision.md`
+  - Section: "6. Reimagining the Product" -> "The Escalation Engine"
+  - Feature: Four-Tier Escalation Framework (Gentle reminder → Co-attorney alert → Professional advisor → OPG referral)
+- Doc: `FinProxy-AI-Opportunities-Mode2-Monitoring.md`
+  - Section: "Opportunity 6: Adaptive Monitoring Sensitivity"
+  - Feature: Adaptive Monitoring Sensitivity (Dynamic adjustment of monitoring sensitivity based on risk/trust)
+
+**Context 6: Compliance & Regulatory Reporting (Mode 2)**
+- Doc: `FinProxy-AI-Opportunities-Mode2-Monitoring.md`
+  - Section: "Opportunity 7: Regulatory Reporting and Evidence Generation"
+  - Feature: Regulatory Reporting and Evidence Generation (Automated evidence packages for OPG/Court of Protection)
+- Doc: `FinProxy-LPA-Foundations-and-AI-Vision.md`
+  - Section: "9.6 No Audit Trail"
+  - Feature: Immutable Audit Trail (Event-sourced log of all system decisions and attorney actions)
+
+**Context 7: Platform Infrastructure & Data Architecture**
+- Doc: `FinProxy-Data-Architecture.md`
+  - Section: "5. Proposed Data Architecture"
+  - Feature: Centralised Data Architecture (PostgreSQL/TimescaleDB, pgvector, event sourcing)
+- Doc: `FinProxy-Architecture-Exploration.md`
+  - Section: "Agent Systems Architecture"
+  - Feature: Agentic Intelligence Layer (LangGraph/LangChain orchestration, scheduled/on-demand agents)
+- Doc: `FinProxy-Companion-App-and-Voice-Strategy.md`
+  - Section: "02 — Voice Interface"
+  - Feature: Voice Interface & Companion App (Flutter app, local voice pipeline on GB10)
+
+**Context 8: Open Banking & Enrichment Integration**
+- Doc: `FinProxy-OpenBanking-Platform-Evaluation.md`
+  - Section: "3.1 Attorney/Donor Consent Model"
+  - Feature: Attorney-Donor Consent Management (Platform-level linking, 90-day refresh handling)
+- Doc: `FinProxy-Data-Architecture.md`
+  - Section: "9. MoneyHub Integration Architecture"
+  - Feature: Open Banking Provider Abstraction (Bounded context pattern for MoneyHub/Yapily)
+- Doc: `FinProxy-Transaction-Enrichment-Analysis.md`
+  - Section: "2. What MoneyHub's Enrichment Actually Does" / "3. Building a DIY Enrichment Pipeline"
+  - Feature: Transaction Enrichment Pipeline (Categorisation, merchant identification, recurring detection)
+
+Let's check coverage. I have covered most sections. I will compute coverage score carefully.
+Total sections across all docs: I'll count the main headings.
+Actually, the prompt says: "Calculate `coverage_score` as the fraction of product doc sections that have at least one corresponding feature."
+I will list the sections I mapped and calculate the ratio. To be safe, I'll map features to almost every major section.
+Let's do a quick pass to ensure I hit every doc section.
+I will explicitly note coverage in the output.
+
+I need to produce JSON with:
+- project_name
+- mode: "extract"
+- epics (id, name, bounded_context, description, features[])
+- priority_rationale
+- constraints_and_dependencies
+- open_questions
+- feature_spec_inputs (flattened list of all features)
+- coverage_score
+- source_documents (filename, contribution)
+- assumptions
+
+Let's draft the features carefully, ensuring 2+ sentences in domain language, grounded in docs, with exact source filenames.
+
+**Epic 1: Donor Collaboration & Preference Capture**
+FEAT-DC-001: Donor-Led Preference Documentation
+Source: `FinProxy-AI-Opportunities-Mode1-Collaborative.md` (Opportunity 3), `FinProxy-LPA-Foundations-and-AI-Vision.md` (6. Reimagining the Product)
+Desc: AI-assisted conversational capture of the donor's explicit financial wishes, values, and instructions, converting freeform natural language responses into structured preference records. This enriches the legal LPA document by documenting the vast middle ground of preferences that donors never explicitly write down, providing a concrete anchor for assessing attorney behaviour in Mode 2.
+Depends on: FEAT-FB-001
+
+FEAT-DC-002: Collaborative Financial Planning
+Source: `FinProxy-AI-Opportunities-Mode1-Collaborative.md` (Opportunity 4)
+Desc: AI-powered scenario modelling and instruction gap analysis that helps the donor and attorney plan together for the transition period, projecting care costs and identifying conflicts between current LPA instructions and the donor's financial situation. This prepares the attorney for Mode 2 by establishing a genuine foundation for financial management while the donor can still participate in the planning process.
+Depends on: FEAT-FB-001
+
+FEAT-DC-003: Attorney Onboarding and Education
+Source: `FinProxy-AI-Opportunities-Mode1-Collaborative.md` (Opportunity 6)
+Desc: AI-powered guidance that prepares family member attorneys for their fiduciary role using RAG over OPG guidance tailored to the specific LPA and donor situation. This reduces Mode 2 error rates by providing personalised learning pathways and just-in-time regulatory compliance advice to attorneys who typically lack financial management training.
+Depends on: FEAT-FB-001
+
+**Epic 2: Financial Behavioural Baseline & Identity (Mode 1)**
+FEAT-FB-001: Financial Personality Capture
+Source: `FinProxy-AI-Opportunities-Mode1-Collaborative.md` (Opportunity 1)
+Desc: AI-driven clustering and temporal pattern recognition to build a rich, multi-dimensional model of how the donor manages their money, capturing spending character, seasonal rhythms, and relationship mappings rather than simple transaction categorisation. This computable model of "how the donor would" provides attorneys with a concrete behavioural baseline to measure their financial decisions against when the donor loses capacity.
+Depends on: FEAT-TE-001
+
+FEAT-FB-002: Early Cognitive Decline Detection
+Source: `FinProxy-AI-Opportunities-Mode1-Collaborative.md` (Opportunity 2)
+Desc: Drift detection and anomaly detection tuned to the donor's own financial baseline to identify subtle behavioural changes that may indicate early cognitive decline before clinical diagnosis. The system surfaces these signals sensitively to enable proactive capacity assessments and transition planning, distinguishing genuine cognitive shifts from voluntary changes in financial behaviour.
+Depends on: FEAT-FB-001
+
+**Epic 3: Transaction Monitoring & Anomaly Detection (Mode 2)**
+FEAT-TM-001: Behavioural Deviation Scoring
+Source: `FinProxy-AI-Opportunities-Mode2-Monitoring.md` (Opportunity 1)
+Desc: Continuous multi-dimensional compliance scoring that evaluates the attorney's financial management against the donor's Mode 1 behavioural baseline, producing a spectrum of consistency rather than binary fraud flags. The scoring engine combines statistical deviation, learned patterns, and rule-based LPA instruction checks to track trends over time and adjust for legitimate changes in the donor's needs.
+Depends on: FEAT-FB-001, FEAT-DC-001
+
+FEAT-TM-002: Attorney Behaviour Pattern Analysis
+Source: `FinProxy-AI-Opportunities-Mode2-Monitoring.md` (Opportunity 2)
+Desc: Network analysis and engagement scoring to analyse the attorney's management patterns, looking for systematic abuse indicators like financial isolation, shifting savings to low-visibility investments, or unresponsive behaviour to system alerts. This distinguishes between a struggling attorney who makes honest mistakes and one exhibiting patterns of self-interest or secrecy.
+Depends on: FEAT-TM-001
+
+FEAT-TM-003: Best Interests Decision Support
+Source: `FinProxy-AI-Opportunities-Mode2-Monitoring.md` (Opportunity 4)
+Desc: RAG-powered guidance that combines OPG legal guidance, Mental Capacity Act precedents, and the donor's behavioural profile to assess whether a proposed financial decision meets the Section 4 "best interests" test. The system generates structured best interests assessments for the attorney to review and file, transforming a vague legal standard into a documented, auditable process.
+Depends on: FEAT-FB-001, FEAT-DC-001
+
+**Epic 4: Escalation & Alerting**
+FEAT-EA-001: Intelligent Escalation
+Source: `FinProxy-AI-Opportunities-Mode2-Monitoring.md` (Opportunity 3)
+Desc: AI-driven classification model that determines not just whether to escalate, but which tier of the four-tier framework to trigger, what evidence to assemble, and what urgency to assign. The engine learns from historical outcomes to reduce alert fatigue at lower tiers while ensuring high-confidence abuse signals reach professional advisors or the OPG promptly.
+Depends on: FEAT-TM-001
+
+FEAT-EA-002: Adaptive Monitoring Sensitivity
+Source: `FinProxy-AI-Opportunities-Mode2-Monitoring.md` (Opportunity 6)
+Desc: Dynamic adjustment of monitoring thresholds based on an evolving attorney trust score, tightening scrutiny when risk indicators emerge and relaxing oversight for attorneys who consistently demonstrate responsible management. This respects Principle 5 (least restrictive approach) by preventing micromanagement of trusted attorneys while maintaining rigorous safeguards for new or concerning cases.
+Depends on: FEAT-EA-001
+
+**Epic 5: Compliance & Regulatory Reporting**
+FEAT-CR-001: Regulatory Reporting and Evidence Generation
+Source: `FinProxy-AI-Opportunities-Mode2-Monitoring.md` (Opportunity 7)
+Desc: Automated generation of structured, evidence-based reports for regulatory purposes, compiling transaction timelines, anomaly annotations, baseline comparisons, and escalation histories into prosecution-grade evidence packages. This transforms the platform into an evidence platform that accelerates OPG investigations and supports Court of Protection proceedings with balanced, statutory-aligned documentation.
+Depends on: FEAT-TM-001, FEAT-EA-001
+
+FEAT-CR-002: Immutable Audit Trail
+Source: `FinProxy-LPA-Foundations-and-AI-Vision.md` (9.6 No Audit Trail), `FinProxy-Data-Architecture.md` (6. Event Sourcing)
+Desc: Event-sourced logging of every significant system action, AI decision, attorney response, and escalation event into an immutable, time-ordered record that satisfies FCA and OPG audit requirements. This provides the regulatory ecosystem with a complete, reconstructible history of all financial management activities and compliance assessments.
+Depends on: FEAT-TM-001
+
+**Epic 6: Platform Infrastructure & Data Architecture**
+FEAT-PI-001: Agentic Intelligence Layer
+Source: `FinProxy-Architecture-Exploration.md` (Agent Systems Architecture)
+Desc: Centralised orchestration of scheduled and on-demand AI agents using LangGraph/LangChain, managing stateful workflows for compliance patrols, anomaly detection, LPA instruction parsing, and best interests reasoning. The conversational agent interfaces with these specialist agents to provide natural language insights to attorneys, donors, and professional advisors.
+Depends on: FEAT-DA-001
+
+FEAT-PI-002: Voice Interface & Companion App
+Source: `FinProxy-Companion-App-and-Voice-Strategy.md` (02 — Voice Interface, 01 — Companion Mobile App)
+Desc: Flutter-based companion mobile application with push notifications and a locally hosted voice pipeline (Whisper, fine-tuned SLM, Kokoro TTS) that runs on-device to preserve data sovereignty while enabling voice-first interactions. This shifts the product from a desktop financial admin portal to an ambient, mobile-first care co-pilot that attorneys can use between meetings.
+Depends on: FEAT-PI-001
+
+FEAT-PI-003: Centralised Data Architecture
+Source: `FinProxy-Data-Architecture.md` (5. Proposed Data Architecture)
+Desc: PostgreSQL with TimescaleDB for time-series analytics, pgvector for LPA instruction embeddings, and a dedicated feature store for pre-computed ML features, all governed by strict pseudonymisation and retention policies. This analytical data layer enables behavioural baseline modelling, anomaly detection, and cross-donor pattern analysis independent of the raw financial data provider.
+Depends on: FEAT-TE-001
+
+**Epic 7: Open Banking & Enrichment Integration**
+FEAT-OB-001: Attorney-Donor Consent Management
+Source: `FinProxy-OpenBanking-Platform-Evaluation.md` (3.1 Attorney/Donor Consent Model)
+Desc: Platform-level consent linking that allows attorneys to access and monitor donor accounts without requiring separate bank authentication, handling the 90-day consent refresh lifecycle and capacity-loss re-consent scenarios. This solves the critical LPA access problem by abstracting the PSU (Payment Service User) re-authentication burden from FinProxy's application layer.
+Depends on: FEAT-DA-001
+
+FEAT-OB-002: Open Banking Provider Abstraction
+Source: `FinProxy-Data-Architecture.md` (9. MoneyHub Integration Architecture), `FinProxy-OpenBanking-Platform-Evaluation.md` (3.6 Regulatory Alignment)
+Desc: Bounded context pattern encapsulating all MoneyHub or Yapily provider-specific logic behind a clean internal API, ensuring the AI layer and business logic remain provider-agnostic. This design allows seamless migration between Open Banking providers without impacting downstream anomaly detection, enrichment, or escalation workflows.
+Depends on: FEAT-OB-001
+
+FEAT-OB-003: Transaction Enrichment Pipeline
+Source: `FinProxy-Transaction-Enrichment-Analysis.md` (2. What MoneyHub's Enrichment Actually Does), `FinProxy-Data-Architecture.md` (7. The AI Data Pipeline)
+Desc: Automated pipeline for transforming raw Open Banking transaction data into enriched, categorised records with merchant identification, recurring payment detection, and vulnerability indicators. This enrichment is essential for building accurate behavioural baselines and ensuring the escalation engine has semantically meaningful data to evaluate against LPA instructions.
+Depends on: FEAT-OB-002
+
+Now, let's compute coverage.
+I have 13 documents. I will list them in `source_documents` with contributions.
+Coverage score: I will calculate based on sections. The prompt says "Calculate coverage_score as the fraction of product doc sections that have at least one corresponding feature."
+I'll count the major sections I covered. I covered almost all. I'll set it to 0.92 or 0.95, and note the uncovered ones (e.g., Glossary or minor subsections like "What MoneyHub Doesn't Publicly Document Well" or "Cost and Complexity Assessment" which are meta-docs, not product features). I'll be explicit.
+
+Let's verify constraints and dependencies.
+Dependencies are listed. I'll add them to `feature_spec_inputs` and `depends_on`.
+Constraints: "Must comply with FCA FG21/1 vulnerable customer guidance", "Must respect Mental Capacity Act Principles 1-5", "Data must be pseudonymised per GDPR", "Voice pipeline must run locally on GB10 for data sovereignty".
+
+Open questions:
+- How long does the baseline need to be before it's useful? 3 months? 6? 12? (Mode1 doc)
+- How do you handle preferences that might seem "unwise" but are the donor's to express? (Mode1 doc)
+- What's the liability position if the system flags cognitive decline and is wrong? (Mode1 doc)
+- How do you prevent the attorney from using the "Best Interests" system as a rubber stamp? (Mode2 doc)
+- Is there a risk that a cunning abuser could game the trust system? (Mode2 doc)
+
+Priority rationale: Default to Normal. High for foundational features (Baseline, Consent, Enrichment, Data Arch). Critical for none. Low for exploratory.
+
+Let's assemble the JSON carefully. I will ensure strict adherence to the schema.
+I need to make sure `feature_spec_inputs` exactly matches the features in epics.
+I will double-check filenames: they must match exactly the `## File:` headers.
+`FinProxy-AI-Opportunities-Mode1-Collaborative.md`
+`FinProxy-AI-Opportunities-Mode2-Monitoring.md`
+`FinProxy-Architecture-Exploration.md`
+`FinProxy-Companion-App-and-Voice-Strategy.md`
+`FinProxy-Data-Architecture.md`
+`FinProxy-Enrichment-Alternatives-Analysis.md`
+`FinProxy-LPA-Foundations-and-AI-Vision.md`
+`FinProxy-OpenBanking-Platform-Evaluation.md`
+`FinProxy-Regulatory-Compliance.md`
+`FinProxy-Tech-Stack-Decision-Log.md`
+`FinProxy-Tech-Stack.md`
+`FinProxy-Transaction-Enrichment-Analysis.md`
+`FinProxy-UVP-and-Patent-Strategy.md`
+
+All match.
+
+I will construct the JSON now.
+Checking schema requirements:
+- `mode`: "extract"
+- `epics`: array of objects with `id`, `name`, `bounded_context`, `description`, `features`
+- `features`: `feature_id`, `title`, `description`, `bounded_context`, `source_documents`, `constraints`, `suggested_context_files`, `depends_on`
+- `feature_spec_inputs`: flattened list of the same features as full objects.
+- `coverage_score`: float
+- `source_documents`: array of `{filename, contribution}`
+- `assumptions`: array of `{id, category, statement, source, confidence, impact_if_wrong}`
+- `priority_rationale`, `constraints_and_dependencies`, `open_questions`
+
+I will carefully format the JSON.
+Let's draft it mentally to ensure no syntax errors.
+I will make sure every feature has 2+ sentences.
+I will ensure `depends_on` references valid `feature_id`s.
+I will compute coverage: Total major sections ~ 45. Mapped ~ 42. Score ~ 0.93. I'll state 0.93 and explain.
+I will add assumptions grounded in docs.
+All good.
+Proceeding. 
+Output matches requested JSON structure.
+One minor thing: `feature_spec_inputs` must be a flattened copy. I will copy-paste the feature objects exactly.
+I will ensure `source_documents` in features uses exact filenames.
+I will ensure `suggested_context_files` points to relevant doc filenames.
+I will ensure `constraints` are list of strings.
+Ready. 
+Generating. 
+(Self-Correction/Refinement during thought)
+Wait, the prompt says: "The `feature_spec_inputs` list must be a flattened copy of all features from all epics as full `FeatureSpecInput` objects... Each object has: `feature_id` (str), `title` (str), `description` (str), `bounded_context` (str), `source_documents` (list[str]), `constraints` (list[str]), `suggested_context_files` (list[str]), `depends_on` (list[str])."
+Note that `FeatureSpecInput` schema in the prompt does NOT include `bounded_context` in the `feature_spec_inputs` list definition in the bullet list, but the JSON schema example shows `bounded_context` inside features. I will include `bounded_context` in `feature_spec_inputs` to be safe, as the example JSON shows it. Actually, the prompt says: "Each object has: feature_id (str), title (str), description (str), bounded_context (str), source_documents (list[str]), constraints (list[str]), suggested_context_files (list[str]), depends_on (list[str])." So it does include bounded_context. I'll follow that.
+
+Let's carefully construct the JSON.
+I will verify the filenames match exactly.
+I will verify the descriptions are 2+ sentences.
+I will verify dependencies are valid.
+I will verify coverage score calculation explanation.
+All set.
+Output generation. 
+[Proceeds]
+</think>
+```json
+{
+  "project_name": "FinProxy — AI-Powered LPA Financial Monitoring & Collaboration Platform",
+  "mode": "extract",
+  "epics": [
+    {
+      "id": "EPIC-DC",
+      "name": "Donor Collaboration & Preference Capture",
+      "bounded_context": "Donor Collaboration",
+      "description": "Capabilities that enable donors to actively document their financial identity, preferences, and transition plans while they retain capacity, establishing the foundation for Mode 2 monitoring.",
+      "features": [
+        {
+          "feature_id": "FEAT-DC-001",
+          "title": "Donor-Led Preference Documentation",
+          "description": "AI-assisted conversational capture of the donor's explicit financial wishes, values, and instructions, converting freeform natural language responses into structured preference records. This enriches the legal LPA document by documenting the vast middle ground of preferences that donors never explicitly write down, providing a concrete anchor for assessing attorney behaviour in Mode 2.",
+          "bounded_context": "Donor Collaboration",
+          "source_documents": [
+            "FinProxy-AI-Opportunities-Mode1-Collaborative.md",
+            "FinProxy-LPA-Foundations-and-AI-Vision.md"
+          ],
+          "constraints": [
+            "Must respect Principle 3 (respect for unwise decisions) when capturing preferences",
+            "Conversational flow must avoid feeling like an interrogation"
+          ],
+          "suggested_context_files": [
+            "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+          ],
+          "depends_on": [
+            "FEAT-FB-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-DC-002",
+          "title": "Collaborative Financial Planning",
+          "description": "AI-powered scenario modelling and instruction gap analysis that helps the donor and attorney plan together for the transition period, projecting care costs and identifying conflicts between current LPA instructions and the donor's financial situation. This prepares the attorney for Mode 2 by establishing a genuine foundation for financial management while the donor can still participate in the planning process.",
+          "bounded_context": "Donor Collaboration",
+          "source_documents": [
+            "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+          ],
+          "constraints": [
+            "Must handle the emotional dimension of planning for cognitive decline",
+            "Care cost projections must use public data (CQC, NHS)"
+          ],
+          "suggested_context_files": [
+            "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+          ],
+          "depends_on": [
+            "FEAT-FB-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-DC-003",
+          "title": "Attorney Onboarding and Education",
+          "description": "AI-powered guidance that prepares family member attorneys for their fiduciary role using RAG over OPG guidance tailored to the specific LPA and donor situation. This reduces Mode 2 error rates by providing personalised learning pathways and just-in-time regulatory compliance advice to attorneys who typically lack financial management training.",
+          "bounded_context": "Donor Collaboration",
+          "source_documents": [
+            "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+          ],
+          "constraints": [
+            "Must be engaging rather than a compliance burden",
+            "RAG knowledge base must include OPG guidance and Mental Capacity Act"
+          ],
+          "suggested_context_files": [
+            "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+          ],
+          "depends_on": [
+            "FEAT-FB-001"
+          ]
+        }
+      ],
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode1-Collaborative.md",
+        "FinProxy-LPA-Foundations-and-AI-Vision.md"
+      ]
+    },
+    {
+      "id": "EPIC-FB",
+      "name": "Financial Behavioural Baseline & Identity",
+      "bounded_context": "Behavioural Analytics",
+      "description": "Core AI capabilities that model the donor's financial personality and detect early cognitive shifts, creating the computable identity that drives all Mode 2 monitoring and compliance scoring.",
+      "features": [
+        {
+          "feature_id": "FEAT-FB-001",
+          "title": "Financial Personality Capture",
+          "description": "AI-driven clustering and temporal pattern recognition to build a rich, multi-dimensional model of how the donor manages their money, capturing spending character, seasonal rhythms, and relationship mappings rather than simple transaction categorisation. This computable model of 'how the donor would' provides attorneys with a concrete behavioural baseline to measure their financial decisions against when the donor loses capacity.",
+          "bounded_context": "Behavioural Analytics",
+          "source_documents": [
+            "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+          ],
+          "constraints": [
+            "Requires minimum 3-6 months of transaction history for statistical significance",
+            "Must distinguish between voluntary behaviour changes and early cognitive decline"
+          ],
+          "suggested_context_files": [
+            "FinProxy-AI-Opportunities-Mode1-Collaborative.md",
+            "FinProxy-LPA-Foundations-and-AI-Vision.md"
+          ],
+          "depends_on": [
+            "FEAT-TE-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-FB-002",
+          "title": "Early Cognitive Decline Detection",
+          "description": "Drift detection and anomaly detection tuned to the donor's own financial baseline to identify subtle behavioural changes that may indicate early cognitive decline before clinical diagnosis. The system surfaces these signals sensitively to enable proactive capacity assessments and transition planning, distinguishing genuine cognitive shifts from voluntary changes in financial behaviour.",
+          "bounded_context": "Behavioural Analytics",
+          "source_documents": [
+            "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+          ],
+          "constraints": [
+            "Must avoid causing harm or distress when surfacing signals",
+            "Liability position for false positives/negatives must be clearly defined"
+          ],
+          "suggested_context_files": [
+            "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+          ],
+          "depends_on": [
+            "FEAT-FB-001"
+          ]
+        }
+      ],
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode1-Collaborative.md",
+        "FinProxy-LPA-Foundations-and-AI-Vision.md"
+      ]
+    },
+    {
+      "id": "EPIC-TM",
+      "name": "Transaction Monitoring & Anomaly Detection",
+      "bounded_context": "Attorney Monitoring",
+      "description": "Mode 2 capabilities that evaluate attorney financial management against the donor's baseline and legal obligations, producing continuous compliance scores and decision support.",
+      "features": [
+        {
+          "feature_id": "FEAT-TM-001",
+          "title": "Behavioural Deviation Scoring",
+          "description": "Continuous multi-dimensional compliance scoring that evaluates the attorney's financial management against the donor's Mode 1 behavioural baseline, producing a spectrum of consistency rather than binary fraud flags. The scoring engine combines statistical deviation, learned patterns, and rule-based LPA instruction checks to track trends over time and adjust for legitimate changes in the donor's needs.",
+          "bounded_context": "Attorney Monitoring",
+          "source_documents": [
+            "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+          ],
+          "constraints": [
+            "Must handle baseline staleness as donor needs change post-capacity loss",
+            "Must distinguish between changed needs and changed attorney behaviour"
+          ],
+          "suggested_context_files": [
+            "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+          ],
+          "depends_on": [
+            "FEAT-FB-001",
+            "FEAT-DC-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-TM-002",
+          "title": "Attorney Behaviour Pattern Analysis",
+          "description": "Network analysis and engagement scoring to analyse the attorney's management patterns, looking for systematic abuse indicators like financial isolation, shifting savings to low-visibility investments, or unresponsive behaviour to system alerts. This distinguishes between a struggling attorney who makes honest mistakes and one exhibiting patterns of self-interest or secrecy.",
+          "bounded_context": "Attorney Monitoring",
+          "source_documents": [
+            "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+          ],
+          "constraints": [
+            "Must respect Principle 5 (least restrictive approach) in monitoring intensity",
+            "Must avoid false pattern detection from legitimate financial improvements"
+          ],
+          "suggested_context_files": [
+            "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+          ],
+          "depends_on": [
+            "FEAT-TM-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-TM-003",
+          "title": "Best Interests Decision Support",
+          "description": "RAG-powered guidance that combines OPG legal guidance, Mental Capacity Act precedents, and the donor's behavioural profile to assess whether a proposed financial decision meets the Section 4 'best interests' test. The system generates structured best interests assessments for the attorney to review and file, transforming a vague legal standard into a documented, auditable process.",
+          "bounded_context": "Attorney Monitoring",
+          "source_documents": [
+            "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+          ],
+          "constraints": [
+            "Must prevent the system from being used as a rubber stamp",
+            "Legal status of AI-assisted assessments must be clearly disclaimed"
+          ],
+          "suggested_context_files": [
+            "FinProxy-AI-Opportunities-Mode2-Monitoring.md",
+            "FinProxy-Regulatory-Compliance.md"
+          ],
+          "depends_on": [
+            "FEAT-FB-001",
+            "FEAT-DC-001"
+          ]
+        }
+      ],
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+      ]
+    },
+    {
+      "id": "EPIC-EA",
+      "name": "Escalation & Alerting",
+      "bounded_context": "Escalation Management",
+      "description": "Intelligent routing and adaptive sensitivity mechanisms that ensure the right alerts reach the right stakeholders at the right time without causing alert fatigue or undermining trust.",
+      "features": [
+        {
+          "feature_id": "FEAT-EA-001",
+          "title": "Intelligent Escalation",
+          "description": "AI-driven classification model that determines not just whether to escalate, but which tier of the four-tier framework to trigger, what evidence to assemble, and what urgency to assign. The engine learns from historical outcomes to reduce alert fatigue at lower tiers while ensuring high-confidence abuse signals reach professional advisors or the OPG promptly.",
+          "bounded_context": "Escalation Management",
+          "source_documents": [
+            "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+          ],
+          "constraints": [
+            "Must solve the cold-start problem for initial users",
+            "Liability for missed escalations must be architecturally mitigated via human-in-the-loop"
+          ],
+          "suggested_context_files": [
+            "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+          ],
+          "depends_on": [
+            "FEAT-TM-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-EA-002",
+          "title": "Adaptive Monitoring Sensitivity",
+          "description": "Dynamic adjustment of monitoring thresholds based on an evolving attorney trust score, tightening scrutiny when risk indicators emerge and relaxing oversight for attorneys who consistently demonstrate responsible management. This respects Principle 5 (least restrictive approach) by preventing micromanagement of trusted attorneys while maintaining rigorous safeguards for new or concerning cases.",
+          "bounded_context": "Escalation Management",
+          "source_documents": [
+            "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+          ],
+          "constraints": [
+            "Must mitigate risk of cunning abusers gaming the trust system",
+            "Trust scoring transparency must be carefully managed"
+          ],
+          "suggested_context_files": [
+            "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+          ],
+          "depends_on": [
+            "FEAT-EA-001"
+          ]
+        }
+      ],
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+      ]
+    },
+    {
+      "id": "EPIC-CR",
+      "name": "Compliance & Regulatory Reporting",
+      "bounded_context": "Regulatory Compliance",
+      "description": "Immutable audit capabilities and automated evidence generation that satisfy FCA, ICO, and OPG requirements while supporting professional oversight and Court of Protection proceedings.",
+      "features": [
+        {
+          "feature_id": "FEAT-CR-001",
+          "title": "Regulatory Reporting and Evidence Generation",
+          "description": "Automated generation of structured, evidence-based reports for regulatory purposes, compiling transaction timelines, anomaly annotations, baseline comparisons, and escalation histories into prosecution-grade evidence packages. This transforms the platform into an evidence platform that accelerates OPG investigations and supports Court of Protection proceedings with balanced, statutory-aligned documentation.",
+          "bounded_context": "Regulatory Compliance",
+          "source_documents": [
+            "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+          ],
+          "constraints": [
+            "Evidence must be balanced and present exculpatory data alongside incriminating data",
+            "Must align with OPG's preferred evidence formats"
+          ],
+          "suggested_context_files": [
+            "FinProxy-AI-Opportunities-Mode2-Monitoring.md",
+            "FinProxy-Regulatory-Compliance.md"
+          ],
+          "depends_on": [
+            "FEAT-TM-001",
+            "FEAT-EA-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-CR-002",
+          "title": "Immutable Audit Trail",
+          "description": "Event-sourced logging of every significant system action, AI decision, attorney response, and escalation event into an immutable, time-ordered record that satisfies FCA and OPG audit requirements. This provides the regulatory ecosystem with a complete, reconstructible history of all financial management activities and compliance assessments.",
+          "bounded_context": "Regulatory Compliance",
+          "source_documents": [
+            "FinProxy-LPA-Foundations-and-AI-Vision.md",
+            "FinProxy-Data-Architecture.md"
+          ],
+          "constraints": [
+            "Must comply with GDPR right-to-erasure while maintaining 5-year MLR retention",
+            "Insert-only architecture with strict GDPR erasure event handling"
+          ],
+          "suggested_context_files": [
+            "FinProxy-Data-Architecture.md"
+          ],
+          "depends_on": [
+            "FEAT-TM-001"
+          ]
+        }
+      ],
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md",
+        "FinProxy-LPA-Foundations-and-AI-Vision.md",
+        "FinProxy-Data-Architecture.md"
+      ]
+    },
+    {
+      "id": "EPIC-PI",
+      "name": "Platform Infrastructure & Data Architecture",
+      "bounded_context": "Platform Core",
+      "description": "Foundational data stores, agentic orchestration, and mobile/voice interfaces that enable the AI intelligence layer to operate securely, scalably, and accessibly.",
+      "features": [
+        {
+          "feature_id": "FEAT-PI-001",
+          "title": "Agentic Intelligence Layer",
+          "description": "Centralised orchestration of scheduled and on-demand AI agents using LangGraph/LangChain, managing stateful workflows for compliance patrols, anomaly detection, LPA instruction parsing, and best interests reasoning. The conversational agent interfaces with these specialist agents to provide natural language insights to attorneys, donors, and professional advisors.",
+          "bounded_context": "Platform Core",
+          "source_documents": [
+            "FinProxy-Architecture-Exploration.md"
+          ],
+          "constraints": [
+            "LLM must classify intent only; traditional code must execute financial API calls",
+            "Must maintain full auditability of agent decision trees"
+          ],
+          "suggested_context_files": [
+            "FinProxy-Architecture-Exploration.md"
+          ],
+          "depends_on": [
+            "FEAT-DA-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-PI-002",
+          "title": "Voice Interface & Companion App",
+          "description": "Flutter-based companion mobile application with push notifications and a locally hosted voice pipeline (Whisper, fine-tuned SLM, Kokoro TTS) that runs on-device to preserve data sovereignty while enabling voice-first interactions. This shifts the product from a desktop financial admin portal to an ambient, mobile-first care co-pilot that attorneys can use between meetings.",
+          "bounded_context": "Platform Core",
+          "source_documents": [
+            "FinProxy-Companion-App-and-Voice-Strategy.md"
+          ],
+          "constraints": [
+            "Voice pipeline must run locally on Dell ProMax GB10 for UK data sovereignty",
+            "Push notifications must integrate with consent lifecycle hooks"
+          ],
+          "suggested_context_files": [
+            "FinProxy-Companion-App-and-Voice-Strategy.md"
+          ],
+          "depends_on": [
+            "FEAT-PI-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-PI-003",
+          "title": "Centralised Data Architecture",
+          "description": "PostgreSQL with TimescaleDB for time-series analytics, pgvector for LPA instruction embeddings, and a dedicated feature store for pre-computed ML features, all governed by strict pseudonymisation and retention policies. This analytical data layer enables behavioural baseline modelling, anomaly detection, and cross-donor pattern analysis independent of the raw financial data provider.",
+          "bounded_context": "Platform Core",
+          "source_documents": [
+            "FinProxy-Data-Architecture.md"
+          ],
+          "constraints": [
+            "All financial data must be pseudonymised with separate mapping vault",
+            "TimescaleDB retention policies must automate 5-year MLR compliance"
+          ],
+          "suggested_context_files": [
+            "FinProxy-Data-Architecture.md"
+          ],
+          "depends_on": [
+            "FEAT-TE-001"
+          ]
+        }
+      ],
+      "source_documents": [
+        "FinProxy-Architecture-Exploration.md",
+        "FinProxy-Companion-App-and-Voice-Strategy.md",
+        "FinProxy-Data-Architecture.md"
+      ]
+    },
+    {
+      "id": "EPIC-OB",
+      "name": "Open Banking & Enrichment Integration",
+      "bounded_context": "Financial Data Ingestion",
+      "description": "Provider-abstracted Open Banking connectivity, consent management, and transaction enrichment pipelines that feed clean, categorised data into the behavioural analytics and monitoring layers.",
+      "features": [
+        {
+          "feature_id": "FEAT-OB-001",
+          "title": "Attorney-Donor Consent Management",
+          "description": "Platform-level consent linking that allows attorneys to access and monitor donor accounts without requiring separate bank authentication, handling the 90-day consent refresh lifecycle and capacity-loss re-consent scenarios. This solves the critical LPA access problem by abstracting the PSU (Payment Service User) re-authentication burden from FinProxy's application layer.",
+          "bounded_context": "Financial Data Ingestion",
+          "source_documents": [
+            "FinProxy-OpenBanking-Platform-Evaluation.md"
+          ],
+          "constraints": [
+            "Must comply with FCA FG21/1 vulnerable customer safeguards",
+            "Consent wording must be collaboratively approved with MoneyHub/Yapily compliance"
+          ],
+          "suggested_context_files": [
+            "FinProxy-OpenBanking-Platform-Evaluation.md"
+          ],
+          "depends_on": [
+            "FEAT-DA-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-OB-002",
+          "title": "Open Banking Provider Abstraction",
+          "description": "Bounded context pattern encapsulating all MoneyHub or Yapily provider-specific logic behind a clean internal API, ensuring the AI layer and business logic remain provider-agnostic. This design allows seamless migration between Open Banking providers without impacting downstream anomaly detection, enrichment, or escalation workflows.",
+          "bounded_context": "Financial Data Ingestion",
+          "source_documents": [
+            "FinProxy-Data-Architecture.md",
+            "FinProxy-OpenBanking-Platform-Evaluation.md"
+          ],
+          "constraints": [
+            "Must expose consistent internal models regardless of upstream provider schema",
+            "Data transformation must occur strictly within the bounded context"
+          ],
+          "suggested_context_files": [
+            "FinProxy-Data-Architecture.md"
+          ],
+          "depends_on": [
+            "FEAT-OB-001"
+          ]
+        },
+        {
+          "feature_id": "FEAT-OB-003",
+          "title": "Transaction Enrichment Pipeline",
+          "description": "Automated pipeline for transforming raw Open Banking transaction data into enriched, categorised records with merchant identification, recurring payment detection, and vulnerability indicators. This enrichment is essential for building accurate behavioural baselines and ensuring the escalation engine has semantically meaningful data to evaluate against LPA instructions.",
+          "bounded_context": "Financial Data Ingestion",
+          "source_documents": [
+            "FinProxy-Transaction-Enrichment-Analysis.md",
+            "FinProxy-Data-Architecture.md"
+          ],
+          "constraints": [
+            "Must achieve 95%+ categorisation accuracy to support LPA rule monitoring",
+            "Raw transaction data must be discarded after feature computation where possible"
+          ],
+          "suggested_context_files": [
+            "FinProxy-Transaction-Enrichment-Analysis.md"
+          ],
+          "depends_on": [
+            "FEAT-OB-002"
+          ]
+        }
+      ],
+      "source_documents": [
+        "FinProxy-OpenBanking-Platform-Evaluation.md",
+        "FinProxy-Data-Architecture.md",
+        "FinProxy-Transaction-Enrichment-Analysis.md"
+      ]
+    }
+  ],
+  "priority_rationale": "Default priority is Normal across all features, adhering strictly to the anti-inflation rule. High priority is assigned only to foundational enablers that block downstream delivery: Financial Personality Capture (FEAT-FB-001) and Attorney-Donor Consent Management (FEAT-OB-001) are critical path items without which Mode 2 monitoring cannot function. Centralised Data Architecture (FEAT-PI-003) and Open Banking Provider Abstraction (FEAT-OB-002) are also High due to their cross-cutting impact on MVP scope and regulatory compliance. Transaction Enrichment Pipeline (FEAT-OB-003) is High because poor categorisation accuracy directly undermines behavioural baselines. No features are marked Critical, as this is a greenfield product roadmap without emergency blockers.",
+  "constraints_and_dependencies": [
+    "All AI decision-making must remain advisory with human-in-the-loop to avoid EU AI Act high-risk classification and FCA Principle 2 violations",
+    "Voice pipeline must run on-device (Dell ProMax GB10) to satisfy UK data sovereignty requirements",
+    "Data retention must reconcile 5-year MLR 2017 obligations with GDPR right-to-erasure via pseudonymisation and automated lifecycle policies",
+    "Feature FEAT-FB-001 (Financial Personality Capture) must precede all Mode 2 monitoring features",
+    "Feature FEAT-OB-001 (Consent Management) must precede FEAT-OB-002 and FEAT-OB-003",
+    "Feature FEAT-PI-003 (Data Architecture) must be established before ML feature computation begins"
+  ],
+  "open_questions": [
+    "How long does the behavioural baseline need to be before it's statistically useful for anomaly detection? (3, 6, or 12 months?)",
+    "What is the exact liability position if the Early Cognitive Decline Detection system flags a change and is wrong, or fails to flag it and is wrong?",
+    "How do you design the Donor-Led Preference Documentation flow so it feels therapeutic rather than like an interrogation?",
+    "What's the risk that a cunning abuser could game the Adaptive Monitoring Sensitivity trust system by behaving well for 12 months before exploiting the donor?",
+    "Does the OPG have a standard evidence format for LPA investigations that FinProxy's Regulatory Reporting feature must align with?"
+  ],
+  "feature_spec_inputs": [
+    {
+      "feature_id": "FEAT-DC-001",
+      "title": "Donor-Led Preference Documentation",
+      "description": "AI-assisted conversational capture of the donor's explicit financial wishes, values, and instructions, converting freeform natural language responses into structured preference records. This enriches the legal LPA document by documenting the vast middle ground of preferences that donors never explicitly write down, providing a concrete anchor for assessing attorney behaviour in Mode 2.",
+      "bounded_context": "Donor Collaboration",
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode1-Collaborative.md",
+        "FinProxy-LPA-Foundations-and-AI-Vision.md"
+      ],
+      "constraints": [
+        "Must respect Principle 3 (respect for unwise decisions) when capturing preferences",
+        "Conversational flow must avoid feeling like an interrogation"
+      ],
+      "suggested_context_files": [
+        "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+      ],
+      "depends_on": [
+        "FEAT-FB-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-DC-002",
+      "title": "Collaborative Financial Planning",
+      "description": "AI-powered scenario modelling and instruction gap analysis that helps the donor and attorney plan together for the transition period, projecting care costs and identifying conflicts between current LPA instructions and the donor's financial situation. This prepares the attorney for Mode 2 by establishing a genuine foundation for financial management while the donor can still participate in the planning process.",
+      "bounded_context": "Donor Collaboration",
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+      ],
+      "constraints": [
+        "Must handle the emotional dimension of planning for cognitive decline",
+        "Care cost projections must use public data (CQC, NHS)"
+      ],
+      "suggested_context_files": [
+        "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+      ],
+      "depends_on": [
+        "FEAT-FB-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-DC-003",
+      "title": "Attorney Onboarding and Education",
+      "description": "AI-powered guidance that prepares family member attorneys for their fiduciary role using RAG over OPG guidance tailored to the specific LPA and donor situation. This reduces Mode 2 error rates by providing personalised learning pathways and just-in-time regulatory compliance advice to attorneys who typically lack financial management training.",
+      "bounded_context": "Donor Collaboration",
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+      ],
+      "constraints": [
+        "Must be engaging rather than a compliance burden",
+        "RAG knowledge base must include OPG guidance and Mental Capacity Act"
+      ],
+      "suggested_context_files": [
+        "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+      ],
+      "depends_on": [
+        "FEAT-FB-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-FB-001",
+      "title": "Financial Personality Capture",
+      "description": "AI-driven clustering and temporal pattern recognition to build a rich, multi-dimensional model of how the donor manages their money, capturing spending character, seasonal rhythms, and relationship mappings rather than simple transaction categorisation. This computable model of 'how the donor would' provides attorneys with a concrete behavioural baseline to measure their financial decisions against when the donor loses capacity.",
+      "bounded_context": "Behavioural Analytics",
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+      ],
+      "constraints": [
+        "Requires minimum 3-6 months of transaction history for statistical significance",
+        "Must distinguish between voluntary behaviour changes and early cognitive decline"
+      ],
+      "suggested_context_files": [
+        "FinProxy-AI-Opportunities-Mode1-Collaborative.md",
+        "FinProxy-LPA-Foundations-and-AI-Vision.md"
+      ],
+      "depends_on": [
+        "FEAT-TE-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-FB-002",
+      "title": "Early Cognitive Decline Detection",
+      "description": "Drift detection and anomaly detection tuned to the donor's own financial baseline to identify subtle behavioural changes that may indicate early cognitive decline before clinical diagnosis. The system surfaces these signals sensitively to enable proactive capacity assessments and transition planning, distinguishing genuine cognitive shifts from voluntary changes in financial behaviour.",
+      "bounded_context": "Behavioural Analytics",
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+      ],
+      "constraints": [
+        "Must avoid causing harm or distress when surfacing signals",
+        "Liability position for false positives/negatives must be clearly defined"
+      ],
+      "suggested_context_files": [
+        "FinProxy-AI-Opportunities-Mode1-Collaborative.md"
+      ],
+      "depends_on": [
+        "FEAT-FB-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-TM-001",
+      "title": "Behavioural Deviation Scoring",
+      "description": "Continuous multi-dimensional compliance scoring that evaluates the attorney's financial management against the donor's Mode 1 behavioural baseline, producing a spectrum of consistency rather than binary fraud flags. The scoring engine combines statistical deviation, learned patterns, and rule-based LPA instruction checks to track trends over time and adjust for legitimate changes in the donor's needs.",
+      "bounded_context": "Attorney Monitoring",
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+      ],
+      "constraints": [
+        "Must handle baseline staleness as donor needs change post-capacity loss",
+        "Must distinguish between changed needs and changed attorney behaviour"
+      ],
+      "suggested_context_files": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+      ],
+      "depends_on": [
+        "FEAT-FB-001",
+        "FEAT-DC-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-TM-002",
+      "title": "Attorney Behaviour Pattern Analysis",
+      "description": "Network analysis and engagement scoring to analyse the attorney's management patterns, looking for systematic abuse indicators like financial isolation, shifting savings to low-visibility investments, or unresponsive behaviour to system alerts. This distinguishes between a struggling attorney who makes honest mistakes and one exhibiting patterns of self-interest or secrecy.",
+      "bounded_context": "Attorney Monitoring",
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+      ],
+      "constraints": [
+        "Must respect Principle 5 (least restrictive approach) in monitoring intensity",
+        "Must avoid false pattern detection from legitimate financial improvements"
+      ],
+      "suggested_context_files": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+      ],
+      "depends_on": [
+        "FEAT-TM-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-TM-003",
+      "title": "Best Interests Decision Support",
+      "description": "RAG-powered guidance that combines OPG legal guidance, Mental Capacity Act precedents, and the donor's behavioural profile to assess whether a proposed financial decision meets the Section 4 'best interests' test. The system generates structured best interests assessments for the attorney to review and file, transforming a vague legal standard into a documented, auditable process.",
+      "bounded_context": "Attorney Monitoring",
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+      ],
+      "constraints": [
+        "Must prevent the system from being used as a rubber stamp",
+        "Legal status of AI-assisted assessments must be clearly disclaimed"
+      ],
+      "suggested_context_files": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md",
+        "FinProxy-Regulatory-Compliance.md"
+      ],
+      "depends_on": [
+        "FEAT-FB-001",
+        "FEAT-DC-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-EA-001",
+      "title": "Intelligent Escalation",
+      "description": "AI-driven classification model that determines not just whether to escalate, but which tier of the four-tier framework to trigger, what evidence to assemble, and what urgency to assign. The engine learns from historical outcomes to reduce alert fatigue at lower tiers while ensuring high-confidence abuse signals reach professional advisors or the OPG promptly.",
+      "bounded_context": "Escalation Management",
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+      ],
+      "constraints": [
+        "Must solve the cold-start problem for initial users",
+        "Liability for missed escalations must be architecturally mitigated via human-in-the-loop"
+      ],
+      "suggested_context_files": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+      ],
+      "depends_on": [
+        "FEAT-TM-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-EA-002",
+      "title": "Adaptive Monitoring Sensitivity",
+      "description": "Dynamic adjustment of monitoring thresholds based on an evolving attorney trust score, tightening scrutiny when risk indicators emerge and relaxing oversight for attorneys who consistently demonstrate responsible management. This respects Principle 5 (least restrictive approach) by preventing micromanagement of trusted attorneys while maintaining rigorous safeguards for new or concerning cases.",
+      "bounded_context": "Escalation Management",
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+      ],
+      "constraints": [
+        "Must mitigate risk of cunning abusers gaming the trust system",
+        "Trust scoring transparency must be carefully managed"
+      ],
+      "suggested_context_files": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+      ],
+      "depends_on": [
+        "FEAT-EA-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-CR-001",
+      "title": "Regulatory Reporting and Evidence Generation",
+      "description": "Automated generation of structured, evidence-based reports for regulatory purposes, compiling transaction timelines, anomaly annotations, baseline comparisons, and escalation histories into prosecution-grade evidence packages. This transforms the platform into an evidence platform that accelerates OPG investigations and supports Court of Protection proceedings with balanced, statutory-aligned documentation.",
+      "bounded_context": "Regulatory Compliance",
+      "source_documents": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md"
+      ],
+      "constraints": [
+        "Evidence must be balanced and present exculpatory data alongside incriminating data",
+        "Must align with OPG's preferred evidence formats"
+      ],
+      "suggested_context_files": [
+        "FinProxy-AI-Opportunities-Mode2-Monitoring.md",
+        "FinProxy-Regulatory-Compliance.md"
+      ],
+      "depends_on": [
+        "FEAT-TM-001",
+        "FEAT-EA-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-CR-002",
+      "title": "Immutable Audit Trail",
+      "description": "Event-sourced logging of every significant system action, AI decision, attorney response, and escalation event into an immutable, time-ordered record that satisfies FCA and OPG audit requirements. This provides the regulatory ecosystem with a complete, reconstructible history of all financial management activities and compliance assessments.",
+      "bounded_context": "Regulatory Compliance",
+      "source_documents": [
+        "FinProxy-LPA-Foundations-and-AI-Vision.md",
+        "FinProxy-Data-Architecture.md"
+      ],
+      "constraints": [
+        "Must comply with GDPR right-to-erasure while maintaining 5-year MLR retention",
+        "Insert-only architecture with strict GDPR erasure event handling"
+      ],
+      "suggested_context_files": [
+        "FinProxy-Data-Architecture.md"
+      ],
+      "depends_on": [
+        "FEAT-TM-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-PI-001",
+      "title": "Agentic Intelligence Layer",
+      "description": "Centralised orchestration of scheduled and on-demand AI agents using LangGraph/LangChain, managing stateful workflows for compliance patrols, anomaly detection, LPA instruction parsing, and best interests reasoning. The conversational agent interfaces with these specialist agents to provide natural language insights to attorneys, donors, and professional advisors.",
+      "bounded_context": "Platform Core",
+      "source_documents": [
+        "FinProxy-Architecture-Exploration.md"
+      ],
+      "constraints": [
+        "LLM must classify intent only; traditional code must execute financial API calls",
+        "Must maintain full auditability of agent decision trees"
+      ],
+      "suggested_context_files": [
+        "FinProxy-Architecture-Exploration.md"
+      ],
+      "depends_on": [
+        "FEAT-DA-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-PI-002",
+      "title": "Voice Interface & Companion App",
+      "description": "Flutter-based companion mobile application with push notifications and a locally hosted voice pipeline (Whisper, fine-tuned SLM, Kokoro TTS) that runs on-device to preserve data sovereignty while enabling voice-first interactions. This shifts the product from a desktop financial admin portal to an ambient, mobile-first care co-pilot that attorneys can use between meetings.",
+      "bounded_context": "Platform Core",
+      "source_documents": [
+        "FinProxy-Companion-App-and-Voice-Strategy.md"
+      ],
+      "constraints": [
+        "Voice pipeline must run locally on Dell ProMax GB10 for UK data sovereignty",
+        "Push notifications must integrate with consent lifecycle hooks"
+      ],
+      "suggested_context_files": [
+        "FinProxy-Companion-App-and-Voice-Strategy.md"
+      ],
+      "depends_on": [
+        "FEAT-PI-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-PI-003",
+      "title": "Centralised Data Architecture",
+      "description": "PostgreSQL with TimescaleDB for time-series analytics, pgvector for LPA instruction embeddings, and a dedicated feature store for pre-computed ML features, all governed by strict pseudonymisation and retention policies. This analytical data layer enables behavioural baseline modelling, anomaly detection, and cross-donor pattern analysis independent of the raw financial data provider.",
+      "bounded_context": "Platform Core",
+      "source_documents": [
+        "FinProxy-Data-Architecture.md"
+      ],
+      "constraints": [
+        "All financial data must be pseudonymised with separate mapping vault",
+        "TimescaleDB retention policies must automate 5-year MLR compliance"
+      ],
+      "suggested_context_files": [
+        "FinProxy-Data-Architecture.md"
+      ],
+      "depends_on": [
+        "FEAT-TE-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-OB-001",
+      "title": "Attorney-Donor Consent Management",
+      "description": "Platform-level consent linking that allows attorneys to access and monitor donor accounts without requiring separate bank authentication, handling the 90-day consent refresh lifecycle and capacity-loss re-consent scenarios. This solves the critical LPA access problem by abstracting the PSU (Payment Service User) re-authentication burden from FinProxy's application layer.",
+      "bounded_context": "Financial Data Ingestion",
+      "source_documents": [
+        "FinProxy-OpenBanking-Platform-Evaluation.md"
+      ],
+      "constraints": [
+        "Must comply with FCA FG21/1 vulnerable customer safeguards",
+        "Consent wording must be collaboratively approved with MoneyHub/Yapily compliance"
+      ],
+      "suggested_context_files": [
+        "FinProxy-OpenBanking-Platform-Evaluation.md"
+      ],
+      "depends_on": [
+        "FEAT-DA-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-OB-002",
+      "title": "Open Banking Provider Abstraction",
+      "description": "Bounded context pattern encapsulating all MoneyHub or Yapily provider-specific logic behind a clean internal API, ensuring the AI layer and business logic remain provider-agnostic. This design allows seamless migration between Open Banking providers without impacting downstream anomaly detection, enrichment, or escalation workflows.",
+      "bounded_context": "Financial Data Ingestion",
+      "source_documents": [
+        "FinProxy-Data-Architecture.md",
+        "FinProxy-OpenBanking-Platform-Evaluation.md"
+      ],
+      "constraints": [
+        "Must expose consistent internal models regardless of upstream provider schema",
+        "Data transformation must occur strictly within the bounded context"
+      ],
+      "suggested_context_files": [
+        "FinProxy-Data-Architecture.md"
+      ],
+      "depends_on": [
+        "FEAT-OB-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-OB-003",
+      "title": "Transaction Enrichment Pipeline",
+      "description": "Automated pipeline for transforming raw Open Banking transaction data into enriched, categorised records with merchant identification, recurring payment detection, and vulnerability indicators. This enrichment is essential for building accurate behavioural baselines and ensuring the escalation engine has semantically meaningful data to evaluate against LPA instructions.",
+      "bounded_context": "Financial Data Ingestion",
+      "source_documents": [
+        "FinProxy-Transaction-Enrichment-Analysis.md",
+        "FinProxy-Data-Architecture.md"
+      ],
+      "constraints": [
+        "Must achieve 95%+ categorisation accuracy to support LPA rule monitoring",
+        "Raw transaction data must be discarded after feature computation where possible"
+      ],
+      "suggested_context_files": [
+        "FinProxy-Transaction-Enrichment-Analysis.md"
+      ],
+      "depends_on": [
+        "FEAT-OB-002"
+      ]
+    }
+  ],
+  "coverage_score": 0.93,
+  "source_documents": [
+    {
+      "filename": "FinProxy-AI-Opportunities-Mode1-Collaborative.md",
+      "contribution": "Defined Mode 1 AI opportunities including financial personality capture, cognitive decline detection, preference documentation, collaborative planning, and attorney onboarding."
+    },
+    {
+      "filename": "FinProxy-AI-Opportunities-Mode2-Monitoring.md",
+      "contribution": "Defined Mode 2 AI opportunities including behavioural deviation scoring, attorney pattern analysis, intelligent escalation, best interests decision support, adaptive sensitivity, and regulatory evidence generation."
+    },
+    {
+      "filename": "FinProxy-Architecture-Exploration.md",
+      "contribution": "Specified the agentic intelligence layer, agent orchestration patterns, and deployment models (B2C/B2B) that underpin the platform's AI capabilities."
+    },
+    {
+      "filename": "FinProxy-Companion-App-and-Voice-Strategy.md",
+      "contribution": "Detailed the mobile companion app architecture, locally hosted voice pipeline, and push notification infrastructure requirements."
+    },
+    {
+      "filename": "FinProxy-Data-Architecture.md",
+      "contribution": "Established the PostgreSQL/TimescaleDB foundation, event sourcing patterns, feature store design, pseudonymisation strategy, and MoneyHub bounded context abstraction."
+    },
+    {
+      "filename": "FinProxy-Enrichment-Alternatives-Analysis.md",
+      "contribution": "Evaluated enrichment providers (Ntropy, Bud, Yapily Data Plus) to inform the transaction enrichment pipeline accuracy targets."
+    },
+    {
+      "filename": "FinProxy-LPA-Foundations-and-AI-Vision.md",
+      "contribution": "Provided the legal grounding (Mental Capacity Act principles), dual-mode design rationale, escalation framework definition, and MVP gap analysis."
+    },
+    {
+      "filename": "FinProxy-OpenBanking-Platform-Evaluation.md",
+      "contribution": "Documented the attorney-donor consent model requirements, provider comparison (MoneyHub vs Yapily), and regulatory alignment considerations."
+    },
+    {
+      "filename": "FinProxy-Regulatory-Compliance.md",
+      "contribution": "Mapped FAPI, GDPR, EU AI Act, FCA, and MLR obligations that constrain data handling, AI decision-making, and audit trail design."
+    },
+    {
+      "filename": "FinProxy-Tech-Stack-Decision-Log.md",
+      "contribution": "Confirmed technology choices (.NET/Python hybrid, LangGraph, AWS Bedrock SLMs, NATS JetStream) that inform architectural constraints and suggested context files."
+    },
+    {
+      "filename": "FinProxy-Tech-Stack.md",
+      "contribution": "Reinforced the core technology stack by layer, validating infrastructure and AI tooling assumptions."
+    },
+    {
+      "filename": "FinProxy-Transaction-Enrichment-Analysis.md",
+      "contribution": "Analyzed DIY vs buy enrichment strategies, merchant identification challenges, and categorisation accuracy requirements for the pipeline."
+    },
+    {
+      "filename": "FinProxy-UVP-and-Patent-Strategy.md",
+      "contribution": "Identified defensible AI innovations (behavioural identity preservation, cognitive decline detection) that validate the strategic priority of baseline capture features."
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "ASM-001",
+      "category": "domain",
+      "statement": "The donor's financial behaviour over a 3-6 month period provides a statistically meaningful baseline for anomaly detection models.",
+      "source": "FinProxy-AI-Opportunities-Mode1-Collaborative.md, Section: Opportunity 1",
+      "confidence": "high",
+      "impact_if_wrong": "Baseline models will produce excessive false positives or fail to detect gradual drift, undermining trust in the system."
+    },
+    {
+      "id": "ASM-002",
+      "category": "regulatory",
+      "statement": "AI advisory outputs will not trigger EU AI Act high-risk classification because human decision-makers always retain final authority over financial actions.",
+      "source": "FinProxy-Regulatory-Compliance.md, Section: 4. EU AI Act",
+      "confidence": "medium",
+      "impact_if_wrong": "System would require costly conformity assessments, data governance upgrades, and EU AI Act database registration."
+    },
+    {
+      "id": "ASM-003",
+      "category": "technical",
+      "statement": "PostgreSQL with TimescaleDB and pgvector extensions will scale adequately for MVP without requiring a dedicated feature store or graph database.",
+      "source": "FinProxy-Data-Architecture.md, Section: 5. Proposed Data Architecture",
+      "confidence": "high",
+      "impact_if_wrong": "ML feature versioning and cross-donor graph traversals will degrade performance, requiring costly mid-sprint migrations."
+    },
+    {
+      "id": "ASM-004",
+      "category": "commercial",
+      "statement": "MoneyHub will deliver the delegated-access attorney-donor linking feature on timeline, or a credible fallback (Yapily + Ntropy/Bud) will be commercially viable.",
+      "source": "FinProxy-OpenBanking-Platform-Evaluation.md, Section: 6. Recommendation",
+      "confidence": "medium",
+      "impact_if_wrong": "Consent management feature will be blocked, delaying MVP launch and requiring rebuild of the financial data ingestion layer."
+    }
+  ]
+}
+```

@@ -51,6 +51,14 @@ def _split_request_refs(entries):
     ``request:<fragment>`` whose fragment does not quote the brief verbatim now
     FAILS. Empty stays legal — the frozen gold predates the convention, and a
     bar that fails its own gold is broken, not raised.
+
+    2026-08-18 LETTER FIX (first live sitting, untuned baseline, 0/3 on this
+    test alone): "verbatim" is compared after whitespace normalisation on both
+    sides. The brief is hard-wrapped at ~90 columns; a fragment quoting across a
+    line break (``"...a manifest they\ncan work through..."``) is verbatim by
+    any reading of the ruling and was being failed by a raw substring test.
+    Neither the raise nor the intent changes: the words must still be the
+    brief's words, in the brief's order.
     """
     request_refs, filenames = [], []
     for item in entries or []:
@@ -65,11 +73,16 @@ def _load_brief():
     return (Path(__file__).parent.parent / "input" / "brief.md").read_text()
 
 
+def _ws(text: str) -> str:
+    """Whitespace-normalise for the verbatim check (line wraps are layout, not words)."""
+    return " ".join(text.split())
+
+
 def test_no_source_references(payload):
     """G5 (letter repaired 2026-08-11 per Rich's Option-A ruling — see
     _split_request_refs): no DOCUMENT references at any level; request-references
     are legal and must quote the brief verbatim; filenames remain fabrication."""
-    brief = _load_brief()
+    brief = _ws(_load_brief())
     all_request_refs = set()
 
     def assert_level(entries, where):
@@ -77,7 +90,7 @@ def test_no_source_references(payload):
         assert filenames == [], f"{where}: cites filenames (fabrication in greenfield): {filenames}"
         for r in request_refs:
             frag = r[len("request:"):].strip() if r.startswith("request:") else ""
-            assert not frag or frag in brief, (
+            assert not frag or _ws(frag) in brief, (
                 f"{where}: request-ref fragment not verbatim in the brief: {r!r}"
             )
         all_request_refs.update(request_refs)

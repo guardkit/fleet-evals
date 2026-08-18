@@ -1,0 +1,2139 @@
+=== integrity tests start 2026-08-18T18:09:58Z
+........................................................................ [ 19%]
+......................................FFF.................EEEEEEEEEEEEEE [ 38%]
+EEE.FF......FFF......................................................... [ 57%]
+........................................................................ [ 76%]
+........................................................................ [ 95%]
+..................                                                       [100%]
+==================================== ERRORS ====================================
+________________ ERROR at setup of test_trivial_program_passes _________________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+_________ ERROR at setup of test_failing_assertion_fails_by_execution __________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+______ ERROR at setup of test_error_before_definition_fails_by_execution _______
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+______ ERROR at setup of test_program_inside_the_timeout_grades_on_merit _______
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+________ ERROR at setup of test_infinite_loop_is_killed_at_the_timeout _________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+__________ ERROR at setup of test_run_continues_after_a_timeout_kill ___________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+_____________ ERROR at setup of test_outbound_connection_is_denied _____________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+_______________ ERROR at setup of test_name_resolution_is_denied _______________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+____________ ERROR at setup of test_host_env_markers_are_invisible _____________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+_ ERROR at setup of test_relative_writes_land_in_scratch_and_scratch_is_removed _
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+_____ ERROR at setup of test_repo_tree_unchanged_after_a_writing_candidate _____
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+___________ ERROR at setup of test_unbounded_allocation_is_contained ___________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+_____________ ERROR at setup of test_process_spawning_is_contained _____________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+________ ERROR at setup of test_missing_isolation_binary_refuses_loudly ________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+________ ERROR at setup of test_unavailable_probe_names_the_missing_leg ________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+_________ ERROR at setup of test_no_unsandboxed_execution_path_exists __________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+________ ERROR at setup of test_scrubbed_env_is_an_allowlist_not_a_copy ________
+
+    @pytest.fixture(scope="module", autouse=True)
+    def sandbox_available():
+        """Every test below is meaningless if isolation cannot be established —
+        and refuse-loud means that is a hard ERROR, not a skip."""
+>       ensure_available()
+
+tests/test_gc_sandbox_integrity.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def ensure_available(
+        *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+    ) -> None:
+        """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+        leg. Callers run this before any candidate code executes (gate conftest,
+        runner pre-flight, provisioner)."""
+        probes: list[tuple[str, str, str]] = [
+            (
+                "interpreter execution (unshare -rn + python3 -I)",
+                "raise SystemExit(0)",
+                "trivial program did not exit 0 — user/network namespaces may be "
+                "blocked on this host (check unprivileged userns / AppArmor)",
+            ),
+            (
+                "network isolation (fresh network namespace)",
+                _NETWORK_PROBE,
+                "an outbound connection SUCCEEDED from inside the sandbox",
+            ),
+            (
+                "resource limits (RLIMIT_AS applied pre-exec)",
+                _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+                "the address-space rlimit was not visible to the sandboxed program",
+            ),
+        ]
+        for leg, probe_program, detail in probes:
+            try:
+                result = run_program(
+                    probe_program,
+                    timeout_s=15.0,
+                    unshare_binary=unshare_binary,
+                    interpreter=interpreter,
+                )
+            except (OSError, subprocess.SubprocessError) as exc:
+                raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: cannot execute probe "
+                    f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+                ) from exc
+            if result.status != "pass":
+>               raise SandboxUnavailable(
+                    f"sandbox isolation unavailable — {leg}: {detail} "
+                    f"(probe: {result.reason}, exit={result.exit_code}, "
+                    f"stderr={result.stderr.strip()[:200]!r}). "
+                    "REFUSING to grade; never degrade to unsandboxed execution."
+                )
+E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+
+harness/gc_sandbox.py:217: SandboxUnavailable
+=================================== FAILURES ===================================
+_______________ test_grade_rows_oracle_all_pass_via_real_sandbox _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-richardwoollcott/pytest-1550/test_grade_rows_oracle_all_pas0')
+
+    def test_grade_rows_oracle_all_pass_via_real_sandbox(tmp_path):
+        task_dir = make_task(tmp_path)
+        sheet = make_sheet(tmp_path, task_dir, oracle=True)
+        grades = gc_gates.grade_rows(task_dir, sheet)
+>       assert gc_gates.solved_count(grades) == len(ROWS)
+E       AssertionError: assert 0 == 3
+E        +  where 0 = <function solved_count at 0xec2faacf6480>({'HumanEval-9001': {'reason': 'execution: nonzero-exit', 'status': 'fail'}, 'HumanEval-9002': {'reason': 'execution: nonzero-exit', 'status': 'fail'}, 'mbpp-9003': {'reason': 'execution: nonzero-exit', 'status': 'fail'}})
+E        +    where <function solved_count at 0xec2faacf6480> = gc_gates.solved_count
+E        +  and   3 = len([{'benchmark': 'HumanEval', 'benchmark_task_id': 'HumanEval/9001', 'canonical_solution': '    return a + b\n', 'entry_..., {'benchmark': 'MBPP', 'benchmark_task_id': 9003, 'code': 'def neg(x):\n    return -x\n', 'row_id': 'mbpp-9003', ...}])
+
+tests/test_gc_gates.py:193: AssertionError
+________________ test_sabotaged_row_fails_by_execution_not_text ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-richardwoollcott/pytest-1550/test_sabotaged_row_fails_by_ex0')
+
+    def test_sabotaged_row_fails_by_execution_not_text(tmp_path):
+        task_dir = make_task(tmp_path)
+        sheet = make_sheet(tmp_path, task_dir, oracle=True, sabotage={"HumanEval-9001"})
+        grades = gc_gates.grade_rows(task_dir, sheet)
+        assert grades["HumanEval-9001"]["status"] == "fail"
+        assert grades["HumanEval-9001"]["reason"].startswith("execution:")
+>       assert grades["HumanEval-9002"]["status"] == "pass"
+E       AssertionError: assert 'fail' == 'pass'
+E         
+E         - pass
+E         + fail
+
+tests/test_gc_gates.py:202: AssertionError
+______________ test_truncated_generation_is_a_distinct_diagnostic ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-richardwoollcott/pytest-1550/test_truncated_generation_is_a0')
+
+    def test_truncated_generation_is_a_distinct_diagnostic(tmp_path):
+        task_dir = make_task(tmp_path)
+        sheet = make_sheet(tmp_path, task_dir, oracle=True,
+                           diagnostics={"HumanEval-9001": {"finish_reason": "length"}})
+        grades = gc_gates.grade_rows(task_dir, sheet)
+        assert grades["HumanEval-9001"] == {"status": "fail", "reason": gc_gates.FAIL_TRUNCATED}
+>       assert grades["HumanEval-9002"]["status"] == "pass", "the run proceeds to the next row"
+E       AssertionError: the run proceeds to the next row
+E       assert 'fail' == 'pass'
+E         
+E         - pass
+E         + fail
+
+tests/test_gc_gates.py:211: AssertionError
+_________________ test_gc_oracle_passes[gc-held-001-humaneval] _________________
+
+task_id = 'gc-held-001-humaneval'
+
+    @pytest.mark.parametrize("task_id", GC_TASK_IDS)
+    def test_gc_oracle_passes(task_id):
+        """(a) A task whose Oracle fails is a broken verifier, not a hard task:
+        the canonical benchmark solutions must grade PASS on every row, by
+        execution in the sandbox."""
+        code, out = run_gate(task_id, None)
+>       assert code == 0, f"Oracle FAILED its own gate for {task_id}:\n{out}"
+E       AssertionError: Oracle FAILED its own gate for gc-held-001-humaneval:
+E         .F.EE                                                                    [100%]
+E         ==================================== ERRORS ====================================
+E         ________________ ERROR at setup of test_rows_grade_by_execution ________________
+E         
+E         fixturedef = <FixtureDef argname='grades' scope='session' baseid='tasks/gc-held-001-humaneval/test'>
+E         request = <SubRequest 'grades' for <Function test_rows_grade_by_execution>>
+E         
+E             @pytest.hookimpl(wrapper=True)
+E             def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+E                 asyncio_mode = _get_asyncio_mode(request.config)
+E                 if not _is_asyncio_fixture_function(fixturedef.func):
+E                     if asyncio_mode == Mode.STRICT:
+E                         # Ignore async fixtures without explicit asyncio mark in strict mode
+E                         # This applies to pytest_trio fixtures, for example
+E         >               return (yield)
+E                                 ^^^^^
+E         
+E         ../../../.local/lib/python3.12/site-packages/pytest_asyncio/plugin.py:728: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         tasks/gc-held-001-humaneval/test/conftest.py:42: in grades
+E             gc_sandbox.ensure_available()
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         ___________________ ERROR at setup of test_regression_floor ____________________
+E         
+E         task_dir = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/tasks/gc-held-001-humaneval')
+E         output_dir = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/tasks/gc-held-001-humaneval/solution')
+E         
+E             @pytest.fixture(scope="session")
+E             def grades(task_dir, output_dir) -> dict:
+E                 """Execution results, computed once. Pins and sandbox isolation are
+E                 re-checked here so no candidate code can execute against drifted content
+E                 or outside the sandbox even if test ordering changes."""
+E                 pin_findings = gc_gates.verify_pins(task_dir)
+E                 assert pin_findings == [], f"grading blocked before execution: {pin_findings}"
+E         >       gc_sandbox.ensure_available()
+E         
+E         tasks/gc-held-001-humaneval/test/conftest.py:42: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         =================================== FAILURES ===================================
+E         _______________________ test_sandbox_isolation_available _______________________
+E         
+E             def test_sandbox_isolation_available():
+E                 """G-G4: the sandbox proves every isolation leg before any candidate code
+E                 runs — unavailable isolation refuses loudly, never degrades."""
+E         >       gc_sandbox.ensure_available()
+E         
+E         tasks/gc-held-001-humaneval/test/test_gate_gc_held_001.py:14: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         =========================== short test summary info ============================
+E         FAILED tasks/gc-held-001-humaneval/test/test_gate_gc_held_001.py::test_sandbox_isolation_available
+E         ERROR tasks/gc-held-001-humaneval/test/test_gate_gc_held_001.py::test_rows_grade_by_execution
+E         ERROR tasks/gc-held-001-humaneval/test/test_gate_gc_held_001.py::test_regression_floor
+E         1 failed, 2 passed, 2 errors in 0.06s
+E         
+E       assert 1 == 0
+
+tests/test_gc_verifier_integrity.py:87: AssertionError
+___________________ test_gc_oracle_passes[gc-held-002-mbpp] ____________________
+
+task_id = 'gc-held-002-mbpp'
+
+    @pytest.mark.parametrize("task_id", GC_TASK_IDS)
+    def test_gc_oracle_passes(task_id):
+        """(a) A task whose Oracle fails is a broken verifier, not a hard task:
+        the canonical benchmark solutions must grade PASS on every row, by
+        execution in the sandbox."""
+        code, out = run_gate(task_id, None)
+>       assert code == 0, f"Oracle FAILED its own gate for {task_id}:\n{out}"
+E       AssertionError: Oracle FAILED its own gate for gc-held-002-mbpp:
+E         .F.EE                                                                    [100%]
+E         ==================================== ERRORS ====================================
+E         ________________ ERROR at setup of test_rows_grade_by_execution ________________
+E         
+E         fixturedef = <FixtureDef argname='grades' scope='session' baseid='tasks/gc-held-002-mbpp/test'>
+E         request = <SubRequest 'grades' for <Function test_rows_grade_by_execution>>
+E         
+E             @pytest.hookimpl(wrapper=True)
+E             def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+E                 asyncio_mode = _get_asyncio_mode(request.config)
+E                 if not _is_asyncio_fixture_function(fixturedef.func):
+E                     if asyncio_mode == Mode.STRICT:
+E                         # Ignore async fixtures without explicit asyncio mark in strict mode
+E                         # This applies to pytest_trio fixtures, for example
+E         >               return (yield)
+E                                 ^^^^^
+E         
+E         ../../../.local/lib/python3.12/site-packages/pytest_asyncio/plugin.py:728: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         tasks/gc-held-002-mbpp/test/conftest.py:42: in grades
+E             gc_sandbox.ensure_available()
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         ___________________ ERROR at setup of test_regression_floor ____________________
+E         
+E         task_dir = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/tasks/gc-held-002-mbpp')
+E         output_dir = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/tasks/gc-held-002-mbpp/solution')
+E         
+E             @pytest.fixture(scope="session")
+E             def grades(task_dir, output_dir) -> dict:
+E                 """Execution results, computed once. Pins and sandbox isolation are
+E                 re-checked here so no candidate code can execute against drifted content
+E                 or outside the sandbox even if test ordering changes."""
+E                 pin_findings = gc_gates.verify_pins(task_dir)
+E                 assert pin_findings == [], f"grading blocked before execution: {pin_findings}"
+E         >       gc_sandbox.ensure_available()
+E         
+E         tasks/gc-held-002-mbpp/test/conftest.py:42: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         =================================== FAILURES ===================================
+E         _______________________ test_sandbox_isolation_available _______________________
+E         
+E             def test_sandbox_isolation_available():
+E                 """G-G4: the sandbox proves every isolation leg before any candidate code
+E                 runs — unavailable isolation refuses loudly, never degrades."""
+E         >       gc_sandbox.ensure_available()
+E         
+E         tasks/gc-held-002-mbpp/test/test_gate_gc_held_002.py:14: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         =========================== short test summary info ============================
+E         FAILED tasks/gc-held-002-mbpp/test/test_gate_gc_held_002.py::test_sandbox_isolation_available
+E         ERROR tasks/gc-held-002-mbpp/test/test_gate_gc_held_002.py::test_rows_grade_by_execution
+E         ERROR tasks/gc-held-002-mbpp/test/test_gate_gc_held_002.py::test_regression_floor
+E         1 failed, 2 passed, 2 errors in 0.06s
+E         
+E       assert 1 == 0
+
+tests/test_gc_verifier_integrity.py:87: AssertionError
+_ test_gc_good_fixture_passes[gc-held-001-humaneval-extraction-fail-row-within-margin] _
+
+task_id = 'gc-held-001-humaneval'
+fixture_name = 'extraction-fail-row-within-margin'
+
+    @pytest.mark.parametrize("task_id,fixture_name", GOOD_CASES)
+    def test_gc_good_fixture_passes(task_id, fixture_name):
+        """(c) A verifier that rejects a legitimate answer sheet is broken too —
+        including sheets with rows lost inside the frozen margin and sheets where
+        an extraction failure is a clean row FAIL."""
+        code, out = run_gate(task_id, GOOD_FIXTURES_DIR / task_id / fixture_name)
+>       assert code == 0, f"{task_id}/{fixture_name}: gate REJECTED a legitimate sheet:\n{out}"
+E       AssertionError: gc-held-001-humaneval/extraction-fail-row-within-margin: gate REJECTED a legitimate sheet:
+E         .F.EE                                                                    [100%]
+E         ==================================== ERRORS ====================================
+E         ________________ ERROR at setup of test_rows_grade_by_execution ________________
+E         
+E         fixturedef = <FixtureDef argname='grades' scope='session' baseid='tasks/gc-held-001-humaneval/test'>
+E         request = <SubRequest 'grades' for <Function test_rows_grade_by_execution>>
+E         
+E             @pytest.hookimpl(wrapper=True)
+E             def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+E                 asyncio_mode = _get_asyncio_mode(request.config)
+E                 if not _is_asyncio_fixture_function(fixturedef.func):
+E                     if asyncio_mode == Mode.STRICT:
+E                         # Ignore async fixtures without explicit asyncio mark in strict mode
+E                         # This applies to pytest_trio fixtures, for example
+E         >               return (yield)
+E                                 ^^^^^
+E         
+E         ../../../.local/lib/python3.12/site-packages/pytest_asyncio/plugin.py:728: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         tasks/gc-held-001-humaneval/test/conftest.py:42: in grades
+E             gc_sandbox.ensure_available()
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         ___________________ ERROR at setup of test_regression_floor ____________________
+E         
+E         task_dir = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/tasks/gc-held-001-humaneval')
+E         output_dir = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/tests/good_fixtures/gc-held-001-humaneval/extraction-fail-row-within-margin')
+E         
+E             @pytest.fixture(scope="session")
+E             def grades(task_dir, output_dir) -> dict:
+E                 """Execution results, computed once. Pins and sandbox isolation are
+E                 re-checked here so no candidate code can execute against drifted content
+E                 or outside the sandbox even if test ordering changes."""
+E                 pin_findings = gc_gates.verify_pins(task_dir)
+E                 assert pin_findings == [], f"grading blocked before execution: {pin_findings}"
+E         >       gc_sandbox.ensure_available()
+E         
+E         tasks/gc-held-001-humaneval/test/conftest.py:42: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         =================================== FAILURES ===================================
+E         _______________________ test_sandbox_isolation_available _______________________
+E         
+E             def test_sandbox_isolation_available():
+E                 """G-G4: the sandbox proves every isolation leg before any candidate code
+E                 runs — unavailable isolation refuses loudly, never degrades."""
+E         >       gc_sandbox.ensure_available()
+E         
+E         tasks/gc-held-001-humaneval/test/test_gate_gc_held_001.py:14: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         =========================== short test summary info ============================
+E         FAILED tasks/gc-held-001-humaneval/test/test_gate_gc_held_001.py::test_sandbox_isolation_available
+E         ERROR tasks/gc-held-001-humaneval/test/test_gate_gc_held_001.py::test_rows_grade_by_execution
+E         ERROR tasks/gc-held-001-humaneval/test/test_gate_gc_held_001.py::test_regression_floor
+E         1 failed, 2 passed, 2 errors in 0.06s
+E         
+E       assert 1 == 0
+
+tests/test_gc_verifier_integrity.py:111: AssertionError
+_______ test_gc_good_fixture_passes[gc-held-001-humaneval-within-margin] _______
+
+task_id = 'gc-held-001-humaneval', fixture_name = 'within-margin'
+
+    @pytest.mark.parametrize("task_id,fixture_name", GOOD_CASES)
+    def test_gc_good_fixture_passes(task_id, fixture_name):
+        """(c) A verifier that rejects a legitimate answer sheet is broken too —
+        including sheets with rows lost inside the frozen margin and sheets where
+        an extraction failure is a clean row FAIL."""
+        code, out = run_gate(task_id, GOOD_FIXTURES_DIR / task_id / fixture_name)
+>       assert code == 0, f"{task_id}/{fixture_name}: gate REJECTED a legitimate sheet:\n{out}"
+E       AssertionError: gc-held-001-humaneval/within-margin: gate REJECTED a legitimate sheet:
+E         .F.EE                                                                    [100%]
+E         ==================================== ERRORS ====================================
+E         ________________ ERROR at setup of test_rows_grade_by_execution ________________
+E         
+E         fixturedef = <FixtureDef argname='grades' scope='session' baseid='tasks/gc-held-001-humaneval/test'>
+E         request = <SubRequest 'grades' for <Function test_rows_grade_by_execution>>
+E         
+E             @pytest.hookimpl(wrapper=True)
+E             def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+E                 asyncio_mode = _get_asyncio_mode(request.config)
+E                 if not _is_asyncio_fixture_function(fixturedef.func):
+E                     if asyncio_mode == Mode.STRICT:
+E                         # Ignore async fixtures without explicit asyncio mark in strict mode
+E                         # This applies to pytest_trio fixtures, for example
+E         >               return (yield)
+E                                 ^^^^^
+E         
+E         ../../../.local/lib/python3.12/site-packages/pytest_asyncio/plugin.py:728: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         tasks/gc-held-001-humaneval/test/conftest.py:42: in grades
+E             gc_sandbox.ensure_available()
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         ___________________ ERROR at setup of test_regression_floor ____________________
+E         
+E         task_dir = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/tasks/gc-held-001-humaneval')
+E         output_dir = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/tests/good_fixtures/gc-held-001-humaneval/within-margin')
+E         
+E             @pytest.fixture(scope="session")
+E             def grades(task_dir, output_dir) -> dict:
+E                 """Execution results, computed once. Pins and sandbox isolation are
+E                 re-checked here so no candidate code can execute against drifted content
+E                 or outside the sandbox even if test ordering changes."""
+E                 pin_findings = gc_gates.verify_pins(task_dir)
+E                 assert pin_findings == [], f"grading blocked before execution: {pin_findings}"
+E         >       gc_sandbox.ensure_available()
+E         
+E         tasks/gc-held-001-humaneval/test/conftest.py:42: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         =================================== FAILURES ===================================
+E         _______________________ test_sandbox_isolation_available _______________________
+E         
+E             def test_sandbox_isolation_available():
+E                 """G-G4: the sandbox proves every isolation leg before any candidate code
+E                 runs — unavailable isolation refuses loudly, never degrades."""
+E         >       gc_sandbox.ensure_available()
+E         
+E         tasks/gc-held-001-humaneval/test/test_gate_gc_held_001.py:14: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         =========================== short test summary info ============================
+E         FAILED tasks/gc-held-001-humaneval/test/test_gate_gc_held_001.py::test_sandbox_isolation_available
+E         ERROR tasks/gc-held-001-humaneval/test/test_gate_gc_held_001.py::test_rows_grade_by_execution
+E         ERROR tasks/gc-held-001-humaneval/test/test_gate_gc_held_001.py::test_regression_floor
+E         1 failed, 2 passed, 2 errors in 0.06s
+E         
+E       assert 1 == 0
+
+tests/test_gc_verifier_integrity.py:111: AssertionError
+_________ test_gc_good_fixture_passes[gc-held-002-mbpp-within-margin] __________
+
+task_id = 'gc-held-002-mbpp', fixture_name = 'within-margin'
+
+    @pytest.mark.parametrize("task_id,fixture_name", GOOD_CASES)
+    def test_gc_good_fixture_passes(task_id, fixture_name):
+        """(c) A verifier that rejects a legitimate answer sheet is broken too —
+        including sheets with rows lost inside the frozen margin and sheets where
+        an extraction failure is a clean row FAIL."""
+        code, out = run_gate(task_id, GOOD_FIXTURES_DIR / task_id / fixture_name)
+>       assert code == 0, f"{task_id}/{fixture_name}: gate REJECTED a legitimate sheet:\n{out}"
+E       AssertionError: gc-held-002-mbpp/within-margin: gate REJECTED a legitimate sheet:
+E         .F.EE                                                                    [100%]
+E         ==================================== ERRORS ====================================
+E         ________________ ERROR at setup of test_rows_grade_by_execution ________________
+E         
+E         fixturedef = <FixtureDef argname='grades' scope='session' baseid='tasks/gc-held-002-mbpp/test'>
+E         request = <SubRequest 'grades' for <Function test_rows_grade_by_execution>>
+E         
+E             @pytest.hookimpl(wrapper=True)
+E             def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+E                 asyncio_mode = _get_asyncio_mode(request.config)
+E                 if not _is_asyncio_fixture_function(fixturedef.func):
+E                     if asyncio_mode == Mode.STRICT:
+E                         # Ignore async fixtures without explicit asyncio mark in strict mode
+E                         # This applies to pytest_trio fixtures, for example
+E         >               return (yield)
+E                                 ^^^^^
+E         
+E         ../../../.local/lib/python3.12/site-packages/pytest_asyncio/plugin.py:728: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         tasks/gc-held-002-mbpp/test/conftest.py:42: in grades
+E             gc_sandbox.ensure_available()
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         ___________________ ERROR at setup of test_regression_floor ____________________
+E         
+E         task_dir = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/tasks/gc-held-002-mbpp')
+E         output_dir = PosixPath('/home/richardwoollcott/Projects/appmilla_github/fleet-evals/tests/good_fixtures/gc-held-002-mbpp/within-margin')
+E         
+E             @pytest.fixture(scope="session")
+E             def grades(task_dir, output_dir) -> dict:
+E                 """Execution results, computed once. Pins and sandbox isolation are
+E                 re-checked here so no candidate code can execute against drifted content
+E                 or outside the sandbox even if test ordering changes."""
+E                 pin_findings = gc_gates.verify_pins(task_dir)
+E                 assert pin_findings == [], f"grading blocked before execution: {pin_findings}"
+E         >       gc_sandbox.ensure_available()
+E         
+E         tasks/gc-held-002-mbpp/test/conftest.py:42: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         =================================== FAILURES ===================================
+E         _______________________ test_sandbox_isolation_available _______________________
+E         
+E             def test_sandbox_isolation_available():
+E                 """G-G4: the sandbox proves every isolation leg before any candidate code
+E                 runs — unavailable isolation refuses loudly, never degrades."""
+E         >       gc_sandbox.ensure_available()
+E         
+E         tasks/gc-held-002-mbpp/test/test_gate_gc_held_002.py:14: 
+E         _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+E         
+E             def ensure_available(
+E                 *, unshare_binary: str = UNSHARE, interpreter: str | None = None
+E             ) -> None:
+E                 """Probe every isolation leg. Raises SandboxUnavailable NAMING the missing
+E                 leg. Callers run this before any candidate code executes (gate conftest,
+E                 runner pre-flight, provisioner)."""
+E                 probes: list[tuple[str, str, str]] = [
+E                     (
+E                         "interpreter execution (unshare -rn + python3 -I)",
+E                         "raise SystemExit(0)",
+E                         "trivial program did not exit 0 — user/network namespaces may be "
+E                         "blocked on this host (check unprivileged userns / AppArmor)",
+E                     ),
+E                     (
+E                         "network isolation (fresh network namespace)",
+E                         _NETWORK_PROBE,
+E                         "an outbound connection SUCCEEDED from inside the sandbox",
+E                     ),
+E                     (
+E                         "resource limits (RLIMIT_AS applied pre-exec)",
+E                         _RLIMIT_PROBE.format(memory_bytes=MEMORY_BYTES),
+E                         "the address-space rlimit was not visible to the sandboxed program",
+E                     ),
+E                 ]
+E                 for leg, probe_program, detail in probes:
+E                     try:
+E                         result = run_program(
+E                             probe_program,
+E                             timeout_s=15.0,
+E                             unshare_binary=unshare_binary,
+E                             interpreter=interpreter,
+E                         )
+E                     except (OSError, subprocess.SubprocessError) as exc:
+E                         raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: cannot execute probe "
+E                             f"({exc!r}). REFUSING to grade; never degrade to unsandboxed execution."
+E                         ) from exc
+E                     if result.status != "pass":
+E         >               raise SandboxUnavailable(
+E                             f"sandbox isolation unavailable — {leg}: {detail} "
+E                             f"(probe: {result.reason}, exit={result.exit_code}, "
+E                             f"stderr={result.stderr.strip()[:200]!r}). "
+E                             "REFUSING to grade; never degrade to unsandboxed execution."
+E                         )
+E         E               harness.gc_sandbox.SandboxUnavailable: sandbox isolation unavailable — interpreter execution (unshare -rn + python3 -I): trivial program did not exit 0 — user/network namespaces may be blocked on this host (check unprivileged userns / AppArmor) (probe: nonzero-exit, exit=1, stderr='unshare: write failed /proc/self/uid_map: Operation not permitted'). REFUSING to grade; never degrade to unsandboxed execution.
+E         
+E         harness/gc_sandbox.py:217: SandboxUnavailable
+E         =========================== short test summary info ============================
+E         FAILED tasks/gc-held-002-mbpp/test/test_gate_gc_held_002.py::test_sandbox_isolation_available
+E         ERROR tasks/gc-held-002-mbpp/test/test_gate_gc_held_002.py::test_rows_grade_by_execution
+E         ERROR tasks/gc-held-002-mbpp/test/test_gate_gc_held_002.py::test_regression_floor
+E         1 failed, 2 passed, 2 errors in 0.06s
+E         
+E       assert 1 == 0
+
+tests/test_gc_verifier_integrity.py:111: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_gc_gates.py::test_grade_rows_oracle_all_pass_via_real_sandbox
+FAILED tests/test_gc_gates.py::test_sabotaged_row_fails_by_execution_not_text
+FAILED tests/test_gc_gates.py::test_truncated_generation_is_a_distinct_diagnostic
+FAILED tests/test_gc_verifier_integrity.py::test_gc_oracle_passes[gc-held-001-humaneval]
+FAILED tests/test_gc_verifier_integrity.py::test_gc_oracle_passes[gc-held-002-mbpp]
+FAILED tests/test_gc_verifier_integrity.py::test_gc_good_fixture_passes[gc-held-001-humaneval-extraction-fail-row-within-margin]
+FAILED tests/test_gc_verifier_integrity.py::test_gc_good_fixture_passes[gc-held-001-humaneval-within-margin]
+FAILED tests/test_gc_verifier_integrity.py::test_gc_good_fixture_passes[gc-held-002-mbpp-within-margin]
+ERROR tests/test_gc_sandbox_integrity.py::test_trivial_program_passes - harne...
+ERROR tests/test_gc_sandbox_integrity.py::test_failing_assertion_fails_by_execution
+ERROR tests/test_gc_sandbox_integrity.py::test_error_before_definition_fails_by_execution
+ERROR tests/test_gc_sandbox_integrity.py::test_program_inside_the_timeout_grades_on_merit
+ERROR tests/test_gc_sandbox_integrity.py::test_infinite_loop_is_killed_at_the_timeout
+ERROR tests/test_gc_sandbox_integrity.py::test_run_continues_after_a_timeout_kill
+ERROR tests/test_gc_sandbox_integrity.py::test_outbound_connection_is_denied
+ERROR tests/test_gc_sandbox_integrity.py::test_name_resolution_is_denied - ha...
+ERROR tests/test_gc_sandbox_integrity.py::test_host_env_markers_are_invisible
+ERROR tests/test_gc_sandbox_integrity.py::test_relative_writes_land_in_scratch_and_scratch_is_removed
+ERROR tests/test_gc_sandbox_integrity.py::test_repo_tree_unchanged_after_a_writing_candidate
+ERROR tests/test_gc_sandbox_integrity.py::test_unbounded_allocation_is_contained
+ERROR tests/test_gc_sandbox_integrity.py::test_process_spawning_is_contained
+ERROR tests/test_gc_sandbox_integrity.py::test_missing_isolation_binary_refuses_loudly
+ERROR tests/test_gc_sandbox_integrity.py::test_unavailable_probe_names_the_missing_leg
+ERROR tests/test_gc_sandbox_integrity.py::test_no_unsandboxed_execution_path_exists
+ERROR tests/test_gc_sandbox_integrity.py::test_scrubbed_env_is_an_allowlist_not_a_copy
+8 failed, 353 passed, 17 errors in 125.43s (0:02:05)
+=== integrity tests end 2026-08-18T18:12:04Z rc=0

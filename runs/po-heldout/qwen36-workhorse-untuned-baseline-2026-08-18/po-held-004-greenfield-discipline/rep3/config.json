@@ -1,0 +1,30 @@
+{
+  "task": "po-held-004-greenfield-discipline",
+  "rep": 3,
+  "suite": "po-heldout",
+  "schema": "ProductRoadmap",
+  "project": "roundroute",
+  "endpoint": "http://promaxgb10-41b1:9000/v1",
+  "model": "product-owner-agent",
+  "gen_params_sent": "server defaults",
+  "system_sha256": "0c125c4f75ff84cec0dec7514ed516f89a6917fe2718b4d0cafca34208769311",
+  "user_sha256": "5ae08d9ae4755e81cd65ed19efbf7e1a5303a5b2c2a5301e5f93485887ef721c",
+  "user_chars": 708,
+  "corpus_manifest_sha256": null,
+  "prompt_source": "specialist-agent/roles/product-owner/prompts/player_greenfield.md (serving prompt, pinned 2026-07-03)",
+  "started_at": "2026-08-18T19:15:05.154300+00:00",
+  "attempt": 1,
+  "duration_s": 126.4,
+  "response_provenance": "rewrapped_reasoning_content",
+  "server_model": "qwen36-workhorse",
+  "finish_reason": "stop",
+  "usage": {
+    "completion_tokens": 6380,
+    "prompt_tokens": 2801,
+    "total_tokens": 9181,
+    "prompt_tokens_details": {
+      "cached_tokens": 2643
+    }
+  },
+  "finished_at": "2026-08-18T19:17:11.560459+00:00"
+}

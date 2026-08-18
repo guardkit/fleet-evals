@@ -1,0 +1,18 @@
+....F                                                                    [100%]
+=================================== FAILURES ===================================
+____________________________ test_structure_floors _____________________________
+
+payload = {'assumptions': [{'category': 'scope', 'confidence': 'medium', 'id': 'ASM-001', 'impact_if_wrong': 'MVP timeline exten...or pattern detection.', 'source_citations': [{...}], 'title': 'Knowledge Graph for Relationship Mapping'}], ...}], ...}
+
+    def test_structure_floors(payload):
+        """G3: anti-collapse floors (the Phase-1 smoke's 1-epic/1-feature thinness watch item)."""
+        epics, features = grading.structure_counts(payload)
+        assert epics >= MIN_EPICS, f"epic collapse: {epics} < {MIN_EPICS}"
+>       assert features >= MIN_FEATURES, f"feature collapse: {features} < {MIN_FEATURES}"
+E       AssertionError: feature collapse: 17 < 18
+E       assert 17 >= 18
+
+test/test_gate_po_held_001.py:46: AssertionError
+=========================== short test summary info ============================
+FAILED test/test_gate_po_held_001.py::test_structure_floors - AssertionError:...
+1 failed, 4 passed in 0.03s

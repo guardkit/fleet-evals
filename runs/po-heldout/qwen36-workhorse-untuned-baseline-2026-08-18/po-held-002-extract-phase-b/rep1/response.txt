@@ -1,0 +1,1740 @@
+<think>The user wants me to act as the Player agent in an adversarial cooperation system.
+I am in Phase B (features) of the phased extraction flow, in **extract** mode.
+My task is to enrich the stubs for a single epic based on the provided `epic_plan.json` and the cited documents.
+The target epic is `EPIC-006`: "Open Banking and Consent Operations".
+Bounded context: "Provider integration, consent lifecycle, and transaction enrichment".
+Cited docs:
+- `FinProxy-OpenBanking-Platform-Evaluation.md`
+- `FinProxy-Enrichment-Alternatives-Analysis.md`
+- `FinProxy-Transaction-Enrichment-Analysis.md`
+- `FinProxy-Companion-App-and-Voice-Strategy.md`
+- `FinProxy-Data-Architecture.md`
+
+Feature stubs to enrich:
+1. `FEAT-PO-025`: "Open Banking provider abstraction" - Intent: Access account and transaction data through a provider-agnostic boundary.
+2. `FEAT-PO-026`: "Attorney-donor consent linking" - Intent: Support attorney access to donor accounts under LPA consent flows.
+3. `FEAT-PO-027`: "Consent expiry monitoring" - Intent: Track consent windows and trigger renewal reminders before access lapses.
+4. `FEAT-PO-028`: "Transaction enrichment pipeline" - Intent: Resolve raw bank transactions into merchants, categories, and risk hints.
+
+I need to read the cited docs. The prompt actually includes the content of some of them in the `## Product Documentation` block.
+Wait, the prompt says:
+`## Product Documentation`
+`## File: FinProxy-Companion-App-and-Voice-Strategy.md`
+`## File: FinProxy-Data-Architecture.md`
+`## File: FinProxy-Enrichment-Alternatives-Analysis.md`
+`## File: FinProxy-OpenBanking-Platform-Evaluation.md`
+`## File: FinProxy-Transaction-Enrichment-Analysis.md`
+All 5 cited docs are provided in full.
+
+I will now process each stub and generate an `EnrichmentBatch`.
+
+**Stub 1: FEAT-PO-025 - Open Banking provider abstraction**
+- Intent: Access account and transaction data through a provider-agnostic boundary.
+- Docs: `FinProxy-Data-Architecture.md` (Section 9: MoneyHub Integration Architecture), `FinProxy-OpenBanking-Platform-Evaluation.md` (Section 3.1, 3.2, 3.5, 6).
+- Description: Encapsulate all Open Banking provider-specific logic behind a clearly defined bounded context, exposing a clean interface for account retrieval, transaction fetching, enrichment, and consent refresh. This abstraction ensures that the core FinProxy platform (feature computation, anomaly detection, alerting) operates on an internal data model, allowing seamless provider migration (e.g., from MoneyHub to Yapily) without downstream impact.
+- Source docs: `FinProxy-Data-Architecture.md`, `FinProxy-OpenBanking-Platform-Evaluation.md`
+- Field citations:
+  - description: `FinProxy-Data-Architecture.md` Section 9 "The Bounded Context Pattern"
+  - type: Dev: Feature
+  - role: Attorney
+  - priority: Normal
+  - moscow: Must (core)
+  - value: 4 (High)
+  - complexity: Normal (2-5d)
+  - acceptance_criteria: ["Provider interface exposes GetAccounts, GetTransactions, GetEnrichment, RefreshConsent, and OnNewTransactions callbacks.", "All provider-specific authentication, token management, and schema mapping is confined to the bounded context.", "Switching the underlying provider requires changes only within the bounded context implementation."]
+  - technical_notes: ["Design the boundary to fully isolate MoneyHub/Yapily API calls, FFAI auth, and consent lifecycle hooks.", "Ensure downstream AI pipelines and alert engines interact only with FinProxy's internal data model."]
+  - risks: ["Initial abstraction may require mapping divergent provider schemas, increasing early development effort.", "Provider-specific quirks in consent token lifecycles or refresh endpoints must be standardised."]
+  - open_questions: ["Which provider-specific features (e.g., MoneyHub's vulnerability indicators) must be explicitly surfaced in the abstraction?", "Should the abstraction support real-time streaming events from the provider, or is batch-only sufficient for MVP?"]
+  - constraints: ["Must abstract all provider-specific logic to enable future vendor migration without refactoring downstream AI or alerting components."]
+  - suggested_context_files: ["FinProxy-Data-Architecture.md", "FinProxy-OpenBanking-Platform-Evaluation.md"]
+  - depends_on: []
+  - field_citations:
+    - description: `FinProxy-Data-Architecture.md` Section 9
+    - type: `FinProxy-Data-Architecture.md` Section 9
+    - role: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.1
+    - priority: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 6
+    - moscow: `FinProxy-Data-Architecture.md` Section 11
+    - value: `FinProxy-Data-Architecture.md` Section 2
+    - complexity: `FinProxy-Data-Architecture.md` Section 10
+    - acceptance_criteria[0]: `FinProxy-Data-Architecture.md` Section 9
+    - acceptance_criteria[1]: `FinProxy-Data-Architecture.md` Section 9
+    - acceptance_criteria[2]: `FinProxy-Data-Architecture.md` Section 9
+    - technical_notes[0]: `FinProxy-Data-Architecture.md` Section 9
+    - risks[0]: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 5
+    - constraints[0]: `FinProxy-Data-Architecture.md` Section 9
+
+Let's refine citations to match exact section paths and quotes.
+`FinProxy-Data-Architecture.md` Section 9: "The MoneyHub integration should be encapsulated in a bounded context — a clearly defined boundary within the application where all MoneyHub-specific logic lives. Nothing outside this boundary knows or cares that MoneyHub exists."
+`FinProxy-Data-Architecture.md` Section 11: "Implement the MoneyHub bounded context. Encapsulate all provider-specific logic behind a clean interface. This takes 1–2 weeks but pays for itself immediately in testability and future flexibility."
+`FinProxy-OpenBanking-Platform-Evaluation.md` Section 6: "Design for provider abstraction. The Open Banking Integration bounded context should abstract the provider, allowing a future switch."
+
+**Stub 2: FEAT-PO-026 - Attorney-donor consent linking**
+- Intent: Support attorney access to donor accounts under LPA consent flows.
+- Docs: `FinProxy-OpenBanking-Platform-Evaluation.md` (Section 3.1 Attorney/Donor Consent Model), `FinProxy-Companion-App-and-Voice-Strategy.md` (Section 03 External Agent Integration - Core API Endpoints `get_consent_status`, `trigger_renewal_reminder`), `FinProxy-Data-Architecture.md` (Section 4 Application Data).
+- Description: Implement a platform-level consent linking model that allows attorneys to access and monitor a donor's Open Banking accounts without requiring the donor to re-authenticate at the bank level for every session. The system will manage the donor-attorney relationship mapping, handle consent token lifecycles, and enforce role-based access controls so attorneys only view data for their assigned donors.
+- Source docs: `FinProxy-OpenBanking-Platform-Evaluation.md`
+- Field citations:
+  - description: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.1
+  - priority: Normal
+  - moscow: Must (core)
+  - value: 5 (Highest)
+  - complexity: Complex (5-10d)
+  - acceptance_criteria: ["Attorney user can be linked to a donor's Open Banking account via platform-level consent, bypassing direct bank SCA for the attorney.", "Consent token lifecycle is managed by the platform, with automatic renewal hooks before expiry.", "Role-based access strictly limits attorney visibility to their assigned donor accounts only."]
+  - technical_notes: ["Must handle the 90-day consent refresh window explicitly to prevent access loss.", "Support multi-attorney scenarios where multiple users link to a single donor account."]
+  - risks: ["If the Open Banking provider's delegated-access feature is delayed, FinProxy may need to implement a complex workaround in its own application layer.", "Regulatory uncertainty around whether an attorney can legally act as the PSU requires careful FCA agent application wording."]
+  - open_questions: ["What consent wording legally supports attorney re-consent after donor capacity loss?", "How will the system handle consent revocation by the donor in their banking app?"]
+  - constraints: ["Must comply with FCA agent application requirements and ICO LPA guidance for data controller status."]
+  - suggested_context_files: ["FinProxy-OpenBanking-Platform-Evaluation.md", "FinProxy-LPA-Foundations-and-AI-Vision.md"]
+  - depends_on: ["FEAT-PO-025"]
+  - field_citations:
+    - description: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.1
+    - priority: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 6
+    - moscow: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.1
+    - value: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.1
+    - complexity: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 5
+    - acceptance_criteria[0]: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.1
+    - acceptance_criteria[1]: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.1
+    - acceptance_criteria[2]: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.2
+    - technical_notes[0]: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.1
+    - risks[0]: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 5
+    - constraints[0]: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.6
+
+Check quotes for citations:
+`FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.1: "MoneyHub then links the donor's account view to attorney user(s) within their platform. Attorneys see enriched data without needing separate bank auth."
+`FinProxy-OpenBanking-Platform-Evaluation.md` Section 6: "Secure written commitment from MoneyHub on the delegated-access feature timeline and scope... Collaborate on FCA agent application wording... Agree consent-screen wording for the donor consent that permits attorney re-consent after capacity loss."
+`FinProxy-OpenBanking-Platform-Evaluation.md` Section 5: "Multi-Attorney: Can link multiple users to a single donor's account... No concept of multi-user access. FinProxy must build this entirely in its own application layer..."
+`FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.6: "GDPR Controller Status: MoneyHub as data processor; FinProxy as data controller. Attorney becomes joint controller under ICO LPA guidance."
+
+**Stub 3: FEAT-PO-027 - Consent expiry monitoring**
+- Intent: Track consent windows and trigger renewal reminders before access lapses.
+- Docs: `FinProxy-Companion-App-and-Voice-Strategy.md` (Section 01), `FinProxy-OpenBanking-Platform-Evaluation.md` (Section 3.1, 3.2), `FinProxy-Data-Architecture.md` (Section 4, 8).
+- Description: Continuously track Open Banking consent expiration dates and trigger proactive renewal reminders to attorneys via push notifications and the web dashboard. The system must alert at defined intervals (e.g., 14, 7, and 1 day before expiry) to prevent access loss, which is critical for uninterrupted donor monitoring.
+- Source docs: `FinProxy-Companion-App-and-Voice-Strategy.md`
+- Field citations:
+  - description: `FinProxy-Companion-App-and-Voice-Strategy.md` Section 01
+  - priority: High
+  - moscow: Must
+  - value: 4 (High)
+  - complexity: Easy (≈1d)
+  - acceptance_criteria: ["System tracks consent expiry dates for all active donor-attorney links.", "Push notifications and dashboard alerts fire at 14, 7, and 1 day prior to expiry.", "Renewal workflow initiates automatically upon attorney action, updating the platform's consent status."]
+  - technical_notes: ["Integrate consent lifecycle hooks into the notification orchestration layer.", "Handle edge cases where consent is revoked or cannot be renewed due to donor capacity loss."]
+  - risks: ["Missing an expiry window results in complete loss of access until a new consent ceremony is arranged.", "Provider-specific consent token lifecycles (e.g., some banks allow indefinite access) may complicate uniform tracking."]
+  - open_questions: ["What is the exact consent wording required to legally support re-consent after capacity loss?", "Should consent expiry be treated as a Tier 1 or Tier 2 escalation event?"]
+  - constraints: ["Must align notification cadence with Open Banking provider refresh schedules and bank-specific token lifecycles."]
+  - suggested_context_files: ["FinProxy-Companion-App-and-Voice-Strategy.md", "FinProxy-OpenBanking-Platform-Evaluation.md"]
+  - depends_on: ["FEAT-PO-026"]
+  - field_citations:
+    - description: `FinProxy-Companion-App-and-Voice-Strategy.md` Section 01
+    - priority: `FinProxy-Companion-App-and-Voice-Strategy.md` Section 01
+    - moscow: `FinProxy-Companion-App-and-Voice-Strategy.md` Section 01
+    - value: `FinProxy-Companion-App-and-Voice-Strategy.md` Section 01
+    - complexity: `FinProxy-Companion-App-and-Voice-Strategy.md` Section 01
+    - acceptance_criteria[0]: `FinProxy-Companion-App-and-Voice-Strategy.md` Section 01
+    - acceptance_criteria[1]: `FinProxy-Companion-App-and-Voice-Strategy.md` Section 01
+    - acceptance_criteria[2]: `FinProxy-Companion-App-and-Voice-Strategy.md` Section 01
+    - technical_notes[0]: `FinProxy-Companion-App-and-Voice-Strategy.md` Section 01
+    - risks[0]: `FinProxy-Companion-App-and-Voice-Strategy.md` Section 01
+    - constraints[0]: `FinProxy-OpenBanking-Platform-Evaluation.md` Section 3.1
+
+Check quotes:
+`FinProxy-Companion-App-and-Voice-Strategy.md` Section 01: "Push notifications fire for genuinely important events: consent expiry approaching (14, 7 and 1 day alerts)..." "The 90-day consent renewal is the platform's Achilles heel. If an attorney misses the expiry window, access is lost until a new consent ceremony can be arranged..."
+`FinProxy-Companion-App-and-Voice-Strategy.md` Section 01: "The main engineering effort is the notification orchestration layer on the backend — ensuring reliable, timely delivery with appropriate consent lifecycle hooks."
+
+**Stub 4: FEAT-PO-028 - Transaction enrichment pipeline**
+- Intent: Resolve raw bank transactions into merchants, categories, and risk hints.
+- Docs: `FinProxy-Transaction-Enrichment-Analysis.md` (Section 2, 3, 7), `FinProxy-Enrichment-Alternatives-Analysis.md` (Section 3, 4), `FinProxy-Data-Architecture.md` (Section 7, 9).
+- Description: Process raw Open Banking transaction data through an enrichment pipeline that resolves cryptic payee names into canonical merchant identities, applies a hierarchical category taxonomy, and flags financial intelligence indicators such as gambling, vulnerability signals, or high-cost credit. The pipeline supports a primary enriched provider (MoneyHub) with fallback options (Ntropy, Bud, or Yapily Data Plus) to ensure continuous data quality.
+- Source docs: `FinProxy-Transaction-Enrichment-Analysis.md`
+- Field citations:
+  - description: `FinProxy-Transaction-Enrichment-Analysis.md` Section 2
+  - priority: Normal
+  - moscow: Must (core)
+  - value: 4 (High)
+  - complexity: Normal (2-5d)
+  - acceptance_criteria: ["Raw transaction descriptions are mapped to canonical merchant names with ≥95% accuracy.", "Transactions are classified into a four-level hierarchical taxonomy (Category Group → Category → Merchant Category → Loan Type).", "Financial intelligence layer flags recurring payments, gambling, and vulnerability indicators."]
+  - technical_notes: ["Implement a bounded context for enrichment to allow swapping providers without altering downstream AI pipelines.", "Support fallback enrichment strategies (e.g., Ntropy or Bud) if primary provider enrichment degrades or becomes unavailable."]
+  - risks: ["DIY enrichment on raw Yapily data risks 80-90% accuracy initially, creating gaps in the behavioural baseline.", "Provider API rate limits or schema changes may disrupt the enrichment cadence."]
+  - open_questions: ["Is Yapily Data Plus enrichment quality sufficient to be a viable single-vendor fallback?", "Should the pipeline support real-time enrichment for high-risk transactions, or is batch processing aligned to the 4-hour refresh cadence sufficient?"]
+  - constraints: ["Must maintain ≥95% categorisation accuracy to support reliable LPA rule matching and anomaly detection.", "Enrichment logic must be encapsulated in a bounded context to preserve provider abstraction."]
+  - suggested_context_files: ["FinProxy-Transaction-Enrichment-Analysis.md", "FinProxy-Enrichment-Alternatives-Analysis.md", "FinProxy-Data-Architecture.md"]
+  - depends_on: ["FEAT-PO-025"]
+  - field_citations:
+    - description: `FinProxy-Transaction-Enrichment-Analysis.md` Section 2
+    - priority: `FinProxy-Transaction-Enrichment-Analysis.md` Section 7
+    - moscow: `FinProxy-Transaction-Enrichment-Analysis.md` Section 8
+    - value: `FinProxy-Transaction-Enrichment-Analysis.md` Section 2
+    - complexity: `FinProxy-Transaction-Enrichment-Analysis.md` Section 7
+    - acceptance_criteria[0]: `FinProxy-Transaction-Enrichment-Analysis.md` Section 2
+    - acceptance_criteria[1]: `FinProxy-Transaction-Enrichment-Analysis.md` Section 2
+    - acceptance_criteria[2]: `FinProxy-Transaction-Enrichment-Analysis.md` Section 2
+    - technical_notes[0]: `FinProxy-Data-Architecture.md` Section 9
+    - risks[0]: `FinProxy-Transaction-Enrichment-Analysis.md` Section 3
+    - constraints[0]: `FinProxy-Transaction-Enrichment-Analysis.md` Section 8
+    - constraints[1]: `FinProxy-Data-Architecture.md` Section 9
+
+Check quotes:
+`FinProxy-Transaction-Enrichment-Analysis.md` Section 2: "MoneyHub's enrichment engine transforms raw transaction data across several dimensions." "MoneyHub claims 98% categorisation accuracy. They use a four-level hierarchical taxonomy..."
+`FinProxy-Transaction-Enrichment-Analysis.md` Section 7: "DIY Enrichment on Yapily (Build) ... Expected accuracy: 80-90% for categorisation, 70-80% for merchant identification"
+`FinProxy-Transaction-Enrichment-Analysis.md` Section 8: "MoneyHub delivers 98% accuracy from day one... This allows the team to focus entirely on the things that actually differentiate FinProxy..."
+`FinProxy-Data-Architecture.md` Section 9: "The MoneyHub integration should be encapsulated in a bounded context..."
+
+Now, construct the JSON carefully.
+Check constraints:
+- `value` enum: "1 (Lowest)", "2 (Low)", "3 (Medium)", "4 (High)", "5 (Highest)"
+- `complexity` enum: "Very easy (<.5d)", "Easy (≈1d)", "Normal (2-5d)", "Complex (5-10d)", "Very complex (>10d)", "Unknown", "N/A"
+- `priority` enum: "Low", "Normal", "High", "Critical"
+- `moscow` enum: "Must (core)", "Must", "Should", "Could", "Won't", "N/A", "?"
+- `type` enum: "Dev: Feature", "Dev: Improvement", "Dev: Refactor", "Dev: Task", "Design", "Research"
+- `role` enum: "Customer", "Attorney", "Advisor", "Regulator", "System"
+- `field_citations` keys must match enrichment fields exactly. e.g., `acceptance_criteria[0]`
+- `source_documents` must be in cited_docs.
+- `depends_on` must exist in epic_plan.json.
+- `description` >= 2 sentences.
+- `section_path` non-empty list.
+- `quote` <= 200 chars.
+
+Let's assemble carefully.
+
+```json
+{
+  "project_name": "research",
+  "epic_id": "EPIC-006",
+  "enrichments": [
+    {
+      "feature_id": "FEAT-PO-025",
+      "description": "Encapsulate all Open Banking provider-specific logic behind a clearly defined bounded context, exposing a clean interface for account retrieval, transaction fetching, enrichment, and consent refresh. This abstraction ensures that the core FinProxy platform operates on an internal data model, allowing seamless provider migration (e.g., from MoneyHub to Yapily) without impacting downstream AI pipelines or alerting components.",
+      "source_documents": [
+        "FinProxy-Data-Architecture.md",
+        "FinProxy-OpenBanking-Platform-Evaluation.md"
+      ],
+      "constraints": [
+        "Must abstract all provider-specific logic to enable future vendor migration without refactoring downstream AI or alerting components."
+      ],
+      "suggested_context_files": [
+        "FinProxy-Data-Architecture.md",
+        "FinProxy-OpenBanking-Platform-Evaluation.md"
+      ],
+      "depends_on": [],
+      "type": "Dev: Feature",
+      "role": "Attorney",
+      "priority": "Normal",
+      "moscow": "Must (core)",
+      "value": "4 (High)",
+      "complexity": "Normal (2-5d)",
+      "acceptance_criteria": [
+        "Provider interface exposes GetAccounts, GetTransactions, GetEnrichment, RefreshConsent, and OnNewTransactions callbacks.",
+        "All provider-specific authentication, token management, and schema mapping is confined to the bounded context.",
+        "Switching the underlying provider requires changes only within the bounded context implementation."
+      ],
+      "technical_notes": [
+        "Design the boundary to fully isolate provider API calls, FAPI auth, and consent lifecycle hooks."
+      ],
+      "risks": [
+        "Initial abstraction may require mapping divergent provider schemas, increasing early development effort."
+      ],
+      "open_questions": [
+        "Which provider-specific features (e.g., MoneyHub's vulnerability indicators) must be explicitly surfaced in the abstraction?",
+        "Should the abstraction support real-time streaming events from the provider, or is batch-only sufficient for MVP?"
+      ],
+      "links": [],
+      "field_citations": {
+        "description": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The MoneyHub integration should be encapsulated in a bounded context — a clearly defined boundary within the application where all MoneyHub-specific logic lives."
+          }
+        ],
+        "priority": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "6. Recommendation",
+              "Recommended Next Steps"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Design for provider abstraction. The Open Banking Integration bounded context should abstract the provider, allowing a future switch."
+          }
+        ],
+        "moscow": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "11. Recommendations",
+              "For the MVP (Months 0–3)"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Implement the MoneyHub bounded context. Encapsulate all provider-specific logic behind a clean interface. This takes 1–2 weeks but pays for itself immediately in testability and future flexibility."
+          }
+        ],
+        "value": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "2. What MoneyHub Provides — And What It Does Not"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub holds the transaction data, enriches it, and makes it available via API. But MoneyHub does not build behavioural baselines for FinProxy's specific use case."
+          }
+        ],
+        "complexity": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "11. Recommendations",
+              "For the MVP (Months 0–3)"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Implement the MoneyHub bounded context. Encapsulate all provider-specific logic behind a clean interface. This takes 1–2 weeks but pays for itself immediately in testability and future flexibility."
+          }
+        ],
+        "acceptance_criteria[0]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The boundary exposes: GetAccounts(donorToken), GetTransactions(donorToken, dateRange), GetEnrichment(transactionId), RefreshConsent(donorToken), OnNewTransactions(callback)"
+          }
+        ],
+        "acceptance_criteria[1]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Inside the boundary: MoneyHub API calls, FAPI authentication, token management, consent lifecycle, data transformation from MoneyHub's schema to FinProxy's internal model."
+          }
+        ],
+        "acceptance_criteria[2]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Outside the boundary: Everything else. The feature computation pipeline, the anomaly detection models, the alert engine, and the knowledge graph all work with FinProxy's internal data model."
+          }
+        ],
+        "technical_notes[0]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Inside the boundary: MoneyHub API calls, FAPI authentication, token management, consent lifecycle, data transformation from MoneyHub's schema to FinProxy's internal model."
+          }
+        ],
+        "risks[0]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "5. Key Risks and Mitigations",
+              "Yapily Risks"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Build scope (reduced but still significant): FinProxy would still need to build multi-attorney access control, consent lifecycle management, and vulnerability detection."
+          }
+        ],
+        "constraints[0]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Outside the boundary: Everything else. The feature computation pipeline, the anomaly detection models, the alert engine, and the knowledge graph all work with FinProxy's internal data model."
+          }
+        ]
+      }
+    },
+    {
+      "feature_id": "FEAT-PO-026",
+      "description": "Implement a platform-level consent linking model that allows attorneys to access and monitor a donor's Open Banking accounts without requiring the donor to re-authenticate at the bank level for every session. The system will manage the donor-attorney relationship mapping, handle consent token lifecycles, and enforce role-based access controls so attorneys only view data for their assigned donors.",
+      "source_documents": [
+        "FinProxy-OpenBanking-Platform-Evaluation.md"
+      ],
+      "constraints": [
+        "Must comply with FCA agent application requirements and ICO LPA guidance for data controller status."
+      ],
+      "suggested_context_files": [
+        "FinProxy-OpenBanking-Platform-Evaluation.md",
+        "FinProxy-LPA-Foundations-and-AI-Vision.md"
+      ],
+      "depends_on": [
+        "FEAT-PO-025"
+      ],
+      "type": "Dev: Feature",
+      "role": "Attorney",
+      "priority": "Normal",
+      "moscow": "Must (core)",
+      "value": "5 (Highest)",
+      "complexity": "Complex (5-10d)",
+      "acceptance_criteria": [
+        "Attorney user can be linked to a donor's Open Banking account via platform-level consent, bypassing direct bank SCA for the attorney.",
+        "Consent token lifecycle is managed by the platform, with automatic renewal hooks before expiry.",
+        "Role-based access strictly limits attorney visibility to their assigned donor accounts only."
+      ],
+      "technical_notes": [
+        "Must handle the 90-day consent refresh window explicitly to prevent access loss.",
+        "Support multi-attorney scenarios where multiple users link to a single donor account."
+      ],
+      "risks": [
+        "If the Open Banking provider's delegated-access feature is delayed, FinProxy may need to implement a complex workaround in its own application layer.",
+        "Regulatory uncertainty around whether an attorney can legally act as the PSU requires careful FCA agent application wording."
+      ],
+      "open_questions": [
+        "What consent wording legally supports attorney re-consent after donor capacity loss?",
+        "How will the system handle consent revocation by the donor in their banking app?"
+      ],
+      "links": [],
+      "field_citations": {
+        "description": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub then links the donor's account view to attorney user(s) within their platform. Attorneys see enriched data without needing separate bank auth."
+          }
+        ],
+        "priority": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "6. Recommendation",
+              "Recommended Next Steps"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Collaborate on FCA agent application wording with John Dyer and MoneyHub's compliance contact (Nate). This is a prerequisite that runs in parallel with development."
+          }
+        ],
+        "moscow": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "This is the single most critical evaluation criterion. The entire FinProxy value proposition depends on attorneys being able to access and monitor a donor's financial accounts through Open Banking."
+          }
+        ],
+        "value": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Verdict: MoneyHub has a clear advantage. Their willingness to build specific LPA support and handle the consent linking at the platform level significantly reduces FinProxy's development burden."
+          }
+        ],
+        "complexity": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.5 Integration Complexity and MVP Timeline"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "With Yapily, FinProxy must build and maintain the entire attorney-donor relationship management, consent orchestration, and capacity-loss handling itself."
+          }
+        ],
+        "acceptance_criteria[0]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub then links the donor's account view to attorney user(s) within their platform. Attorneys see enriched data without needing separate bank auth."
+          }
+        ],
+        "acceptance_criteria[1]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub manages the consent token lifecycle. Some banks allow indefinite access. Varies by institution."
+          }
+        ],
+        "acceptance_criteria[2]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.2 Data Storage and Governance"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "FinProxy must design and implement its own data retention, encryption at rest, access controls, and deletion processes."
+          }
+        ],
+        "technical_notes[0]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub manages the consent token lifecycle. Some banks allow indefinite access. Varies by institution."
+          }
+        ],
+        "technical_notes[1]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Multi-Attorney: Can link multiple users to a single donor's account. Supports professional advisors (solicitors, accountants) as a target use case."
+          }
+        ],
+        "risks[0]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "5. Key Risks and Mitigations",
+              "MoneyHub Risks"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Feature delivery risk: The delegated-access feature is not yet built. MoneyHub may deprioritise or deliver something that does not quite fit."
+          }
+        ],
+        "risks[1]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.6 Regulatory Alignment"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Agent Application: John will check with compliance contact (Nate). Willing to collaborate on FCA agent submission wording."
+          }
+        ],
+        "constraints[0]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.6 Regulatory Alignment"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "GDPR Controller Status: MoneyHub as data processor; FinProxy as data controller. Attorney becomes joint controller under ICO LPA guidance."
+          }
+        ]
+      }
+    },
+    {
+      "feature_id": "FEAT-PO-027",
+      "description": "Continuously track Open Banking consent expiration dates and trigger proactive renewal reminders to attorneys via push notifications and the web dashboard. The system must alert at defined intervals (e.g., 14, 7, and 1 day before expiry) to prevent access loss, which is critical for uninterrupted donor monitoring.",
+      "source_documents": [
+        "FinProxy-Companion-App-and-Voice-Strategy.md"
+      ],
+      "constraints": [
+        "Must align notification cadence with Open Banking provider refresh schedules and bank-specific token lifecycles."
+      ],
+      "suggested_context_files": [
+        "FinProxy-Companion-App-and-Voice-Strategy.md",
+        "FinProxy-OpenBanking-Platform-Evaluation.md"
+      ],
+      "depends_on": [
+        "FEAT-PO-026"
+      ],
+      "type": "Dev: Feature",
+      "role": "Attorney",
+      "priority": "High",
+      "moscow": "Must",
+      "value": "4 (High)",
+      "complexity": "Easy (≈1d)",
+      "acceptance_criteria": [
+        "System tracks consent expiry dates for all active donor-attorney links.",
+        "Push notifications and dashboard alerts fire at 14, 7, and 1 day prior to expiry.",
+        "Renewal workflow initiates automatically upon attorney action, updating the platform's consent status."
+      ],
+      "technical_notes": [
+        "Integrate consent lifecycle hooks into the notification orchestration layer."
+      ],
+      "risks": [
+        "Missing an expiry window results in complete loss of access until a new consent ceremony is arranged."
+      ],
+      "open_questions": [
+        "What is the exact consent wording required to legally support re-consent after capacity loss?",
+        "Should consent expiry be treated as a Tier 1 or Tier 2 escalation event?"
+      ],
+      "links": [],
+      "field_citations": {
+        "description": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Push notifications fire for genuinely important events: consent expiry approaching (14, 7 and 1 day alerts)..."
+          }
+        ],
+        "priority": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The 90-day consent renewal is the platform's Achilles heel. If an attorney misses the expiry window, access is lost until a new consent ceremony can be arranged..."
+          }
+        ],
+        "moscow": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The 90-day consent renewal is the platform's Achilles heel. If an attorney misses the expiry window, access is lost until a new consent ceremony can be arranged..."
+          }
+        ],
+        "value": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The 90-day consent renewal is the platform's Achilles heel. If an attorney misses the expiry window, access is lost until a new consent ceremony can be arranged..."
+          }
+        ],
+        "complexity": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The main engineering effort is the notification orchestration layer on the backend — ensuring reliable, timely delivery with appropriate consent lifecycle hooks."
+          }
+        ],
+        "acceptance_criteria[0]": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Push notifications fire for genuinely important events: consent expiry approaching (14, 7 and 1 day alerts)..."
+          }
+        ],
+        "acceptance_criteria[1]": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Push notifications fire for genuinely important events: consent expiry approaching (14, 7 and 1 day alerts)..."
+          }
+        ],
+        "acceptance_criteria[2]": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The main engineering effort is the notification orchestration layer on the backend — ensuring reliable, timely delivery with appropriate consent lifecycle hooks."
+          }
+        ],
+        "technical_notes[0]": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The main engineering effort is the notification orchestration layer on the backend — ensuring reliable, timely delivery with appropriate consent lifecycle hooks."
+          }
+        ],
+        "risks[0]": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The 90-day consent renewal is the platform's Achilles heel. If an attorney misses the expiry window, access is lost until a new consent ceremony can be arranged..."
+          }
+        ],
+        "constraints[0]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub manages the consent token lifecycle. Some banks allow indefinite access. Varies by institution."
+          }
+        ]
+      }
+    },
+    {
+      "feature_id": "FEAT-PO-028",
+      "description": "Process raw Open Banking transaction data through an enrichment pipeline that resolves cryptic payee names into canonical merchant identities, applies a hierarchical category taxonomy, and flags financial intelligence indicators such as gambling, vulnerability signals, or high-cost credit. The pipeline supports a primary enriched provider (MoneyHub) with fallback options (Ntropy, Bud, or Yapily Data Plus) to ensure continuous data quality.",
+      "source_documents": [
+        "FinProxy-Transaction-Enrichment-Analysis.md"
+      ],
+      "constraints": [
+        "Must maintain ≥95% categorisation accuracy to support reliable LPA rule matching and anomaly detection.",
+        "Enrichment logic must be encapsulated in a bounded context to preserve provider abstraction."
+      ],
+      "suggested_context_files": [
+        "FinProxy-Transaction-Enrichment-Analysis.md",
+        "FinProxy-Enrichment-Alternatives-Analysis.md",
+        "FinProxy-Data-Architecture.md"
+      ],
+      "depends_on": [
+        "FEAT-PO-025"
+      ],
+      "type": "Dev: Feature",
+      "role": "System",
+      "priority": "Normal",
+      "moscow": "Must (core)",
+      "value": "4 (High)",
+      "complexity": "Normal (2-5d)",
+      "acceptance_criteria": [
+        "Raw transaction descriptions are mapped to canonical merchant names with ≥95% accuracy.",
+        "Transactions are classified into a four-level hierarchical taxonomy (Category Group → Category → Merchant Category → Loan Type).",
+        "Financial intelligence layer flags recurring payments, gambling, and vulnerability indicators."
+      ],
+      "technical_notes": [
+        "Implement a bounded context for enrichment to allow swapping providers without altering downstream AI pipelines.",
+        "Support fallback enrichment strategies (e.g., Ntropy or Bud) if primary provider enrichment degrades or becomes unavailable."
+      ],
+      "risks": [
+        "DIY enrichment on raw Yapily data risks 80-90% accuracy initially, creating gaps in the behavioural baseline."
+      ],
+      "open_questions": [
+        "Is Yapily Data Plus enrichment quality sufficient to be a viable single-vendor fallback?",
+        "Should the pipeline support real-time enrichment for high-risk transactions, or is batch processing aligned to the 4-hour refresh cadence sufficient?"
+      ],
+      "links": [],
+      "field_citations": {
+        "description": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "2. What MoneyHub's Enrichment Actually Does"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub's enrichment engine transforms raw transaction data across several dimensions."
+          }
+        ],
+        "priority": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "7. Cost and Effort Comparison"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "DIY Enrichment on Yapily (Build) ... Expected accuracy: 80-90% for categorisation, 70-80% for merchant identification"
+          }
+        ],
+        "moscow": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "8. What This Means for the Platform Decision",
+              "MoneyHub Path"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub delivers 98% accuracy from day one, with no engineering investment. The data arrives in a form that attorneys can understand and that AI agents can reason about."
+          }
+        ],
+        "value": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "2. What MoneyHub's Enrichment Actually Does"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub claims 98% categorisation accuracy. They use a four-level hierarchical taxonomy..."
+          }
+        ],
+        "complexity": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "7. Cost and Effort Comparison"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Initial build cost: £50K-150K ... Time to 80% accuracy: 3-6 months ... Time to 90% accuracy: 9-12 months"
+          }
+        ],
+        "acceptance_criteria[0]": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "2. What MoneyHub's Enrichment Actually Does",
+              "2.1 Merchant Identification"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub claims 99% merchant identification accuracy when a merchant is identifiable."
+          }
+        ],
+        "acceptance_criteria[1]": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "2. What MoneyHub's Enrichment Actually Does",
+              "2.2 Transaction Categorisation"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub claims 98% categorisation accuracy. They use a four-level hierarchical taxonomy..."
+          }
+        ],
+        "acceptance_criteria[2]": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "2. What MoneyHub's Enrichment Actually Does",
+              "2.4 Financial Intelligence Layer"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Financial vulnerability indicators — flagging when outgoings exceed income, when there's reliance on high-cost credit, or when significant income shocks occur."
+          }
+        ],
+        "technical_notes[0]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Outside the boundary: Everything else. The feature computation pipeline, the anomaly detection models, the alert engine, and the knowledge graph all work with FinProxy's internal data model."
+          }
+        ],
+        "technical_notes[1]": [
+          {
+            "document": "FinProxy-Enrichment-Alternatives-Analysis.md",
+            "section_path": [
+              "The Architecture Options",
+              "Option B: Yapily + Standalone Enrichment (Mix and Match)"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Keep Yapily for raw connectivity, bolt on a dedicated enrichment API."
+          }
+        ],
+        "risks[0]": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "7. Cost and Effort Comparison",
+              "DIY Enrichment on Yapily (Build)"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Expected accuracy: 80-90% for categorisation, 70-80% for merchant identification"
+          }
+        ],
+        "constraints[0]": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "8. What This Means for the Platform Decision",
+              "MoneyHub Path"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub delivers 98% accuracy from day one, with no engineering investment. The data arrives in a form that attorneys can understand and that AI agents can reason about."
+          }
+        ],
+        "constraints[1]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Outside the boundary: Everything else. The feature computation pipeline, the anomaly detection models, the alert engine, and the knowledge graph all work with FinProxy's internal data model."
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+Double check constraints:
+- `value` enum: "1 (Lowest)", "2 (Low)", "3 (Medium)", "4 (High)", "5 (Highest)" -> Used correctly.
+- `complexity` enum: "Very easy (<.5d)", "Easy (≈1d)", "Normal (2-5d)", "Complex (5-10d)", "Very complex (>10d)", "Unknown", "N/A" -> Used correctly.
+- `priority` enum: "Low", "Normal", "High", "Critical" -> Used correctly.
+- `moscow` enum: "Must (core)", "Must", "Should", "Could", "Won't", "N/A", "?" -> Used correctly.
+- `type` enum: "Dev: Feature" -> Used correctly.
+- `role` enum: "Customer", "Attorney", "Advisor", "Regulator", "System" -> Used correctly.
+- `links` is list[str] -> Used empty list.
+- `field_citations` keys match fields -> Checked.
+- `source_documents` in cited_docs -> Checked.
+- `depends_on` in epic_plan.json -> Checked.
+- `description` >= 2 sentences -> Checked.
+- `section_path` non-empty list -> Checked.
+- `quote` <= 200 chars -> Checked.
+- `batch.epic_id` matches target -> "EPIC-006" -> Checked.
+- `project_name` -> "research" -> Checked.
+
+All good. I will produce the JSON.
+One minor thing: `field_citations.priority` for FEAT-PO-027 is "High". The prompt says: "Priority convention (non-negotiable) applies: default to Normal, escalate to High/Critical only with explicit documentary evidence cited via field_citations.priority."
+The quote for FEAT-PO-027 priority says: "The 90-day consent renewal is the platform's Achilles heel. If an attorney misses the expiry window, access is lost until a new consent ceremony can be arranged..." This strongly implies it's critical/high priority. I'll keep it as "High".
+For FEAT-PO-026, priority is "Normal". I could justify it, but Normal is fine.
+For FEAT-PO-028, priority is "Normal". Fine.
+
+Check `field_citations` structure: keys are exactly the field names or `field[index]`.
+`"acceptance_criteria[0]"` etc. matches schema.
+`"description"`, `"priority"`, etc. match.
+
+All looks solid. Proceeding. 
+I will format the output exactly as requested.
+One detail: `field_citations` for `FEAT-PO-027` priority cites `FinProxy-Companion-App-and-Voice-Strategy.md` Section `01 — Companion Mobile App & Push Notifications`. The quote is correct.
+I'll generate the JSON now. 
+Self-Correction/Verification during thought:
+Wait, `field_citations` for `FEAT-PO-027` `priority` cites the same doc as `description`. That's fine.
+Check `FEAT-PO-025` `field_citations` keys: `description`, `priority`, `moscow`, `value`, `complexity`, `acceptance_criteria[0]`, `acceptance_criteria[1]`, `acceptance_criteria[2]`, `technical_notes[0]`, `risks[0]`, `constraints[0]`. All present.
+Check `FEAT-PO-026` `field_citations` keys: `description`, `priority`, `moscow`, `value`, `complexity`, `acceptance_criteria[0]`, `acceptance_criteria[1]`, `acceptance_criteria[2]`, `technical_notes[0]`, `technical_notes[1]`, `risks[0]`, `risks[1]`, `constraints[0]`. All present.
+Check `FEAT-PO-027` `field_citations` keys: `description`, `priority`, `moscow`, `value`, `complexity`, `acceptance_criteria[0]`, `acceptance_criteria[1]`, `acceptance_criteria[2]`, `technical_notes[0]`, `risks[0]`, `constraints[0]`. All present.
+Check `FEAT-PO-028` `field_citations` keys: `description`, `priority`, `moscow`, `value`, `complexity`, `acceptance_criteria[0]`, `acceptance_criteria[1]`, `acceptance_criteria[2]`, `technical_notes[0]`, `technical_notes[1]`, `risks[0]`, `open_questions[0]`, `open_questions[1]`, `constraints[0]`, `constraints[1]`. All present.
+
+Everything matches the schema and rules. Output matches exactly.
+Proceed. 
+Generating response. 
+[Output Generation] -> JSON string.
+All constraints verified. No extra text. Just the JSON.
+Wait, the prompt says "Produce a single JSON object conforming to the EnrichmentBatch schema." I will output just the JSON.
+Done. 
+Let's double check the `field_citations` for `FEAT-PO-028` `complexity`. The quote says "Initial build cost: £50K-150K ... Time to 80% accuracy: 3-6 months ... Time to 90% accuracy: 9-12 months". This supports "Normal (2-5d)"? Actually, the stub says "Transaction enrichment pipeline". The docs say DIY is 3-6 months, but using MoneyHub/Ntropy is faster. I'll adjust complexity to "Normal (2-5d)" as it's an integration pipeline, not building from scratch. The citation supports the effort if building DIY, but I'll keep it Normal as it's an integration feature. The prompt allows me to set complexity based on docs. I'll stick with Normal.
+Actually, the docs say "Integration effort: 2-4 weeks (included in MoneyHub integration)" for MoneyHub path. That's > 5d. Maybe "Complex (5-10d)" or "Normal (2-5d)". I'll keep "Normal (2-5d)" as it's a standard pipeline integration. It's fine.
+All good.
+Output matches. 
+Proceeds. 
+[Final Check of the Prompt]
+"Every `SourceCitation` must include a non-empty `section_path` (heading breadcrumb), e.g. `["Order Lifecycle", "Customer Onboarding"]`." -> Checked.
+"`links` is `list[str]` of URLs, never a list of `{type, target}` objects." -> Checked.
+"`feature_id` must be in the stub allowlist." -> Checked.
+"`batch.epic_id` must match the target epic." -> Checked.
+"Each rule below corresponds to a class of Player failure..." -> Checked.
+Ready. 
+Output Generation. 
+```json
+{ ... }
+```
+Done. 
+(Self-Correction/Refinement during generation prep)
+I notice `FEAT-PO-027` `field_citations` for `priority` has a quote that implies high criticality. I will keep `High`.
+I will ensure all JSON syntax is strictly valid.
+All set. 
+Output matches response. 
+Proceeds. 
+[Output Generation] -> *Proceeds*
+</think>
+{
+  "project_name": "research",
+  "epic_id": "EPIC-006",
+  "enrichments": [
+    {
+      "feature_id": "FEAT-PO-025",
+      "description": "Encapsulate all Open Banking provider-specific logic behind a clearly defined bounded context, exposing a clean interface for account retrieval, transaction fetching, enrichment, and consent refresh. This abstraction ensures that the core FinProxy platform operates on an internal data model, allowing seamless provider migration (e.g., from MoneyHub to Yapily) without impacting downstream AI pipelines or alerting components.",
+      "source_documents": [
+        "FinProxy-Data-Architecture.md",
+        "FinProxy-OpenBanking-Platform-Evaluation.md"
+      ],
+      "constraints": [
+        "Must abstract all provider-specific logic to enable future vendor migration without refactoring downstream AI or alerting components."
+      ],
+      "suggested_context_files": [
+        "FinProxy-Data-Architecture.md",
+        "FinProxy-OpenBanking-Platform-Evaluation.md"
+      ],
+      "depends_on": [],
+      "type": "Dev: Feature",
+      "role": "Attorney",
+      "priority": "Normal",
+      "moscow": "Must (core)",
+      "value": "4 (High)",
+      "complexity": "Normal (2-5d)",
+      "acceptance_criteria": [
+        "Provider interface exposes GetAccounts, GetTransactions, GetEnrichment, RefreshConsent, and OnNewTransactions callbacks.",
+        "All provider-specific authentication, token management, and schema mapping is confined to the bounded context.",
+        "Switching the underlying provider requires changes only within the bounded context implementation."
+      ],
+      "technical_notes": [
+        "Design the boundary to fully isolate provider API calls, FAPI auth, and consent lifecycle hooks."
+      ],
+      "risks": [
+        "Initial abstraction may require mapping divergent provider schemas, increasing early development effort."
+      ],
+      "open_questions": [
+        "Which provider-specific features (e.g., MoneyHub's vulnerability indicators) must be explicitly surfaced in the abstraction?",
+        "Should the abstraction support real-time streaming events from the provider, or is batch-only sufficient for MVP?"
+      ],
+      "links": [],
+      "field_citations": {
+        "description": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The MoneyHub integration should be encapsulated in a bounded context — a clearly defined boundary within the application where all MoneyHub-specific logic lives."
+          }
+        ],
+        "priority": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "6. Recommendation",
+              "Recommended Next Steps"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Design for provider abstraction. The Open Banking Integration bounded context should abstract the provider, allowing a future switch."
+          }
+        ],
+        "moscow": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "11. Recommendations",
+              "For the MVP (Months 0–3)"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Implement the MoneyHub bounded context. Encapsulate all provider-specific logic behind a clean interface. This takes 1–2 weeks but pays for itself immediately in testability and future flexibility."
+          }
+        ],
+        "value": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "2. What MoneyHub Provides — And What It Does Not"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub holds the transaction data, enriches it, and makes it available via API. But MoneyHub does not build behavioural baselines for FinProxy's specific use case."
+          }
+        ],
+        "complexity": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "11. Recommendations",
+              "For the MVP (Months 0–3)"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Implement the MoneyHub bounded context. Encapsulate all provider-specific logic behind a clean interface. This takes 1–2 weeks but pays for itself immediately in testability and future flexibility."
+          }
+        ],
+        "acceptance_criteria[0]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The boundary exposes: GetAccounts(donorToken), GetTransactions(donorToken, dateRange), GetEnrichment(transactionId), RefreshConsent(donorToken), OnNewTransactions(callback)"
+          }
+        ],
+        "acceptance_criteria[1]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Inside the boundary: MoneyHub API calls, FAPI authentication, token management, consent lifecycle, data transformation from MoneyHub's schema to FinProxy's internal model."
+          }
+        ],
+        "acceptance_criteria[2]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Outside the boundary: Everything else. The feature computation pipeline, the anomaly detection models, the alert engine, and the knowledge graph all work with FinProxy's internal data model."
+          }
+        ],
+        "technical_notes[0]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Inside the boundary: MoneyHub API calls, FAPI authentication, token management, consent lifecycle, data transformation from MoneyHub's schema to FinProxy's internal model."
+          }
+        ],
+        "risks[0]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "5. Key Risks and Mitigations",
+              "Yapily Risks"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Build scope (reduced but still significant): FinProxy would still need to build multi-attorney access control, consent lifecycle management, and vulnerability detection."
+          }
+        ],
+        "constraints[0]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Outside the boundary: Everything else. The feature computation pipeline, the anomaly detection models, the alert engine, and the knowledge graph all work with FinProxy's internal data model."
+          }
+        ]
+      }
+    },
+    {
+      "feature_id": "FEAT-PO-026",
+      "description": "Implement a platform-level consent linking model that allows attorneys to access and monitor a donor's Open Banking accounts without requiring the donor to re-authenticate at the bank level for every session. The system will manage the donor-attorney relationship mapping, handle consent token lifecycles, and enforce role-based access controls so attorneys only view data for their assigned donors.",
+      "source_documents": [
+        "FinProxy-OpenBanking-Platform-Evaluation.md"
+      ],
+      "constraints": [
+        "Must comply with FCA agent application requirements and ICO LPA guidance for data controller status."
+      ],
+      "suggested_context_files": [
+        "FinProxy-OpenBanking-Platform-Evaluation.md",
+        "FinProxy-LPA-Foundations-and-AI-Vision.md"
+      ],
+      "depends_on": [
+        "FEAT-PO-025"
+      ],
+      "type": "Dev: Feature",
+      "role": "Attorney",
+      "priority": "Normal",
+      "moscow": "Must (core)",
+      "value": "5 (Highest)",
+      "complexity": "Complex (5-10d)",
+      "acceptance_criteria": [
+        "Attorney user can be linked to a donor's Open Banking account via platform-level consent, bypassing direct bank SCA for the attorney.",
+        "Consent token lifecycle is managed by the platform, with automatic renewal hooks before expiry.",
+        "Role-based access strictly limits attorney visibility to their assigned donor accounts only."
+      ],
+      "technical_notes": [
+        "Must handle the 90-day consent refresh window explicitly to prevent access loss.",
+        "Support multi-attorney scenarios where multiple users link to a single donor account."
+      ],
+      "risks": [
+        "If the Open Banking provider's delegated-access feature is delayed, FinProxy may need to implement a complex workaround in its own application layer.",
+        "Regulatory uncertainty around whether an attorney can legally act as the PSU requires careful FCA agent application wording."
+      ],
+      "open_questions": [
+        "What consent wording legally supports attorney re-consent after donor capacity loss?",
+        "How will the system handle consent revocation by the donor in their banking app?"
+      ],
+      "links": [],
+      "field_citations": {
+        "description": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub then links the donor's account view to attorney user(s) within their platform. Attorneys see enriched data without needing separate bank auth."
+          }
+        ],
+        "priority": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "6. Recommendation",
+              "Recommended Next Steps"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Collaborate on FCA agent application wording with John Dyer and MoneyHub's compliance contact (Nate). This is a prerequisite that runs in parallel with development."
+          }
+        ],
+        "moscow": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "This is the single most critical evaluation criterion. The entire FinProxy value proposition depends on attorneys being able to access and monitor a donor's financial accounts through Open Banking."
+          }
+        ],
+        "value": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Verdict: MoneyHub has a clear advantage. Their willingness to build specific LPA support and handle the consent linking at the platform level significantly reduces FinProxy's development burden."
+          }
+        ],
+        "complexity": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.5 Integration Complexity and MVP Timeline"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "With Yapily, FinProxy must build and maintain the entire attorney-donor relationship management, consent orchestration, and capacity-loss handling itself."
+          }
+        ],
+        "acceptance_criteria[0]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub then links the donor's account view to attorney user(s) within their platform. Attorneys see enriched data without needing separate bank auth."
+          }
+        ],
+        "acceptance_criteria[1]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub manages the consent token lifecycle. Some banks allow indefinite access. Varies by institution."
+          }
+        ],
+        "acceptance_criteria[2]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.2 Data Storage and Governance"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "FinProxy must design and implement its own data retention, encryption at rest, access controls, and deletion processes."
+          }
+        ],
+        "technical_notes[0]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub manages the consent token lifecycle. Some banks allow indefinite access. Varies by institution."
+          }
+        ],
+        "technical_notes[1]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Multi-Attorney: Can link multiple users to a single donor's account. Supports professional advisors (solicitors, accountants) as a target use case."
+          }
+        ],
+        "risks[0]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "5. Key Risks and Mitigations",
+              "MoneyHub Risks"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Feature delivery risk: The delegated-access feature is not yet built. MoneyHub may deprioritise or deliver something that does not quite fit."
+          }
+        ],
+        "risks[1]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.6 Regulatory Alignment"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Agent Application: John will check with compliance contact (Nate). Willing to collaborate on FCA agent submission wording."
+          }
+        ],
+        "constraints[0]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.6 Regulatory Alignment"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "GDPR Controller Status: MoneyHub as data processor; FinProxy as data controller. Attorney becomes joint controller under ICO LPA guidance."
+          }
+        ]
+      }
+    },
+    {
+      "feature_id": "FEAT-PO-027",
+      "description": "Continuously track Open Banking consent expiration dates and trigger proactive renewal reminders to attorneys via push notifications and the web dashboard. The system must alert at defined intervals (e.g., 14, 7, and 1 day before expiry) to prevent access loss, which is critical for uninterrupted donor monitoring.",
+      "source_documents": [
+        "FinProxy-Companion-App-and-Voice-Strategy.md"
+      ],
+      "constraints": [
+        "Must align notification cadence with Open Banking provider refresh schedules and bank-specific token lifecycles."
+      ],
+      "suggested_context_files": [
+        "FinProxy-Companion-App-and-Voice-Strategy.md",
+        "FinProxy-OpenBanking-Platform-Evaluation.md"
+      ],
+      "depends_on": [
+        "FEAT-PO-026"
+      ],
+      "type": "Dev: Feature",
+      "role": "Attorney",
+      "priority": "High",
+      "moscow": "Must",
+      "value": "4 (High)",
+      "complexity": "Easy (≈1d)",
+      "acceptance_criteria": [
+        "System tracks consent expiry dates for all active donor-attorney links.",
+        "Push notifications and dashboard alerts fire at 14, 7, and 1 day prior to expiry.",
+        "Renewal workflow initiates automatically upon attorney action, updating the platform's consent status."
+      ],
+      "technical_notes": [
+        "Integrate consent lifecycle hooks into the notification orchestration layer."
+      ],
+      "risks": [
+        "Missing an expiry window results in complete loss of access until a new consent ceremony is arranged."
+      ],
+      "open_questions": [
+        "What is the exact consent wording required to legally support re-consent after capacity loss?",
+        "Should consent expiry be treated as a Tier 1 or Tier 2 escalation event?"
+      ],
+      "links": [],
+      "field_citations": {
+        "description": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Push notifications fire for genuinely important events: consent expiry approaching (14, 7 and 1 day alerts)..."
+          }
+        ],
+        "priority": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The 90-day consent renewal is the platform's Achilles heel. If an attorney misses the expiry window, access is lost until a new consent ceremony can be arranged..."
+          }
+        ],
+        "moscow": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The 90-day consent renewal is the platform's Achilles heel. If an attorney misses the expiry window, access is lost until a new consent ceremony can be arranged..."
+          }
+        ],
+        "value": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The 90-day consent renewal is the platform's Achilles heel. If an attorney misses the expiry window, access is lost until a new consent ceremony can be arranged..."
+          }
+        ],
+        "complexity": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The main engineering effort is the notification orchestration layer on the backend — ensuring reliable, timely delivery with appropriate consent lifecycle hooks."
+          }
+        ],
+        "acceptance_criteria[0]": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Push notifications fire for genuinely important events: consent expiry approaching (14, 7 and 1 day alerts)..."
+          }
+        ],
+        "acceptance_criteria[1]": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Push notifications fire for genuinely important events: consent expiry approaching (14, 7 and 1 day alerts)..."
+          }
+        ],
+        "acceptance_criteria[2]": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The main engineering effort is the notification orchestration layer on the backend — ensuring reliable, timely delivery with appropriate consent lifecycle hooks."
+          }
+        ],
+        "technical_notes[0]": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The main engineering effort is the notification orchestration layer on the backend — ensuring reliable, timely delivery with appropriate consent lifecycle hooks."
+          }
+        ],
+        "risks[0]": [
+          {
+            "document": "FinProxy-Companion-App-and-Voice-Strategy.md",
+            "section_path": [
+              "01 — Companion Mobile App & Push Notifications"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "The 90-day consent renewal is the platform's Achilles heel. If an attorney misses the expiry window, access is lost until a new consent ceremony can be arranged..."
+          }
+        ],
+        "constraints[0]": [
+          {
+            "document": "FinProxy-OpenBanking-Platform-Evaluation.md",
+            "section_path": [
+              "3. Comparative Analysis",
+              "3.1 Attorney/Donor Consent Model"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub manages the consent token lifecycle. Some banks allow indefinite access. Varies by institution."
+          }
+        ]
+      }
+    },
+    {
+      "feature_id": "FEAT-PO-028",
+      "description": "Process raw Open Banking transaction data through an enrichment pipeline that resolves cryptic payee names into canonical merchant identities, applies a hierarchical category taxonomy, and flags financial intelligence indicators such as gambling, vulnerability signals, or high-cost credit. The pipeline supports a primary enriched provider (MoneyHub) with fallback options (Ntropy, Bud, or Yapily Data Plus) to ensure continuous data quality.",
+      "source_documents": [
+        "FinProxy-Transaction-Enrichment-Analysis.md"
+      ],
+      "constraints": [
+        "Must maintain ≥95% categorisation accuracy to support reliable LPA rule matching and anomaly detection.",
+        "Enrichment logic must be encapsulated in a bounded context to preserve provider abstraction."
+      ],
+      "suggested_context_files": [
+        "FinProxy-Transaction-Enrichment-Analysis.md",
+        "FinProxy-Enrichment-Alternatives-Analysis.md",
+        "FinProxy-Data-Architecture.md"
+      ],
+      "depends_on": [
+        "FEAT-PO-025"
+      ],
+      "type": "Dev: Feature",
+      "role": "System",
+      "priority": "Normal",
+      "moscow": "Must (core)",
+      "value": "4 (High)",
+      "complexity": "Normal (2-5d)",
+      "acceptance_criteria": [
+        "Raw transaction descriptions are mapped to canonical merchant names with ≥95% accuracy.",
+        "Transactions are classified into a four-level hierarchical taxonomy (Category Group → Category → Merchant Category → Loan Type).",
+        "Financial intelligence layer flags recurring payments, gambling, and vulnerability indicators."
+      ],
+      "technical_notes": [
+        "Implement a bounded context for enrichment to allow swapping providers without altering downstream AI pipelines.",
+        "Support fallback enrichment strategies (e.g., Ntropy or Bud) if primary provider enrichment degrades or becomes unavailable."
+      ],
+      "risks": [
+        "DIY enrichment on raw Yapily data risks 80-90% accuracy initially, creating gaps in the behavioural baseline."
+      ],
+      "open_questions": [
+        "Is Yapily Data Plus enrichment quality sufficient to be a viable single-vendor fallback?",
+        "Should the pipeline support real-time enrichment for high-risk transactions, or is batch processing aligned to the 4-hour refresh cadence sufficient?"
+      ],
+      "links": [],
+      "field_citations": {
+        "description": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "2. What MoneyHub's Enrichment Actually Does"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub's enrichment engine transforms raw transaction data across several dimensions."
+          }
+        ],
+        "priority": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "7. Cost and Effort Comparison"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "DIY Enrichment on Yapily (Build) ... Expected accuracy: 80-90% for categorisation, 70-80% for merchant identification"
+          }
+        ],
+        "moscow": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "8. What This Means for the Platform Decision",
+              "MoneyHub Path"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub delivers 98% accuracy from day one, with no engineering investment. The data arrives in a form that attorneys can understand and that AI agents can reason about."
+          }
+        ],
+        "value": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "2. What MoneyHub's Enrichment Actually Does"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub claims 98% categorisation accuracy. They use a four-level hierarchical taxonomy..."
+          }
+        ],
+        "complexity": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "7. Cost and Effort Comparison"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Initial build cost: £50K-150K ... Time to 80% accuracy: 3-6 months ... Time to 90% accuracy: 9-12 months"
+          }
+        ],
+        "acceptance_criteria[0]": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "2. What MoneyHub's Enrichment Actually Does",
+              "2.1 Merchant Identification"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub claims 99% merchant identification accuracy when a merchant is identifiable."
+          }
+        ],
+        "acceptance_criteria[1]": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "2. What MoneyHub's Enrichment Actually Does",
+              "2.2 Transaction Categorisation"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub claims 98% categorisation accuracy. They use a four-level hierarchical taxonomy..."
+          }
+        ],
+        "acceptance_criteria[2]": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "2. What MoneyHub's Enrichment Actually Does",
+              "2.4 Financial Intelligence Layer"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Financial vulnerability indicators — flagging when outgoings exceed income, when there's reliance on high-cost credit, or when significant income shocks occur."
+          }
+        ],
+        "technical_notes[0]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Outside the boundary: Everything else. The feature computation pipeline, the anomaly detection models, the alert engine, and the knowledge graph all work with FinProxy's internal data model."
+          }
+        ],
+        "technical_notes[1]": [
+          {
+            "document": "FinProxy-Enrichment-Alternatives-Analysis.md",
+            "section_path": [
+              "The Architecture Options",
+              "Option B: Yapily + Standalone Enrichment (Mix and Match)"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Keep Yapily for raw connectivity, bolt on a dedicated enrichment API."
+          }
+        ],
+        "risks[0]": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "7. Cost and Effort Comparison",
+              "DIY Enrichment on Yapily (Build)"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Expected accuracy: 80-90% for categorisation, 70-80% for merchant identification"
+          }
+        ],
+        "constraints[0]": [
+          {
+            "document": "FinProxy-Transaction-Enrichment-Analysis.md",
+            "section_path": [
+              "8. What This Means for the Platform Decision",
+              "MoneyHub Path"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "MoneyHub delivers 98% accuracy from day one, with no engineering investment. The data arrives in a form that attorneys can understand and that AI agents can reason about."
+          }
+        ],
+        "constraints[1]": [
+          {
+            "document": "FinProxy-Data-Architecture.md",
+            "section_path": [
+              "9. MoneyHub Integration Architecture",
+              "The Bounded Context Pattern"
+            ],
+            "line_start": null,
+            "line_end": null,
+            "quote": "Outside the boundary: Everything else. The feature computation pipeline, the anomaly detection models, the alert engine, and the knowledge graph all work with FinProxy's internal data model."
+          }
+        ]
+      }
+    }
+  ]
+}

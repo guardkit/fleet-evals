@@ -1,0 +1,30 @@
+{
+  "task": "po-held-003-extract-full",
+  "rep": 1,
+  "suite": "po-heldout",
+  "schema": "ProductRoadmap",
+  "project": "research",
+  "endpoint": "http://promaxgb10-41b1:9000/v1",
+  "model": "product-owner-agent",
+  "gen_params_sent": "server defaults",
+  "system_sha256": "2fdb1cf1f4db53b21df4037926d29c3c221aac44a393db6a1374c3e93b0aa065",
+  "user_sha256": "a798f59ddc84acd3b15c8a0ccb7628af381b0966a1abeeb50b8322e622ae2247",
+  "user_chars": 284277,
+  "corpus_manifest_sha256": "535b42a4cd19c1b311683e978c588cecf8ca851b29120733b9193ec968682482",
+  "prompt_source": "specialist-agent/roles/product-owner/prompts/player_extract.md (serving prompt, pinned 2026-07-03)",
+  "started_at": "2026-08-18T18:45:45.040341+00:00",
+  "attempt": 1,
+  "duration_s": 446.7,
+  "response_provenance": "rewrapped_reasoning_content",
+  "server_model": "qwen36-workhorse",
+  "finish_reason": "stop",
+  "usage": {
+    "completion_tokens": 17205,
+    "prompt_tokens": 64408,
+    "total_tokens": 81613,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "finished_at": "2026-08-18T18:53:11.720067+00:00"
+}

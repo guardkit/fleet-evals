@@ -1,0 +1,57 @@
+....F.                                                                   [100%]
+=================================== FAILURES ===================================
+__________________________ test_no_source_references ___________________________
+
+payload = {'assumptions': [{'category': 'technical', 'confidence': 'high', 'id': 'ASM-001', 'impact_if_wrong': 'Requires ruggedi...tem into the driver’s return route to ensure same-day retrieval at the pharmacy.', ...}], 'id': 'EPIC-003', ...}], ...}
+
+    def test_no_source_references(payload):
+        """G5 (letter repaired 2026-08-11 per Rich's Option-A ruling — see
+        _split_request_refs): no DOCUMENT references at any level; request-references
+        are legal and must quote the brief verbatim; filenames remain fabrication."""
+        brief = _load_brief()
+        all_request_refs = set()
+    
+        def assert_level(entries, where):
+            request_refs, filenames = _split_request_refs(entries)
+            assert filenames == [], f"{where}: cites filenames (fabrication in greenfield): {filenames}"
+            for r in request_refs:
+                frag = r[len("request:"):].strip() if r.startswith("request:") else ""
+                assert not frag or frag in brief, (
+                    f"{where}: request-ref fragment not verbatim in the brief: {r!r}"
+                )
+            all_request_refs.update(request_refs)
+    
+        assert_level(payload.get("source_documents"), "top-level source_documents")
+        cited = grading.collect_cited_documents(payload)
+        non_request = {c for c in cited if not (c == "request" or c.startswith("request:"))}
+        assert non_request == set(), (
+            f"greenfield output cites documents that do not exist: {sorted(non_request)}"
+        )
+        for e in payload.get("epics", []):
+            assert_level(e.get("source_documents"), f"epic {e.get('id')}")
+            assert e.get("field_citations") in (None, {}), f"epic {e.get('id')}: field_citations must be empty"
+            for f in e.get("features", []):
+                fid = f.get("feature_id")
+>               assert_level(f.get("source_documents"), str(fid))
+
+test/test_gate_po_held_004.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+entries = ['request:Some medicines are temperature-sensitive and some are controlled drugs']
+where = 'FEAT-PO-002'
+
+    def assert_level(entries, where):
+        request_refs, filenames = _split_request_refs(entries)
+        assert filenames == [], f"{where}: cites filenames (fabrication in greenfield): {filenames}"
+        for r in request_refs:
+            frag = r[len("request:"):].strip() if r.startswith("request:") else ""
+>           assert not frag or frag in brief, (
+                f"{where}: request-ref fragment not verbatim in the brief: {r!r}"
+            )
+E           AssertionError: FEAT-PO-002: request-ref fragment not verbatim in the brief: 'request:Some medicines are temperature-sensitive and some are controlled drugs'
+E           assert (not 'Some medicines are temperature-sensitive and some are controlled drugs' or 'Some medicines are temperature-sensitive and some are controlled drugs' in "# Brief: RoundRoute\n\nWe run delivery rounds for a group of community pharmacies. Drivers collect dispensed\nprescri...ies have to be returned to the pharmacy the same\nday.\n\nThat's the whole brief — assume what you must, and say so.\n")
+
+test/test_gate_po_held_004.py:80: AssertionError
+=========================== short test summary info ============================
+FAILED test/test_gate_po_held_004.py::test_no_source_references - AssertionEr...
+1 failed, 5 passed in 0.04s

@@ -1,0 +1,497 @@
+<think>Here's a thinking process:
+
+1.  **Analyze User Input:**
+   - **Problem Statement:** "We run delivery rounds for a group of community pharmacies. Drivers collect dispensed prescriptions in the morning and deliver them to housebound patients during the day. Today the rounds are planned on a whiteboard and paper manifests; proof of delivery is a signature on a clipboard. We want software that plans each driver's daily round, gives the driver a manifest they can work through on the road, records proof of delivery, and lets the pharmacy see where a prescription is. Some medicines are temperature-sensitive and some are controlled drugs, and missed deliveries have to be returned to the pharmacy the same day. That's the whole brief — assume what you must, and say so."
+   - **Key Entities/Concepts:** Community pharmacies, drivers, housebound patients, dispensed prescriptions, daily delivery rounds, whiteboard/paper manifests (current state), software for planning, driver manifest (digital), proof of delivery (digital signature), prescription tracking/status visibility for pharmacy, temperature-sensitive medicines, controlled drugs, missed deliveries (same-day return).
+   - **Core Capabilities Needed:**
+     - Round planning/optimization
+     - Digital manifest for drivers
+     - Proof of delivery capture (signature)
+     - Prescription tracking/status updates
+     - Handling special medicines (temperature, controlled drugs)
+     - Missed delivery handling & same-day return workflow
+   - **Constraints/Context:** Community pharmacy setting, housebound patients (implies specific addresses/locations), daily operational cycle, regulatory considerations for controlled drugs/temperature-sensitive meds, same-day return requirement.
+   - **Assumptions to Document:** Number of drivers/pharmacies, GPS/network availability for drivers, integration with pharmacy dispensing systems (assume manual entry for MVP or basic API), signature capture on mobile devices, offline capability needs, regulatory compliance requirements for controlled drugs.
+
+2.  **Query Knowledge Graph (Optional but recommended per prompt):**
+   - I'll simulate calling `graphiti_query` with a broad query about delivery routing, pharmacy operations, or logistics patterns. Since I'm an AI, I'll note that the query is optional and proceed assuming it returns nothing or generic patterns, as instructed. I'll explicitly state it was queried/assumed empty per instructions.
+
+3.  **Analyze Problem Space & Define Bounded Contexts:**
+   Based on the problem statement, natural domain boundaries emerge:
+   - **Round Planning & Routing:** Creating daily schedules, assigning prescriptions to drivers, optimizing routes.
+   - **Driver Manifest & Field Operations:** The driver's view, walking through stops, capturing proof of delivery, handling exceptions (missed deliveries).
+   - **Prescription Tracking & Visibility:** Pharmacy dashboard to see status, location, and handle exceptions.
+   - **Special Medicines Handling:** Rules/workflows for temperature-sensitive and controlled drugs (chain of custody, temperature logging, compliance).
+   - **Returns & Exception Management:** Workflow for missed deliveries, same-day returns, re-routing.
+
+   Let's consolidate into 3-4 core bounded contexts (epics) to keep it focused for greenfield:
+   1. **Route Planning & Assignment** (Planning)
+   2. **Driver Manifest & Proof of Delivery** (Field Operations)
+   3. **Prescription Tracking & Pharmacy Dashboard** (Visibility/Management)
+   4. **Special Medicines & Compliance** (Regulatory/Handling) - Actually, this might be better as constraints/features within the tracking/manifest contexts rather than a full epic, but the prompt mentions it explicitly. I'll make it a feature set within the relevant epics or a dedicated "Compliance & Special Handling" epic. Let's stick to 3 epics for simplicity, embedding compliance as features/constraints, or make it a 4th if it naturally stands alone. Actually, "Special Medicines Handling" is distinct enough. I'll keep 3 epics but ensure special medicines are explicitly covered in features. Wait, the prompt says "Some medicines are temperature-sensitive and some are controlled drugs, and missed deliveries have to be returned to the pharmacy the same day." I'll create:
+     - EPIC-001: Daily Round Planning & Route Optimisation
+     - EPIC-002: Driver Manifest & Field Execution
+     - EPIC-003: Prescription Tracking & Pharmacy Visibility
+     - EPIC-004: Exception Handling & Returns (missed deliveries, same-day return)
+     Actually, 3 is cleaner. I'll merge tracking and visibility into one, and exception handling into the driver manifest or planning. Let's go with 3 epics:
+     1. **Route Planning & Assignment**
+     2. **Driver Manifest & Field Execution** (includes proof of delivery, special meds handling, missed delivery capture)
+     3. **Prescription Tracking & Pharmacy Dashboard** (includes visibility, returns processing)
+     Wait, the prompt explicitly mentions temperature-sensitive and controlled drugs. I'll make sure features cover chain-of-custody and temperature checks. I'll stick to 3 epics for a lean greenfield start.
+
+4.  **Propose Features (Grounded in Request):**
+   *EPIC-001: Route Planning & Assignment*
+   - FEAT-PO-001: Daily Round Creation & Prescription Assignment
+     - Grounding: "plans each driver's daily round"
+     - Desc: Allow pharmacy staff to select dispensed prescriptions for the day and assign them to specific drivers. The system will group prescriptions by delivery address clusters and display them in a draft round schedule for manual review or automated optimisation.
+   - FEAT-002: Route Optimisation & Stop Sequencing
+     - Grounding: "plans each driver's daily round"
+     - Desc: Calculate an efficient delivery sequence based on patient addresses, driver capacity, and time windows. The optimised route should present stops in a logical geographic order to minimise driving time while accommodating priority deliveries.
+
+   *EPIC-002: Driver Manifest & Field Execution*
+   - FEAT-PO-003: Digital Manifest & Stop-by-Stop Navigation
+     - Grounding: "gives the driver a manifest they can work through on the road"
+     - Desc: Provide drivers with a mobile-friendly manifest showing their assigned stops, patient details, and delivery instructions in the planned sequence. Drivers can navigate through the manifest, marking each stop as completed, pending, or failed.
+   - FEAT-PO-004: Proof of Delivery Capture
+     - Grounding: "records proof of delivery"
+     - Desc: Enable drivers to record proof of delivery per prescription by capturing a digital signature, photo, or timestamp upon handover. The system must validate that POD is recorded before allowing the driver to proceed to the next stop.
+   - FEAT-PO-005: Controlled Drugs & Temperature-Sensitive Medicines Workflow
+     - Grounding: "Some medicines are temperature-sensitive and some are controlled drugs"
+     - Desc: Flag prescriptions requiring special handling and enforce compliance checks during the manifest workflow. For controlled drugs, require dual verification or secure storage logging; for temperature-sensitive items, prompt drivers to confirm temperature conditions at pickup and delivery.
+
+   *EPIC-003: Prescription Tracking & Exception Management*
+   - FEAT-PO-006: Real-Time Prescription Status Tracking
+     - Grounding: "lets the pharmacy see where a prescription is"
+     - Desc: Display a live dashboard for pharmacy staff showing the current status and location of each prescription (e.g., loaded, in-transit, delivered, pending). Status updates sync automatically as drivers progress through their manifest.
+   - FEAT-PO-007: Missed Delivery & Same-Day Return Handling
+     - Grounding: "missed deliveries have to be returned to the pharmacy the same day"
+     - Desc: Allow drivers to log missed deliveries with a reason code and automatically flag them for same-day return. The system will generate a return manifest for the driver to collect the items and bring them back to the pharmacy before shift end.
+
+5.  **Map Dependencies:**
+   - FEAT-PO-001 (Daily Round Creation) -> FEAT-PO-002 (Route Optimisation) -> FEAT-PO-003 (Digital Manifest) -> FEAT-PO-004 (POD Capture) & FEAT-PO-005 (Special Meds) & FEAT-PO-007 (Missed Delivery)
+   - FEAT-PO-006 (Tracking) depends on FEAT-PO-004 & FEAT-PO-007 (status updates from field execution)
+   - FEAT-PO-007 (Returns) depends on FEAT-PO-003 (manifest workflow) and feeds back into FEAT-PO-001/003 for next-day planning.
+   - Dependencies are linear with some parallel field execution. No circular dependencies.
+
+6.  **Generate Feature Descriptions & Check Constraints:**
+   - Check against anti-patterns:
+     - UNGROUNDED_FEATURE: All have `request:<fragment>`
+     - VAGUE_DESCRIPTION: All are 2+ sentences, domain-specific
+     - SCOPE_CREEP: Stays within brief (planning, manifest, POD, tracking, special meds, returns)
+     - DEPENDENCY_MISSING: All dependencies reference features in the roadmap
+     - FABRICATED_SOURCE_REFERENCE: Only `request:` tokens used
+   - I'll refine descriptions to ensure they meet the "2+ sentences, domain language, specific enough for /feature-spec" requirement.
+
+   *Refining FEAT-PO-001:* Allow pharmacy dispatchers to select dispensed prescriptions from the day's batch and assign them to drivers for daily round creation. The system will aggregate prescriptions by patient address and present a draft schedule that staff can review, adjust, and finalise before publishing to drivers.
+   *Refining FEAT-PO-002:* Compute an optimised delivery sequence by analysing patient postcodes, driver home bases, and time constraints to minimise travel distance and ensure efficient stop sequencing. The optimised route will output a prioritised stop list that respects driver capacity limits and regulatory delivery windows.
+   *Refining FEAT-PO-003:* Serve a structured digital manifest to drivers on mobile devices, displaying patient name, address, delivery instructions, and prescription details in the planned execution order. Drivers can interact with each stop to update its state and access contextual information without leaving the manifest workflow.
+   *Refining FEAT-PO-004:* Capture verifiable proof of delivery at each stop by allowing drivers to record a digital signature, photograph, or geotagged confirmation upon successful handover. The system will enforce POD completion as a mandatory step before the manifest advances to the next prescription.
+   *Refining FEAT-PO-005:* Tag prescriptions that require controlled drug or temperature-sensitive handling and surface mandatory compliance checkpoints within the driver manifest. For controlled drugs, require secure handover verification and audit logging; for temperature-sensitive items, prompt temperature confirmation at both collection and delivery points.
+   *Refining FEAT-PO-006:* Provide pharmacy staff with a real-time tracking dashboard that displays the current status, location, and progress of every prescription in the active delivery cycle. Status transitions (loaded, in-transit, delivered, returned) update automatically as drivers complete manifest actions.
+   *Refining FEAT-PO-007:* Enable drivers to flag missed deliveries with a reason code and automatically generate a same-day return task that re-integrates into the active manifest. The system will route the return collection sequence to ensure all undelivered prescriptions are brought back to the pharmacy before the driver's shift concludes.
+
+7.  **Structure Output (ProductRoadmap JSON):**
+   - project_name: "RoundRoute"
+   - mode: "greenfield"
+   - epics: 3 epics as defined
+   - features: 7 features total
+   - source_documents: `request:<fragment>` for each feature
+   - constraints: from brief (same-day return, temperature/controlled drugs, housebound patients, mobile/offline likely)
+   - depends_on: mapped above
+   - priority_rationale: Advisory prose
+   - constraints_and_dependencies: list
+   - open_questions: genuinely ambiguous items
+   - feature_spec_inputs: exact mirror of epics[].features[]
+   - coverage_score: null
+   - assumptions: documented with confidence & impact
+
+   Let's draft the JSON carefully, ensuring all fields match the schema exactly.
+
+   *Self-Correction/Verification during drafting:*
+   - Check `source_documents` format: Must be `["request:<verbatim fragment>"]` or `["request"]`. I'll use specific fragments.
+   - Check `feature_spec_inputs`: Must be identical objects to features in epics.
+   - Check `coverage_score`: null.
+   - Check `mode`: "greenfield".
+   - Check descriptions: All 2+ sentences, domain language.
+   - Check dependencies: All point to valid feature IDs.
+   - Check assumptions: I'll add 3-4 clear assumptions about offline capability, integration with dispensing software, device fleet, and regulatory scope.
+   - Check open_questions: Network reliability, integration with pharmacy management systems, signature validation standards, controlled drug legal jurisdiction variations.
+   - Check constraints_and_dependencies: List them clearly.
+   - Check priority_rationale: Advisory prose, no numbers.
+
+   All looks solid. I will generate the JSON now. 
+   One detail: The prompt says `source_documents` for epics and roadmap level should be empty `[]`. Grounding lives on features. I'll ensure that.
+   I'll carefully construct the JSON. 
+   Structure:
+   ```json
+   {
+     "project_name": "RoundRoute",
+     "mode": "greenfield",
+     "epics": [...],
+     "priority_rationale": "...",
+     "constraints_and_dependencies": [...],
+     "open_questions": [...],
+     "feature_spec_inputs": [...],
+     "coverage_score": null,
+     "source_documents": [],
+     "assumptions": [...]
+   }
+   ```
+   I will map out the exact JSON structure now. All constraints met. Proceed. 
+   Output matches the required format.✅
+   Self-Correction/Refinement during thought: 
+   I need to make sure the `feature_spec_inputs` array contains the exact same objects as the features inside the epics. I'll copy-paste them carefully.
+   I'll verify the `request:<fragment>` matches the brief exactly.
+   Brief: "plans each driver's daily round" -> `request:plans each driver's daily round`
+   Brief: "gives the driver a manifest they can work through on the road" -> `request:gives the driver a manifest they can work through on the road`
+   Brief: "records proof of delivery" -> `request:records proof of delivery`
+   Brief: "lets the pharmacy see where a prescription is" -> `request:lets the pharmacy see where a prescription is`
+   Brief: "Some medicines are temperature-sensitive and some are controlled drugs" -> `request:Some medicines are temperature-sensitive and some are controlled drugs`
+   Brief: "missed deliveries have to be returned to the pharmacy the same day" -> `request:missed deliveries have to be returned to the pharmacy the same day`
+   All good.
+   I will generate the response now. 
+   Output matches exactly.✅
+   Proceeds. 
+   [Output Generation] -> *See response.* 
+   Note: I'll make sure the JSON is valid and properly formatted. I'll double-check the schema requirements. All good. 
+   One minor thing: `constraints` field in features should be a list of strings. I'll add relevant constraints like "Must support mobile/offline-first", "Must comply with controlled drug regulations", etc. based on the brief.
+   All set. 
+   Output matches response. 
+   [Done.] 
+   *Self-Correction/Verification during output generation prep:*
+   Wait, the prompt says: `source_documents` for features must be `["request:<verbatim fragment from the problem statement this feature addresses>"]`. I will use exact quotes from the brief.
+   I will ensure `feature_spec_inputs` is a flat list of ALL features.
+   I will ensure `coverage_score` is `null`.
+   I will ensure `mode` is `"greenfield"`.
+   I will ensure descriptions are 2+ sentences.
+   I will ensure `priority_rationale` is advisory prose without numbers.
+   All constraints met. Proceeds. 
+   Output generation. 
+   [Output] -> *Proceeds*
+</think>
+```json
+{
+  "project_name": "RoundRoute",
+  "mode": "greenfield",
+  "epics": [
+    {
+      "id": "EPIC-001",
+      "name": "Daily Round Planning & Route Optimisation",
+      "bounded_context": "Route Planning BC",
+      "description": "Enable pharmacy dispatchers to assemble daily delivery rounds, assign prescriptions to drivers, and optimise stop sequencing for efficient field execution.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-001",
+          "title": "Daily Round Creation & Prescription Assignment",
+          "description": "Allow pharmacy dispatchers to select dispensed prescriptions from the day's batch and assign them to specific drivers for daily round creation. The system will aggregate prescriptions by patient address and present a draft schedule that staff can review, adjust, and finalise before publishing to drivers.",
+          "bounded_context": "Route Planning BC",
+          "source_documents": [
+            "request:plans each driver's daily round"
+          ],
+          "constraints": [
+            "Must support manual drag-and-drop or bulk assignment for dispatchers",
+            "Must respect driver capacity limits per shift"
+          ],
+          "suggested_context_files": [],
+          "depends_on": []
+        },
+        {
+          "feature_id": "FEAT-PO-002",
+          "title": "Route Optimisation & Stop Sequencing",
+          "description": "Compute an optimised delivery sequence by analysing patient postcodes, driver home bases, and time constraints to minimise travel distance and ensure efficient stop sequencing. The optimised route will output a prioritised stop list that respects driver capacity limits and regulatory delivery windows.",
+          "bounded_context": "Route Planning BC",
+          "source_documents": [
+            "request:plans each driver's daily round"
+          ],
+          "constraints": [
+            "Must generate stop sequences compatible with mobile manifest consumption",
+            "Must allow dispatcher override of algorithmic sequencing"
+          ],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-001"
+          ]
+        }
+      ],
+      "source_documents": []
+    },
+    {
+      "id": "EPIC-002",
+      "name": "Driver Manifest & Field Execution",
+      "bounded_context": "Field Operations BC",
+      "description": "Provide drivers with a structured digital manifest to navigate stops, capture proof of delivery, handle special medicine compliance, and manage missed deliveries in the field.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-003",
+          "title": "Digital Manifest & Stop-by-Stop Navigation",
+          "description": "Serve a structured digital manifest to drivers on mobile devices, displaying patient name, address, delivery instructions, and prescription details in the planned execution order. Drivers can interact with each stop to update its state and access contextual information without leaving the manifest workflow.",
+          "bounded_context": "Field Operations BC",
+          "source_documents": [
+            "request:gives the driver a manifest they can work through on the road"
+          ],
+          "constraints": [
+            "Must function with intermittent or no cellular connectivity",
+            "Must present high-contrast, touch-friendly UI for field use"
+          ],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-002"
+          ]
+        },
+        {
+          "feature_id": "FEAT-PO-004",
+          "title": "Proof of Delivery Capture",
+          "description": "Capture verifiable proof of delivery at each stop by allowing drivers to record a digital signature, photograph, or geotagged confirmation upon successful handover. The system will enforce POD completion as a mandatory step before the manifest advances to the next prescription.",
+          "bounded_context": "Field Operations BC",
+          "source_documents": [
+            "request:records proof of delivery"
+          ],
+          "constraints": [
+            "Must store POD evidence securely and link it to the specific prescription ID",
+            "Must support offline capture with background sync when connectivity returns"
+          ],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-003"
+          ]
+        },
+        {
+          "feature_id": "FEAT-PO-005",
+          "title": "Controlled Drugs & Temperature-Sensitive Medicines Workflow",
+          "description": "Tag prescriptions that require controlled drug or temperature-sensitive handling and surface mandatory compliance checkpoints within the driver manifest. For controlled drugs, require secure handover verification and audit logging; for temperature-sensitive items, prompt temperature confirmation at both collection and delivery points.",
+          "bounded_context": "Field Operations BC",
+          "source_documents": [
+            "request:Some medicines are temperature-sensitive and some are controlled drugs"
+          ],
+          "constraints": [
+            "Must enforce compliance gates that prevent progression without required checks",
+            "Must generate immutable audit trails for controlled drug handling"
+          ],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-003"
+          ]
+        }
+      ],
+      "source_documents": []
+    },
+    {
+      "id": "EPIC-003",
+      "name": "Prescription Tracking & Exception Management",
+      "bounded_context": "Pharmacy Visibility BC",
+      "description": "Provide pharmacy staff with real-time visibility into prescription status and location, and automate workflows for missed deliveries and same-day returns.",
+      "features": [
+        {
+          "feature_id": "FEAT-PO-006",
+          "title": "Real-Time Prescription Status Tracking",
+          "description": "Display a live dashboard for pharmacy staff showing the current status and location of each prescription (e.g., loaded, in-transit, delivered, pending). Status transitions (loaded, in-transit, delivered, returned) update automatically as drivers complete manifest actions.",
+          "bounded_context": "Pharmacy Visibility BC",
+          "source_documents": [
+            "request:lets the pharmacy see where a prescription is"
+          ],
+          "constraints": [
+            "Must sync driver progress to the dashboard with minimal latency",
+            "Must filter and group prescriptions by driver, status, or time window"
+          ],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-004",
+            "FEAT-PO-005"
+          ]
+        },
+        {
+          "feature_id": "FEAT-PO-007",
+          "title": "Missed Delivery & Same-Day Return Handling",
+          "description": "Enable drivers to flag missed deliveries with a reason code and automatically generate a same-day return task that re-integrates into the active manifest. The system will route the return collection sequence to ensure all undelivered prescriptions are brought back to the pharmacy before the driver's shift concludes.",
+          "bounded_context": "Pharmacy Visibility BC",
+          "source_documents": [
+            "request:missed deliveries have to be returned to the pharmacy the same day"
+          ],
+          "constraints": [
+            "Must enforce same-day return completion before shift close",
+            "Must preserve chain-of-custody records for returned items"
+          ],
+          "suggested_context_files": [],
+          "depends_on": [
+            "FEAT-PO-003"
+          ]
+        }
+      ],
+      "source_documents": []
+    }
+  ],
+  "priority_rationale": "The roadmap follows a natural operational dependency chain. Route planning and assignment must exist first to populate the daily schedule. Route optimisation builds on assignment to structure the delivery sequence. The driver manifest is the primary field interface and must be delivered early so drivers can execute rounds. Proof of delivery and special medicines workflows attach directly to the manifest as mandatory execution gates. Real-time tracking depends on field actions completing, so it is prioritised after manifest and POD features. Missed delivery handling closes the operational loop and must be ready alongside manifest execution to support same-day return requirements. This ordering ensures each phase delivers incremental, testable value while respecting data and workflow dependencies.",
+  "constraints_and_dependencies": [
+    "FEAT-PO-002 depends on FEAT-PO-001",
+    "FEAT-PO-003 depends on FEAT-PO-002",
+    "FEAT-PO-004 depends on FEAT-PO-003",
+    "FEAT-PO-005 depends on FEAT-PO-003",
+    "FEAT-PO-006 depends on FEAT-PO-004 and FEAT-PO-005",
+    "FEAT-PO-007 depends on FEAT-PO-003",
+    "All features require mobile device support and offline-first data persistence",
+    "Controlled drug features require jurisdiction-specific compliance validation"
+  ],
+  "open_questions": [
+    "What is the expected number of drivers, pharmacies, and prescriptions per day to size capacity and performance requirements?",
+    "Should the system integrate with existing pharmacy management/dispensing software, or will prescription data be entered manually for the initial release?",
+    "What are the specific legal and audit requirements for controlled drug handover verification in the operating jurisdictions?",
+    "What offline connectivity assumptions apply to drivers (e.g., guaranteed cellular coverage vs. store-and-forward sync)?"
+  ],
+  "feature_spec_inputs": [
+    {
+      "feature_id": "FEAT-PO-001",
+      "title": "Daily Round Creation & Prescription Assignment",
+      "description": "Allow pharmacy dispatchers to select dispensed prescriptions from the day's batch and assign them to specific drivers for daily round creation. The system will aggregate prescriptions by patient address and present a draft schedule that staff can review, adjust, and finalise before publishing to drivers.",
+      "bounded_context": "Route Planning BC",
+      "source_documents": [
+        "request:plans each driver's daily round"
+      ],
+      "constraints": [
+        "Must support manual drag-and-drop or bulk assignment for dispatchers",
+        "Must respect driver capacity limits per shift"
+      ],
+      "suggested_context_files": [],
+      "depends_on": []
+    },
+    {
+      "feature_id": "FEAT-PO-002",
+      "title": "Route Optimisation & Stop Sequencing",
+      "description": "Compute an optimised delivery sequence by analysing patient postcodes, driver home bases, and time constraints to minimise travel distance and ensure efficient stop sequencing. The optimised route will output a prioritised stop list that respects driver capacity limits and regulatory delivery windows.",
+      "bounded_context": "Route Planning BC",
+      "source_documents": [
+        "request:plans each driver's daily round"
+      ],
+      "constraints": [
+        "Must generate stop sequences compatible with mobile manifest consumption",
+        "Must allow dispatcher override of algorithmic sequencing"
+      ],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-001"
+      ]
+    },
+    {
+      "feature_id": "FEAT-PO-003",
+      "title": "Digital Manifest & Stop-by-Stop Navigation",
+      "description": "Serve a structured digital manifest to drivers on mobile devices, displaying patient name, address, delivery instructions, and prescription details in the planned execution order. Drivers can interact with each stop to update its state and access contextual information without leaving the manifest workflow.",
+      "bounded_context": "Field Operations BC",
+      "source_documents": [
+        "request:gives the driver a manifest they can work through on the road"
+      ],
+      "constraints": [
+        "Must function with intermittent or no cellular connectivity",
+        "Must present high-contrast, touch-friendly UI for field use"
+      ],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-002"
+      ]
+    },
+    {
+      "feature_id": "FEAT-PO-004",
+      "title": "Proof of Delivery Capture",
+      "description": "Capture verifiable proof of delivery at each stop by allowing drivers to record a digital signature, photograph, or geotagged confirmation upon successful handover. The system will enforce POD completion as a mandatory step before the manifest advances to the next prescription.",
+      "bounded_context": "Field Operations BC",
+      "source_documents": [
+        "request:records proof of delivery"
+      ],
+      "constraints": [
+        "Must store POD evidence securely and link it to the specific prescription ID",
+        "Must support offline capture with background sync when connectivity returns"
+      ],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-003"
+      ]
+    },
+    {
+      "feature_id": "FEAT-PO-005",
+      "title": "Controlled Drugs & Temperature-Sensitive Medicines Workflow",
+      "description": "Tag prescriptions that require controlled drug or temperature-sensitive handling and surface mandatory compliance checkpoints within the driver manifest. For controlled drugs, require secure handover verification and audit logging; for temperature-sensitive items, prompt temperature confirmation at both collection and delivery points.",
+      "bounded_context": "Field Operations BC",
+      "source_documents": [
+        "request:Some medicines are temperature-sensitive and some are controlled drugs"
+      ],
+      "constraints": [
+        "Must enforce compliance gates that prevent progression without required checks",
+        "Must generate immutable audit trails for controlled drug handling"
+      ],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-003"
+      ]
+    },
+    {
+      "feature_id": "FEAT-PO-006",
+      "title": "Real-Time Prescription Status Tracking",
+      "description": "Display a live dashboard for pharmacy staff showing the current status and location of each prescription (e.g., loaded, in-transit, delivered, pending). Status transitions (loaded, in-transit, delivered, returned) update automatically as drivers complete manifest actions.",
+      "bounded_context": "Pharmacy Visibility BC",
+      "source_documents": [
+        "request:lets the pharmacy see where a prescription is"
+      ],
+      "constraints": [
+        "Must sync driver progress to the dashboard with minimal latency",
+        "Must filter and group prescriptions by driver, status, or time window"
+      ],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-004",
+        "FEAT-PO-005"
+      ]
+    },
+    {
+      "feature_id": "FEAT-PO-007",
+      "title": "Missed Delivery & Same-Day Return Handling",
+      "description": "Enable drivers to flag missed deliveries with a reason code and automatically generate a same-day return task that re-integrates into the active manifest. The system will route the return collection sequence to ensure all undelivered prescriptions are brought back to the pharmacy before the driver's shift concludes.",
+      "bounded_context": "Pharmacy Visibility BC",
+      "source_documents": [
+        "request:missed deliveries have to be returned to the pharmacy the same day"
+      ],
+      "constraints": [
+        "Must enforce same-day return completion before shift close",
+        "Must preserve chain-of-custody records for returned items"
+      ],
+      "suggested_context_files": [],
+      "depends_on": [
+        "FEAT-PO-003"
+      ]
+    }
+  ],
+  "coverage_score": null,
+  "source_documents": [],
+  "assumptions": [
+    {
+      "id": "ASM-001",
+      "category": "technical",
+      "statement": "Drivers will use standard smartphones or tablets with intermittent cellular connectivity, requiring offline-first data persistence and background sync.",
+      "source": "problem statement",
+      "confidence": "high",
+      "impact_if_wrong": "If drivers have guaranteed high-bandwidth connectivity or use dedicated hardware, sync architecture and UI constraints would change significantly."
+    },
+    {
+      "id": "ASM-002",
+      "category": "domain",
+      "statement": "Prescription data will initially be entered or imported manually by pharmacy staff rather than integrated with third-party dispensing software.",
+      "source": "problem statement",
+      "confidence": "medium",
+      "impact_if_wrong": "If real-time dispensing system integration is required from day one, the planning epic must include API adapters and data synchronization workflows."
+    },
+    {
+      "id": "ASM-003",
+      "category": "regulatory",
+      "statement": "Controlled drug handling and temperature-sensitive medicine workflows must comply with local pharmacy and transport regulations, but exact jurisdictional rules are not specified.",
+      "source": "problem statement",
+      "confidence": "medium",
+      "impact_if_wrong": "If specific legal audit requirements exist (e.g., dual signatures, tamper-evident logging, calibrated thermometers), the special medicines workflow will need additional compliance gates."
+    },
+    {
+      "id": "ASM-004",
+      "category": "operational",
+      "statement": "Each driver operates a single daily shift with a fixed vehicle capacity, and missed deliveries must be physically collected and returned by the same driver before shift end.",
+      "source": "problem statement",
+      "confidence": "high",
+      "impact_if_wrong": "If multiple shifts, shared vehicles, or third-party return couriers are used, the return handling feature must support multi-driver coordination and extended time windows."
+    }
+  ]
+}
+```

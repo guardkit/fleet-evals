@@ -176,5 +176,12 @@
       },
       "recorded_at": "2026-08-13T17:31:39+00:00"
     }
+  },
+  "spot_check": {
+    "status": "ok",
+    "by": "Rich",
+    "date": "2026-08-14",
+    "pairs": 4,
+    "note": "verdict FINAL"
   }
 }

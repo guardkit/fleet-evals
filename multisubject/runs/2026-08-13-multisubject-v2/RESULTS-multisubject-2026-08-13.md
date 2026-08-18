@@ -138,3 +138,10 @@ its second run died at item 20 on LaTeX-backslash JSON (escape repair +
 progressive writes added, resumed, completed). Scenario review also caught and
 fixed one internal inconsistency (history Putsch/Chancellor) BEFORE generation;
 the Elizabethan essay-phrasing taste-flag is recorded here for Rich's eyes.
+
+---
+
+**SPOT-CHECK COMPLETE — Rich, 2026-08-14 ("I've read them — spot-check ok").** The
+protocol's mandatory human backstop is discharged; the verdicts above are FINAL for
+this run. Next evidence step (Rich's word, same day): the attended base-in-the-loop
+trial — prepared in study-tutor `RUNBOOK-base-in-loop-trial.md`.

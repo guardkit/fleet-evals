@@ -78,6 +78,28 @@ def load_task(task_dir: Path) -> dict:
         return tomllib.load(f)
 
 
+def prompts_root_identity(prompts_root: Path) -> dict:
+    """Stamp WHICH TREE the prompts came from, not just their hashes.
+
+    2026-08-21: the shared specialist-agent checkout was found sitting on another session's
+    branch while this suite's baseline was pinned to main's bytes. The hashes happened to match,
+    but a branch switch is SILENT and there is no signal — so a grade must carry evidence of the
+    tree it read, and a later reader must be able to tell without asking anyone.
+    """
+    def _git(*a):
+        try:
+            return subprocess.run(["git", "-C", str(prompts_root), *a], capture_output=True,
+                                  text=True, timeout=15).stdout.strip() or None
+        except Exception:
+            return None
+    return {
+        "path": str(prompts_root),
+        "head": _git("rev-parse", "HEAD"),
+        "branch": _git("rev-parse", "--abbrev-ref", "HEAD"),
+        "dirty": bool(_git("status", "--porcelain", "--", "roles/product-owner/prompts")),
+    }
+
+
 def assemble(task_dir: Path, prompts_root: Path) -> dict:
     """instruction.md: the pinned serving template + this brief as the description."""
     prompt_path = prompts_root / SERVING_PROMPT
@@ -139,9 +161,14 @@ def slice_file_bundle(text: str) -> dict[str, str]:
     for i, m in enumerate(marks):
         end = marks[i + 1].start() if i + 1 < len(marks) else len(text)
         body = text[m.end():end]
-        body = re.sub(r"^\s*```[a-zA-Z0-9]*\s*\n", "", body)
-        body = re.sub(r"\n\s*```\s*$", "\n", body)
+        # ORDER MATTERS (caught by tests/test_po_spec_runner.py, 2026-08-21): strip the
+        # `=== END FILE ===` marker FIRST. Otherwise the closing ``` is not at end-of-string when
+        # the trailing-fence regex runs, and a code fence is written into the graded .feature file
+        # — which the Gherkin parser would then reject for a reason that has nothing to do with
+        # the model.
         body = re.sub(r"^===\s*END FILE\s*===\s*$", "", body, flags=re.MULTILINE)
+        body = re.sub(r"^\s*```[a-zA-Z0-9]*\s*\n", "", body)
+        body = re.sub(r"\n\s*```\s*\n?\s*$", "\n", body)
         files[m.group("path").strip()] = body.strip("\n") + "\n"
     return files
 
@@ -203,6 +230,7 @@ def run_rep(args, task: dict, task_dir: Path, rep: int, out_dir: Path) -> dict:
         "gen_params_sent": gen or "server defaults",
         "system_sha256": sha256_text(asm["system"]), "user_sha256": sha256_text(asm["user"]),
         "serving_prompt": SERVING_PROMPT,
+        "prompts_root": prompts_root_identity(Path(args.prompts_root)),
         "started_at": _dt.datetime.now(_dt.timezone.utc).isoformat(),
     }
     if args.dry_run:

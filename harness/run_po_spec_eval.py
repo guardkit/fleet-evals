@@ -255,10 +255,29 @@ def tree_from_output(raw: str) -> tuple[dict[str, str], str]:
     return slice_file_bundle(body), "bundle_slicer (postprocess returned nothing)"
 
 
+def _place(rel: str, slug: str | None) -> str:
+    """Where production's postprocessor would put this block.
+
+    2026-08-21: the model emits BARE filenames — `=== FILE: kiln-firing-slot-booking.feature ===` —
+    exactly as its training rows do. Production runs with `--output features/` and the pinned layout
+    is `{--output}/{kebab-case-feature-name}/`, so the postprocessor lands them in
+    features/<slug>/. Writing them flat (what this runner did) produced a rep dir with no features/
+    directory at all, and every gate then failed on layout — a HARNESS defect reported as a model
+    failure. A model-authored path that already names a directory is honoured as-is.
+    """
+    rel = rel.lstrip("/")
+    if "/" in rel or slug is None:
+        return rel
+    return f"features/{slug}/{rel}"
+
+
 def write_tree(rep_dir: Path, files: dict[str, str]) -> list[str]:
     written = []
+    # the slug is the .feature block's stem — the same value the contract keys every name off
+    slug = next((Path(n).stem for n in files if n.endswith(".feature") and "/" not in n.lstrip("/")),
+                None)
     for rel, content in files.items():
-        rel = rel.lstrip("/")
+        rel = _place(rel, slug)
         if ".." in Path(rel).parts:
             continue  # never write outside the rep dir
         p = rep_dir / rel
@@ -349,7 +368,13 @@ def main() -> int:
     ap.add_argument("--grade", action="store_true")
     ap.add_argument("--temperature", type=float, default=None)
     ap.add_argument("--top-p", type=float, default=None)
-    ap.add_argument("--max-tokens", type=int, default=None)
+    # 2026-08-21: this defaulted to None, so NO cap was sent and the server ran to EOS or the full
+    # 131K context. A single repetition loop then burned 27,000+ tokens at 34 t/s before anyone
+    # noticed. Production caps registered modes at PLAYER_REGISTERED_MODE_MAX_COMPLETION_TOKENS =
+    # 16384 (specialist-agent agents/player.py:61) and its own docstring cites a "live iter-2 260k-char
+    # runaway" as the reason. Grading unbounded is both unfaithful to production and unbounded in cost.
+    ap.add_argument("--max-tokens", type=int, default=16384,
+                    help="Completion budget. Default 16384 = production's registered-mode cap.")
     args = ap.parse_args()
 
     task_dir = TASKS_DIR / TASK_ID

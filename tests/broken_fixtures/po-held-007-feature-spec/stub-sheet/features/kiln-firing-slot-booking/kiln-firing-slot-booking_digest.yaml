@@ -1,0 +1,17 @@
+feature: kiln-firing-slot-booking
+generated: '2026-07-07T00:00:00Z'
+scenarios:
+- title: Booking a slot works
+  tags:
+  - '@key-example'
+  - '@smoke'
+  sentence: Booking a slot works.
+- title: Cancelling a booking works
+  tags:
+  - '@key-example'
+  sentence: Cancelling a booking works.
+- title: Blocking a slot works
+  tags:
+  - '@key-example'
+  sentence: Blocking a slot works.
+assumptions: []

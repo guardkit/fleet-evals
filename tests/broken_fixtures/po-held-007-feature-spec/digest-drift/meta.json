@@ -1,0 +1,8 @@
+{
+  "defect_class": "four-file contract violation — a digest title PARAPHRASED instead of transcribed",
+  "construction": "the frontier-baseline good fixture with one digest scenario title reworded ('Booking a free slot succeeds' -> 'Booking a free slot works correctly'); the .feature is untouched, so the digest no longer corresponds to the worked examples it claims to compress",
+  "expect_fail": [
+    "test_digest_conforms"
+  ],
+  "authored": "2026-08-21 (the four-file re-cut). Chosen because a paraphrase is the drift a model is most likely to produce — it reads like an improvement, and nothing about the output looks wrong to a person skimming it. A new gate with no fixture proving it fires is not a gate."
+}

@@ -2,7 +2,7 @@
 
 Axes per the pinned contract (CONTRACT-feature-spec-plan-outputs.md Part A,
 guardkit feature-spec.md @ ce914f7c) and the po-heldout-spec extension scope:
-three-file contract conformance; Gherkin structure incl. the single-physical-
+four-file contract conformance; Gherkin structure incl. the single-physical-
 line step invariant; domain-language discipline; assumptions-manifest schema +
 annotation agreement; --auto/SPL assumption discipline (all-low, all-deferred,
 review_required); summary/manifest/feature count coherence; and the
@@ -29,9 +29,13 @@ def banlist(task_dir):
     return spec_gates.load_anchors(task_dir / "test" / "reference" / "domain_language_banlist.json")
 
 
-def test_three_file_contract(output_dir):
-    """Part A: exactly the pinned triple under features/{slug}/ — no step
-    definitions, no support files, nothing extra ('purely additive')."""
+def test_four_file_contract(output_dir):
+    """Part A: exactly the pinned FOUR files under features/{slug}/ — no step
+    definitions, no support files, nothing extra ('purely additive').
+
+    Was three until 2026-08-14, when specialist-agent f23a845 added the digest and made the
+    postprocessor raise on a missing block. This suite stayed on three for a week because the
+    contract document it cites for provenance was not corrected until 2026-08-21."""
     findings = spec_gates.spec_layout_findings(output_dir)
     assert findings == [], "\n" + "\n".join(json.dumps(f) for f in findings)
 
@@ -207,3 +211,15 @@ def test_scenario_floor(parsed):
     assert len(parsed["scenarios"]) >= MIN_SCENARIOS, (
         f"only {len(parsed['scenarios'])} scenarios — effort-dodging floor is {MIN_SCENARIOS}"
     )
+
+
+
+def test_digest_conforms(digest, feature_text, manifest, paths):
+    """Part A.4: the digest is transcription plus one plain sentence per worked example.
+
+    Mirrors production's check_digest_consistency(). What is deliberately NOT asserted here — as
+    production also declines to assert it — is whether a sentence accurately DESCRIBES its example.
+    Nothing deterministic can, and that is exactly what the human read is for.
+    """
+    findings = spec_gates.digest_findings(digest, feature_text, manifest, paths["slug"].name)
+    assert findings == [], "\n" + "\n".join(json.dumps(f) for f in findings)

@@ -1,0 +1,64 @@
+feature: kiln-firing-slot-booking
+generated: '2026-07-07T00:00:00Z'
+scenarios:
+- title: Booking a free slot succeeds
+  tags:
+  - '@key-example'
+  - '@smoke'
+  sentence: A member can take an open kiln slot, and it is then held in their name.
+- title: Viewing availability shows only free slots
+  tags:
+  - '@key-example'
+  - '@smoke'
+  sentence: Someone looking for a slot sees only the ones still open, never those already taken or withdrawn.
+- title: Cancelling a booking frees the slot
+  tags:
+  - '@key-example'
+  sentence: When a member gives up a booking, that slot becomes available for someone else to take.
+- title: The manager blocks out a slot for servicing
+  tags:
+  - '@key-example'
+  sentence: The studio manager can withdraw a slot from use so that nobody can book it while the kiln
+    is serviced.
+- title: Booking while holding two active bookings succeeds
+  tags:
+  - '@boundary'
+  sentence: A member who already holds two bookings is still allowed to take one more.
+- title: Booking a fourth slot beyond the active-booking limit is refused
+  tags:
+  - '@boundary'
+  - '@negative'
+  sentence: A member who has reached the limit on bookings they may hold at once is turned down when they
+    try to take another.
+- title: Booking a slot that is already taken is refused
+  tags:
+  - '@negative'
+  sentence: Trying to take a slot someone else already holds is refused rather than quietly double-booked.
+- title: A member cannot cancel another member's booking
+  tags:
+  - '@negative'
+  sentence: One member cannot give away a booking that belongs to somebody else.
+- title: Cancelling inside the cancellation window is refused
+  tags:
+  - '@negative'
+  sentence: A member who leaves it too late to call off a booking is held to it.
+- title: Two members booking the same slot at the same moment
+  tags:
+  - '@edge-case'
+  sentence: When two people go for the same slot at the same instant, exactly one of them gets it and
+    the other is told it has gone.
+- title: Blocking a slot that already holds a booking cancels it
+  tags:
+  - '@edge-case'
+  sentence: Withdrawing a slot that someone had already booked calls off their booking and lets them know.
+assumptions:
+- id: ASSUM-001
+  text: A member may hold at most three active bookings at a time
+  basis: The brief states no cap; a small booking limit is a common studio scheduling default
+- id: ASSUM-002
+  text: Bookings may be cancelled up to 24 hours before the slot starts; closer than that the cancellation
+    window has closed
+  basis: The brief allows cancelling but states no notice rule; a one-day window is a common default
+- id: ASSUM-003
+  text: Blocking a booked slot cancels the existing booking and the affected member is informed
+  basis: The brief does not say what happens to bookings on a slot taken out of use for servicing

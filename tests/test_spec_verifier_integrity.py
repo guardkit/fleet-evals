@@ -169,6 +169,7 @@ FLOOR_BROKEN_007 = {
     "header-drift", "manifest-enum-drift", "confident-assumptions",
     "summary-count-mismatch", "unlicensed-invention", "unlicensed-all-groups",
     "stuffed-license", "annotation-missing", "dangling-scenario-ref", "bom-file",
+    "digest-drift",   # 2026-08-21, the four-file re-cut
 }
 FLOOR_GOOD_007 = {
     "frontier-baseline", "licensed-per-group", "box-drawing-dividers",

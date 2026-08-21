@@ -51,7 +51,10 @@ __all__ = [
 
 STEP_KEYWORDS = ("Given", "When", "Then", "And", "But")
 CATEGORY_TAGS = ("@key-example", "@boundary", "@negative", "@edge-case")
-SPEC_FILE_SUFFIXES = (".feature", "_assumptions.yaml", "_summary.md")
+# 2026-08-14 (specialist-agent f23a845): the /feature-spec output contract became FOUR files — the
+# digest joined the triple and the postprocessor now raises on a missing block. The contract document
+# was not corrected until 2026-08-21, which is how this suite came to be frozen against three.
+SPEC_FILE_SUFFIXES = (".feature", "_assumptions.yaml", "_summary.md", "_digest.yaml")
 TASK_TAG_RE = re.compile(r"^\s*@task:(TASK-[A-Za-z0-9._-]+)\s*$")
 ASSUM_ANNOTATION_RE = re.compile(
     r"#\s*\[ASSUMPTION:\s*confidence=(\w+)\s*\]"
@@ -101,7 +104,7 @@ def find_spec_dir(output_root: Path) -> Path:
 
 
 def spec_layout_findings(output_root: Path) -> list[dict]:
-    """Part A: exactly three files, pinned names, nothing else (no step
+    """Part A: exactly four files, pinned names, nothing else (no step
     definitions, no support files — behavioural rule 'purely additive')."""
     findings: list[dict] = []
     try:
@@ -131,6 +134,7 @@ def spec_paths(output_root: Path) -> dict[str, Path]:
         "feature": spec_dir / f"{slug}.feature",
         "assumptions": spec_dir / f"{slug}_assumptions.yaml",
         "summary": spec_dir / f"{slug}_summary.md",
+        "digest": spec_dir / f"{slug}_digest.yaml",
     }
 
 
@@ -755,3 +759,135 @@ def linkage_findings(parsed: dict, feature_yaml: dict, output_root: Path) -> lis
 
 def mermaid_blocks(guide_text: str) -> list[str]:
     return re.findall(r"```mermaid\s*\n(.*?)```", guide_text, re.DOTALL)
+
+
+# --- The digest (Part A.4, from 2026-08-14) -------------------------------------
+#
+# These mirror `check_digest_consistency()` in specialist-agent
+# (src/specialist_agent/roles/product_owner/modes/feature_spec.py) — production's own checker, which
+# is the source of truth. They are re-implemented here rather than imported because GRADING must run
+# standalone against an output directory: an exam that needs the production repo on the path is an
+# exam that quietly does not run. The oracle in solution/ is validated against the REAL function, so
+# a divergence between these rules and production's shows up as a failing oracle.
+#
+# Deliberately NOT checked, exactly as production does not: whether a sentence accurately DESCRIBES
+# its example. Nothing deterministic can, and that is what the human read is for.
+
+DIGEST_KEYS = {"feature", "generated", "scenarios", "assumptions"}
+
+# --- VENDORED VERBATIM from specialist-agent -----------------------------------
+# src/specialist_agent/roles/product_owner/modes/feature_spec.py (lines ~881-965).
+#
+# Copied, not paraphrased, and the reason is a live example: my first pass wrote
+# `\b(Given|When|Then|And|But)\b\s` and it rejected two perfectly good oracle sentences —
+# "When a member gives up a booking, ..." — because "When" opens ordinary English all the time.
+# Production knows that and excludes "When" from the start-anchored set ON PURPOSE, and it re-checks
+# every candidate sentence break against an abbreviation list. Those are judgements, not details, and
+# a paraphrase loses them. If these ever drift from production, the oracle in solution/ — which is
+# validated against the REAL function — starts failing, which is the signal we want.
+_STEP_KEYWORDS = ("Given", "When", "Then", "And", "But")
+# "When" is missing on purpose: "When the service restarts, the queue is drained." is ordinary
+# English, and refusing it would reject good digests.
+_STEP_KEYWORDS_AT_START = ("Given", "Then", "And", "But")
+_DIGEST_STEP_LINE_RE = re.compile(
+    r"\n\s*(?:" + "|".join(_STEP_KEYWORDS) + r")\s"
+    r"|\A(?:" + "|".join(_STEP_KEYWORDS_AT_START) + r")\s"
+)
+_MID_SENTENCE_BREAK_RE = re.compile(r"[.?!]\s")
+_DIGEST_ABBREVIATIONS = (
+    "e.g.", "i.e.", "etc.", "cf.", "vs.", "approx.", "a.m.", "p.m.", "U.S.", "U.K.", "E.U.",
+    "Dr.", "Mr.", "Mrs.", "Ms.", "Prof.", "St.", "Jr.", "Sr.", "Inc.", "Ltd.", "Co.",
+)
+_ABBREVIATION_TAIL_RE = re.compile(
+    r"(?<![A-Za-z])(?:" + "|".join(re.escape(a) for a in _DIGEST_ABBREVIATIONS) + r")$",
+    re.IGNORECASE,
+)
+
+
+def _has_mid_sentence_break(sentence: str) -> bool:
+    """True iff `sentence` is more than one sentence — abbreviations excepted."""
+    body = sentence[:-1]
+    for match in _MID_SENTENCE_BREAK_RE.finditer(body):
+        if _ABBREVIATION_TAIL_RE.search(body[: match.start() + 1]):
+            continue
+        return True
+    return False
+
+
+def digest_findings(digest, feature_text: str, manifest, slug: str) -> list[dict]:
+    """Structured findings; empty list means the digest conforms."""
+    out: list[dict] = []
+    if not isinstance(digest, dict):
+        return [{"defect": "digest_shape", "detail": "the digest is not a mapping"}]
+
+    extra = set(digest) - DIGEST_KEYS
+    missing = DIGEST_KEYS - set(digest)
+    for k in sorted(extra):
+        out.append({"defect": "digest_unknown_key", "key": k})
+    for k in sorted(missing):
+        out.append({"defect": "digest_missing_key", "key": k})
+    if digest.get("feature") not in (None, slug):
+        out.append({"defect": "digest_slug_mismatch",
+                    "detail": f"names {digest.get('feature')!r}, spec files are {slug!r}"})
+
+    spec = parse_feature(feature_text)["scenarios"]
+    # this parser names the scenario title `name`; production's _parse_scenarios returns it as the
+    # first tuple element. Same value, different key — read it from THIS parser, not from memory.
+    spec_titles = [sc["name"] for sc in spec]
+    spec_tags = [list(sc.get("tags") or []) for sc in spec]
+    entries = digest.get("scenarios") or []
+    if not isinstance(entries, list):
+        return out + [{"defect": "digest_shape", "detail": "'scenarios' is not a list"}]
+
+    if len(entries) != len(spec_titles):
+        out.append({"defect": "digest_scenario_count",
+                    "detail": f"digest has {len(entries)}, .feature has {len(spec_titles)}"})
+
+    for i, (entry, title) in enumerate(zip(entries, spec_titles), start=1):
+        if not isinstance(entry, dict):
+            out.append({"defect": "digest_entry_shape", "index": i}); continue
+        if str(entry.get("title") or "").strip() != title:
+            out.append({"defect": "digest_title_mismatch", "index": i,
+                        "detail": f"{entry.get('title')!r} != {title!r} (order-sensitive)"})
+        tags = entry.get("tags")
+        if [str(t) for t in (tags or [])] != spec_tags[i - 1]:
+            out.append({"defect": "digest_tags_mismatch", "index": i,
+                        "detail": f"{tags} != {spec_tags[i - 1]}"})
+        sentence = str(entry.get("sentence") or "").strip()
+        if not sentence:
+            out.append({"defect": "digest_sentence_empty", "index": i}); continue
+        if sentence[-1] not in ".?!":
+            out.append({"defect": "digest_sentence_unterminated", "index": i})
+        if _has_mid_sentence_break(sentence):
+            out.append({"defect": "digest_sentence_not_one_sentence", "index": i})
+        if _DIGEST_STEP_LINE_RE.search(sentence):
+            out.append({"defect": "digest_sentence_has_step_line", "index": i})
+        for token in ("Scenario", "Feature:"):
+            if token in sentence:
+                out.append({"defect": "digest_sentence_uses_spec_word", "index": i, "word": token})
+
+    man_entries = (manifest or {}).get("assumptions") or []
+    man_ids = [str(a.get("id")) for a in man_entries if isinstance(a, dict)]
+    dig_entries = digest.get("assumptions") or []
+    dig_ids = [str(a.get("id")) for a in dig_entries if isinstance(a, dict)]
+    for missing_id in [i for i in man_ids if i not in dig_ids]:
+        out.append({"defect": "digest_assumption_missing", "id": missing_id})
+    for extra_id in [i for i in dig_ids if i not in man_ids]:
+        out.append({"defect": "digest_assumption_unknown", "id": extra_id})
+    by_id = {str(a.get("id")): a for a in man_entries if isinstance(a, dict)}
+    for a in dig_entries:
+        if not isinstance(a, dict):
+            continue
+        src = by_id.get(str(a.get("id")))
+        if not src:
+            continue
+        if str(a.get("text") or "") != str(src.get("assumption") or ""):
+            out.append({"defect": "digest_assumption_text_not_verbatim", "id": a.get("id")})
+        if str(a.get("basis") or "") != str(src.get("basis") or ""):
+            out.append({"defect": "digest_assumption_basis_not_verbatim", "id": a.get("id")})
+    return out
+
+
+def load_digest(path):
+    import yaml
+    return yaml.safe_load(Path(path).read_text(encoding="utf-8"))

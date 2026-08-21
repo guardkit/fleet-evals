@@ -1,0 +1,92 @@
+feature: kiln-firing-slot-booking
+generated: '2026-07-07T00:00:00Z'
+scenarios:
+- title: Booking a free slot succeeds
+  tags:
+  - '@key-example'
+  - '@smoke'
+  sentence: Booking a free slot succeeds.
+- title: Viewing availability shows only free slots
+  tags:
+  - '@key-example'
+  - '@smoke'
+  sentence: Viewing availability shows only free slots.
+- title: Cancelling well before the slot starts frees it
+  tags:
+  - '@key-example'
+  - '@smoke'
+  sentence: Cancelling well before the slot starts frees it.
+- title: The manager blocks out a free slot for servicing
+  tags:
+  - '@key-example'
+  sentence: The manager blocks out a free slot for servicing.
+- title: Booking while holding two active bookings succeeds
+  tags:
+  - '@boundary'
+  sentence: Booking while holding two active bookings succeeds.
+- title: Booking beyond the active-booking limit is refused
+  tags:
+  - '@boundary'
+  - '@negative'
+  sentence: Booking beyond the active-booking limit is refused.
+- title: Cancelling exactly at the cancellation window edge succeeds
+  tags:
+  - '@boundary'
+  sentence: Cancelling exactly at the cancellation window edge succeeds.
+- title: Cancelling inside the cancellation window is refused
+  tags:
+  - '@boundary'
+  - '@negative'
+  sentence: Cancelling inside the cancellation window is refused.
+- title: Booking a slot that is already taken is refused
+  tags:
+  - '@negative'
+  sentence: Booking a slot that is already taken is refused.
+- title: A member cannot cancel another member's booking
+  tags:
+  - '@negative'
+  sentence: A member cannot cancel another member's booking.
+- title: Booking a blocked slot is refused
+  tags:
+  - '@negative'
+  sentence: Booking a blocked slot is refused.
+- title: Booking a slot that has already started is refused
+  tags:
+  - '@negative'
+  sentence: Booking a slot that has already started is refused.
+- title: Two members booking the same slot at the same moment
+  tags:
+  - '@edge-case'
+  sentence: Two members booking the same slot at the same moment.
+- title: Blocking a slot that already holds a booking cancels it
+  tags:
+  - '@edge-case'
+  sentence: Blocking a slot that already holds a booking cancels it.
+- title: Blocking every slot on one kiln leaves the other kiln bookable
+  tags:
+  - '@edge-case'
+  sentence: Blocking every slot on one kiln leaves the other kiln bookable.
+- title: A cancelled slot can be booked again straight away
+  tags:
+  - '@edge-case'
+  sentence: A cancelled slot can be booked again straight away.
+assumptions:
+- id: ASSUM-001
+  text: A member may hold at most three active bookings at a time
+  basis: The brief states no cap; a small booking limit is a common studio scheduling default
+- id: ASSUM-002
+  text: Bookings may be cancelled up to 24 hours before the slot starts; closer than that the cancellation
+    window has closed
+  basis: The brief allows cancelling but states no notice rule; a one-day window is a common default
+- id: ASSUM-003
+  text: Blocking a booked slot cancels the existing booking and the affected member is informed
+  basis: The brief does not say what happens to bookings on a slot taken out of use for servicing
+- id: ASSUM-004
+  text: Firing slots are published by the studio manager ahead of time
+  basis: The brief says slots exist but not who defines them or when
+- id: ASSUM-005
+  text: A slot that has already started can no longer be booked or cancelled
+  basis: The brief is silent on past slots; acting on them can only corrupt the calendar
+- id: ASSUM-006
+  text: A cancelled slot returns to the free pool immediately
+  basis: The brief implies freed slots are reusable but states no delay or hold

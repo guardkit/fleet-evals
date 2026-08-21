@@ -46,3 +46,9 @@ def manifest(paths):
 @pytest.fixture(scope="session")
 def summary_text(paths) -> str:
     return paths["summary"].read_text(encoding="utf-8")
+
+
+@pytest.fixture(scope="session")
+def digest(paths):
+    """The fourth file (Part A.4, from 2026-08-14)."""
+    return spec_gates.load_digest(paths["digest"])

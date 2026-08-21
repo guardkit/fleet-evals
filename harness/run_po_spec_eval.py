@@ -63,6 +63,12 @@ TASK_ID = "po-held-007-feature-spec"
 DEFAULT_ENDPOINT = "http://promaxgb10-41b1:9000/v1"
 DEFAULT_PROMPTS_ROOT = REPO_ROOT.parent / "specialist-agent"
 SERVING_PROMPT = "roles/product-owner/prompts/player_feature_spec.md"
+# The pinned /feature-spec methodology template. Production puts it in the USER turn, and the system
+# prompt tells the model it is there ("The request carries the full /feature-spec methodology template
+# as reference data"). specialist-agent resolves it as the `feature-spec-methodology` TemplatePin from
+# the guardkit package; this is the same file in the guardkit checkout.
+DEFAULT_TEMPLATE_ROOT = REPO_ROOT.parent / "guardkit"
+METHODOLOGY_TEMPLATE = "installer/core/commands/feature-spec.md"
 RETRIES_PER_REP = 2
 
 # `=== FILE: <path> ===` … the emission contract the serving prompt pins and the trace corpus shows.
@@ -100,16 +106,72 @@ def prompts_root_identity(prompts_root: Path) -> dict:
     }
 
 
-def assemble(task_dir: Path, prompts_root: Path) -> dict:
-    """instruction.md: the pinned serving template + this brief as the description."""
+def template_root_identity(template_root: Path) -> dict:
+    """Same argument as prompts_root_identity: a grade must name the tree its bytes came from."""
+    def _git(*a):
+        try:
+            return subprocess.run(["git", "-C", str(template_root), *a], capture_output=True,
+                                  text=True, timeout=15).stdout.strip() or None
+        except Exception:
+            return None
+    return {
+        "path": str(template_root),
+        "head": _git("rev-parse", "HEAD"),
+        "branch": _git("rev-parse", "--abbrev-ref", "HEAD"),
+        "dirty": bool(_git("status", "--porcelain", "--", METHODOLOGY_TEMPLATE)),
+    }
+
+
+def assemble(task_dir: Path, prompts_root: Path, template_root: Path, stack: str = "generic") -> dict:
+    """Reproduce what PRODUCTION sends — not a simplification of it.
+
+    2026-08-21 correction. This function used to return {system: player_feature_spec.md, user: brief}.
+    That is not the serving shape. `build_feature_spec_input()` in
+    specialist-agent/src/specialist_agent/roles/product_owner/modes/feature_spec.py assembles the user
+    turn from LABELLED SECTIONS:
+
+        ## Methodology template (reference — precedence rules in system prompt apply)
+        {the pinned 944-line template}
+
+        ## Approved input
+        {the brief}
+
+        ## Context documents        (only when present)
+
+        ## Stack
+        generic
+
+    and 007's own instruction.md §Harness assembly says answer sheets come from the specialist-agent
+    target-terminal harness invoking the pinned template with `--auto --stack generic --output
+    features/` — explicitly NOT a simplified assembly.
+
+    The omission mattered: the system prompt tells the model "The request carries the full
+    /feature-spec methodology template as reference data", so sending only the brief graded the model
+    against a request that contradicts its own instructions. This is the same defect class as the
+    merged-gen gate replaying a training prompt production never sends — an instrument measuring a
+    configuration that does not occur.
+    """
     prompt_path = prompts_root / SERVING_PROMPT
     if not prompt_path.is_file():
         raise FileNotFoundError(
             f"Serving prompt not found: {prompt_path} — pass --prompts-root at your "
             "specialist-agent checkout (provenance is pinned in task.toml)."
         )
+    template_path = template_root / METHODOLOGY_TEMPLATE
+    if not template_path.is_file():
+        raise FileNotFoundError(
+            f"Methodology template not found: {template_path} — pass --template-root at your "
+            "guardkit checkout. Production puts this template in the user turn; grading without it "
+            "measures a request production never sends."
+        )
     brief = (task_dir / "input" / "brief.md").read_text(encoding="utf-8")
-    return {"system": prompt_path.read_text(encoding="utf-8"), "user": brief}
+    sections = [
+        "## Methodology template (reference — precedence rules in system prompt apply)\n\n"
+        + template_path.read_text(encoding="utf-8"),
+        "## Approved input\n\n" + brief,
+        "## Stack\n\n" + stack,
+    ]
+    return {"system": prompt_path.read_text(encoding="utf-8"), "user": "\n\n".join(sections)}
 
 
 def call_model(endpoint, model, system, user, timeout_s, gen_params) -> dict:
@@ -221,7 +283,7 @@ def grade_rep(task_dir: Path, rep_dir: Path) -> bool:
 def run_rep(args, task: dict, task_dir: Path, rep: int, out_dir: Path) -> dict:
     rep_dir = out_dir / TASK_ID / f"rep{rep}"
     rep_dir.mkdir(parents=True, exist_ok=True)
-    asm = assemble(task_dir, Path(args.prompts_root))
+    asm = assemble(task_dir, Path(args.prompts_root), Path(args.template_root))
     gen = {k: v for k, v in {"temperature": args.temperature, "top_p": args.top_p,
                              "max_tokens": args.max_tokens}.items() if v is not None}
     record = {
@@ -231,6 +293,7 @@ def run_rep(args, task: dict, task_dir: Path, rep: int, out_dir: Path) -> dict:
         "system_sha256": sha256_text(asm["system"]), "user_sha256": sha256_text(asm["user"]),
         "serving_prompt": SERVING_PROMPT,
         "prompts_root": prompts_root_identity(Path(args.prompts_root)),
+        "template_root": template_root_identity(Path(args.template_root)),
         "started_at": _dt.datetime.now(_dt.timezone.utc).isoformat(),
     }
     if args.dry_run:
@@ -276,6 +339,10 @@ def main() -> int:
     ap.add_argument("--model", required=True)
     ap.add_argument("--endpoint", default=DEFAULT_ENDPOINT)
     ap.add_argument("--prompts-root", default=str(DEFAULT_PROMPTS_ROOT))
+    ap.add_argument("--template-root", default=str(DEFAULT_TEMPLATE_ROOT),
+                    help="guardkit checkout holding the pinned /feature-spec methodology "
+                         "template. Production puts it in the user turn; omitting it grades "
+                         "a request production never sends.")
     ap.add_argument("--out", default=None)
     ap.add_argument("--rep", type=int, default=None)
     ap.add_argument("--dry-run", action="store_true")

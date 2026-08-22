@@ -1,10 +1,10 @@
 {
   "defect_class": "deliberately-stubbed answer sheet (G2b session gate: a stub must FAIL)",
-  "construction": "guardkit-VALID one-task 'do everything' plan: untagged spec copy, no diagrams, no decomposition \u2014 effort-dodging that the YAML oracle alone cannot catch",
+  "construction": "guardkit-VALID one-task 'do everything' plan: untagged spec copy, no diagrams, no decomposition — effort-dodging that the YAML oracle alone cannot catch",
   "expect_fail": [
     "test_plan_structure_floor",
-    "test_bdd_linkage_coherence",
     "test_mandatory_diagrams"
   ],
-  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)",
+  "amended": "2026-08-22: test_bdd_linkage_coherence dropped from expect_fail. This fixture's spec copy is UNTAGGED, and an untagged copy stopped being a defect when Step 11 (@task tagging) was retired DO NOT RUN on 2026-08-14 — it is exactly what a forge worktree holds. The fixture still does its job: a deliberately stubbed plan is still caught, by the structure floor and the missing diagrams. Fixture content unchanged. See tasks/po-held-008-feature-plan/STEP-11-NOTE.md."
 }

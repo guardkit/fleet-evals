@@ -6,8 +6,21 @@ feature-YAML oracle (`guardkit feature validate`, exit 0); task-markdown
 frontmatter discipline (explicit task_type, id/feature_id/wave agreement);
 the pinned mode-assignment rule; the Step 8/9 folder contract (README +
 IMPLEMENTATION-GUIDE with mandatory Mermaid diagrams); the lint acceptance
-criterion; plan/spec coherence via Step 11 @task linkage; and spec
-preservation — the plan may TAG the input spec, never rewrite it.
+criterion; plan/spec coherence via @task linkage WHEN a tagged spec copy is
+present; and spec preservation — the plan may TAG the input spec, never
+rewrite it.
+
+CORRECTION 2026-08-22. Two axes below used to REQUIRE a tagged copy of the
+input spec at `features/<slug>/<slug>.feature`. No tool in the chain writes
+that file today, and one of them would refuse the whole plan if the model
+tried: the plan writer's output grammar admits exactly four artefact shapes
+(`.guardkit/features/{id}.yaml`, `tasks/backlog/{slug}/TASK-*.md`,
+`.../IMPLEMENTATION-GUIDE.md`, `.../README.md`) and rejects everything else.
+The step that used to write the tagged copy — Step 11, BDD scenario linking —
+was retired by ruling on 2026-08-14 and is marked DO NOT RUN in the template.
+So both axes now grade the copy IF the graded tree carries one, and say so
+plainly if it does not. Full account, with the measurements and dates, in
+STEP-11-NOTE.md beside this directory.
 """
 import json
 
@@ -100,20 +113,60 @@ def test_lint_acceptance_criterion(output_dir, feature_yaml):
 
 
 def test_bdd_linkage_coherence(parsed, feature_yaml, output_dir):
-    """Plan/spec coherence (Step 11): every @task tag resolves to a plan task;
-    at least one scenario is linked; every @smoke scenario is linked; every
-    feature-type task owns at least one scenario."""
+    """Plan/spec coherence: every @task tag resolves to a plan task; every
+    @smoke scenario is linked; every feature-type task owns at least one
+    scenario.
+
+    Graded WHEN the tree carries a spec copy with at least one @task tag.
+    Skipped otherwise, and that is not leniency — it is the contract:
+
+    * No spec copy at all is what the plan tool produces. Its four artefact
+      shapes cannot contain a `.feature` file (STEP-11-NOTE.md).
+    * A copy with NO @task tags is what a real forge worktree looks like: the
+      spec stage commits the untagged `.feature`, and Step 11 — the step that
+      would tag it — is retired DO NOT RUN since 2026-08-14. Failing an
+      untagged copy would fail a plan for obeying the ruling.
+
+    Consequence worth stating out loud: for any sheet the current tool
+    produces, this axis is not graded at all. Nothing in the four artefact
+    shapes carries a scenario-to-task mapping. If plan/spec coherence is to
+    have teeth again, something must first produce the mapping — see the
+    closing section of STEP-11-NOTE.md.
+    """
+    if parsed is None:
+        pytest.skip(
+            "no copy of the spec .feature in the graded tree — the plan tool "
+            "cannot emit one (retired Step 11; see STEP-11-NOTE.md)"
+        )
+    tagged = any(t.startswith("@task:") for sc in parsed["scenarios"] for t in sc["tags"])
+    if not tagged:
+        pytest.skip(
+            "spec copy present but carries no @task tags — tagging is retired "
+            "DO NOT RUN since 2026-08-14 (see STEP-11-NOTE.md)"
+        )
     findings = spec_gates.linkage_findings(parsed, feature_yaml, output_dir)
     assert findings == [], "\n" + "\n".join(json.dumps(f) for f in findings)
 
 
-def test_spec_preserved_verbatim(tagged_feature_text, pinned_input_feature):
-    """Spec preservation: Step 11 only INSERTS standalone `@task:<ID>` lines
-    (bdd_linker.apply_mapping pinned shape). Stripping exactly those lines
-    must reproduce the pinned input spec byte-for-byte — a plan that rewrites
-    the spec has broken the upstream contract."""
-    stripped = spec_gates.strip_task_tag_lines(tagged_feature_text)
-    assert stripped == pinned_input_feature, (
-        "tagged .feature is not the pinned input plus @task tag lines — "
-        "the plan modified the spec (only tag insertion is allowed)"
+def test_spec_preserved_verbatim(output_dir, tagged_feature_paths, pinned_input_feature):
+    """Spec preservation: the plan may INSERT standalone `@task:<ID>` lines
+    into the spec, never rewrite a line of it. Stripping exactly those lines
+    from any copy in the tree must reproduce the pinned input byte-for-byte.
+
+    CORRECTION 2026-08-22: this now grades EVERY copy of the spec in the tree
+    rather than only the one canonical path, and a tree with NO copy passes
+    rather than erroring. Both halves are strictly more faithful to the
+    assertion the test is named for — "the plan did not rewrite the spec" is
+    true of a plan that emits no copy, and a rewritten copy at a non-canonical
+    path used to slip through. The requirement to PRODUCE a copy is what was
+    dropped, and only that; see STEP-11-NOTE.md.
+    """
+    offenders = []
+    for path in tagged_feature_paths:
+        stripped = spec_gates.strip_task_tag_lines(path.read_text(encoding="utf-8"))
+        if stripped != pinned_input_feature:
+            offenders.append(str(path.relative_to(output_dir)))
+    assert offenders == [], (
+        "these .feature copies are not the pinned input plus @task tag lines — "
+        f"the plan modified the spec (only tag insertion is allowed): {offenders}"
     )

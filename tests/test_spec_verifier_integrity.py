@@ -110,7 +110,10 @@ def test_input_spec_structurally_sane():
     for tag in spec_gates.CATEGORY_TAGS:
         assert spec_gates.tag_count(parsed, tag) >= 1
     assert not any(t.startswith("@task:") for sc in parsed["scenarios"] for t in sc["tags"]), (
-        "the PINNED input must be untagged — Step 11 tagging is the answer sheet's job"
+        "the PINNED input must be untagged — it is the baseline the spec-preservation "
+        "gate compares against (until 2026-08-22 the reason given here was 'Step 11 "
+        "tagging is the answer sheet's job'; Step 11 is retired, the assertion is not — "
+        "see tasks/po-held-008-feature-plan/STEP-11-NOTE.md)"
     )
 
 

@@ -16,9 +16,12 @@ tasks/backlog/member-directory-search/
 ├── README.md
 ├── IMPLEMENTATION-GUIDE.md              # with the mandatory Mermaid diagrams
 └── TASK-{...}-{kebab-title}.md          # one per task
-features/member-directory-search/
-└── member-directory-search.feature      # the input spec, Step-11 tagged
 ```
+
+These four artefact shapes are the whole contract. **Do not emit any other
+path** — the plan writer's output grammar admits exactly these, and a block
+with any other name makes it discard the entire plan. In particular, do not
+write a copy of the input `.feature` file: see the note below.
 
 - **Feature YAML** must pass the deterministic oracle:
   `guardkit feature validate {FEAT-ID}` (exit 0) — schema layer
@@ -37,11 +40,19 @@ features/member-directory-search/
 - **IMPLEMENTATION-GUIDE.md** carries the mandatory Mermaid diagrams:
   data-flow (`flowchart`, always) and the task-dependency graph (`graph TD`,
   ≥ 3 tasks).
-- **Step 11 (BDD linking)**: tag the spec's scenarios `@task:<TASK-ID>` by
-  inserting standalone tag lines — **never rewrite an existing line of the
-  input `.feature`**. Every tag must name a real plan task; every `@smoke`
-  scenario must be linked; every feature-type task must own at least one
-  scenario (a task no scenario motivates is invented work).
+- **Do not modify the input specification.** If a copy of the `.feature` file
+  is present in the workspace, leave it exactly as it is. The grader checks
+  every copy of it in the tree and fails a plan that has changed a line.
+
+## Step 11 (BDD `@task` linking) — retired, not graded
+
+Earlier versions of this task required a `@task:<TASK-ID>`-tagged copy of the
+input spec at `features/member-directory-search/member-directory-search.feature`.
+That step was retired by ruling on 2026-08-14, and the tool this task grades
+cannot write the file in any case — it would refuse the whole plan. The
+requirement was removed on 2026-08-22. The full account, with the measurements
+and the dates, is in `STEP-11-NOTE.md` beside this file. **Do not add the
+requirement back without first building something that produces the linkage.**
 
 ## Harness assembly
 

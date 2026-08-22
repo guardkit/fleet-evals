@@ -3,8 +3,8 @@ id = "po-held-008-feature-plan"
 suite = "po-heldout-spec"
 mode = "feature-plan"
 phase = "headless"
-schema = "feature-task-wave-yaml + task-markdown-frontmatter + step-11-linkage"
-artifact = "repo-root tree: .guardkit/features/{FEAT-ID}.yaml + tasks/backlog/{slug}/ + tagged features/{slug}/{slug}.feature"
+schema = "feature-task-wave-yaml + task-markdown-frontmatter"
+artifact = "repo-root tree: .guardkit/features/{FEAT-ID}.yaml + tasks/backlog/{slug}/"
 reps = 3
 timeout_seconds = 1800
 
@@ -18,3 +18,32 @@ oracle_cli = "installed `guardkit feature validate` (~/.agentecflow/bin/guardkit
 instruction_source = "instruction.md — authored for this suite 2026-07-07; the serving prompt is FEAT-SPL-008's (Session D builds it against the same pinned contract); answer sheets come from the target-terminal harness, not run_po_eval.py"
 input_source = "input/features/member-directory-search/ — authored spec triple 2026-07-07 (SPL-chained shape: all-low/deferred), pinned by input/INPUT.sha256; the checksum pin is enforced by tests/test_spec_verifier_integrity.py"
 oracle_source = "solution/ authored for this suite 2026-07-07 (5-task 4-wave plan tree; guardkit validate exit 0; every gate axis exercised). NOT harvested from the FEAT-RAG-08 gold pair — that trace predates the 2026-07-05 feature-plan template change (binding caveat, WS1 plan §8)"
+
+# --- Correction of record ------------------------------------------------------
+correction_2026_08_22 = """Step-11 @task linkage REMOVED as a requirement (Rich's ruling
+'correct the exam', 2026-08-22). WHAT CHANGED: the exam required a tagged copy of the input spec at
+features/{slug}/{slug}.feature; the tool this exam grades cannot produce it and would refuse the
+entire plan if it tried. MEASURED THE SAME DAY: specialist-agent's plan-writer grammar
+(ARTIFACT_NAME_GRAMMAR, roles/architect/modes/feature_plan_oracle.py) admits exactly the four
+artefact shapes named in `artifact` above and raises 'unknown artifact block name' for anything
+else; specialist_agent/modes/types.py states the spec .feature it is given is 'NEVER emitted';
+forge contains no @task tagging (its spec stage commits the .feature UNTAGGED); and both failing
+tests errored solely on the missing-file fixture assertion at test/conftest.py:36, before either
+test body ran. WHY IT WENT STALE: Step 11 was built 2026-04-22 in guardkit's INTERACTIVE
+/feature-plan slash command (55b94054) and was live when this exam was pinned on 2026-07-07; the
+HEADLESS plan tool this exam actually grades was created two days later (specialist-agent 945f50c,
+2026-07-09) and never implemented it; Rich then RETIRED Step 11 on 2026-08-14 (guardkit a87862ef,
+BDD-replacement card Q10) — the template says 'RETIRED. DO NOT RUN' — and specialist-agent moved
+its template pin to follow on 2026-08-15. So this correction removes a stale requirement; it does
+not waive a live one. HOW THE TESTS CHANGED (neither was deleted): test_spec_preserved_verbatim now
+grades EVERY copy of this spec under features/ instead of one canonical path, and a tree with no
+copy passes — strictly wider than before; test_bdd_linkage_coherence keeps all four of its
+assertions and runs them whenever a TAGGED copy is present, skipping when there is no copy or the
+copy is untagged (an untagged copy is what a forge worktree holds after the ruling). One broken
+fixture, stub-plan, no longer expects test_bdd_linkage_coherence — it is still caught by
+test_plan_structure_floor and test_mandatory_diagrams. UNCHANGED: input/ and its INPUT.sha256 pin,
+the reference solution (still passes), and the seven other tests. KNOWN COST, NOT FIXED HERE: for
+any answer the current tool produces, plan/spec coherence is now ungraded — nothing in the four
+artefact shapes carries a scenario-to-task mapping. The candidate successor is the routing-law
+feature_files:/scenarios: map in the feature YAML, which the plan writer CAN emit but is not
+currently required to (the 2026-08-22 drive omitted it). See STEP-11-NOTE.md."""

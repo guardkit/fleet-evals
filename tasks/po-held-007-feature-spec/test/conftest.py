@@ -37,8 +37,11 @@ sys.path.insert(0, str(REPO_ROOT))
 from harness import spec_gates  # noqa: E402
 from harness.could_not_measure import (  # noqa: E402,F401 — pytest finds hooks by name
     EXIT_COULD_NOT_MEASURE,
+    pytest_collectreport,
     pytest_runtest_logreport,
     pytest_sessionfinish,
+    pytest_sessionstart,
+    pytest_terminal_summary,
 )
 
 

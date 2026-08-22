@@ -18,6 +18,30 @@ The seed is graded from `$PO_EVAL_OUTPUT_DIR/qa/` (defaults to the task's
 solution/, so a bare run validates the frozen gold seed). Frozen surfaces (brief,
 reference anchors, banlist, the gold spec triple) are untouched — this file and
 the gold `solution/qa/` seed are the sanctioned additive re-freeze.
+
+2026-08-22 — WHAT CHANGED HERE, AND WHAT DELIBERATELY DID NOT.
+
+Not one assertion in this file changed. What changed is what happens when there
+is nothing to assert against. These three checks skip when the graded tree
+carries no seed, and until today a skip exited 0, so a runner recorded all three
+as PASSED. `tasks/po-held-007-feature-spec/test/conftest.py` now installs
+`harness/could_not_measure.py`, which makes any skip in this grade exit 40 and
+names the checks that stepped aside.
+
+The skip REASON below was also wrong, and the wrong word mattered: it blamed
+"this candidate". The seed is not written by the candidate. Production's
+`/feature-spec` post-processor composes it deterministically from the model's own
+`@key-example` / `@smoke` scenarios (specialist-agent
+`roles/product_owner/modes/feature_spec.py`, `_compose_pass_bar_seed`). A missing
+seed therefore usually says something about the HARNESS — the recorded reps of
+2026-08-21 all fell back to slicing the model's file bundle because the
+post-processor could not be constructed outside a live session — and not about
+the model. A reason that points the reader at the model is a reason that sends
+them to the wrong place.
+
+Whether these three axes belong in this exam at all is a scope question for Rich,
+not a lane's edit: see `docs/research/ideas/po-heldout-spec-extension-scope.md`
+§11.6.
 """
 from __future__ import annotations
 
@@ -39,13 +63,25 @@ _VALID_CLASSES = {"machine", "manual"}
 
 @pytest.fixture(scope="module")
 def seed(output_dir):
-    """The emitted feature-grain F1 seed under qa/. Skips (not fails) when the
-    candidate emitted none — the three-file spec contract does not require it,
-    but if a seed IS emitted it must clear these bars."""
+    """The emitted feature-grain F1 seed under qa/.
+
+    Skips — it does NOT fail — when the graded tree has no seed, because the
+    four-file spec contract does not require one and a missing seed is far more
+    often a harness fact than a model fact. But a skip here is no longer silent:
+    the task's conftest turns any skip in this grade into exit code 40, so the
+    three axes below read COULD NOT MEASURE instead of PASSED. If a seed IS
+    present it must clear these bars.
+    """
     qa = output_dir / "qa"
     matches = sorted(qa.glob("pass-bar-seed-*.yaml")) if qa.is_dir() else []
     if not matches:
-        pytest.skip("no qa/pass-bar-seed-*.yaml emitted by this candidate")
+        pytest.skip(
+            f"no qa/pass-bar-seed-*.yaml in the graded tree ({output_dir}). This file is "
+            "written by production's /feature-spec post-processor, not by the model, so "
+            "its absence usually means the harness never ran that post-processor. Either "
+            "way these three axes measured NOTHING — this grade is not a pass. See "
+            "conftest.py and the scope doc's open ruling (§11.6)."
+        )
     assert len(matches) == 1, f"expected exactly one feature-grain seed, found {[m.name for m in matches]}"
     return yaml.safe_load(matches[0].read_text(encoding="utf-8"))
 

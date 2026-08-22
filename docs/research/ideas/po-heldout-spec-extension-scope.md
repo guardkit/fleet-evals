@@ -16,6 +16,14 @@ whole-factory analysis session (ai-transition); house convention: freeze = the c
 flipping this line. Pre-registration discipline verbatim from the frozen suites: the
 freeze precedes any grading run (none has run); after a grading run starts, thresholds
 are immutable; between candidates they may only be *raised*.
+**READ §11 BEFORE APPLYING THAT SENTENCE.** On 2026-08-22 Rich ruled that a FAULT in an
+exam — a check that measures nothing, or measures the wrong thing — is to be fixed
+promptly rather than deferred because the exam is frozen, and that the freeze continues to
+forbid, exactly as before, moving a threshold or narrowing what is measured because a
+candidate scored badly. §11 is a standing amendment covering every frozen exam in this
+repository, with the procedure, the awkward case (a fix that turns a green result red:
+fix it anyway and say so), and how the historical grades are annotated rather than
+rewritten.
 **Date:** 2026-07-07 (Claude Fable 5, WS1 Session H per
 `ai-transition/docs/ws1-outer-loop-completion-build-plan-2026-07-07.md` §8)
 **Repo:** fleet-evals · new suite `po-heldout-spec` (tasks `po-held-007-feature-spec`,
@@ -444,3 +452,192 @@ done
 **How to read the result.** 3/3 exit 0 ⇒ G-S5 met on this model. Any rep exiting 1 with
 `test_scenario_coverage_map` named ⇒ the axis fails, and the finding names the scenario.
 Any rep exiting **40** ⇒ COULD NOT MEASURE — never write that down as a pass.
+
+---
+
+## 11. STANDING AMENDMENT: a fault in an exam is not a goalpost (Rich's ruling, 2026-08-22)
+
+**This section is the standing rule for every frozen exam in this repository, not
+just this suite.** It is written so a future session can act on it without asking
+Rich again. Where it and an older sentence in a scope document disagree, this
+section wins, and the older sentence is left standing as the record.
+
+### 11.1 The ruling
+
+Rich, 2026-08-22, in his own words:
+
+> *"if we find a fault in an exam i think we should fix the exam rather than get
+> hung up on it being frozen. obviously it would be better not to have to but
+> such is life."*
+
+The occasion was `po-held-007-feature-spec`. Three of its checks stepped aside
+when the graded answer carried no quality-bar seed file, and because the runners
+decide a rep by pytest's exit code — and pytest exits 0 when a test steps aside —
+all three were being written down as **passed** while measuring nothing at all.
+The identical fault had been found and closed in the sibling exam
+`po-held-008-feature-plan` the same morning.
+
+### 11.2 What the freeze is for, and what it is not for
+
+The pre-registration rule this document has carried since 2026-07-07 —
+*"after a grading run starts, thresholds are immutable; between candidates they
+may only be raised"* — exists for exactly one reason: **to stop anyone moving
+the goalposts to flatter a result.** That reason is untouched. Rich's ruling does
+not weaken it. It says something narrower and obvious once said out loud: **a
+fault is not a goalpost.** An instrument that measures nothing, or measures the
+wrong thing, is not a bar anyone is being held to. Leaving it in place protects
+no one; it only guarantees that the next result is worth less than it looks.
+
+So the line is drawn between two different acts that can look similar in a diff.
+
+**REQUIRED — and required promptly, not deferred to the next freeze:**
+
+* Fixing a check that cannot measure what it claims to measure — it skips, it
+  passes on an empty input, it grades a step no tool performs any more, or it
+  reads a file nothing produces.
+* Fixing a check that measures the wrong thing — it grades the harness and
+  reports it as the model, or the reverse.
+* Fixing how a result is *recorded* when the recording hides the truth: a skip
+  recorded as a pass, a denominator that quietly excludes the checks that stepped
+  aside, an absent pin recorded as though it were a pin.
+* Correcting a factual claim written into a governance document that turns out to
+  be false. (This document has already had to do that once, in §3.)
+
+**STILL FORBIDDEN, and no less forbidden than before:**
+
+* Moving a threshold because a candidate scored badly against it.
+* Narrowing what is measured — dropping an axis, softening an assertion, shrinking
+  a fixture battery — because a candidate keeps failing it.
+* Repairing a fault quietly, so that the grades taken before the repair and the
+  grades taken after it read as though they were taken on the same instrument.
+* Deciding a question of **scope** — should this exam grade this thing at all? —
+  by editing a test. Scope is Rich's. Faults are the lane's.
+
+The distinction to hold on to: **you may always fix HOW WELL the instrument
+measures. You may not change WHAT it measures, or WHERE THE BAR SITS, without a
+ruling.** If a proposed change would alter the answer for a candidate that is
+behaving correctly, it is a scope or threshold change and it needs Rich. If it
+only alters the answer for a candidate — or a harness — that is behaving badly,
+or turns a false green into an honest "could not measure", it is a fault fix and
+it should have been done already.
+
+### 11.3 How to apply it — the procedure, in order
+
+1. **Prove the fault before touching anything.** Run the instrument as the graded
+   runner runs it, and record the *exit code*, not the summary line. Establish
+   exactly which checks are affected and under what conditions.
+2. **Fix the smallest thing that removes the fault.** Prefer making the
+   unmeasurable state *visible* over guessing which way it should have gone.
+   Where a check cannot run, "could not measure" is a third answer and it is
+   usually the honest one — `harness/could_not_measure.py` provides it, and exit
+   code **40** is the house signal for it.
+3. **Say what it costs, by name.** Re-run every fixture and every recorded answer
+   the repository carries, and compare **failure identities — the node ids** —
+   not counts. Name every fixture whose colour changes. A fixture that was green
+   and is now red is an authorised outcome, but it must be *named in the same
+   breath as the fix*, never discovered later by someone else.
+4. **Mark the grades the fault calls into question.** See §11.4.
+5. **Write it down here, dated and reasoned**, before the next freeze, and say
+   plainly whether the change flatters the result or not. §4 and §10 of this
+   document are the precedent: calibration is recorded whether or not it helps.
+6. **If any part of it is a scope or threshold question, stop and put it to
+   Rich** — with the evidence and with options, not with a preferred edit already
+   made.
+
+### 11.4 The historical grades — annotate, never rewrite
+
+A repaired instrument casts doubt backwards. That doubt is handled by **adding**,
+never by editing:
+
+* **Never** delete, recompute, or re-baseline a recorded grade. Someone may have
+  quoted it, and a number that changes under a reader's feet is worse than a
+  number that was wrong.
+* **Do** write a dated note *beside* the affected run, naming the fault, the
+  date, the fix, and — precisely — what the recorded numbers do and do not still
+  support. `runs/po-heldout-spec/*/MEASURED-UNDER-A-FAULTY-INSTRUMENT.md` is the
+  worked example.
+* **Do** check whether the doubt actually reaches each run, and say so either
+  way, with the evidence. "Probably unaffected" is not an answer. The 2026-08-22
+  sweep of this repository found the fault touched five recorded reps of
+  `po-held-007` and **no** run of any other exam, and both halves of that
+  sentence were measured, not assumed.
+* A re-grade under the repaired instrument, if one is wanted, is a **new** run
+  with a new record. It never overwrites the old one.
+
+### 11.5 The awkward case: when fixing the fault turns a green result red
+
+**Fix it anyway, and say so.** In Rich's words on the same day, of exactly this
+situation: *"such is life."*
+
+A green that came out of a check that measured nothing was never a result. Taking
+it away removes nothing real. The temptation to defer — "we'll fix it after this
+grading run" — is the same temptation the freeze exists to resist, only wearing
+the other hat, and it is worse than moving a threshold, because at least a moved
+threshold is visible in the document.
+
+Three obligations come with it, and they are not optional:
+
+1. **Name every result that changes colour**, in the same commit and in the same
+   report, before anyone else finds it.
+2. **Say whether the red is the model's fault or the instrument's**, and if you
+   cannot yet tell, say that. In the 007 case it is neither: the missing seed
+   file is written by production's post-processor, not by the model, and the
+   exam's runner never ran that post-processor — so a red there is a finding
+   about the harness, and reporting it as a model failure would be a second
+   defect on top of the first.
+3. **Do not compensate.** Do not relax another check, widen a tolerance, or amend
+   a fixture to bring the total back to where it was. If the honest state is that
+   the exam can no longer fully grade anything, that is the state, and it should
+   be loud until someone rules on it.
+
+### 11.6 The open ruling this lane did NOT take for itself — po-held-007's three seed axes
+
+The fault is fixed: a skipped check in `po-held-007` now exits **40**, names
+itself, and can never again be recorded as a pass. What is deliberately left open
+is the question underneath it, because it is scope, and scope is Rich's.
+
+**The three checks** — `test_seed_wellformed`, `test_criteria_observability`,
+`test_negative_path_honesty` — grade `qa/pass-bar-seed-{slug}.yaml`. Measured
+facts about that file, 2026-08-22:
+
+* It is **not written by the model.** Production's `/feature-spec`
+  post-processor composes it deterministically from the model's own
+  `@key-example` / `@smoke` scenarios (specialist-agent
+  `roles/product_owner/modes/feature_spec.py`, `_compose_pass_bar_seed`).
+* **`po-held-007`'s own `instruction.md` never asks the candidate for it.** The
+  graded artifact was re-cut on Rich's option-1 ruling of 2026-08-21 to *"the
+  four pinned files, and nothing else, under `features/`"*. The seed is not one
+  of the four.
+* It is **not part of the frozen G-S axes.** G-S1..G-S3 name their owning tests;
+  none of them is one of these three. They arrived on 2026-07-11 as an additive
+  extension in the DF-019 re-pin window.
+* **They have graded a candidate exactly zero times.** The only tree in this
+  repository that carries a seed is the task's own frozen gold answer. All six
+  registered good fixtures, all eighteen broken fixtures, and all six recorded
+  reps of 2026-08-21 have none.
+
+**The three options.**
+
+1. **Retire the three axes from the graded exam** and keep the gold seed as a
+   fixture graded by the instrument-integrity suite instead. Honest if the view
+   is that this exam grades the model and the seed grades the host. Cost: the
+   emitter loses its only standing check.
+2. **Keep them, and make the harness produce the seed** — `run_po_spec_eval.py`
+   must run production's real post-processor rather than falling back to slicing
+   the model's file bundle. Today that fallback fires on every rep
+   (`tree_source` in each `config.json` records it), which is why nothing has
+   ever had a seed to grade. Cost: a runner fix, and the six good fixtures need a
+   seed appended before the pass-side proof is green again.
+3. **Keep them exactly as they are.** Every real answer sheet then grades as
+   "could not measure" (exit 40) until option 2 is done. This is the current
+   state, and it is the honest one while the question is open — but it is not a
+   resting place, because the exam cannot return a pass in it.
+
+This lane recommends **2 if the seed is meant to be part of what this exam
+proves, 1 if it is not** — and takes neither, because either one changes what the
+exam measures.
+
+**Until Rich rules, the state is option 3, and it is visible:** six good fixtures
+return exit 40, `tests/test_spec_verifier_integrity.py::test_spec_good_fixture_passes`
+fails for each of them with a message that says "could not measure", not
+"rejected", and `runs/po-heldout-spec/` carries the annotation described in §11.4.

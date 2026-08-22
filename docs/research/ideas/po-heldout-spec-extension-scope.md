@@ -1,11 +1,15 @@
 # PO Held-Out Suite — Feature-Spec/Plan Extension (FEAT-EVAL-SPEC, gate G2b)
 
 **Status:** **FROZEN 2026-07-07 (Rich — thresholds G-S1..G-S5 accepted as proposed; this
-commit is the freeze). ⚠️ REOPENED 2026-08-22 on the G-S5 axis only — see G-S5 in §3.**
-The reopening is deliberate and visible, per this document's own rule that instrument
+commit is the freeze). REOPENED 2026-08-22 on the G-S5 axis only; RULED and RE-FROZEN the
+same day — see G-S5 in §3.**
+The reopening was deliberate and visible, per this document's own rule that instrument
 revisions "reopen this doc *before* the next freeze, never silently". G-S1..G-S4 are
-untouched and remain frozen. G-S5 awaits Rich's ruling and must not be recorded as met
-in the meantime. The 008 task instrument was corrected the same day; no 008 grading run
+untouched and remain frozen. **G-S5 was re-pointed on Rich's ruling of 2026-08-22** at the
+routing-law scenario coverage map — option 2 of the three put to him, in his words "a
+better long term option" — and is measurable again. The reopened text and the three
+options are kept below exactly as they were written, so the reasoning that led to the
+ruling stays readable. The 008 task instrument was corrected the same day; no 008 grading run
 has ever been recorded (`runs/po-heldout-spec/` holds 007 reps only), so no started run
 is being retro-fitted. Acceptance given by Rich's instruction in the 2026-07-07
 whole-factory analysis session (ai-transition); house convention: freeze = the commit
@@ -37,6 +41,14 @@ job), and neither of those ever rescues a failed G-S gate.
 |---|---|---|---|
 | `po-held-007-feature-spec` | FEAT-SPL-007 `po_feature_spec`, headless `--auto`/SPL semantics, thin authored brief | three-file spec triple under `features/{slug}/` | authored minimal (licensing path exercised) |
 | `po-held-008-feature-plan` | FEAT-SPL-008 `architect_feature_plan`, headless, pinned input spec triple | repo-root tree: feature YAML + task folder + Step-11-tagged spec copy | authored 5-task/4-wave plan |
+
+**Amended 2026-08-22 (G-S5 ruling).** The 008 Artifact cell above still reads
+"Step-11-tagged spec copy". That is the 2026-07-07 wording and is left standing as the
+record; it is no longer the contract. The graded 008 artifact is the four-shape tree the
+plan tool actually emits — `.guardkit/features/{FEAT-ID}.yaml` plus
+`tasks/backlog/{slug}/{README.md, IMPLEMENTATION-GUIDE.md, TASK-*.md}` — and the feature
+YAML must now carry the routing-law coverage map (`feature_files:` + `scenarios:`). No
+`.feature` copy is required or expected; the tool's output grammar forbids one.
 
 K = 3 reps per task, timeout 1800 s, grading via `PO_EVAL_OUTPUT_DIR` → per-task
 `pytest test/ -q` (frozen-suite convention). **Runner divergence, by design:** answer
@@ -72,6 +84,18 @@ FEAT-SPL-007/008 tool versions, the guardkit template/oracle pin, and the input 
   SHA-256-pinned (`input/INPUT.sha256`), structurally sane and untagged by integrity test —
   the byte-exact spec-preservation gate is computed against it via the pinned
   `bdd_linker.apply_mapping` insertion shape (standalone `@task:` lines only).
+- **Routing-law contract (added 2026-08-22, the G-S5 re-pointing):** guardkit
+  `installer/core/commands/feature-plan.md` — the "Required Fields" table
+  (`feature_files`, `scenarios`) and "The Routing Law: `verifier:` stamps" section —
+  as pinned by specialist-agent `templates/pins.py` under the name
+  `feature-plan-methodology` (sha256 `20a3061159…`, `pinned_commit 3ad3a366`, 3,017
+  lines). The closed verifier vocabulary and the Gherkin title lexer are **imported**
+  from `guardkit.orchestrator.verifier_stamp` by `harness/spec_gates.py`, never copied,
+  so the exam and the production feature loader cannot drift apart; a failed import is
+  an instrument error naming the pin, never a silent skip. **Measured drift worth
+  naming:** the contract's oracle pin is the guardkit checkout @ `28587b61`; the working
+  checkout the CLI and the import both resolve to sat at `703734ee` on 2026-08-22. That
+  drift pre-dates this lane and is recorded, not resolved, here.
 - **Dependency posture (documented divergence):** `harness/spec_gates.py` uses PyYAML —
   guardkit's own parser (`feature_loader.py` `yaml.safe_load`) — for parse-parity with
   the oracle, rather than a hand-rolled YAML subset that could disagree with it. The
@@ -110,44 +134,37 @@ reuses another suite's `--out` directory.
   (task-work ≥4 / direct ≤3), `test_plan_structure_floor` (≥3 tasks, ≥2 waves),
   `test_mandatory_diagrams` (data-flow always; dependency graph at ≥3 tasks), and
   `test_lint_acceptance_criterion`.
-- **G-S5 — Plan/spec coherence — ⚠️ REOPENED 2026-08-22, AWAITING RICH'S RULING. DO NOT
-  RECORD THIS AXIS AS MET UNTIL HE HAS RULED.** As frozen it read: *3/3 plan reps pass
-  `test_bdd_linkage_coherence` (every @task tag resolves; ≥1 scenario linked; every
-  @smoke scenario linked; every feature-type task owns ≥1 scenario) and
-  `test_spec_preserved_verbatim` (stripping the inserted `@task:` lines reproduces the
-  pinned input spec byte-for-byte). G-S5 claims linkage *discipline*, not pairing
-  *aptness*.*
+- **G-S5 — Plan/spec coherence — RE-POINTED 2026-08-22 ON RICH'S RULING; MEASURABLE
+  AGAIN.** The axis now reads: *3/3 plan reps pass `test_scenario_coverage_map` (the
+  plan's own feature YAML declares `feature_files:` naming the pinned specification and
+  a `scenarios:` map that stamps every scenario in it, keyed by the scenario's title
+  copied verbatim, each with a verification home from the closed list, `toolchain` homes
+  naming their test, and no `routing_law:` policy flag) and `test_spec_preserved_verbatim`
+  (any copy of the specification in the tree is the pinned input plus inserted `@task:`
+  lines and nothing else).* G-S5 claims coverage *discipline*, not routing *aptness* —
+  whether `hurl` was the right home for a given scenario stays Coach territory (§5).
 
-  **Why it is reopened.** This axis grades Step-11 `@task:` scenario tagging. **Rich
-  retired Step 11 on 2026-08-14** (guardkit `a87862ef`, the Q10 ruling on the
-  BDD-replacement card): the template now reads "BDD scenario linking — RETIRED. DO NOT
-  RUN", because those tags armed the BDD-execution oracle he was removing.
-  specialist-agent followed the ruling on 2026-08-15. The headless plan tool this exam
-  actually grades (created 2026-07-09, two days after this freeze) never implemented
-  Step 11 at all, and its artefact grammar **forbids** emitting a `.feature` file — a
-  model that obeyed the old instruction had its entire plan discarded.
+  **What this axis measures, in plain words.** Does the plan say which scenarios it
+  covers and where each one will be proved — and is what it says true against the
+  specification it was handed? A plan that says nothing fails. A plan that says something
+  untrue fails, and the finding names the scenario.
 
-  **THE TRAP THIS AXIS NOW SETS, and the reason it must not be quietly left alone.**
-  With no tagged copy in the tree the linkage test SKIPS, and
-  `harness/run_po_eval.py:255` grades a rep by `proc.returncode == 0` — **pytest exits 0
-  when tests skip.** So "3/3 plan reps pass `test_bdd_linkage_coherence`" would score
-  **GREEN while measuring nothing at all**. That is precisely the defect class this
-  estate has spent the week removing: a check whose coverage is narrower than its claim.
-  A skip on this axis is **COULD NOT MEASURE**, never a pass.
+  **AS FROZEN ON 2026-07-07 IT READ, VERBATIM — kept because a threshold's history is
+  part of the threshold:** *3/3 plan reps pass `test_bdd_linkage_coherence` (every @task
+  tag resolves; ≥1 scenario linked; every @smoke scenario linked; every feature-type task
+  owns ≥1 scenario) and `test_spec_preserved_verbatim` (stripping the inserted `@task:`
+  lines reproduces the pinned input spec byte-for-byte). G-S5 claims linkage *discipline*,
+  not pairing *aptness*.*
 
-  **What is actually lost.** Plan/spec coherence is now *ungraded*, not leniently graded.
-  Nothing in the tool's four artefact shapes carries a scenario-to-task mapping, so the
-  exam cannot say whether a plan covers the scenarios the spec asked for, or invented
-  tasks nothing asked for. That hole is real and is not papered over here.
+  **THE HISTORY, KEPT VISIBLE.**
 
-  **The three options, for Rich:**
-  1. **Strike the linkage half** and keep only `test_spec_preserved_verbatim` (which
-     still does useful work: any spec copy present in the tree must not have been
-     rewritten). Cheapest; leaves coverage ungraded.
-  2. **Re-point the axis at the routing-law successor.** The current template has
-     `/feature-plan` write `feature_files:` + a `scenarios:` block keyed by verbatim
-     scenario title inside `.guardkit/features/{id}.yaml` — which the plan tool CAN
-     emit, needing no grammar change.
+  | Date | What happened to this axis |
+  |---|---|
+  | 2026-07-07 | Frozen, grading Step-11 `@task:` scenario tagging. Correct on the day. |
+  | 2026-07-09 | The headless plan tool this exam actually grades is created. It never implemented Step 11, and its output grammar FORBIDS emitting a `.feature` file — a model obeying the old instruction had its whole plan discarded. |
+  | 2026-08-14 | Rich retires Step 11 (guardkit `a87862ef`, BDD-replacement card Q10). The template reads "RETIRED. DO NOT RUN". The same ruling creates the routing law, the successor mechanism. |
+  | 2026-08-22 am | The exam is corrected so the check stops erroring. **This made it worse:** with nothing to grade it SKIPPED, `harness/run_po_eval.py:255` grades a rep by `proc.returncode == 0`, and **pytest exits 0 when tests skip** — so the axis would have been recorded GREEN while measuring nothing. This document was reopened on that, visibly, with three options for Rich. |
+  | 2026-08-22 pm | **Rich rules: option 2.** The axis is re-pointed at the coverage map, the reference answer and the fixture battery are brought up to it, and the skip is closed. |
 
      **CORRECTION 2026-08-22, same day: an earlier revision of this line said "today's
      drives emit neither key". THAT WAS FALSE and it was written here by this lane.** It
@@ -178,8 +195,49 @@ reuses another suite's `--out` directory.
      Rich deliberately disarmed and would mean widening the plan writer's artefact
      grammar, which is what currently protects it from this class of mistake.
 
-  Until he rules, this axis is **NOT MEASURABLE** and any RESULTS doc must record it as
-  such rather than as met.
+  **The three options that were put to him, kept for the record.** (1) Strike the linkage
+  half and keep only spec-preservation — cheapest, leaves coverage ungraded. (2) Re-point
+  the axis at the routing-law successor the current template already specifies, which the
+  plan tool CAN emit and needs no grammar change — "the option that restores real teeth".
+  (3) Un-retire Step 11 — rejected on this lane's read: it re-arms the oracle Rich
+  deliberately disarmed. **HE CHOSE (2).**
+
+  **A CLAIM IN THE REOPENED TEXT WAS WRONG AND IS CORRECTED HERE.** The 2026-08-22
+  morning entry said "Measured 2026-08-22: today's drives emit neither key". That was
+  measured on ONE run — the exam drive against this task's own pinned spec — and
+  generalised. Re-measured across all eleven captured planning runs of that morning
+  (`ai-transition/docs/evidence/architect-plan-drives-2026-08-22/`): **ten of the eleven
+  emit both keys.** The exam drive is the only one that emits neither. So the tool does
+  this routinely; the requirement is not a new capability being demanded of it, it is an
+  existing behaviour being made non-optional. What remains true is that forge TOLERATES
+  the omission rather than requiring it (`declare_feature_files_if_absent` fills the key
+  in), so nothing outside this exam forces the map today.
+
+  **WHAT WAS LOST AND HAS NO SUCCESSOR, stated plainly rather than glossed.** The retired
+  tags named a TASK per scenario, so the axis could ask "does every task named exist?"
+  and "does every task own a scenario?". The routing-law map has **no task field** — its
+  stamp schema (`ScenarioStamp`, `extra="forbid"`) allows exactly `verifier`, `test_ref`,
+  `test_paths` — because the law replaced task-ownership with verification-home
+  ownership. Those two questions are **no longer asked by this exam**. The nearest
+  surviving task-side check is the task-frontmatter `verifier:` stamp, which IS graded.
+
+  **THE SKIP IS CLOSED TWICE OVER.** (a) The new check cannot skip: a plan with no
+  coverage map fails it. (b) `tasks/po-held-008-feature-plan/test/conftest.py` refuses to
+  let ANY skip in this task's grade exit 0 — it names the skipped checks and returns exit
+  code **40**, deliberately outside pytest's own range (0/1/2/3/4/5) so "could not
+  measure" is distinguishable from "measured and failed", while every existing
+  `returncode == 0` check treats it as the failure it is. Proved by running it, on a plan
+  of exactly the shape today's tool produces (the reference answer with no spec copy and
+  no coverage map): **this morning's instrument → 8 passed, 1 skipped, exit 0 (recorded
+  as PASSED); this afternoon's → 8 passed, 1 failed, exit 1.**
+
+  **THE REFERENCE ANSWER FAILED THE NEW BAR.** `solution/` was authored 2026-07-07, five
+  weeks before the routing law existed, and carried neither key. The bar was **not**
+  weakened to fit it; the reference was brought up to the current contract by appending
+  the coverage map (nine scenarios, titles copied from the pinned input, `toolchain` homes
+  each naming their test). Nothing else about it changed, and the pinned input triple and
+  its checksums are untouched. The same map was appended to all eighteen 008 fixtures so
+  each still fails only for its own defect.
 
 **If not met:** the target terminal does NOT go live on this model — FEAT-SPL-007/008
 stay behind the PLANNED-HANDOFF fallback (which needs only G2); the failing axis is
@@ -253,7 +311,7 @@ referenced; INVALID reps listed with re-run evidence.
 | Folder contract | `test_readme_and_guide_present` | no-guide | frontier-baseline |
 | Mandatory diagrams | `test_mandatory_diagrams` | no-diagrams, stub-plan | frontier-baseline |
 | Lint criterion | `test_lint_acceptance_criterion` | missing-lint-criterion | frontier-baseline |
-| Linkage coherence | `test_bdd_linkage_coherence` | dangling-task-tag, untraced-feature-task, missing-smoke-link, stub-plan | frontier-baseline, minimal-plan |
+| Scenario coverage map (re-pointed 2026-08-22; was "Linkage coherence" / `test_bdd_linkage_coherence`, whose firing demos were dangling-task-tag, untraced-feature-task, missing-smoke-link, stub-plan) | `test_scenario_coverage_map` | no-coverage-map, paraphrased-scenario-key, unknown-verifier-home, bare-toolchain-stamp, feature-files-wrong-path, routing-law-emitted, dangling-task-tag, missing-smoke-link, untraced-feature-task | frontier-baseline, minimal-plan, alias-task-type, extra-yaml-keys |
 | Spec preservation | `test_spec_preserved_verbatim` | spec-rewritten | all 008 good (tag-insertion-only) |
 
 ## 9. Freeze procedure
@@ -263,3 +321,126 @@ commit** (the commit that flips the Status line). The frozen thresholds ride wit
 RESULTS doc. The frozen suites' own docs are untouched throughout. After the freeze,
 G2b reads "built + frozen; grade-pending" in the WS1 gate table until the serving
 model's 6-rollout grade lands.
+
+---
+
+## 10. Calibration of the re-pointed G-S5 axis (measured 2026-08-22, the ruling lane)
+
+Sanctioned by §4's precedent: calibration is recorded here, and it is recorded whether or
+not it flatters the change. **No grading run of the frozen suite has started, so no
+pre-registered threshold is being altered after the fact.**
+
+### 10.1 The instrument's own battery
+
+| Measurement | Result |
+|---|---|
+| 008 fixture battery | **20 broken / 4 good** (was 14/4). Every broken fixture fails, and every one fails the check its `meta.json` names. Every good fixture passes. |
+| Reference answer (`solution/`) | **9/9 pass** after the coverage map was appended (see §3 G-S5 — it failed before, and that failure is a finding, not a calibration). |
+| Instrument integrity (`tests/test_spec_verifier_integrity.py`) | **31 passed** |
+| Frozen integrity file, 008 cases (`tests/test_verifier_integrity.py -k po-held-008`) | **21 passed** |
+| Frozen surfaces (tasks 001–006, `po_contract.py`, `grading.py`, `idea_gates.py`, `test_verifier_integrity.py`, `test_idea_verifier_integrity.py`, `run_po_eval.py`, the frozen scope docs) | **untouched — `git status` shows no change to any of them** |
+| po-held-007 gate | **17 passed** — unaffected by the shared `spec_gates` change |
+
+Two of the new checks are **independently corroborated**: `bare-toolchain-stamp` and
+`unknown-verifier-home` also fail `test_guardkit_validate`, i.e. guardkit's own CLI
+refuses those stamps at load with no involvement from the exam.
+
+### 10.2 The skip that scored green — before and after, on one tree
+
+The tree: the reference answer with no specification copy and no coverage map, which is
+exactly the shape the current plan tool produces.
+
+| Instrument | pytest result | Exit code | What a runner records |
+|---|---|---|---|
+| 2026-08-22 morning | 8 passed, 1 **skipped** | **0** | **PASSED** |
+| 2026-08-22 afternoon (this lane) | 8 passed, 1 **failed** | **1** | FAILED |
+
+And with a deliberately unmeasurable check added to the grade, to prove the guard itself
+rather than only the new bar: morning instrument → 9 passed, 1 skipped, **exit 0**;
+this lane's → same tests, **exit 40** with a named `COULD NOT MEASURE` block.
+
+### 10.3 The bar run against eleven real planning runs (off-exam)
+
+Every architect planning run captured on 2026-08-22
+(`ai-transition/docs/evidence/architect-plan-drives-2026-08-22/`), graded by
+`harness/grade_coverage_map.py`, which calls the **same** `coverage_map_findings` the
+exam's fifth bar calls, against each run's **own** specification (carried in its request
+as `spec_feature`). Ten of the eleven are plans for other features, so the exam's own
+pytest gate cannot be pointed at them; this is the widest independent test of the
+instrument available without a model.
+
+| Run | Scenarios in its spec | Entries in its map | Verdict |
+|---|---|---|---|
+| drv-01-uptcount | 6 | 6 | PASS |
+| drv-02 | 4 | 4 | PASS |
+| drv-03 | 11 | 11 | PASS |
+| drv-04 | 14 | 14 | PASS |
+| drv-05 | 18 | 18 | PASS |
+| drv-06 | 18 | 18 | PASS |
+| **drv-07** | 27 | 27 | **FAIL** — 5 titles written in the plan's own words, so 5 real scenarios have no verification home |
+| drv-08 | 19 | 19 | PASS |
+| drv-09 | 27 | 27 | PASS |
+| drv-10 | 25 | 25 | PASS |
+| **exam-r2** (the 008 exam drive) | 9 | 0 | **FAIL** — no `feature_files:`, no `scenarios:` at all |
+
+**9 of 11 pass.** This was not the expected result and it matters three ways.
+
+1. **False-positive sweep.** 142 scenarios across nine plans and four unrelated feature
+   specifications produced **zero findings**. The verbatim-title rule does not fire on
+   legitimate maps.
+2. **The requirement is not new work for the tool.** It emits this map routinely. The
+   ruling makes an existing behaviour non-optional; it does not demand a new capability.
+3. **The one real defect the bar caught is invisible without it.** drv-07's plan stamps
+   27 entries and looks complete, but five of them are the model's own phrasing rather
+   than the specification's titles — so five scenarios are silently unverified while the
+   plan reads as fully covered. For example the plan wrote *"Partial write must not leave
+   corrupted episodes in the graph"* where the specification says *"Metrics write
+   interrupted mid-operation does not leave partial episodes"*. Both the coach score
+   (0.935) and `guardkit feature validate` pass that plan.
+
+**Honest scope note.** These eleven runs are the same seat on the same morning; they are
+not reps of this exam and they are not a grade of any model. They calibrate the
+instrument, nothing more. And nine of eleven passing says the bar is not a rubber stamp
+only because the two failures are real — it is not evidence that the bar is hard.
+
+### 10.4 The one measurement this lane could not make — DESIGNED, NOT RUN
+
+**Not run because the GPU was not this lane's to use** (another lane held ~100 GB of the
+box's memory throughout). No model was loaded, no server was started or stopped, nothing
+was trained. Everything in §10.1–§10.3 was measured off-line from files.
+
+**The open question.** Ten of eleven captured runs emit the coverage map and one — the
+run against this exam's own pinned specification — does not. That could be run-to-run
+variation, or it could be something about this specification (nine scenarios, four
+category tags, three low-confidence assumptions) that makes the seat drop the map. Three
+fresh reps against the same input would answer it, and G-S5 needs 3/3 anyway.
+
+**Run it like this when the box frees.** Each rep needs its own correlation id — replies
+on `agents.result.architect-agent` were measured arriving twice on 2026-08-22, so a
+reused id can collect a stale duplicate:
+
+```bash
+cd ~/Projects/appmilla_github/ai-transition/docs/evidence/architect-plan-drives-2026-08-22
+
+for REP in 1 2 3; do
+  python3 - "$REP" <<'PY'
+import json, sys
+p = json.load(open("exam-r2.payload.json"))
+p["payload"]["correlation_id"] = f"exam-r3-rep{sys.argv[1]}"
+json.dump(p, open(f"/tmp/exam-r3-rep{sys.argv[1]}.payload.json", "w"))
+PY
+  ./run_drive.sh /tmp/exam-r3-rep$REP.payload.json /tmp/exam-r3-rep$REP.reply.json 900
+  python3 exam_materialise.py /tmp/exam-r3-rep$REP.reply.json /tmp/exam-r3-rep$REP-tree
+done
+
+cd ~/Projects/appmilla_github/fleet-evals/tasks/po-held-008-feature-plan
+for REP in 1 2 3; do
+  echo "--- rep$REP"
+  PO_EVAL_OUTPUT_DIR=/tmp/exam-r3-rep$REP-tree python3 -m pytest test/ -q
+  echo "exit $?   (0 = pass · 1 = failed a bar · 40 = a bar could not measure)"
+done
+```
+
+**How to read the result.** 3/3 exit 0 ⇒ G-S5 met on this model. Any rep exiting 1 with
+`test_scenario_coverage_map` named ⇒ the axis fails, and the finding names the scenario.
+Any rep exiting **40** ⇒ COULD NOT MEASURE — never write that down as a pass.

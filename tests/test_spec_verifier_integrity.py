@@ -183,6 +183,13 @@ FLOOR_BROKEN_008 = {
     "mode-mismatch", "dangling-task-tag", "untraced-feature-task",
     "missing-smoke-link", "spec-rewritten", "no-guide", "no-diagrams",
     "missing-lint-criterion", "collapsed-plan", "stub-plan",
+    # 2026-08-22, the re-pointed fifth bar (scenario coverage map). Six firing
+    # demos, one per assertion the bar makes. The floor GROWS, never shrinks:
+    # the three fixtures built for the retired @task check keep their names and
+    # their place and now carry the equivalent coverage-map defect (see each
+    # fixture's meta.json "amended" note).
+    "no-coverage-map", "paraphrased-scenario-key", "unknown-verifier-home",
+    "bare-toolchain-stamp", "feature-files-wrong-path", "routing-law-emitted",
 }
 FLOOR_GOOD_008 = {
     "frontier-baseline", "minimal-plan", "extra-yaml-keys", "alias-task-type",
@@ -266,3 +273,158 @@ def test_stuffed_statement_licenses_nothing():
     assert {"payment", "notification-channel", "waitlist"} <= fired, (
         f"the keyword-salad statement licensed groups it should not have: fired={sorted(fired)}"
     )
+
+
+# --- Instrument: the scenario coverage map (the re-pointed fifth bar) --------------
+#
+# Fixture-level proof that the bar can fail lives in the broken-fixture battery above
+# (six firing demos + three re-pointed ones), and the frozen
+# tests/test_verifier_integrity.py runs each of them. What is proved HERE is the
+# things a whole-tree fixture is a clumsy way to prove: that the gate reads its
+# vocabulary from guardkit rather than a copy, that the documented shorthand is
+# accepted, and that the exact-title rule does not fire on a legitimate map.
+
+def _spec_008() -> str:
+    return (T008 / "input" / "features" / SLUG_008 / f"{SLUG_008}.feature").read_text(encoding="utf-8")
+
+
+def _titles_008() -> list[str]:
+    from guardkit.orchestrator.verifier_stamp import extract_scenario_titles
+    return list(dict.fromkeys(extract_scenario_titles(_spec_008())))
+
+
+def _valid_map(**overrides) -> dict:
+    data = {
+        "feature_files": [f"features/{SLUG_008}/{SLUG_008}.feature"],
+        "scenarios": {t: {"verifier": "hurl"} for t in _titles_008()},
+    }
+    data.update(overrides)
+    return data
+
+
+def test_coverage_gate_reads_guardkits_own_vocabulary_not_a_copy():
+    """A copied list of allowed verification homes would drift from the one the
+    production loader enforces. The gate imports guardkit's, so it cannot."""
+    from guardkit.orchestrator.verifier_stamp import VERIFIER_HOMES
+    homes, extract = spec_gates._guardkit_routing_law()
+    assert homes is VERIFIER_HOMES
+    assert extract(_spec_008()) == _titles_008()
+
+
+def test_coverage_gate_passes_a_correct_map():
+    """The pass side. A map naming the pinned spec and stamping every scenario
+    with an allowed home has nothing to report."""
+    assert spec_gates.coverage_map_findings(
+        _valid_map(), _spec_008(),
+        expected_feature_files={f"features/{SLUG_008}/{SLUG_008}.feature"},
+    ) == []
+
+
+def test_coverage_gate_accepts_the_documented_bare_string_shorthand():
+    """guardkit's parse_scenario_stamp accepts `"<title>": hurl` as shorthand for
+    `{verifier: hurl}`. A gate that rejected it would fail a plan for writing
+    something the schema documents as legal."""
+    data = _valid_map()
+    data["scenarios"] = {t: "hurl" for t in _titles_008()}
+    assert spec_gates.coverage_map_findings(data, _spec_008()) == []
+
+
+def test_coverage_gate_rejects_a_key_that_is_not_a_title_and_shows_the_nearest_one():
+    """A key that is not verbatim is rejected, whether it is a mis-copy of a real
+    title or a scenario the plan invented — the gate deliberately does NOT claim
+    to tell those apart (see `_closest_title`), it reports the nearest real title
+    and lets a reader decide in one look."""
+    titles = _titles_008()
+
+    mis_copied = titles[4].replace("minimum length", "minimum allowed length")
+    assert mis_copied not in titles
+    data = _valid_map()
+    data["scenarios"] = {(mis_copied if k == titles[4] else k): v
+                         for k, v in data["scenarios"].items()}
+    hits = [f for f in spec_gates.coverage_map_findings(data, _spec_008())
+            if f["defect"] == "scenario_title_not_in_the_specification"]
+    assert len(hits) == 1 and hits[0]["key"] == mis_copied
+    assert hits[0]["nearest_title_in_the_spec"] == titles[4]
+    # the mis-copy leaves the real scenario with nowhere to be proved — the point
+    assert {"defect": "scenario_unstamped", "scenario": titles[4]} in \
+        spec_gates.coverage_map_findings(data, _spec_008())
+
+    invented = "Searching by employer returns matching members"
+    assert invented not in titles
+    data = _valid_map()
+    data["scenarios"][invented] = {"verifier": "hurl"}
+    hits = [f for f in spec_gates.coverage_map_findings(data, _spec_008())
+            if f["defect"] == "scenario_title_not_in_the_specification"]
+    assert len(hits) == 1 and hits[0]["key"] == invented
+
+
+def test_coverage_gate_agrees_with_guardkits_own_loader_on_every_stamp_it_rejects():
+    """The strongest check available without a live model: for each stamp the gate
+    rejects, guardkit's own ScenarioStamp must reject it too. If the exam and the
+    production loader ever disagree about what a valid stamp is, the exam is wrong."""
+    from guardkit.orchestrator.verifier_stamp import parse_scenario_stamp
+    bad_stamps = [
+        {"verifier": "manual"},                    # not one of the eight homes
+        {"verifier": "toolchain"},                 # toolchain with no named test
+        {"verifier": "hurl", "typo_key": "x"},     # unknown key (extra='forbid')
+    ]
+    title = _titles_008()[0]
+    for stamp in bad_stamps:
+        data = _valid_map()
+        data["scenarios"][title] = stamp
+        gate_findings = spec_gates.coverage_map_findings(data, _spec_008())
+        assert gate_findings, f"the exam accepted a stamp guardkit rejects: {stamp}"
+        with pytest.raises(ValueError):
+            parse_scenario_stamp(stamp, scenario=title)
+
+
+def test_coverage_gate_flags_a_plan_that_switches_the_law_on():
+    data = _valid_map(routing_law="enforced")
+    defects = {f["defect"] for f in spec_gates.coverage_map_findings(data, _spec_008())}
+    assert "routing_law_emitted_by_the_plan" in defects
+
+
+def test_smoke_scenarios_are_named_separately_when_left_out():
+    """The pinned spec marks two scenarios @smoke. Dropping one must produce both
+    a general finding and a smoke-specific one, so the loss cannot be skimmed past."""
+    tags = spec_gates.spec_scenario_tags(_spec_008())
+    smoke = [t for t, tg in tags.items() if "@smoke" in tg]
+    assert len(smoke) == 2, smoke
+    data = _valid_map()
+    del data["scenarios"][smoke[0]]
+    findings = spec_gates.coverage_map_findings(data, _spec_008())
+    assert {"defect": "smoke_scenario_unstamped", "scenario": smoke[0]} in findings
+    assert {"defect": "scenario_unstamped", "scenario": smoke[0]} in findings
+
+
+def test_the_grade_cannot_exit_zero_when_a_check_skips():
+    """THE TRAP THIS LANE EXISTS TO CLOSE, proved end to end.
+
+    Every runner decides whether a graded run passed by looking at pytest's exit
+    code, and pytest exits 0 when a test skips. A bar that stepped aside was
+    therefore written down as a pass. The 008 grade now refuses to exit 0 if
+    anything skipped. Proved by running the real gate over the real reference
+    answer with one extra check that cannot measure anything.
+    """
+    import shutil as _shutil
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp:
+        staged = Path(tmp) / "task"
+        _shutil.copytree(T008, staged, ignore=_shutil.ignore_patterns("__pycache__", ".pytest_cache"))
+        (staged / "test" / "test_zz_cannot_measure.py").write_text(
+            "import pytest\n\n\ndef test_a_bar_with_nothing_to_grade():\n"
+            "    pytest.skip('the thing this bar grades is not in the tree')\n",
+            encoding="utf-8",
+        )
+        env = {k: v for k, v in os.environ.items() if k != "PO_EVAL_OUTPUT_DIR"}
+        env["PYTHONPATH"] = str(REPO_ROOT)
+        proc = subprocess.run(
+            [sys.executable, "-m", "pytest", "test/", "-q", "-p", "no:cacheprovider"],
+            cwd=staged, capture_output=True, text=True, env=env,
+        )
+    assert proc.returncode != 0, (
+        "a grade that skipped a check exited 0 — the skip-scores-green trap is back:\n"
+        + proc.stdout[-3000:]
+    )
+    assert "COULD NOT MEASURE" in proc.stdout, proc.stdout[-3000:]

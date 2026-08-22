@@ -1,0 +1,9 @@
+{
+  "defect_class": "scenario coverage — the plan switches the law on for the repo",
+  "construction": "a top-level `routing_law: enforced` added above the map. The map itself is complete and correct.",
+  "why_this_one_matters": "Whether the law is enforced is a repo/human policy decision. The template says in as many words: do NOT emit routing_law — the plan writer never sets policy, it writes feature_files and scenarios only. specialist-agent strips the line in production for the same reason; the exam grades what the model wrote, before that repair.",
+  "expect_fail": [
+    "test_scenario_coverage_map"
+  ],
+  "authored": "2026-08-22 — the G-S5 re-pointing lane. Built by copying the reference solution/ tree and making exactly ONE change to it, so the diff against a passing answer IS the defect."
+}

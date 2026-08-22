@@ -1,8 +1,12 @@
 {
-  "defect_class": "linkage coherence \u2014 @task tag names no plan task",
+  "defect_class": "scenario coverage — the map names a scenario that does not exist",
   "construction": "one scenario tagged @task:TASK-MDS-999 (not in the YAML); TASK-MDS-004 still owns another scenario so only the dangling ref fires",
   "expect_fail": [
-    "test_bdd_linkage_coherence"
+    "test_scenario_coverage_map"
   ],
-  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)",
+  "construction_2026_08_22": "the coverage map gains an entry keyed 'Searching by employer returns matching members'. No such scenario is in the specification. Every real scenario is still stamped, so this fires on the invented entry alone.",
+  "same_family_as_the_original": "The original defect was a @task tag naming a plan task that did not exist. This is the same mistake in the mechanism that replaced it: a coverage claim pointing at nothing. A plan that claims work nobody asked for is the thing being caught, then and now.",
+  "amended": "2026-08-22 (afternoon): RE-POINTED. This fixture was built to fire the retired @task-tag linkage check. Rich ruled that the fifth bar now grades the plan's own scenario coverage map instead, so the fixture keeps its name and its files and its job — demonstrating that the fifth bar can fail — but the defect it carries has been restated in the language the bar now speaks. The old @task tag lines are left in the spec copy untouched; they are inert, and the spec-preservation bar still ignores them exactly as it always did.",
+  "one_defect_name_two_readings": "Same finding as `paraphrased-scenario-key`, opposite reading: the key names a scenario (searching by employer) that the specification simply does not contain, while every real scenario is still stamped. The gate reports the nearest real title so the difference is visible without reading the spec."
 }

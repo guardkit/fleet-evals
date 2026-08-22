@@ -1,0 +1,9 @@
+{
+  "defect_class": "scenario coverage — the plan does not say which scenarios it covers",
+  "construction": "the reference answer with its whole `feature_files:` + `scenarios:` block deleted. Nothing else changed: the plan is still guardkit-VALID, still 5 tasks over 4 waves, still fully diagrammed.",
+  "why_this_one_matters": "This is the exact shape of the real 2026-08-22 planning run against this exam's own spec (exam-r2): a plan that is sound in every other respect and says nothing at all about scenario coverage. Before this lane it scored 9/9; the whole point of re-pointing the fifth bar is that it no longer does.",
+  "expect_fail": [
+    "test_scenario_coverage_map"
+  ],
+  "authored": "2026-08-22 — the G-S5 re-pointing lane. Built by copying the reference solution/ tree and making exactly ONE change to it, so the diff against a passing answer IS the defect."
+}

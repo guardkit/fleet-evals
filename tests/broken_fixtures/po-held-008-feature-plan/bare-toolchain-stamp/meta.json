@@ -1,0 +1,10 @@
+{
+  "defect_class": "scenario coverage — a `toolchain` home that names no test",
+  "construction": "one scenario's `test_ref:` line removed, leaving a bare `verifier: toolchain`.",
+  "why_this_one_matters": "`toolchain` means 'this NAMED test proves the scenario'. Without the name it is a promise with nothing behind it, and guardkit refuses it at plan load and at task load (ruled 2026-08-18 after a live run stamped three scenarios toolchain and named no test).",
+  "expect_fail": [
+    "test_scenario_coverage_map"
+  ],
+  "authored": "2026-08-22 — the G-S5 re-pointing lane. Built by copying the reference solution/ tree and making exactly ONE change to it, so the diff against a passing answer IS the defect.",
+  "also_caught_by_the_deterministic_oracle": "MEASURED 2026-08-22: this fixture ALSO fails test_guardkit_validate — guardkit's own CLI refuses the stamp at load, independently of the exam. That is corroboration, not duplication: it shows the exam's fifth bar and the production loader agree about what an invalid stamp is. The exam still names the defect in the coverage-map finding, which the CLI's output does not."
+}

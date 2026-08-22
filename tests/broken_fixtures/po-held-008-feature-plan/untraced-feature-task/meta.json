@@ -1,8 +1,11 @@
 {
-  "defect_class": "linkage coherence \u2014 feature-type task owns no scenario",
+  "defect_class": "scenario coverage — a task claims a verification home but names no test",
   "construction": "both of TASK-MDS-004's scenario tags retargeted to TASK-MDS-002: a feature task no scenario motivates is plan-invented work",
   "expect_fail": [
-    "test_bdd_linkage_coherence"
+    "test_scenario_coverage_map"
   ],
-  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)",
+  "construction_2026_08_22": "TASK-MDS-004's frontmatter gains `verifier: toolchain` with no `test_ref:`. The feature-level coverage map is complete and correct; the defect is on the task side.",
+  "honest_note_this_is_NOT_the_same_defect": "Said plainly, because it matters: the original defect — a plan task that no scenario motivates — HAS NO SUCCESSOR. The retired tags linked scenarios to TASKS, so the exam could ask whether every task was asked for. The routing-law map has no task field at all (its stamp schema allows exactly verifier, test_ref, test_paths and rejects anything else), because the routing law replaced task-ownership with verification-home ownership. What survives on the task side is the frontmatter stamp, and that is what this fixture now demonstrates: a task claiming 'a named test proves this' while naming no test. The loss is recorded in the freezing document, not papered over here.",
+  "amended": "2026-08-22 (afternoon): RE-POINTED. This fixture was built to fire the retired @task-tag linkage check. Rich ruled that the fifth bar now grades the plan's own scenario coverage map instead, so the fixture keeps its name and its files and its job — demonstrating that the fifth bar can fail — but the defect it carries has been restated in the language the bar now speaks. The old @task tag lines are left in the spec copy untouched; they are inert, and the spec-preservation bar still ignores them exactly as it always did."
 }

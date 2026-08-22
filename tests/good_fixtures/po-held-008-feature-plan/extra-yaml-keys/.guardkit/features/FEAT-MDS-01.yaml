@@ -64,3 +64,46 @@ orchestration:
   - - TASK-MDS-004
   - - TASK-MDS-005
   estimated_duration_minutes: 285
+
+# --- Scenario coverage map (THE ROUTING LAW) --------------------------------
+# `feature_files:` names the specification this plan answers. `scenarios:` gives
+# every scenario in it the place where it will be proved, keyed by the scenario's
+# own title copied character-for-character from the .feature file.
+# Source: guardkit installer/core/commands/feature-plan.md, "Required Fields"
+# (feature_files / scenarios) and "The Routing Law: verifier: stamps".
+# `routing_law:` is deliberately ABSENT: switching the law on is a repo/human
+# decision and the template says the plan writer never emits it.
+# These scenarios describe application behaviour in a stack-generic spec — no
+# request, response or status code appears anywhere in it — so each is proved by
+# a named test in the repo's own suite (`toolchain`), which the template requires
+# to carry the test it names.
+feature_files:
+  - features/member-directory-search/member-directory-search.feature
+scenarios:
+  "Searching by name returns matching members":
+    verifier: toolchain
+    test_ref: test_searching_by_name_returns_matching_members
+  "Searching by skill returns members with that skill":
+    verifier: toolchain
+    test_ref: test_searching_by_skill_returns_members_with_that_skill
+  "Opening a search result shows the member's profile summary":
+    verifier: toolchain
+    test_ref: test_opening_a_search_result_shows_the_member_s_profile_summary
+  "Results beyond the page size appear on the next page":
+    verifier: toolchain
+    test_ref: test_results_beyond_the_page_size_appear_on_the_next_page
+  "A query shorter than the minimum length is refused":
+    verifier: toolchain
+    test_ref: test_a_query_shorter_than_the_minimum_length_is_refused
+  "A visitor who is not signed in cannot search the directory":
+    verifier: toolchain
+    test_ref: test_a_visitor_who_is_not_signed_in_cannot_search_the_directory
+  "Searching with an empty query is refused":
+    verifier: toolchain
+    test_ref: test_searching_with_an_empty_query_is_refused
+  "Two members sharing the same name are both listed":
+    verifier: toolchain
+    test_ref: test_two_members_sharing_the_same_name_are_both_listed
+  "A member who has opted out never appears in results":
+    verifier: toolchain
+    test_ref: test_a_member_who_has_opted_out_never_appears_in_results

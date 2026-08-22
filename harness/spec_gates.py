@@ -32,6 +32,7 @@ import json
 import re
 import shutil
 import subprocess
+from difflib import SequenceMatcher
 from pathlib import Path
 
 from harness.idea_gates import (
@@ -891,3 +892,355 @@ def digest_findings(digest, feature_text: str, manifest, slug: str) -> list[dict
 def load_digest(path):
     import yaml
     return yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+
+
+# ===========================================================================
+# THE SCENARIO COVERAGE MAP  (G-S5, re-pointed 2026-08-22 on Rich's ruling)
+# ===========================================================================
+#
+# WHAT THIS REPLACES AND WHY, in plain words.
+#
+# Until 2026-08-14 a plan said which scenarios it covered by writing tag lines
+# (`@task:TASK-XXX-001`) into a copy of the specification. Rich retired that on
+# 2026-08-14 and the tool that writes plans today cannot produce such a file at
+# all. The check that graded those tags therefore measured nothing, and — worse
+# — it SKIPPED, which pytest reports as exit code 0, i.e. as a pass.
+#
+# The replacement is the mechanism the current planning template already
+# specifies: the plan's own feature YAML carries
+#
+#     feature_files:                       <- which specification file(s) this
+#       - features/<slug>/<slug>.feature      plan is answering
+#     scenarios:                           <- one entry per scenario in it
+#       "<the scenario's title, copied exactly>":
+#         verifier: hurl                   <- where that scenario gets proved
+#
+# Every assertion below is taken from a written source, named inline. Nothing
+# here is invented for the exam.
+#
+# SOURCES (all read 2026-08-22):
+#   [T] guardkit installer/core/commands/feature-plan.md — the planning
+#       template the serving seat is given, pinned by specialist-agent
+#       templates/pins.py as `feature-plan-methodology`
+#       (sha256 20a3061159…, pinned_commit 3ad3a366, 3017 lines).
+#       Line numbers below are that file's.
+#   [L] guardkit guardkit/orchestrator/feature_loader.py — the loader that
+#       reads the YAML in production (`Feature`, `_enforce_routing_law`).
+#   [V] guardkit guardkit/orchestrator/verifier_stamp.py — `ScenarioStamp`,
+#       `VERIFIER_HOMES`, `extract_scenario_titles`.
+#   [S] specialist-agent roles/architect/modes/feature_plan_oracle.py — the
+#       plan writer's own post-processing (what it strips, what it repairs).
+#   [F] forge src/forge/planning/target_terminal_tools.py — what forge does
+#       when the plan omits `feature_files:`.
+#
+# ONE THING THE OLD CHECK DID THAT THIS ONE CANNOT, stated plainly rather than
+# quietly dropped: the retired tags named a TASK per scenario, so the exam
+# could ask "does every task exist?" and "does every task own a scenario?".
+# The routing-law map has no task field at all — `ScenarioStamp` [V] sets
+# `extra="forbid"` and allows exactly `verifier`, `test_ref`, `test_paths`.
+# The routing law replaced task-ownership with verification-home ownership.
+# So the successor questions are "does every scenario have a home?" and "does
+# every stamp name a scenario that really exists?", which is what is graded
+# below. The task half survives only as the task-frontmatter `verifier:` stamp
+# ([T] 479-486), graded by `task_verifier_findings`.
+
+# The closed list of verification homes, and the scenario-title lexer, are
+# IMPORTED from guardkit rather than copied, so this gate and the production
+# loader can never drift apart. A failed import is an instrument error naming
+# the pin — the same posture as the missing-CLI rule above, never a silent skip.
+def _guardkit_routing_law():
+    """(`VERIFIER_HOMES`, `extract_scenario_titles`) from the installed guardkit."""
+    try:
+        from guardkit.orchestrator.verifier_stamp import (  # noqa: PLC0415
+            VERIFIER_HOMES,
+            extract_scenario_titles,
+        )
+    except ImportError as exc:  # pragma: no cover - environment defect
+        raise RuntimeError(
+            "guardkit is not importable — the scenario-coverage gate reads its "
+            "closed verifier vocabulary and its Gherkin title lexer from "
+            "guardkit.orchestrator.verifier_stamp so the exam and the production "
+            "feature loader can never disagree. Install the pinned guardkit "
+            "checkout (CONTRACT-feature-spec-plan-outputs.md §0)."
+        ) from exc
+    return VERIFIER_HOMES, extract_scenario_titles
+
+
+# The stamp's allowed keys, verbatim from ScenarioStamp [V] (extra='forbid';
+# parse_scenario_stamp's own message says "Allowed keys: verifier, test_ref,
+# test_paths").
+STAMP_KEYS = ("verifier", "test_ref", "test_paths")
+
+# A tag line in a .feature file: `@smoke`, `@key-example @smoke`, …
+_TAG_LINE_RE = re.compile(r"^\s*@[^\s]")
+# Same shape as guardkit's _SCENARIO_LINE_RE [V] — longest keyword first so
+# "Scenario Outline" never half-matches, and "Examples:" (an Outline's table
+# header) can never match.
+_SCENARIO_HEAD_RE = re.compile(
+    r"^\s*(?:Scenario Outline|Scenario Template|Scenario|Example)\s*:\s*(?P<title>\S.*?)\s*$"
+)
+
+
+def spec_scenario_tags(spec_text: str) -> dict[str, set[str]]:
+    """{scenario title -> the tags on the lines immediately above it}.
+
+    guardkit's own extractor returns titles only; the exam additionally needs to
+    know which scenarios the specification marked `@smoke`, because the smoke set
+    is the one the Coach re-proves on every build. Titles come from the SAME
+    regex shape guardkit uses, so the two agree on what a scenario is.
+    """
+    tags: dict[str, set[str]] = {}
+    pending: set[str] = set()
+    for line in spec_text.splitlines():
+        head = _SCENARIO_HEAD_RE.match(line)
+        if head:
+            tags.setdefault(head.group("title"), set()).update(pending)
+            pending = set()
+            continue
+        if _TAG_LINE_RE.match(line):
+            pending.update(tok for tok in line.split() if tok.startswith("@"))
+            continue
+        if line.strip():
+            pending = set()
+    return tags
+
+
+def _loose(title: str) -> str:
+    """Case- and spacing-insensitive form of a title, used ONLY to pick the
+    closest specification title to show beside a rejected key. The PASS/FAIL rule
+    is exact equality — [T] 461-465: keys "MUST be the spec's `Scenario:` titles
+    VERBATIM … never paraphrase, re-case, or tidy it"."""
+    return re.sub(r"[^a-z0-9]+", " ", title.casefold()).strip()
+
+
+def _closest_title(key: str, titles: list[str]) -> tuple[str | None, float]:
+    """The specification title most similar to `key`, and how similar.
+
+    DELIBERATELY NOT A VERDICT. An earlier draft of this gate tried to sort
+    rejected keys into "a paraphrase of a real scenario" and "a scenario the plan
+    invented", and reported them as two different defects. That distinction is not
+    mechanically decidable and the attempt was dropped: "Searching by EMPLOYER
+    returns matching members" and "A query shorter than the minimum ALLOWED length
+    is refused" are the same edit distance from a real title, and one is an
+    invented scenario while the other is a mis-copied one. Only a person reading
+    the two titles can tell. So the gate reports ONE defect — the key is not a
+    title in the specification — and hands the reader the nearest title and the
+    similarity so the answer is obvious at a glance.
+    """
+    best, score = None, 0.0
+    loose_key = _loose(key)
+    for title in titles:
+        ratio = SequenceMatcher(None, loose_key, _loose(title)).ratio()
+        if ratio > score:
+            best, score = title, ratio
+    return best, round(score, 3)
+
+
+def coverage_map_findings(
+    feature_yaml: dict,
+    spec_text: str,
+    *,
+    expected_feature_files: set[str] | None = None,
+) -> list[dict]:
+    """Does the plan say which scenarios it covers, and is what it says true?
+
+    Returns findings that NAME the offending scenario or key (house rule,
+    extension scope §2.4). An empty list is the only pass.
+
+    `expected_feature_files` — when the exam knows exactly which specification
+    file the plan was handed (it does; the input is pinned), the declared paths
+    must be that file. Omit it to grade a plan whose specification lives
+    somewhere the caller cannot pin, which is the case when grading captured
+    production runs for other features.
+    """
+    homes, extract_titles = _guardkit_routing_law()
+    findings: list[dict] = []
+
+    # --- 1. The map must be there at all. ---------------------------------
+    # [T] 319: `feature_files` "Repo-relative Gherkin .feature paths naming this
+    # feature's approved-scenario universe. Required when the law is enforced."
+    # [T] 320: `scenarios` "Per-scenario verifier map".
+    # [T] 421: "/feature-spec proposes the routing in its summary; THIS COMMAND
+    # writes the authoritative map into the feature YAML."
+    # Both keys are optional in the schema [L] and become mandatory only under
+    # the enforcement flag — which the plan writer is forbidden to set ([T] 470-474).
+    # RICH'S RULING, 2026-08-22: for this exam they are REQUIRED. A plan that
+    # does not say which scenarios it covers has not been graded on coverage,
+    # and "not graded" must never again be recorded as "passed".
+    files = feature_yaml.get("feature_files")
+    if not files:
+        findings.append({
+            "defect": "no_feature_files",
+            "detail": "the plan's feature YAML declares no `feature_files:` — "
+                      "nothing names the specification this plan answers",
+        })
+    elif not isinstance(files, list):
+        findings.append({"defect": "feature_files_not_a_list", "value": repr(files)[:120]})
+        files = []
+    else:
+        for entry in files:
+            if not isinstance(entry, str) or not entry.strip():
+                findings.append({"defect": "feature_files_entry_malformed", "entry": repr(entry)[:120]})
+    if not isinstance(files, list):
+        files = []
+
+    # [S] 2447-2455: the plan writer may declare
+    # `feature_files: [features/<slug>/<slug>.feature]` and "a feature_files:
+    # entry naming any OTHER path is still refused"; [F] 1746-1811: forge fills
+    # the key with the spec .feature IT committed at that path, and refuses a
+    # plan whose declaration contradicts it; [L] 1250-1259: every declared file
+    # must exist under the repo root.
+    if expected_feature_files is not None and files:
+        declared = {str(e).strip().lstrip("./") for e in files if isinstance(e, str)}
+        for entry in sorted(declared - expected_feature_files):
+            findings.append({
+                "defect": "feature_files_wrong_path", "entry": entry,
+                "expected_one_of": sorted(expected_feature_files),
+            })
+        if not (declared & expected_feature_files):
+            findings.append({
+                "defect": "feature_files_missing_the_pinned_spec",
+                "expected_one_of": sorted(expected_feature_files),
+                "declared": sorted(declared),
+            })
+
+    scenarios = feature_yaml.get("scenarios")
+    if not scenarios:
+        findings.append({
+            "defect": "no_scenarios_map",
+            "detail": "the plan's feature YAML declares no `scenarios:` map — "
+                      "no scenario has been given a verification home",
+        })
+        scenarios = {}
+    elif not isinstance(scenarios, dict):
+        findings.append({"defect": "scenarios_not_a_mapping", "value": type(scenarios).__name__})
+        scenarios = {}
+
+    # --- 2. The keys must be the specification's own titles, exactly. -----
+    # [T] 461-465: "`scenarios:` keys MUST be the spec's `Scenario:` titles
+    # VERBATIM — copy the title text from the .feature file character for
+    # character; never paraphrase, re-case, or tidy it. Under the law a key that
+    # does not equal a title in feature_files matches nothing, so a paraphrased
+    # key is an UNSTAMPED scenario."
+    # [L] 1284-1293 logs the mirror case as a stale stamp.
+    spec_titles = list(dict.fromkeys(extract_titles(spec_text)))
+    title_set = set(spec_titles)
+    for key in scenarios:
+        if not isinstance(key, str) or not key.strip():
+            findings.append({"defect": "scenario_key_not_a_title", "key": repr(key)[:120]})
+            continue
+        if key in title_set:
+            continue
+        nearest, similarity = _closest_title(key, spec_titles)
+        findings.append({
+            "defect": "scenario_title_not_in_the_specification",
+            "key": key,
+            "nearest_title_in_the_spec": nearest,
+            "similarity": similarity,
+            "detail": "this key is not a scenario title in the declared specification. "
+                      "Either the plan copied a real title inexactly — in which case that "
+                      "scenario now has no verification home, because under the routing "
+                      "law a key that is not equal to a title matches nothing — or the "
+                      "plan is claiming to cover a scenario nobody asked for. Compare it "
+                      "with the nearest title above to see which.",
+        })
+
+    # --- 3. Every scenario in the specification must have a home. ---------
+    # [T] 474-477: "Under the flag, a scenario found in feature_files but missing
+    # from scenarios: REJECTS THE PLAN LOAD, naming the unstamped titles."
+    # [L] 1270-1282 is that rejection.
+    tags = spec_scenario_tags(spec_text)
+    for title in spec_titles:
+        if title in scenarios:
+            continue
+        findings.append({"defect": "scenario_unstamped", "scenario": title})
+        # Named separately, not because it can fire alone (it cannot — an
+        # unstamped smoke scenario is always an unstamped scenario) but because
+        # the frozen G-S5 wording called the smoke set out by name: it is the
+        # set the Coach re-proves on every build, so losing one is worth saying
+        # in its own sentence rather than leaving a reader to notice the tag.
+        if "@smoke" in tags.get(title, set()):
+            findings.append({"defect": "smoke_scenario_unstamped", "scenario": title})
+
+    # --- 4. Each stamp must be well formed. -------------------------------
+    # [T] 417-420 closed vocabulary + "An unknown value is a loud plan-load ERROR
+    # — there is no fallback home"; [V] ScenarioStamp._verifier_in_closed_vocabulary.
+    # [T] 432-437 and 457-458: toolchain "REQUIRES test_ref: naming that test —
+    # a toolchain stamp WITHOUT test_ref is REJECTED"; [V]
+    # ScenarioStamp._toolchain_carries_its_named_test.
+    # [V] ScenarioStamp extra="forbid" — "Allowed keys: verifier, test_ref, test_paths."
+    for key, stamp in scenarios.items():
+        if isinstance(stamp, str):          # the documented bare-string shorthand [V]
+            stamp = {"verifier": stamp}
+        if not isinstance(stamp, dict):
+            findings.append({"defect": "stamp_malformed", "scenario": key,
+                             "value": repr(stamp)[:120]})
+            continue
+        for extra in sorted(k for k in stamp if k not in STAMP_KEYS):
+            findings.append({"defect": "stamp_unknown_key", "scenario": key, "key": extra,
+                             "allowed": list(STAMP_KEYS)})
+        verifier = stamp.get("verifier")
+        if verifier is None:
+            findings.append({"defect": "stamp_has_no_verifier", "scenario": key})
+            continue
+        if verifier not in homes:
+            findings.append({"defect": "verifier_not_in_closed_list", "scenario": key,
+                             "verifier": verifier, "allowed": sorted(homes)})
+            continue
+        test_ref = stamp.get("test_ref")
+        if verifier == "toolchain" and not (isinstance(test_ref, str) and test_ref.strip()):
+            findings.append({
+                "defect": "toolchain_stamp_without_test_ref", "scenario": key,
+                "detail": "`verifier: toolchain` means 'this NAMED test proves the "
+                          "scenario' and requires `test_ref:`; a bare toolchain stamp "
+                          "is refused at plan load",
+            })
+
+    # --- 5. The plan must not set policy. ---------------------------------
+    # [T] 470-474: "routing_law: is REPO/HUMAN POLICY, not a plan-writer field …
+    # Do NOT emit routing_law: in the feature YAML — the plan-writer never sets
+    # policy; write feature_files: and scenarios: only, and let the repo flag
+    # decide." [S] strip_model_emitted_routing_law removes it in production, for
+    # the same reason. The exam grades what the model wrote, before that repair.
+    if "routing_law" in feature_yaml:
+        findings.append({
+            "defect": "routing_law_emitted_by_the_plan",
+            "value": str(feature_yaml.get("routing_law")),
+            "detail": "turning the law on is a human/repo decision; the plan writer "
+                      "declares coverage, never policy",
+        })
+
+    return findings
+
+
+def task_verifier_findings(output_root: Path, feature_yaml: dict) -> list[dict]:
+    """The task-frontmatter half of the routing law.
+
+    [T] 479-486: "a task MAY carry `verifier:` beside `task_type:` (same closed
+    vocabulary, same loud validation at task load). For `verifier: toolchain`,
+    `test_ref: <test token>` is REQUIRED — a bare toolchain is refused at task
+    load." MAY, so absence is not a finding; a PRESENT stamp is checked, exactly
+    as `validate_task_verifier` [V] checks it in production.
+    """
+    homes, _ = _guardkit_routing_law()
+    findings: list[dict] = []
+    for task in feature_yaml.get("tasks") or []:
+        tid = str(task.get("id"))
+        fp = Path(output_root) / str(task.get("file_path", ""))
+        if not fp.is_file():
+            continue                      # owned by test_task_frontmatter_discipline
+        try:
+            fm = parse_frontmatter(fp)
+        except ValueError:
+            continue                      # owned by test_task_frontmatter_discipline
+        verifier = fm.get("verifier")
+        if verifier is None:
+            continue
+        if verifier not in homes:
+            findings.append({"task": tid, "defect": "task_verifier_not_in_closed_list",
+                             "verifier": verifier, "allowed": sorted(homes)})
+            continue
+        test_ref = fm.get("test_ref")
+        if verifier == "toolchain" and not (isinstance(test_ref, str) and test_ref.strip()):
+            findings.append({"task": tid, "defect": "task_toolchain_stamp_without_test_ref"})
+    return findings

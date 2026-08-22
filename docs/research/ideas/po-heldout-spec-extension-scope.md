@@ -147,9 +147,33 @@ reuses another suite's `--out` directory.
   2. **Re-point the axis at the routing-law successor.** The current template has
      `/feature-plan` write `feature_files:` + a `scenarios:` block keyed by verbatim
      scenario title inside `.guardkit/features/{id}.yaml` — which the plan tool CAN
-     emit, needing no grammar change. **Measured 2026-08-22: today's drives emit
-     neither key, and forge tolerates the omission rather than requiring it.** Making it
-     required is a ruling, not a test edit. This is the option that restores real teeth.
+     emit, needing no grammar change.
+
+     **CORRECTION 2026-08-22, same day: an earlier revision of this line said "today's
+     drives emit neither key". THAT WAS FALSE and it was written here by this lane.** It
+     came from one drive (the exam replay) being generalised to all of them by a single
+     changed word — "drive" to "drives" — and it then stood in a frozen governance
+     document as a measured fact. Re-measured across all eleven captured planning runs of
+     2026-08-22: **ten of eleven carry BOTH keys**, and nine of eleven stamp every
+     specification scenario word-perfect. The seat has been writing this map since
+     2026-08-16; the pinned methodology template already invites it.
+
+     **The real defect is different, and worse.** In **6 of the 10** plans that carry the
+     map, the `feature_files:` PATH is wrong — the plan names a folder that does not
+     exist (e.g. `features/users-count/` where the spec lives in
+     `features/users-count-endpoint/`). Root cause, and it is not a model failure: **the
+     request hands the plan writer the specification's CONTENTS and never its LOCATION.**
+     The model is being asked for a fact nobody gave it, so it invents a plausible folder
+     name from the title.
+
+     That matters because a confidently wrong path is worse than a missing one: forge
+     refuses a plan whose `feature_files:` omits the spec file forge itself committed, and
+     guardkit under an enforced routing law refuses a declared file that does not exist —
+     whereas a MISSING key forge quietly fills in correctly. So requiring the key without
+     first passing the path would make things worse, not better.
+
+     Making it required is a ruling, not a test edit. This is still the option that
+     restores real teeth — but the path must be supplied to the writer first.
   3. **Un-retire Step 11** — rejected on this lane's read: it would re-arm the oracle
      Rich deliberately disarmed and would mean widening the plan writer's artefact
      grammar, which is what currently protects it from this class of mistake.

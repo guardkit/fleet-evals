@@ -1,7 +1,13 @@
 # PO Held-Out Suite — Feature-Spec/Plan Extension (FEAT-EVAL-SPEC, gate G2b)
 
 **Status:** **FROZEN 2026-07-07 (Rich — thresholds G-S1..G-S5 accepted as proposed; this
-commit is the freeze).** Acceptance given by Rich's instruction in the 2026-07-07
+commit is the freeze). ⚠️ REOPENED 2026-08-22 on the G-S5 axis only — see G-S5 in §3.**
+The reopening is deliberate and visible, per this document's own rule that instrument
+revisions "reopen this doc *before* the next freeze, never silently". G-S1..G-S4 are
+untouched and remain frozen. G-S5 awaits Rich's ruling and must not be recorded as met
+in the meantime. The 008 task instrument was corrected the same day; no 008 grading run
+has ever been recorded (`runs/po-heldout-spec/` holds 007 reps only), so no started run
+is being retro-fitted. Acceptance given by Rich's instruction in the 2026-07-07
 whole-factory analysis session (ai-transition); house convention: freeze = the commit
 flipping this line. Pre-registration discipline verbatim from the frozen suites: the
 freeze precedes any grading run (none has run); after a grading run starts, thresholds
@@ -104,12 +110,52 @@ reuses another suite's `--out` directory.
   (task-work ≥4 / direct ≤3), `test_plan_structure_floor` (≥3 tasks, ≥2 waves),
   `test_mandatory_diagrams` (data-flow always; dependency graph at ≥3 tasks), and
   `test_lint_acceptance_criterion`.
-- **G-S5 — Plan/spec coherence: 3/3 plan reps** pass `test_bdd_linkage_coherence`
-  (every @task tag resolves; ≥1 scenario linked; every @smoke scenario linked; every
-  feature-type task owns ≥1 scenario) and `test_spec_preserved_verbatim` (stripping the
-  inserted `@task:` lines reproduces the pinned input spec byte-for-byte). G-S5 claims
-  linkage *discipline*, not pairing *aptness* (whether a scenario truly belongs to that
-  task is Coach/judgment territory).
+- **G-S5 — Plan/spec coherence — ⚠️ REOPENED 2026-08-22, AWAITING RICH'S RULING. DO NOT
+  RECORD THIS AXIS AS MET UNTIL HE HAS RULED.** As frozen it read: *3/3 plan reps pass
+  `test_bdd_linkage_coherence` (every @task tag resolves; ≥1 scenario linked; every
+  @smoke scenario linked; every feature-type task owns ≥1 scenario) and
+  `test_spec_preserved_verbatim` (stripping the inserted `@task:` lines reproduces the
+  pinned input spec byte-for-byte). G-S5 claims linkage *discipline*, not pairing
+  *aptness*.*
+
+  **Why it is reopened.** This axis grades Step-11 `@task:` scenario tagging. **Rich
+  retired Step 11 on 2026-08-14** (guardkit `a87862ef`, the Q10 ruling on the
+  BDD-replacement card): the template now reads "BDD scenario linking — RETIRED. DO NOT
+  RUN", because those tags armed the BDD-execution oracle he was removing.
+  specialist-agent followed the ruling on 2026-08-15. The headless plan tool this exam
+  actually grades (created 2026-07-09, two days after this freeze) never implemented
+  Step 11 at all, and its artefact grammar **forbids** emitting a `.feature` file — a
+  model that obeyed the old instruction had its entire plan discarded.
+
+  **THE TRAP THIS AXIS NOW SETS, and the reason it must not be quietly left alone.**
+  With no tagged copy in the tree the linkage test SKIPS, and
+  `harness/run_po_eval.py:255` grades a rep by `proc.returncode == 0` — **pytest exits 0
+  when tests skip.** So "3/3 plan reps pass `test_bdd_linkage_coherence`" would score
+  **GREEN while measuring nothing at all**. That is precisely the defect class this
+  estate has spent the week removing: a check whose coverage is narrower than its claim.
+  A skip on this axis is **COULD NOT MEASURE**, never a pass.
+
+  **What is actually lost.** Plan/spec coherence is now *ungraded*, not leniently graded.
+  Nothing in the tool's four artefact shapes carries a scenario-to-task mapping, so the
+  exam cannot say whether a plan covers the scenarios the spec asked for, or invented
+  tasks nothing asked for. That hole is real and is not papered over here.
+
+  **The three options, for Rich:**
+  1. **Strike the linkage half** and keep only `test_spec_preserved_verbatim` (which
+     still does useful work: any spec copy present in the tree must not have been
+     rewritten). Cheapest; leaves coverage ungraded.
+  2. **Re-point the axis at the routing-law successor.** The current template has
+     `/feature-plan` write `feature_files:` + a `scenarios:` block keyed by verbatim
+     scenario title inside `.guardkit/features/{id}.yaml` — which the plan tool CAN
+     emit, needing no grammar change. **Measured 2026-08-22: today's drives emit
+     neither key, and forge tolerates the omission rather than requiring it.** Making it
+     required is a ruling, not a test edit. This is the option that restores real teeth.
+  3. **Un-retire Step 11** — rejected on this lane's read: it would re-arm the oracle
+     Rich deliberately disarmed and would mean widening the plan writer's artefact
+     grammar, which is what currently protects it from this class of mistake.
+
+  Until he rules, this axis is **NOT MEASURABLE** and any RESULTS doc must record it as
+  such rather than as met.
 
 **If not met:** the target terminal does NOT go live on this model — FEAT-SPL-007/008
 stay behind the PLANNED-HANDOFF fallback (which needs only G2); the failing axis is

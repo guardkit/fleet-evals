@@ -114,3 +114,35 @@ this exam. Two options exist, and both need someone to rule on them:
 mechanism is chosen.** An exam that grades a behaviour no tool performs does not
 measure the model — it just subtracts two marks from every score, which is what
 it did between July and today.
+
+---
+
+## Added 2026-08-22 after adversarial review — two things the first pass got wrong
+
+**1. A SKIP ON THE LINKAGE AXIS SCORES GREEN. This is the important one.**
+`harness/run_po_eval.py:255` grades a rep by `proc.returncode == 0`, and **pytest exits 0
+when tests skip**. So the frozen threshold G-S5 ("3/3 plan reps pass
+`test_bdd_linkage_coherence`") would record as MET on an axis that measured nothing at
+all. Correcting the task instrument without saying so would have converted a visible
+failure into an invisible one — the exact defect class this estate spent the week
+removing.
+
+The freezing document `docs/research/ideas/po-heldout-spec-extension-scope.md` has
+therefore been **reopened on the G-S5 axis, visibly**, per its own rule that instrument
+revisions "reopen this doc *before* the next freeze, never silently". It records three
+options and awaits Rich's ruling. **Until he rules, a skip here means COULD NOT MEASURE
+and must never be written down as a pass.**
+
+**2. The tagged-copy selection depended on filename sort order.**
+`tagged_feature_text` took `paths[0]`. A tree holding an untagged copy that sorts first
+and a *tagged* copy that sorts second was judged on the untagged one — so a dangling
+`@task:` tag in the other file was never graded. Measured both ways: the same tree
+flipped between "8 passed, 1 skipped" and a caught `dangling_task_tag` purely on
+ordering. Now the fixture selects the first copy that actually **contains** a `@task:`
+tag and only falls back to `paths[0]` when none does. Proven by mutation: the
+dangling-tag tree that previously skipped now fails by name.
+
+**Scope note, stated precisely:** the fixture checks every file *named
+`<slug>.feature`* under `features/` — not every file under `features/`. A rewritten copy
+saved under a different filename is not caught. That was true before this lane too; it
+is recorded here so nobody reads "every copy" as broader than it is.

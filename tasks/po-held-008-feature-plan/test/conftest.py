@@ -76,6 +76,17 @@ def tagged_feature_text(tagged_feature_paths) -> str | None:
     """
     if not tagged_feature_paths:
         return None
+    # PREFER A TAGGED COPY OVER SORT ORDER. Taking paths[0] made the whole
+    # linkage axis depend on filename ordering: a tree holding an untagged copy
+    # that sorts first and a TAGGED copy that sorts second would be judged on
+    # the untagged one, and a dangling `@task:` tag in the other file would
+    # never be graded. Measured: with the order reversed the same tree flips
+    # between "8 passed, 1 skipped" and a caught `dangling_task_tag`. Select on
+    # content, never on order; fall back to the first copy when none is tagged.
+    for candidate in tagged_feature_paths:
+        text = candidate.read_text(encoding="utf-8")
+        if "@task:" in text:
+            return text
     return tagged_feature_paths[0].read_text(encoding="utf-8")
 
 

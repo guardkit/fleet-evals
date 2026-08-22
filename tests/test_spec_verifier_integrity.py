@@ -159,9 +159,70 @@ def run_gate(task_id: str, output_dir: Path | None) -> tuple[int, str]:
 @pytest.mark.parametrize("task_id,fixture_name", GOOD_CASES)
 def test_spec_good_fixture_passes(task_id, fixture_name):
     """A verifier that rejects a legitimate serving-acceptable sheet is broken
-    (frozen rule (c), applied to tree-shaped artifacts)."""
+    (frozen rule (c), applied to tree-shaped artifacts).
+
+    2026-08-22: this used to say `code == 0` and, on any other code, report
+    "gate REJECTED a legitimate answer sheet". There are now THREE outcomes, not
+    two, and calling the third one a rejection would send the reader to the wrong
+    place entirely:
+
+        0   every bar ran and passed        — the fixture proves what it claims
+        40  a bar COULD NOT BE MEASURED     — proves nothing either way
+        else the gate genuinely rejected it — the verifier is broken
+
+    A pass-side proof that could not measure part of the exam is not a pass-side
+    proof, so 40 still fails this test. It fails with the truth on it.
+    """
+    from harness.could_not_measure import EXIT_COULD_NOT_MEASURE
+
     code, out = run_gate(task_id, REPO_ROOT / "tests" / "good_fixtures" / task_id / fixture_name)
+    if code == EXIT_COULD_NOT_MEASURE:
+        block = out.split("COULD NOT MEASURE", 1)[-1][:1500]
+        raise AssertionError(
+            f"{task_id}/{fixture_name}: the gate did NOT reject this sheet — it could not "
+            f"MEASURE part of it, so this fixture proves nothing about the axes that stepped "
+            f"aside. This is the honest reading of a real gap, not a regression to undo by "
+            f"loosening the check. See docs/research/ideas/po-heldout-spec-extension-scope.md "
+            f"§11.6 for the ruling that closes it.\nCOULD NOT MEASURE{block}"
+        )
     assert code == 0, f"{task_id}/{fixture_name}: gate REJECTED a legitimate answer sheet:\n{out}"
+
+
+def test_the_007_grade_cannot_exit_zero_when_a_check_skips():
+    """THE SAME TRAP AS 008's, CLOSED IN 007 TOO — proved on the real fixtures.
+
+    po-held-007's three quality-bar-seed checks step aside when the graded tree
+    carries no `qa/pass-bar-seed-*.yaml`. Every runner grades a rep by pytest's
+    exit code, and pytest exits 0 when a test skips, so those three axes were
+    written down as PASSED while measuring nothing.
+
+    Measured on this repo's own assets before the fix: all six registered GOOD
+    fixtures returned `14 passed, 3 skipped`, exit 0. This test pins the fix
+    against the same fixtures, so the trap cannot come back unnoticed.
+    """
+    from harness.could_not_measure import EXIT_COULD_NOT_MEASURE
+
+    seedless = REPO_ROOT / "tests" / "good_fixtures" / "po-held-007-feature-spec" / "frontier-baseline"
+    assert not (seedless / "qa").exists(), (
+        "this test needs a tree with NO quality-bar seed; frontier-baseline has grown one — "
+        "point it at another seedless fixture, or delete this test if none is left"
+    )
+    code, out = run_gate("po-held-007-feature-spec", seedless)
+    assert code == EXIT_COULD_NOT_MEASURE, (
+        f"a 007 grade that skipped three checks exited {code} — the skip-scores-green trap "
+        f"is back:\n{out[-3000:]}"
+    )
+    assert "COULD NOT MEASURE" in out, out[-3000:]
+    for node in ("test_seed_wellformed", "test_criteria_observability", "test_negative_path_honesty"):
+        assert node in out, f"the grade did not NAME the unmeasured check {node}:\n{out[-3000:]}"
+
+
+def test_the_007_oracle_still_measures_every_axis():
+    """The other half of the same claim: the frozen gold answer DOES carry a seed,
+    so the Oracle run measures all seventeen axes and exits 0. If this ever starts
+    returning 40, the exam has lost the only tree it can fully grade."""
+    code, out = run_gate("po-held-007-feature-spec", None)  # default output dir = solution/
+    assert code == 0, f"the 007 Oracle no longer measures every axis (exit {code}):\n{out[-3000:]}"
 
 
 # --- Fixture floors (§2.7: the battery may grow, never shrink) ---------------------

@@ -146,3 +146,100 @@ dangling-tag tree that previously skipped now fails by name.
 `<slug>.feature`* under `features/` — not every file under `features/`. A rewritten copy
 saved under a different filename is not caught. That was true before this lane too; it
 is recorded here so nobody reads "every copy" as broader than it is.
+
+---
+
+## Added 2026-08-22, afternoon — RICH RULED. The fifth bar now grades the plan's own coverage map.
+
+Everything above stands as the record of how the bar went stale and what the
+morning's correction did. This section records what replaced it.
+
+**The ruling.** Of the three options listed above, Rich chose the second — make
+the plan writer emit `feature_files:` and `scenarios:` inside the plan's own
+feature YAML, and grade that. His words: *"that would be a better long term
+option"*.
+
+**What the bar is now.** `test_bdd_linkage_coherence` is gone;
+`test_scenario_coverage_map` takes its place. It requires the plan's feature
+YAML to carry:
+
+```yaml
+feature_files:
+  - features/member-directory-search/member-directory-search.feature
+scenarios:
+  "Searching by name returns matching members":
+    verifier: toolchain
+    test_ref: test_search_by_name
+```
+
+and then grades it. Every assertion is taken from the planning template the
+serving seat is actually given (guardkit `installer/core/commands/feature-plan.md`,
+pinned by specialist-agent as `feature-plan-methodology`, sha256 `20a3061159…`,
+commit `3ad3a366`, 3,017 lines) or from the code that enforces it. Nothing is
+invented for the exam; each check names its source in
+`harness/spec_gates.py::coverage_map_findings`:
+
+| What is required | Where it comes from |
+|---|---|
+| `feature_files:` and `scenarios:` are present | template "Required Fields" table; "this command **writes the authoritative map**" |
+| `feature_files:` names the pinned specification and no other path | specialist-agent `feature_plan_oracle.py` (an entry naming any other path "is still refused"); forge `declare_feature_files_if_absent`; guardkit `_enforce_routing_law` (a declared file must exist) |
+| every key is a scenario title copied **verbatim** | template: keys "MUST be the spec's `Scenario:` titles VERBATIM … never paraphrase, re-case, or tidy it" |
+| every scenario in the specification appears in the map | template: a scenario "missing from `scenarios:` **rejects the plan load**"; guardkit `_enforce_routing_law` lists them by name |
+| a `@smoke` scenario left out is named separately | the frozen G-S5 wording called the smoke set out by name; it is the set re-proved on every build |
+| `verifier:` is one of the eight allowed homes | template's closed vocabulary; guardkit `VERIFIER_HOMES`, imported not copied |
+| a `toolchain` home carries `test_ref:` | template ("REQUIRED with toolchain — never omit"); guardkit `ScenarioStamp` |
+| a stamp carries no other keys | guardkit `ScenarioStamp` (`extra="forbid"`; allowed keys are verifier, test_ref, test_paths) |
+| the plan does not write `routing_law:` | template: "Do NOT emit `routing_law:` — the plan-writer never sets policy" |
+| a task's own `verifier:` stamp, when it has one, obeys the same rules | template, "Task frontmatter" |
+
+**One thing the old bar did that this one cannot, said plainly.** The retired
+tags named a TASK per scenario, so the exam could ask "does every task named
+exist?" and "does every task own a scenario?". **The routing-law map has no task
+field at all** — its stamp schema allows exactly `verifier`, `test_ref`,
+`test_paths` and rejects anything else — because the routing law replaced
+task-ownership with verification-home ownership. Those two questions therefore
+have **no successor**, and the exam no longer asks them. What survives on the
+task side is the frontmatter `verifier:` stamp, which is graded. This is a real
+narrowing and it is recorded here rather than glossed.
+
+**The skip that scored green is closed twice over.**
+
+1. The new bar never skips. A plan with no coverage map FAILS it.
+2. `tasks/po-held-008-feature-plan/test/conftest.py` now refuses to let *any*
+   skip in this grade exit 0. It prints the skipped checks by name and returns
+   exit code **40** — deliberately outside pytest's own range (0 ok / 1 failed /
+   2 interrupted / 3 internal / 4 usage / 5 nothing collected) so a reader can
+   tell "could not measure" from "measured and failed", while every existing
+   `returncode == 0` check in the runners treats it as the failure it is.
+
+Measured, on a plan of exactly the shape today's tool produces (the reference
+answer with no spec copy and no coverage map):
+
+| Instrument | Result | Exit code |
+|---|---|---|
+| this morning's | 8 passed, 1 skipped | **0 — recorded as PASSED** |
+| this afternoon's | 8 passed, 1 failed | **1** |
+
+**The reference answer failed the new bar, and that is a real finding, not a
+weakened bar.** `solution/` was authored 2026-07-07, five weeks before the
+routing law was ruled (2026-08-14). It had no `feature_files:` and no
+`scenarios:`, so it failed exactly as any other pre-law plan does. The bar was
+NOT relaxed to fit it: the reference was brought up to the current contract by
+appending the coverage map (nine scenarios, every title copied from the pinned
+input, `toolchain` homes each naming their test). Nothing else about the
+reference changed. The same map was appended to all eighteen 008 fixtures so
+each still fails only for its own defect.
+
+**The fixture battery grew from 14 broken to 20.** Six new firing demos —
+`no-coverage-map`, `paraphrased-scenario-key`, `unknown-verifier-home`,
+`bare-toolchain-stamp`, `feature-files-wrong-path`, `routing-law-emitted` —
+each built by copying the reference answer and making exactly one change, so
+the diff against a passing plan *is* the defect. The three fixtures built for
+the retired tag check keep their names and their place and now carry the
+equivalent coverage-map defect; each one's `meta.json` says what it demonstrates
+now and how that relates to what it demonstrated before.
+
+**Two of the new checks are independently corroborated.** `bare-toolchain-stamp`
+and `unknown-verifier-home` also fail `test_guardkit_validate` — guardkit's own
+CLI refuses those stamps at load, with no involvement from the exam. The exam
+and the production loader agree about what an invalid stamp is.

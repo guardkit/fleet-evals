@@ -1,8 +1,11 @@
 {
-  "defect_class": "linkage coherence \u2014 @smoke scenario left unlinked",
+  "defect_class": "scenario coverage — a smoke scenario has no verification home",
   "construction": "the name-search smoke scenario's @task line removed; the Coach's every-build oracle set must trace to owning tasks",
   "expect_fail": [
-    "test_bdd_linkage_coherence"
+    "test_scenario_coverage_map"
   ],
-  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)"
+  "authored": "2026-07-07 (TASK-EVS-004 fixture battery)",
+  "construction_2026_08_22": "the coverage map entry for 'Searching by name returns matching members' is deleted. That scenario is tagged @smoke in the specification, so the gate names it twice: once as an unstamped scenario and once, separately, as an unstamped SMOKE scenario.",
+  "same_family_as_the_original": "Identical in substance to the original: the smoke set is the set re-proved on every build, and a smoke scenario with nowhere to be proved is a hole in the one place a hole is least affordable. Only the mechanism changed.",
+  "amended": "2026-08-22 (afternoon): RE-POINTED. This fixture was built to fire the retired @task-tag linkage check. Rich ruled that the fifth bar now grades the plan's own scenario coverage map instead, so the fixture keeps its name and its files and its job — demonstrating that the fifth bar can fail — but the defect it carries has been restated in the language the bar now speaks. The old @task tag lines are left in the spec copy untouched; they are inert, and the spec-preservation bar still ignores them exactly as it always did."
 }

@@ -1,0 +1,10 @@
+{
+  "defect_class": "scenario coverage — a map key paraphrases the specification's title",
+  "construction": "one key gains the word 'allowed'. The stamp itself is untouched and valid; the KEY no longer equals any title in the specification.",
+  "why_this_one_matters": "Measured in a live planning run on 2026-08-16 (specialist-agent run 8a693c5e): seven of eight titles were byte-exact and the eighth was a one-word paraphrase, which left that scenario unstamped and killed the run. The planning template answers it directly: keys must be the titles VERBATIM, 'never paraphrase, re-case, or tidy'.",
+  "expect_fail": [
+    "test_scenario_coverage_map"
+  ],
+  "authored": "2026-08-22 — the G-S5 re-pointing lane. Built by copying the reference solution/ tree and making exactly ONE change to it, so the diff against a passing answer IS the defect.",
+  "one_defect_name_two_readings": "This fixture and `dangling-task-tag` both fire the same finding — the key is not a title in the specification. The gate does not claim to tell a mis-copied title from an invented one, because that is not mechanically decidable; it reports the nearest real title beside the offending key so a reader can see in one look which happened. Here the nearest title differs by one word, which is the mis-copy reading."
+}

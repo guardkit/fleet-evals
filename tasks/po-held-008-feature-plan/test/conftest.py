@@ -1,14 +1,31 @@
 """Grades the candidate plan tree at $PO_EVAL_OUTPUT_DIR (defaults to the
-task's solution/ dir, so a bare pytest run validates the Oracle).
+task's solution/ dir, so a bare pytest run validates the reference answer).
 
-CORRECTION 2026-08-22 — the spec `.feature` copy is OPTIONAL here.
-Until today this file asserted that the graded tree contained
-`features/<slug>/<slug>.feature`, the Step-11 @task-tagged copy of the input
-spec. The tool this exam grades cannot produce that file and is not asked to:
-see STEP-11-NOTE.md in the task directory for the measurements and the dates.
-The copy is therefore looked up, not demanded — present, it is graded exactly
-as before; absent, the two tests that need it say so instead of erroring at
-fixture setup and hiding the rest of the grade.
+TWO CORRECTIONS, both 2026-08-22, both kept visible.
+
+MORNING — the spec `.feature` copy became OPTIONAL. Until then this file
+asserted that the graded tree contained `features/<slug>/<slug>.feature`, a
+copy of the specification with tag lines added marking which plan task covers
+which scenario. The tool this exam grades cannot produce that file and is not
+asked to (STEP-11-NOTE.md has the measurements and the dates). The copy is
+therefore looked up, not demanded.
+
+AFTERNOON — the skip that scored green was closed. Making the check optional
+left a worse hole: with no copy to grade, the check SKIPPED, and pytest exits 0
+when tests skip, so every runner that grades a run by its exit code would have
+recorded the bar as PASSED while it measured nothing. Two things changed:
+
+  * the fifth bar was re-pointed, on Rich's ruling, at something the plan tool
+    can and does emit — the coverage map in the plan's own feature YAML — and
+    the new check (`test_scenario_coverage_map`) never skips; and
+  * `pytest_sessionfinish` below refuses to let ANY skip in this grade exit 0.
+    A skipped check means COULD NOT MEASURE, and this task's grade now says so
+    in its exit code rather than in a line of output nobody parses.
+
+The fixtures that existed only to feed the retired tag check (`parsed`,
+`tagged_feature_text`) are gone with it. `tagged_feature_paths` stays: the
+spec-preservation bar still grades every copy of the specification found in the
+tree, exactly as it did this morning.
 """
 import os
 import sys
@@ -68,35 +85,60 @@ def tagged_feature_paths(output_dir) -> list[Path]:
 
 
 @pytest.fixture(scope="session")
-def tagged_feature_text(tagged_feature_paths) -> str | None:
-    """The graded tree's copy of the spec, or None when it holds none.
-
-    None is NOT a defect — see STEP-11-NOTE.md. The plan tool's four artefact
-    shapes cannot carry a `.feature` file at all.
-    """
-    if not tagged_feature_paths:
-        return None
-    # PREFER A TAGGED COPY OVER SORT ORDER. Taking paths[0] made the whole
-    # linkage axis depend on filename ordering: a tree holding an untagged copy
-    # that sorts first and a TAGGED copy that sorts second would be judged on
-    # the untagged one, and a dangling `@task:` tag in the other file would
-    # never be graded. Measured: with the order reversed the same tree flips
-    # between "8 passed, 1 skipped" and a caught `dangling_task_tag`. Select on
-    # content, never on order; fall back to the first copy when none is tagged.
-    for candidate in tagged_feature_paths:
-        text = candidate.read_text(encoding="utf-8")
-        if "@task:" in text:
-            return text
-    return tagged_feature_paths[0].read_text(encoding="utf-8")
-
-
-@pytest.fixture(scope="session")
-def parsed(tagged_feature_text):
-    if tagged_feature_text is None:
-        return None
-    return spec_gates.parse_feature(tagged_feature_text)
-
-
-@pytest.fixture(scope="session")
 def pinned_input_feature() -> str:
     return (TASK_DIR / "input" / "features" / SLUG / f"{SLUG}.feature").read_text(encoding="utf-8")
+
+
+# ---------------------------------------------------------------------------
+# THE SKIP THAT SCORED GREEN — closed here, for every runner at once
+# ---------------------------------------------------------------------------
+#
+# THE DEFECT, in plain words. Every runner in this repo decides whether a graded
+# run passed by looking at the exit code of `python3 -m pytest test/ -q`
+# (`harness/run_po_eval.py` grade_rep; `harness/run_po_spec_eval.py` grade_rep).
+# pytest exits 0 when a test is SKIPPED. So a check that quietly stepped aside —
+# because the thing it wanted to look at was not there — was written down as a
+# PASS. A bar that measured nothing scored the same as a bar that measured
+# everything, and nothing in the receipt showed the difference.
+#
+# THE FIX. Any skip in this task's grade makes the run exit non-zero, with its
+# own code, and prints the skipped checks by name. The code is deliberately
+# outside pytest's own range (0 ok / 1 failed / 2 interrupted / 3 internal /
+# 4 usage / 5 nothing collected) so a reader can tell "could not measure" from
+# "measured and failed" at a glance, while every existing `returncode == 0`
+# check treats it as the failure it is.
+#
+# This does not stop anyone writing a legitimately conditional check later. It
+# stops such a check being scored as a pass — which is the part that was wrong.
+
+EXIT_COULD_NOT_MEASURE = 40
+
+_skipped: "dict[str, str]" = {}
+
+
+def pytest_runtest_logreport(report):
+    """Record every skipped check, whichever phase it skipped in."""
+    if not report.skipped:
+        return
+    reason = ""
+    longrepr = getattr(report, "longrepr", None)
+    if isinstance(longrepr, tuple) and len(longrepr) == 3:
+        reason = str(longrepr[2])
+    elif longrepr is not None:
+        reason = str(longrepr)
+    _skipped.setdefault(report.nodeid, reason)
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """A grade that could not measure something must not exit 0."""
+    if not _skipped:
+        return
+    print("\n" + "=" * 72)
+    print("COULD NOT MEASURE — this grade skipped checks, so it is NOT a pass:")
+    for nodeid, reason in sorted(_skipped.items()):
+        print(f"  - {nodeid}\n      {reason}")
+    print("A skipped bar measures nothing. Recording it as green is the defect")
+    print("this guard exists to prevent (see the note at the top of this file).")
+    print("=" * 72)
+    if exitstatus == 0:
+        session.exitstatus = EXIT_COULD_NOT_MEASURE

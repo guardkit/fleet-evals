@@ -10,6 +10,7 @@ complexity: 4
 dependencies:
 - TASK-MDS-002
 - TASK-MDS-003
+verifier: toolchain
 ---
 
 # TASK-MDS-004 — Member search results page with profile summaries

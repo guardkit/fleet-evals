@@ -1,26 +1,33 @@
 """Gate tests: headless /feature-plan quality from a pinned spec triple.
 
 Axes per the pinned contract (CONTRACT-feature-spec-plan-outputs.md Parts B+D,
-guardkit feature-plan.md @ 5ad48fcf on main 28587b61): the deterministic
-feature-YAML oracle (`guardkit feature validate`, exit 0); task-markdown
-frontmatter discipline (explicit task_type, id/feature_id/wave agreement);
-the pinned mode-assignment rule; the Step 8/9 folder contract (README +
-IMPLEMENTATION-GUIDE with mandatory Mermaid diagrams); the lint acceptance
-criterion; plan/spec coherence via @task linkage WHEN a tagged spec copy is
-present; and spec preservation — the plan may TAG the input spec, never
-rewrite it.
+guardkit feature-plan.md): the deterministic feature-YAML oracle (`guardkit
+feature validate`, exit 0); task-markdown frontmatter discipline (explicit
+task_type, id/feature_id/wave agreement); the pinned mode-assignment rule; the
+Step 8/9 folder contract (README + IMPLEMENTATION-GUIDE with mandatory Mermaid
+diagrams); the lint acceptance criterion; the scenario coverage map; and spec
+preservation — a plan may not rewrite the specification it was given.
 
-CORRECTION 2026-08-22. Two axes below used to REQUIRE a tagged copy of the
-input spec at `features/<slug>/<slug>.feature`. No tool in the chain writes
-that file today, and one of them would refuse the whole plan if the model
-tried: the plan writer's output grammar admits exactly four artefact shapes
-(`.guardkit/features/{id}.yaml`, `tasks/backlog/{slug}/TASK-*.md`,
-`.../IMPLEMENTATION-GUIDE.md`, `.../README.md`) and rejects everything else.
-The step that used to write the tagged copy — Step 11, BDD scenario linking —
-was retired by ruling on 2026-08-14 and is marked DO NOT RUN in the template.
-So both axes now grade the copy IF the graded tree carries one, and say so
-plainly if it does not. Full account, with the measurements and dates, in
-STEP-11-NOTE.md beside this directory.
+HISTORY OF THE FIFTH BAR, kept visible rather than tidied away:
+
+* Pinned 2026-07-07 against a step that wrote `@task:` tag lines into a copy of
+  the specification. Correct on the day it was written.
+* 2026-08-14 Rich retired that step. The tool this exam grades never
+  implemented it and its output grammar forbids the file outright.
+* 2026-08-22 (morning) the bar was made conditional so it would stop erroring.
+  That was worse: with nothing to grade it SKIPPED, and pytest exits 0 on a
+  skip, so the bar would have been recorded as PASSED while measuring nothing.
+* 2026-08-22 (this change) Rich ruled: require the plan to carry the routing-law
+  coverage map in its own YAML, and grade that. `test_bdd_linkage_coherence` is
+  replaced by `test_scenario_coverage_map`, which cannot skip. The other half of
+  the old axis, `test_spec_preserved_verbatim`, is unchanged and still runs.
+
+Bars one to four (`test_guardkit_validate`, `test_task_frontmatter_discipline`,
+`test_mode_assignment`, `test_plan_structure_floor` + `test_readme_and_guide_present`,
+`test_mandatory_diagrams`, `test_lint_acceptance_criterion`) are frozen and are
+byte-identical to their 2026-07-07 text.
+
+Full account, with the measurements and dates, in STEP-11-NOTE.md.
 """
 import json
 
@@ -28,6 +35,7 @@ import pytest
 
 from harness import spec_gates
 
+SLUG = "member-directory-search"
 MIN_TASKS = 3   # anti-collapse floor (dependency-graph diagram threshold)
 MIN_WAVES = 2   # a one-wave plan has no ordering judgment to grade
 
@@ -112,40 +120,55 @@ def test_lint_acceptance_criterion(output_dir, feature_yaml):
     assert missing == [], f"implementation tasks without the lint acceptance criterion: {missing}"
 
 
-def test_bdd_linkage_coherence(parsed, feature_yaml, output_dir):
-    """Plan/spec coherence: every @task tag resolves to a plan task; every
-    @smoke scenario is linked; every feature-type task owns at least one
-    scenario.
+def test_scenario_coverage_map(feature_yaml, pinned_input_feature, output_dir):
+    """THE FIFTH BAR — does the plan say which scenarios it covers, and is what
+    it says true?
 
-    Graded WHEN the tree carries a spec copy with at least one @task tag.
-    Skipped otherwise, and that is not leniency — it is the contract:
+    RE-POINTED 2026-08-22 on Rich's ruling. What this bar used to grade, and why
+    that stopped working, is in STEP-11-NOTE.md beside this directory; the short
+    version is that plans used to mark coverage by writing tag lines into a copy
+    of the specification, Rich retired that on 2026-08-14, and the tool that
+    writes plans today cannot produce such a file at all. The check that graded
+    those tags ended up SKIPPING — and a skipped test exits 0, which every
+    runner reads as a pass. A bar that measures nothing must never score green.
 
-    * No spec copy at all is what the plan tool produces. Its four artefact
-      shapes cannot contain a `.feature` file (STEP-11-NOTE.md).
-    * A copy with NO @task tags is what a real forge worktree looks like: the
-      spec stage commits the untagged `.feature`, and Step 11 — the step that
-      would tag it — is retired DO NOT RUN since 2026-08-14. Failing an
-      untagged copy would fail a plan for obeying the ruling.
+    The mechanism graded instead is the one the current planning template
+    already specifies for exactly this job: the plan's own feature YAML carries
+    `feature_files:` (which specification it is answering) and a `scenarios:`
+    map (one entry per scenario, giving the place that scenario will be proved).
+    The template says of it, in as many words, that "this command writes the
+    authoritative map".
 
-    Consequence worth stating out loud: for any sheet the current tool
-    produces, this axis is not graded at all. Nothing in the four artefact
-    shapes carries a scenario-to-task mapping. If plan/spec coherence is to
-    have teeth again, something must first produce the mapping — see the
-    closing section of STEP-11-NOTE.md.
+    Graded here, each assertion sourced in `harness/spec_gates.py`
+    `coverage_map_findings` at the line that makes it:
+
+      1. the map is present at all — `feature_files:` and `scenarios:`;
+      2. `feature_files:` names the specification this exam pinned, not some
+         other path;
+      3. every key in `scenarios:` is a scenario title copied from that
+         specification VERBATIM — a paraphrased key matches nothing, so it
+         leaves the scenario unstamped, and a key matching no title at all is
+         the plan claiming to cover something nobody asked for;
+      4. every scenario in the specification appears in the map — with the
+         @smoke ones named separately when they are missing, because that is
+         the set re-proved on every build;
+      5. every verification home is one of the eight allowed values, and a
+         `toolchain` home names the test that proves it;
+      6. the plan does not switch the law on — that is a human's decision.
+
+    NEVER SKIPS. An answer with no coverage map FAILS here. That is the whole
+    point of the re-pointing: "could not measure" is not a pass.
     """
-    if parsed is None:
-        pytest.skip(
-            "no copy of the spec .feature in the graded tree — the plan tool "
-            "cannot emit one (retired Step 11; see STEP-11-NOTE.md)"
-        )
-    tagged = any(t.startswith("@task:") for sc in parsed["scenarios"] for t in sc["tags"])
-    if not tagged:
-        pytest.skip(
-            "spec copy present but carries no @task tags — tagging is retired "
-            "DO NOT RUN since 2026-08-14 (see STEP-11-NOTE.md)"
-        )
-    findings = spec_gates.linkage_findings(parsed, feature_yaml, output_dir)
-    assert findings == [], "\n" + "\n".join(json.dumps(f) for f in findings)
+    findings = spec_gates.coverage_map_findings(
+        feature_yaml,
+        pinned_input_feature,
+        expected_feature_files={f"features/{SLUG}/{SLUG}.feature"},
+    )
+    findings += spec_gates.task_verifier_findings(output_dir, feature_yaml)
+    assert findings == [], (
+        "\nthe plan's scenario coverage map does not hold up:\n"
+        + "\n".join(json.dumps(f) for f in findings)
+    )
 
 
 def test_spec_preserved_verbatim(output_dir, tagged_feature_paths, pinned_input_feature):

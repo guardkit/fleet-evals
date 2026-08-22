@@ -4,7 +4,7 @@ suite = "po-heldout-spec"
 mode = "feature-plan"
 phase = "headless"
 schema = "feature-task-wave-yaml + task-markdown-frontmatter"
-artifact = "repo-root tree: .guardkit/features/{FEAT-ID}.yaml + tasks/backlog/{slug}/"
+artifact = "repo-root tree: .guardkit/features/{FEAT-ID}.yaml (incl. the routing-law feature_files: + scenarios: coverage map, required since 2026-08-22) + tasks/backlog/{slug}/"
 reps = 3
 timeout_seconds = 1800
 
@@ -47,3 +47,56 @@ any answer the current tool produces, plan/spec coherence is now ungraded — no
 artefact shapes carries a scenario-to-task mapping. The candidate successor is the routing-law
 feature_files:/scenarios: map in the feature YAML, which the plan writer CAN emit but is not
 currently required to (the 2026-08-22 drive omitted it). See STEP-11-NOTE.md."""
+
+ruling_2026_08_22 = """G-S5 RE-POINTED at the routing-law scenario coverage map (Rich's ruling,
+2026-08-22 afternoon: of the three options this exam's freezing document put to him he chose the
+one that makes the plan writer emit `feature_files:` and `scenarios:` in its own feature YAML and
+grades that — his words, "that would be a better long term option").
+
+WHY A SECOND CORRECTION THE SAME DAY. The morning's correction made the linkage check CONDITIONAL
+so it would stop erroring. That was worse than the problem: with nothing to grade the check
+SKIPPED, and pytest exits 0 when tests skip, so a runner grading by exit code (run_po_eval.py:255,
+run_po_spec_eval.py grade_rep) would have recorded the axis as PASSED while it measured nothing.
+
+WHAT CHANGED. `test_bdd_linkage_coherence` is replaced by `test_scenario_coverage_map`, which
+REQUIRES the plan's feature YAML to declare `feature_files:` naming the pinned specification and a
+`scenarios:` map stamping every scenario in it, keyed by the scenario title copied VERBATIM, each
+with a verification home from the closed list (toolchain, hurl, exam, probe:bus, probe:process,
+flutter, playwright, operator), a `test_ref:` on every `toolchain` home, no unknown stamp keys, and
+no `routing_law:` policy flag; task-frontmatter `verifier:` stamps, when present, obey the same
+rules. Every assertion is sourced from the pinned planning template (guardkit
+installer/core/commands/feature-plan.md, "Required Fields" + "The Routing Law") or the code that
+enforces it (guardkit feature_loader.py / verifier_stamp.py, specialist-agent feature_plan_oracle.py,
+forge target_terminal_tools.py); the closed vocabulary and the Gherkin title lexer are IMPORTED from
+guardkit, never copied, so exam and production loader cannot drift.
+
+THE SKIP TRAP IS CLOSED TWICE. The new check never skips (no map = FAIL), and test/conftest.py now
+refuses to let ANY skip in this grade exit 0 — it names the skipped checks and returns exit code 40,
+outside pytest's own 0..5 range so "could not measure" reads differently from "measured and failed"
+while every `returncode == 0` check treats it as a failure. MEASURED on a plan of the shape today's
+tool produces: morning instrument 8 passed / 1 skipped / EXIT 0 (recorded as PASSED); this
+instrument 8 passed / 1 failed / EXIT 1.
+
+THE REFERENCE ANSWER FAILED THE NEW BAR — a real finding, not a weakened bar. solution/ was authored
+2026-07-07, five weeks before the routing law was ruled (2026-08-14), and carried neither key. It was
+brought up to the current contract by APPENDING the coverage map (9 scenarios, titles copied from the
+pinned input, toolchain homes each naming their test). Nothing else about it changed. The same map
+was appended to all 18 fixtures so each still fails only for its own defect.
+
+FIXTURE BATTERY 14 -> 20 broken (never shrinks): six new firing demos (no-coverage-map,
+paraphrased-scenario-key, unknown-verifier-home, bare-toolchain-stamp, feature-files-wrong-path,
+routing-law-emitted), each a copy of the reference answer with exactly one change. The three
+fixtures built for the retired tag check keep their names and now carry the equivalent
+coverage-map defect; each meta.json records what it demonstrates now and how that relates to before.
+
+UNCHANGED: input/ and its INPUT.sha256 pin, bars one to four, and test_spec_preserved_verbatim.
+
+WHAT IS LOST AND HAS NO SUCCESSOR: the retired tags named a TASK per scenario, so the exam could ask
+"does every task named exist" and "does every task own a scenario". The routing-law map has NO task
+field (ScenarioStamp forbids extra keys; allowed keys are verifier/test_ref/test_paths) because the
+law replaced task-ownership with verification-home ownership. Those questions are no longer asked.
+
+CORRECTION OF RECORD: the morning's note said "the 2026-08-22 drive omitted it" and the freezing
+document generalised that to "today's drives emit neither key". Re-measured across all ELEVEN
+captured planning runs of that morning: TEN of eleven emit both keys. Only the 008 exam drive emits
+neither. See STEP-11-NOTE.md and the freezing document §10."""

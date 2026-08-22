@@ -1,0 +1,9 @@
+{
+  "defect_class": "scenario coverage — the plan names a specification file that is not the one it was given",
+  "construction": "`feature_files:` points at features/member-directory/member-directory.feature. Every scenario is still stamped, and the titles are still verbatim.",
+  "why_this_one_matters": "The declared path is what the coverage claim is measured against. guardkit refuses a declared file that does not exist in the repo; forge refuses a plan whose declaration contradicts the specification it committed. A map keyed to the wrong file is a coverage claim about some other feature.",
+  "expect_fail": [
+    "test_scenario_coverage_map"
+  ],
+  "authored": "2026-08-22 — the G-S5 re-pointing lane. Built by copying the reference solution/ tree and making exactly ONE change to it, so the diff against a passing answer IS the defect."
+}

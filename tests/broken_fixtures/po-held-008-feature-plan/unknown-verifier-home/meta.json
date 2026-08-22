@@ -1,0 +1,10 @@
+{
+  "defect_class": "scenario coverage — a verification home outside the allowed list",
+  "construction": "one scenario stamped `verifier: manual`, which is not one of the eight allowed homes (toolchain, hurl, exam, probe:bus, probe:process, flutter, playwright, operator).",
+  "why_this_one_matters": "The template is explicit that an unknown value is a loud error with no fallback home, because a scenario quietly routed nowhere is exactly the unverified green the routing law exists to remove.",
+  "expect_fail": [
+    "test_scenario_coverage_map"
+  ],
+  "authored": "2026-08-22 — the G-S5 re-pointing lane. Built by copying the reference solution/ tree and making exactly ONE change to it, so the diff against a passing answer IS the defect.",
+  "also_caught_by_the_deterministic_oracle": "MEASURED 2026-08-22: this fixture ALSO fails test_guardkit_validate — guardkit's own CLI refuses the stamp at load, independently of the exam. That is corroboration, not duplication: it shows the exam's fifth bar and the production loader agree about what an invalid stamp is. The exam still names the defect in the coverage-map finding, which the CLI's output does not."
+}

@@ -235,7 +235,7 @@ def slice_file_bundle(text: str) -> dict[str, str]:
     return files
 
 
-def tree_from_output(raw: str) -> tuple[dict[str, str], str]:
+def tree_from_output(raw: str, prompts_root: Path = DEFAULT_PROMPTS_ROOT) -> tuple[dict[str, str], str]:
     """Preferred: the production post-processor. Fallback: the bundle slicer. Report which."""
     body = strip_think(raw)
     try:
@@ -245,7 +245,18 @@ def tree_from_output(raw: str) -> tuple[dict[str, str], str]:
         )
         from specialist_agent.modes.types import ModeRuntimeContext  # noqa: E402
 
-        ctx = ModeRuntimeContext()  # type: ignore[call-arg]
+        # 2026-08-23: this was ModeRuntimeContext() with no arguments, which raises TypeError, so
+        # EVERY rep silently fell back to the bundle slicer. postprocess_feature_spec reads nothing
+        # from the context (ctx.templates is used by the ASSEMBLER, not the postprocessor), so a
+        # minimal instance is enough — and using the real postprocessor is what makes the F1
+        # quality-bar-seed axes MEASURABLE instead of skipped. See po-lane-state §21.
+        ctx = ModeRuntimeContext(
+            role_config=None,
+            role_dir=prompts_root,
+            templates={},
+            output_path="features/",
+            project_name="fleet-evals",
+        )
         produced = postprocess_feature_spec(body, ctx)
         if isinstance(produced, dict) and produced:
             return {str(k): str(v) for k, v in produced.items()}, "postprocess_feature_spec"
@@ -267,6 +278,13 @@ def _place(rel: str, slug: str | None) -> str:
     """
     rel = rel.lstrip("/")
     if "/" in rel or slug is None:
+        return rel
+    # The additive QA sidecar lands in qa/, NOT beside the spec files — the F1 gate globs
+    # $PO_EVAL_OUTPUT_DIR/qa/pass-bar-seed-*.yaml (test_gate_po_held_007_f1_seed.py:76).
+    if rel.startswith("pass-bar-seed"):
+        return f"qa/{rel}"
+    # validation.json is the postprocessor's own report, not a graded artefact
+    if rel == "validation.json":
         return rel
     return f"features/{slug}/{rel}"
 

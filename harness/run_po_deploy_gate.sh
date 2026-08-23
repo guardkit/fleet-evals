@@ -26,6 +26,7 @@ ENDPOINT="${ENDPOINT:-http://127.0.0.1:9310/v1}"
 TEMP="${TEMP:-0}"          # greedy: the ~1-in-3 feature-spec repetition loop appears at temp 0.3
 TOPP="${TOPP:-0.95}"
 MAXTOK="${MAXTOK:-16384}"  # production's registered-mode cap
+REPS="${REPS:-3}"          # greedy decode is deterministic, so REPS=1 is sufficient at TEMP=0
 cd "$(dirname "$0")/.."
 
 echo "=== PO DEPLOY GATE — model=$MODEL temp=$TEMP ==="
@@ -35,16 +36,24 @@ echo
 
 echo "--- feature-spec (po-held-007, file-tree artefact) ---"
 python3 harness/run_po_spec_eval.py --model "$MODEL" --endpoint "$ENDPOINT" \
-  --temperature "$TEMP" --max-tokens "$MAXTOK" --grade || true
+  --temperature "$TEMP" --max-tokens "$MAXTOK" --rep "$REPS" --grade \
+  || echo "  !! 007 RETURNED NONZERO — read the run dir, do not treat as pass"
 
 echo
 echo "--- greenfield + idea (po-held-004, po-held-005) ---"
 # NOTE 2026-08-23: po-held-005 has an assembler in run_po_eval but has NEVER BEEN RUN. First contact
 # may surface harness defects rather than model defects — po-held-008's first run found a structural
 # cap that no model could clear. Read a 005 failure with that in mind before blaming the seat.
-for T in po-held-004-greenfield-discipline po-held-005-idea; do
+# `--task` filters WITHIN a suite and discover_task_dirs() matches the suite EXACTLY, so the suite must
+# be named or the task resolves to nothing. Omitting it here would have made po-held-005 (suite
+# po-heldout-idea) silently match zero tasks and — behind `|| true` — report as though it had passed.
+# That is the same defect shape as §22: a check whose coverage is narrower than its claim.
+for PAIR in "po-heldout:po-held-004-greenfield-discipline" "po-heldout-idea:po-held-005-idea"; do
+  S="${PAIR%%:*}"; T="${PAIR##*:}"
   python3 harness/run_po_eval.py --model "$MODEL" --endpoint "$ENDPOINT" \
-    --task "$T" --temperature "$TEMP" --top-p "$TOPP" --max-tokens "$MAXTOK" --grade || true
+    --suite "$S" --task "$T" --temperature "$TEMP" --top-p "$TOPP" --max-tokens "$MAXTOK" \
+    --rep "$REPS" --grade \
+    || echo "  !! $T RETURNED NONZERO — read the run dir, do not treat as pass"
 done
 echo
 echo "=== DEPLOY GATE COMPLETE — read per-task grades above; no verdict is asserted here ==="

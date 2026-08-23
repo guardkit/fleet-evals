@@ -28,6 +28,8 @@ import datetime as _dt
 import hashlib
 import http.client
 import json
+import re
+import os
 import subprocess
 import sys
 import time
@@ -174,6 +176,70 @@ def discover_task_dirs(suite: str) -> list[Path]:
     return dirs
 
 
+# --- tool loop -------------------------------------------------------------
+# WHY THIS EXISTS (2026-08-23). Several PO mode prompts open with an instruction to call a tool:
+# player_idea.md:16 — "Query the knowledge graph — Call `graphiti_query` to retrieve existing bounded
+# contexts, prior ADRs, architectural patterns, and previous product decisions." The seat obeys, emits
+# `call:graphiti_query{...}` and STOPS, because nothing here services it. The turn ends at ~192
+# characters and `test_serving_shape` fails on a seat that did exactly what it was told.
+#
+# Measured 2026-08-23: po-held-004 (greenfield) and po-held-005 (idea) — the two modes whose prompts say
+# CALL — failed on both serving paths, while po-held-007 (feature-spec), whose prompt says DO NOT call
+# tools, passed 17/17. The merged llama.cpp seat only passed 004/005 because `--reasoning auto` led it to
+# reason instead of calling. Those scores measured serving configuration, not model quality.
+#
+# Note the tension this services rather than hides: the corpus is 224 rows of clean
+# system→user→assistant with ZERO tool turns, so the tune was never taught a call format — it improvises
+# one from the prompt. Feeding the result back lets it finish; it does not teach it anything.
+#
+# The executor calls the REAL tool inside the running specialist-agent container. It is deliberately not
+# a re-implementation: re-implementing production logic in a harness is how the 08-23 summary normaliser
+# inherited production's own `_tag_count` bug. Today the real tool returns `[]` because
+# FLEET_MEMORY_ENABLED is unset — so this is faithful to production now, and stays faithful the moment
+# the flag is turned on.
+_TOOL_CALL_RE = re.compile(r"call:\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\{(.*?)\}\s*$", re.S)
+TOOL_CONTAINER = os.environ.get("PO_EVAL_TOOL_CONTAINER", "specialist-agent-product-owner-agent-1")
+MAX_TOOL_TURNS = int(os.environ.get("PO_EVAL_MAX_TOOL_TURNS", "3"))
+
+
+def _parse_tool_call(text: str):
+    """Return (name, query) for a trailing improvised `call:NAME{...}`, else None."""
+    m = _TOOL_CALL_RE.search((text or "").strip())
+    if not m:
+        return None
+    name, body = m.group(1), m.group(2)
+    q = re.search(r'query\s*:\s*"(.*?)"', body, re.S) or re.search(r"query\s*:\s*'(.*?)'", body, re.S)
+    return name, (q.group(1) if q else body.strip())
+
+
+def _execute_tool(name: str, query: str, timeout_s: int = 180) -> str:
+    """Run the real tool in the specialist-agent container. Never raises — a harness that
+    dies on a tool error grades nothing, and production's own tool fails open."""
+    snippet = (
+        "import asyncio,json\n"
+        f"from specialist_agent.tools.{name} import {name} as t\n"
+        "async def go():\n"
+        "    r = await t.ainvoke({'query': %r, 'max_results': 5})\n"
+        "    print(json.dumps(r) if not isinstance(r,str) else r)\n"
+        "asyncio.run(go())\n" % query
+    )
+    try:
+        out = subprocess.run(
+            ["docker", "exec", TOOL_CONTAINER, "python", "-c", snippet],
+            capture_output=True, text=True, timeout=timeout_s,
+        )
+        # A FAILED call must never look like an EMPTY result. Without this check an unknown tool,
+        # a stopped container or an import error all return "" -> "[]", i.e. exactly the same thing
+        # the working tool returns when the store has nothing — the silence-reads-as-health failure
+        # this harness exists to stop mistaking for a model defect.
+        if out.returncode != 0:
+            err = (out.stderr or "").strip().splitlines()
+            return f"[tool error: exit {out.returncode}: {err[-1][:160] if err else 'no stderr'}]"
+        return (out.stdout or "").strip() or "[]"
+    except Exception as exc:  # noqa: BLE001
+        return f"[tool error: {type(exc).__name__}]"
+
+
 def call_model(
     endpoint: str,
     model: str,
@@ -182,23 +248,32 @@ def call_model(
     timeout_s: int,
     gen_params: dict,
 ) -> dict:
-    body = {
-        "model": model,
-        "messages": [
-            {"role": "system", "content": system},
-            {"role": "user", "content": user},
-        ],
-        "stream": False,
-        **gen_params,
-    }
-    req = urllib.request.Request(
-        endpoint.rstrip("/") + "/chat/completions",
-        data=json.dumps(body).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-    with urllib.request.urlopen(req, timeout=timeout_s) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    messages = [
+        {"role": "system", "content": system},
+        {"role": "user", "content": user},
+    ]
+    reply = None
+    for _turn in range(MAX_TOOL_TURNS + 1):
+        body = {"model": model, "messages": messages, "stream": False, **gen_params}
+        req = urllib.request.Request(
+            endpoint.rstrip("/") + "/chat/completions",
+            data=json.dumps(body).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+            reply = json.loads(resp.read().decode("utf-8"))
+        content = (reply.get("choices") or [{}])[0].get("message", {}).get("content") or ""
+        parsed = _parse_tool_call(content)
+        if not parsed:
+            return reply
+        name, query = parsed
+        result = _execute_tool(name, query)
+        print(f"    tool: {name}({query[:48]!r}) -> {len(result)} chars", flush=True)
+        messages.append({"role": "assistant", "content": content})
+        messages.append({"role": "user", "content": f"{name} returned:\n{result}\n\nContinue."})
+    # Budget exhausted: return the last reply so the grader sees the real artifact, not an exception.
+    return reply
 
 
 def _outside_fences(text: str) -> str:
@@ -271,6 +346,16 @@ def run_rep(
         }.items()
         if v is not None
     }
+    # Suite scope §3.4: "pinned model id + quant + temperature + template, config recorded per rep".
+    # §5's validity gate: a config mismatch is an INVALID run, not a graded result. This used to send
+    # nothing and record the string "server defaults", which is the ABSENCE of a pin recorded as
+    # though it were one — so two runs at different server temperatures looked equally well-recorded
+    # and were silently incomparable. 2026-08-22: the params are now always sent and always recorded.
+    if not gen_params:
+        raise SystemExit(
+            "ABORT: no generation parameters pinned. Suite scope §3.4 requires a pinned temperature; "
+            "recording 'server defaults' makes runs incomparable and, per §5, INVALID."
+        )
     record = {
         "task": task_id,
         "rep": rep,
@@ -279,7 +364,7 @@ def run_rep(
         "project": asm["project"],
         "endpoint": args.endpoint,
         "model": args.model,
-        "gen_params_sent": gen_params or "server defaults",
+        "gen_params_sent": gen_params,
         "system_sha256": sha256_text(asm["system"]),
         "user_sha256": sha256_text(asm["user"]),
         "user_chars": len(asm["user"]),
@@ -356,9 +441,12 @@ def main() -> int:
     ap.add_argument("--rep", type=int, default=None, help="run only this rep number (for re-runs)")
     ap.add_argument("--dry-run", action="store_true", help="assemble + record, no model call")
     ap.add_argument("--grade", action="store_true", help="pytest-grade each rep after the call")
-    ap.add_argument("--temperature", type=float, default=None)
-    ap.add_argument("--top-p", type=float, default=None)
-    ap.add_argument("--max-tokens", type=int, default=None)
+    ap.add_argument("--temperature", type=float, default=0.6,
+                    help="PINNED per suite scope §3.4. suite §3.4 requires a PINNED temperature")
+    ap.add_argument("--top-p", type=float, default=0.95,
+                    help="PINNED per suite scope §3.4. ")
+    ap.add_argument("--max-tokens", type=int, default=16384,
+                    help="PINNED per suite scope §3.4. production's registered-mode cap")
     args = ap.parse_args()
 
     stamp = _dt.datetime.now(_dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")

@@ -448,11 +448,17 @@ def response_text(raw: dict) -> tuple[str, str]:
     provenance string, so the rep record says where its thinking came from. Reading only
     message.content meant a vLLM reply arrived at the grader with its thinking silently missing.
 
-    Never raises: a malformed reply reads as empty text, as it did before.
+    A malformed reply reads as empty text instead of raising, in the shapes the reader this
+    replaced handled: no choices key, an empty choices list, no message key, and a message that
+    is present but is not a dictionary (null, a list, a bare string, a number). The 2026-09-03
+    version of this docstring said "never raises", which was too broad - the non-dictionary
+    message shapes did raise an AttributeError, and the isinstance guard below is what closes it.
     """
     try:
         msg = raw["choices"][0]["message"]
     except (KeyError, IndexError, TypeError):
+        return "", "content_verbatim"
+    if not isinstance(msg, dict):
         return "", "content_verbatim"
     content = msg.get("content") or ""
     reasoning, source = "", ""

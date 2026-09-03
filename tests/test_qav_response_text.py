@@ -106,3 +106,18 @@ def test_a_malformed_reply_reads_as_empty_exactly_as_before():
     mod = _load()
     for raw in ({}, {"choices": []}, {"choices": [{}]}, {"choices": [{"message": {"content": None}}]}):
         assert mod.response_text(raw) == ("", "content_verbatim")
+
+
+def test_a_message_that_is_not_a_dictionary_reads_as_empty():
+    """The regression this closes.
+
+    A reply can carry a `message` key whose value is not a dictionary - null, a list, a bare
+    string, a number. The reader this function replaced did `message["content"]` inside a
+    try/except and every one of those shapes came out as a TypeError, was caught, and read as
+    empty text; the run carried on. The 2026-09-03 version looked the key up inside the
+    try/except but called `.get()` on it outside, so those shapes raised an AttributeError that
+    no call site catches and the whole run died. Four shapes, empty text, nothing raised.
+    """
+    mod = _load()
+    for message in (None, [], "text", 3):
+        assert mod.response_text({"choices": [{"message": message}]}) == ("", "content_verbatim")

@@ -318,10 +318,17 @@ def test_main_refuses_missing_freeze_commit(tmp_path, seat):
 
 # --- §10: default shape is byte-preserved (no new flags) -------------------------------
 
-# the committed 07-16 config.json key set (finish_reason=="stop" => no finish_reason_note)
+# the committed 07-16 config.json key set (finish_reason=="stop" => no finish_reason_note),
+# plus `response_provenance` from 2026-09-03. That key is the receipt half of reading the
+# separated thinking under either field name (the fix commits 85cb025 and 783b00d made in the
+# PO runners): the runner now says where the graded text came from — `content_verbatim`, or
+# `rewrapped_reasoning_content` / `rewrapped_reasoning` when a server split the think block out
+# into a field of its own. Before it, a vLLM reply reached the grader with its thinking missing
+# and nothing on the sheet said so. The graded BYTES are unchanged for every reply that has no
+# separated thinking, which is what this test's "byte-preserved" claim is about.
 _COMMITTED_CONFIG_KEYS = {
     "suite", "task_id", "rep", "model", "endpoint", "sampling", "prompt_sha256",
-    "prompt", "freeze_commit", "wall_time", "usage", "finish_reason",
+    "prompt", "freeze_commit", "wall_time", "usage", "finish_reason", "response_provenance",
     "generation_timeout_s", "transport_retries", "single_slot_probe", "runner",
 }
 

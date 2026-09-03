@@ -55,6 +55,48 @@ def call_model(endpoint: str, model: str, system: str, user: str,
         return json.loads(resp.read().decode("utf-8"))
 
 
+def _outside_fences(text: str) -> str:
+    """Text with ```-fenced regions removed - a literal <think> inside a fenced sample is
+    content, not a think block (fence-aware, like the graders)."""
+    out, in_fence = [], False
+    for line in text.splitlines():
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if not in_fence:
+            out.append(line)
+    return "\n".join(out)
+
+
+def response_text(raw: dict) -> tuple[str, str]:
+    """The assistant's answer, with any separated thinking put back inline.
+
+    Same fix as the PO runners (commits 85cb025 and 783b00d). Two servers, two field names for
+    the same thing: llama.cpp (--reasoning auto) puts the separated thinking in
+    message.reasoning_content, vLLM v0.25.0 puts it in message.reasoning. Read either -
+    reasoning_content first, then reasoning - and name the field that was used in the returned
+    provenance string, so the rep record says where its thinking came from. Reading only
+    message.content meant a vLLM reply arrived at the grader with its thinking silently missing.
+
+    Never raises: a malformed reply reads as empty text, as it did before.
+    """
+    try:
+        msg = raw["choices"][0]["message"]
+    except (KeyError, IndexError, TypeError):
+        return "", "content_verbatim"
+    content = msg.get("content") or ""
+    reasoning, source = "", ""
+    for field in ("reasoning_content", "reasoning"):
+        value = msg.get(field) or ""
+        if value:
+            reasoning, source = value, field
+            break
+    if reasoning and "<think>" not in _outside_fences(content):
+        return f"<think>{reasoning}</think>\n{content}", f"rewrapped_{source}"
+    return content, "content_verbatim"
+
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--task-dir", required=True, type=Path)
@@ -118,11 +160,7 @@ def main() -> None:
 
         (out / "responses" / f"{row_id}.response.json").write_text(
             json.dumps(raw, indent=2), encoding="utf-8")
-        content = ""
-        try:
-            content = raw["choices"][0]["message"]["content"] or ""
-        except (KeyError, IndexError, TypeError):
-            pass
+        content, response_provenance = response_text(raw)
         (out / "responses" / f"{row_id}.content.txt").write_text(content, encoding="utf-8")
         finish = (raw.get("choices") or [{}])[0].get("finish_reason")
 
@@ -142,6 +180,7 @@ def main() -> None:
 
         per_row_meta[row_id] = {
             "seconds": seconds, "finish_reason": finish, "extracted": extracted,
+            "response_provenance": response_provenance,
             "prompt_hashes": gc_rows.prompt_hashes(row), "usage": raw.get("usage"),
         }
         print(f"  {row_id}: {seconds}s finish={finish} extracted={extracted}")

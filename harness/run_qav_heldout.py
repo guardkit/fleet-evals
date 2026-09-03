@@ -425,11 +425,45 @@ def _write_aborted(out: Path, task_id: str, rep: int, bundle_id: str,
     }, indent=2), encoding="utf-8")
 
 
-def _content_of(raw: dict) -> str:
+def _outside_fences(text: str) -> str:
+    """Text with ```-fenced regions removed - a literal <think> inside a fenced sample is
+    content, not a think block (fence-aware, like the graders)."""
+    out, in_fence = [], False
+    for line in text.splitlines():
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if not in_fence:
+            out.append(line)
+    return "\n".join(out)
+
+
+def response_text(raw: dict) -> tuple[str, str]:
+    """The assistant's answer, with any separated thinking put back inline.
+
+    Same fix as the PO runners (commits 85cb025 and 783b00d). Two servers, two field names for
+    the same thing: llama.cpp (--reasoning auto) puts the separated thinking in
+    message.reasoning_content, vLLM v0.25.0 puts it in message.reasoning. Read either -
+    reasoning_content first, then reasoning - and name the field that was used in the returned
+    provenance string, so the rep record says where its thinking came from. Reading only
+    message.content meant a vLLM reply arrived at the grader with its thinking silently missing.
+
+    Never raises: a malformed reply reads as empty text, as it did before.
+    """
     try:
-        return raw["choices"][0]["message"]["content"] or ""
+        msg = raw["choices"][0]["message"]
     except (KeyError, IndexError, TypeError):
-        return ""
+        return "", "content_verbatim"
+    content = msg.get("content") or ""
+    reasoning, source = "", ""
+    for field in ("reasoning_content", "reasoning"):
+        value = msg.get(field) or ""
+        if value:
+            reasoning, source = value, field
+            break
+    if reasoning and "<think>" not in _outside_fences(content):
+        return f"<think>{reasoning}</think>\n{content}", f"rewrapped_{source}"
+    return content, "content_verbatim"
 
 
 def _finish_of(raw: dict):
@@ -485,7 +519,7 @@ def main(argv: list[str] | None = None) -> int:
         (out / "responses" / f"{bid}.raw-response.json").write_text(
             json.dumps(raw, indent=2), encoding="utf-8")
 
-        content = _content_of(raw)
+        content, response_provenance = response_text(raw)
         finish_reason = _finish_of(raw)
         # verdicts/{bid}.json = the extracted JSON object; if none is extractable,
         # the RAW assistant bytes so qav_gates.load_verdict surfaces it honestly.
@@ -502,6 +536,7 @@ def main(argv: list[str] | None = None) -> int:
             "bundle_sha256": bundle_sha256,
             "prompt_sha256": prompt_sha256,
             "finish_reason": finish_reason,
+            "response_provenance": response_provenance,
             "truncated": finish_reason == "length",
             "json_extracted": json_extracted,
             "usage": raw.get("usage"),

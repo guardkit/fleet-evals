@@ -38,6 +38,15 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+# The runaway guard is a sibling harness module; the runners are run as scripts and loaded by
+# file path in tests, so its own directory is what makes the import work in both.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from runaway_guard import (  # noqa: E402
+    RunawayDetector,
+    guard_record,
+    stream_chat_completion,
+)
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TASKS_DIR = REPO_ROOT / "tasks"
 DEFAULT_ENDPOINT = "http://promaxgb10-41b1:9000/v1"
@@ -247,33 +256,49 @@ def call_model(
     user: str,
     timeout_s: int,
     gen_params: dict,
-) -> dict:
+    runaway_guard: bool = True,
+) -> tuple[dict, dict | None]:
+    """Return (reply, guard outcome).
+
+    With the guard on, each turn is streamed and stopped the moment the reply starts repeating
+    itself; the streamed turn is folded back into the non-streaming shape before it is used, so
+    response_text() and the tool loop below read it unchanged. With the guard off this is
+    byte-for-byte the old single POST per turn.
+    """
     messages = [
         {"role": "system", "content": system},
         {"role": "user", "content": user},
     ]
     reply = None
+    outcome = None
     for _turn in range(MAX_TOOL_TURNS + 1):
         body = {"model": model, "messages": messages, "stream": False, **gen_params}
-        req = urllib.request.Request(
-            endpoint.rstrip("/") + "/chat/completions",
-            data=json.dumps(body).encode("utf-8"),
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
-            reply = json.loads(resp.read().decode("utf-8"))
+        if runaway_guard:
+            outcome = stream_chat_completion(endpoint, body, timeout_s, RunawayDetector())
+            reply = outcome["reply"]
+            if outcome["aborted"]:
+                # Never re-ask a model that has started looping: the whole point is to stop paying.
+                return reply, outcome
+        else:
+            req = urllib.request.Request(
+                endpoint.rstrip("/") + "/chat/completions",
+                data=json.dumps(body).encode("utf-8"),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+                reply = json.loads(resp.read().decode("utf-8"))
         content = (reply.get("choices") or [{}])[0].get("message", {}).get("content") or ""
         parsed = _parse_tool_call(content)
         if not parsed:
-            return reply
+            return reply, outcome
         name, query = parsed
         result = _execute_tool(name, query)
         print(f"    tool: {name}({query[:48]!r}) -> {len(result)} chars", flush=True)
         messages.append({"role": "assistant", "content": content})
         messages.append({"role": "user", "content": f"{name} returned:\n{result}\n\nContinue."})
     # Budget exhausted: return the last reply so the grader sees the real artifact, not an exception.
-    return reply
+    return reply, outcome
 
 
 def _outside_fences(text: str) -> str:
@@ -391,6 +416,7 @@ def run_rep(
         (rep_dir / "prompt_user.txt").write_text(asm["user"], encoding="utf-8")
         (rep_dir / "prompt_system.txt").write_text(asm["system"], encoding="utf-8")
         record["dry_run"] = True
+        record["runaway_guard"] = guard_record(args.runaway_guard, None)
         (rep_dir / "config.json").write_text(json.dumps(record, indent=2))
         return {"task": task_id, "rep": rep, "status": "assembled"}
 
@@ -399,23 +425,36 @@ def run_rep(
     for attempt in range(1, RETRIES_PER_REP + 2):
         try:
             t0 = time.monotonic()
-            reply = call_model(
-                args.endpoint, args.model, asm["system"], asm["user"], timeout_s, gen_params
+            reply, guard = call_model(
+                args.endpoint, args.model, asm["system"], asm["user"], timeout_s, gen_params,
+                runaway_guard=args.runaway_guard,
             )
             choice = reply["choices"][0]
             text, provenance = response_text(reply)
+            # A reply the guard cut short is still saved and graded exactly as any other — it
+            # fails, quickly and honestly — but the receipt must say plainly that the text is a
+            # fragment we stopped, not the answer the model finished.
+            aborted = bool(guard and guard.get("aborted"))
+            if aborted:
+                print(f"  {task_id} rep{rep} RUNAWAY: {guard['rule']} — connection closed "
+                      f"after {guard['tokens_received']} tokens", file=sys.stderr)
             record.update(
                 attempt=attempt,
                 duration_s=round(time.monotonic() - t0, 1),
-                response_provenance=provenance,
+                response_provenance="runaway_aborted" if aborted else provenance,
+                runaway_guard=guard_record(args.runaway_guard, guard),
                 server_model=reply.get("model"),
                 finish_reason=choice.get("finish_reason"),
                 usage=reply.get("usage"),
                 finished_at=_dt.datetime.now(_dt.timezone.utc).isoformat(),
             )
+            if aborted:
+                # what the text WOULD have been called had it finished, kept beside the abort
+                record["text_provenance"] = provenance
             (rep_dir / "response.txt").write_text(text, encoding="utf-8")
             (rep_dir / "config.json").write_text(json.dumps(record, indent=2))
-            result = {"task": task_id, "rep": rep, "status": "ok"}
+            result = {"task": task_id, "rep": rep,
+                      "status": "runaway aborted" if aborted else "ok"}
             if args.grade:
                 result["passed"] = grade_rep(task_dir, rep_dir)
             return result
@@ -433,6 +472,7 @@ def run_rep(
             print(f"  {task_id} rep{rep} attempt {attempt} failed: {exc!r}", file=sys.stderr)
     record.update(
         error=repr(last_err),
+        runaway_guard=guard_record(args.runaway_guard, None),
         finished_at=_dt.datetime.now(_dt.timezone.utc).isoformat(),
     )
     (rep_dir / "config.json").write_text(json.dumps(record, indent=2))
@@ -459,6 +499,15 @@ def main() -> int:
                     help="PINNED per suite scope §3.4. ")
     ap.add_argument("--max-tokens", type=int, default=16384,
                     help="PINNED per suite scope §3.4. production's registered-mode cap")
+    # 2026-09-03: a rep generated to that ceiling for 17 minutes writing the same 19 scenarios
+    # eleven times, and only then could be graded. On by default; the state is written into every
+    # rep's config.json because every run before today used no guard at all, and a frozen exam's
+    # comparability has to be readable off the receipt rather than remembered.
+    ap.add_argument("--runaway-guard", dest="runaway_guard", action="store_true", default=True,
+                    help="Stream the reply and stop it once it repeats itself (default on).")
+    ap.add_argument("--no-runaway-guard", dest="runaway_guard", action="store_false",
+                    help="Read the reply in one non-streaming response, as runs before "
+                         "2026-09-03 did.")
     args = ap.parse_args()
 
     stamp = _dt.datetime.now(_dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")

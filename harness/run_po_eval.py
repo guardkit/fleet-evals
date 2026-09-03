@@ -290,14 +290,26 @@ def _outside_fences(text: str) -> str:
 
 
 def response_text(api_reply: dict) -> tuple[str, str]:
-    """Reconstruct the raw serving text. llama.cpp with --reasoning auto may
-    split the think block into message.reasoning_content; the serving contract
-    (and the fence-aware graders) expect it inline, so re-wrap it."""
+    """Reconstruct the raw serving text. A server may split the think block out
+    of the content; the serving contract (and the fence-aware graders) expect it
+    inline, so re-wrap it.
+
+    Two servers, two field names for the same thing: llama.cpp (--reasoning auto) puts the
+    separated thinking in message.reasoning_content, vLLM v0.25.0 puts it in message.reasoning.
+    Read either - reasoning_content first, then reasoning - and name the field that was used in
+    the provenance string, so each rep's config.json records where its thinking came from.
+    Before this, a vLLM reply's thinking block was dropped without a trace.
+    """
     msg = api_reply["choices"][0]["message"]
     content = msg.get("content") or ""
-    reasoning = msg.get("reasoning_content") or ""
+    reasoning, source = "", ""
+    for field in ("reasoning_content", "reasoning"):
+        value = msg.get(field) or ""
+        if value:
+            reasoning, source = value, field
+            break
     if reasoning and "<think>" not in _outside_fences(content):
-        return f"<think>{reasoning}</think>\n{content}", "rewrapped_reasoning_content"
+        return f"<think>{reasoning}</think>\n{content}", f"rewrapped_{source}"
     return content, "content_verbatim"
 
 

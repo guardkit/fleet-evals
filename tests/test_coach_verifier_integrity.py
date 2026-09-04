@@ -68,9 +68,13 @@ def run_gate(task_id: str, output_dir: Path | None) -> tuple[int, str]:
 # --- Three-sided proof (frozen rules (a)/(b)/(c), applied to coach-held-*) --------
 
 def test_coach_task_family_present():
+    # 2026-09-04: coach-held-003 joined the family — the turn-1 record from
+    # build-FEAT-44A8 / TASK-44A8-004, where a profile-mandated test skip was
+    # read as an absent signal.
     assert COACH_TASK_IDS == [
         "coach-held-001-escape-kin",
         "coach-held-002-catch-and-green",
+        "coach-held-003-mandated-skip-not-absent",
     ]
 
 
@@ -121,13 +125,17 @@ def test_bundles_parse_and_carry_the_field_floor(task_id):
 def test_expected_registry_matches_bundles(task_id):
     """The pre-registered expectations and the bundle set agree 1:1; every
     row's verdict is a legal enum; every reject row's class is admissible;
-    ground_truth_source is 'seeded' (all bundles are authored analogues)."""
+    ground_truth_source is 'seeded' for an authored analogue and 'receipt' for
+    a bundle copied verbatim out of a real build's receipt."""
     task_dir = TASKS_DIR / task_id
     expected = coach_gates.expected_rows(task_dir)
     assert set(expected) == set(coach_gates.bundle_ids(task_dir))
     for bundle_id, row in expected.items():
         assert row["verdict"] in coach_gates.VERDICTS, bundle_id
-        assert row["ground_truth_source"] == "seeded", bundle_id
+        # 2026-09-04: 'receipt' added for coach-held-003's CE-05, which is the
+        # turn-1 coach evidence bundle from build-FEAT-44A8 / TASK-44A8-004
+        # copied with nothing removed — a real record, not an authored one.
+        assert row["ground_truth_source"] in ("seeded", "receipt"), bundle_id
         if row["verdict"] == "reject":
             assert row["dc_class"] in coach_gates.ADMISSIBLE_DC_CLASSES, bundle_id
 
@@ -138,9 +146,18 @@ def test_signal_anchor_per_reject_row_fires_on_the_oracle(task_id):
     and the Oracle verdict demonstrates it can fire; approve rows own none."""
     task_dir = TASKS_DIR / task_id
     anchors = coach_gates.load_anchors(task_dir / "test" / "reference" / "signal_anchors.json")
-    groups = {g["id"]: g for g in coach_gates.compile_anchors(anchors)}
     expected = coach_gates.expected_rows(task_dir)
     reject_ids = {b for b, row in expected.items() if row["verdict"] == "reject"}
+    if not reject_ids:
+        # 2026-09-04: coach-held-003 (build-FEAT-44A8 / TASK-44A8-004) holds a
+        # single must-APPROVE row. One anchor group per must-reject row means
+        # no groups at all here, and compile_anchors rightly refuses an empty
+        # list — so assert the empty set directly instead of compiling it.
+        assert not anchors.get("groups"), (
+            f"{task_id}: no must-reject rows, so signal_anchors.json must carry no groups"
+        )
+        return
+    groups = {g["id"]: g for g in coach_gates.compile_anchors(anchors)}
     assert set(groups) == reject_ids, "anchor groups must map 1:1 to must-reject bundles"
     for bundle_id in sorted(reject_ids):
         verdict = coach_gates.load_verdict(task_dir / "solution", bundle_id)

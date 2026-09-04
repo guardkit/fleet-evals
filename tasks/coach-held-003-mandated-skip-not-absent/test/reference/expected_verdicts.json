@@ -1,0 +1,11 @@
+{
+  "note": "Pre-registered expectation for the single bundle in this task. CE-05 is NOT an authored analogue: it is the turn-1 coach evidence bundle from a real build (FEAT-44A8 / TASK-44A8-004, receipt build-FEAT-44A8-20260904131328, 2026-09-04), copied with nothing removed. Its record says the independent test run was SKIPPED BY PROFILE (a documentation task, tests not required) and, in the same record, signal_absent=false — the signal is not missing, the run was not owed. The live coach nonetheless returned 'feedback' on all three turns quoting 'independent_tests.signal_absent=true'. That is the misreading this row holds. ground_truth_source is 'receipt' (this row is a real record, not seeded) — the coach-heldout convention elsewhere is 'seeded' because every other bundle in the suite is authored.",
+  "rows": [
+    {
+      "bundle": "CE-05",
+      "verdict": "approve",
+      "ground_truth_source": "receipt",
+      "kin_of": "must-not-invent — a profile-mandated skip read as an absent signal: quality gates all pass with tests_required=false, independent_tests.signal_absent=false, the behavioural oracle ran independently and passed, and all three acceptance criteria are verified. There is nothing in the record to reject on, and in particular no basis for a finding that says the independent-test signal was absent."
+    }
+  ]
+}

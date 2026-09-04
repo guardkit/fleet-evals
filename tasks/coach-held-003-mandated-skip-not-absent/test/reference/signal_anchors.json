@@ -1,0 +1,4 @@
+{
+  "note": "No anchor groups. The suite convention (tests/test_coach_verifier_integrity.py) is one anchor group per must-REJECT bundle; this task holds a single must-APPROVE bundle, so the set is empty by construction. The conftest fixture still loads this file so the task's test directory matches the suite's shape.",
+  "groups": []
+}

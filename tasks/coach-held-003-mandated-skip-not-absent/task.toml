@@ -1,0 +1,20 @@
+[task]
+id = "coach-held-003-mandated-skip-not-absent"
+suite = "coach-heldout"
+mode = "bundle-judgment"
+phase = "must-not-invent"
+schema = "per-bundle verdict json: verdict + findings[{class,locus}]"
+artifact = "verdicts/{BUNDLE-ID}.json, one per input bundle"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+[provenance]
+weakness_source = "a real misreading observed on 2026-09-04. Build FEAT-44A8, task TASK-44A8-004 (a documentation task; the documentation profile does not require tests). The evidence bundles for all three coach turns record independent_tests.signal_absent=false, test_command='skipped' and the summary 'Independent test verification skipped (tests not required for documentation tasks)', with every acceptance criterion verified and an independent behavioural oracle run that passed. The served coach nevertheless returned 'feedback' on all three turns with one major finding quoting 'independent_tests.signal_absent=true' - a claim the record contradicts. The coach prompt's independent-test-absent guard (guardkit/orchestrator/agent_invoker.py, 'INDEPENDENT-TEST ABSENT GUARD') is written to apply only when that field is true; the deterministic backstop in the same file (_reconcile_absent_independent_test_signal) only corrects the opposite direction, turning an approve into feedback when the record does say absent. Nothing in the machinery catches a coach that invents the absence, so the row is held here as an exam case."
+row_lineage = "CE-05 is NOT an authored analogue - it is the live turn-1 evidence bundle from receipt build-FEAT-44A8-20260904131328, file .guardkit/autobuild-private/TASK-44A8-004/coach_evidence_turn_1.json (sha256 2424ef3cde327730effd4bcf25e70781a9e73f663131ab0ad014ec01778d2d5e), copied with nothing removed or reworded. Three identity keys (bundle_id, feature_id, task_id) were added at the top because the suite bundle contract in harness/coach_gates.py requires them and the live receipt does not carry them. Scanned for keys and broker URLs before saving: zero matches. Because the row is a real record and not seeded, its ground_truth_source in test/reference/expected_verdicts.json is 'receipt', which differs from the 'seeded' value every other coach-held row carries."
+bundle_shape = "the live CoachEvidenceBundle as serialised by guardkit on 2026-09-04, plus the three identity keys named above. Richer than the authored bundles in coach-held-001/002 (it carries behavioural_oracle, spec_conformance, zero_test and profile fields those predate) - deliberately so: the point of this row is that the seat must read the real record."
+instruction_source = "instruction.md is a byte-identical copy of tasks/coach-held-001-escape-kin/instruction.md, including its heading. This is on purpose: the case tests the seat under the instruction the suite already uses, not a new prompt written to make the case easy. Note that the copied instruction carries a must-catch framing ('every bundle here LOOKS green ... hiding a defect'), so this row is graded under a framing that leans toward rejection - a deliberately hard bar for a must-approve case."
+oracle_source = "solution/verdicts/CE-05.json - approve with empty findings, written 2026-09-04 from the bundle's own fields (see solution/PROVENANCE.md for the field-by-field reading)."

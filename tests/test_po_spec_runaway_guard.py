@@ -126,7 +126,7 @@ def _run(mod, tmp_path, monkeypatch, opener=None, whole=None, **over):
         monkeypatch.setattr(urllib.request, "urlopen", whole)
     out_dir = tmp_path / "run"
     result = mod.run_rep(_args(tmp_path, **over), TASK, tmp_path, 1, out_dir)
-    rep_dir = out_dir / mod.TASK_ID / "rep1"
+    rep_dir = out_dir / mod.DEFAULT_TASK_ID / "rep1"
     return result, json.loads((rep_dir / "config.json").read_text()), rep_dir
 
 
@@ -220,6 +220,6 @@ def test_the_flag_defaults_to_on_and_is_recorded_on_a_dry_run(tmp_path, monkeypa
     args = _args(tmp_path)
     out_dir = tmp_path / "dry"
     mod.run_rep(argparse.Namespace(**{**vars(args), "dry_run": True}), TASK, tmp_path, 1, out_dir)
-    config = json.loads((out_dir / mod.TASK_ID / "rep1" / "config.json").read_text())
+    config = json.loads((out_dir / mod.DEFAULT_TASK_ID / "rep1" / "config.json").read_text())
     assert config["runaway_guard"]["enabled"] is True
     assert config["runaway_guard"]["fired"] is False

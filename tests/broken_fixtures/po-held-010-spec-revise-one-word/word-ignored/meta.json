@@ -1,0 +1,8 @@
+{
+  "defect_class": "a one-word note did nothing — the list came back identical",
+  "construction": "the spec sent back for revision, returned unchanged: worked example 2 still says the oldest loan comes first",
+  "expect_fail": [
+    "test_the_note_was_honoured"
+  ],
+  "authored": "2026-09-05. The drop-an-example note can be honoured by deleting a line; this one cannot, so a seat can pass po-held-009 and still fail here."
+}

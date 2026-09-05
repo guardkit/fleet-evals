@@ -1,0 +1,8 @@
+{
+  "defect_class": "the note was honoured but the seat also improved a sentence nobody asked about",
+  "construction": "worked example 3 correctly dropped, and worked example 2's digest sentence rewritten from 'The list shows the oldest loan first and works forward through the newer ones.' to 'The list is ordered by date, with the earliest loan at the top.'",
+  "expect_fail": [
+    "test_nothing_else_changed"
+  ],
+  "authored": "2026-09-05. The over-edit is the quieter half of the same defect: the person approving reads the difference between two cards, so a difference they did not ask for costs them the ability to approve by reading."
+}

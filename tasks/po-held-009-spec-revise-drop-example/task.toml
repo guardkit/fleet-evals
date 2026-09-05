@@ -1,0 +1,28 @@
+[task]
+id = "po-held-009-spec-revise-drop-example"
+suite = "po-heldout-spec-revise"
+mode = "feature-spec"
+phase = "revise"
+schema = "feature-spec-four-file-contract"
+artifact = "features/<kebab-feature-name>/ (the same four files, revised)"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+# The note Rich sent back on the spec card, and what honouring it means. Read by
+# harness/revise_gates.py; a different note is a different table here, never a
+# different grader.
+[revise]
+note = "drop example 3, seven exactly is the rule"
+kind = "remove"
+example_number = 3
+must_not_say = ["at least seven", "at least 7", "no fewer than seven", "not fewer than seven"]
+
+[provenance]
+defect_source = "2026-09-05, the plan of record 'a defect in the send-a-note touch': Rich sent this exact note on a spec digest card. The forge re-dispatched the spec writer with the note at the top of its prompt; the writer returned the same six worked examples with example 3 reworded, its coach scored 1.0 (its criteria never ask whether feedback was resolved), and the second card was identical to the first with no word that nothing had changed."
+input_source = "input/prior/ — a four-file /feature-spec output authored for this task 2026-09-05 against the same pinned contract as po-held-007 (CONTRACT-feature-spec-plan-outputs.md Part A, four files since specialist-agent f23a845). Domain disjoint from the kiln-booking and member-directory briefs."
+oracle_source = "solution/ — the prior spec with worked example 3 dropped and the other five carried over word for word, in order; the summary counts and the specification file follow."
+grading_source = "harness/revise_gates.py — ordinary code on the produced digest. No model judges whether a model obeyed."

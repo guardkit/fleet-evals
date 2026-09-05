@@ -1,0 +1,32 @@
+[task]
+id = "po-held-010-spec-revise-one-word"
+suite = "po-heldout-spec-revise"
+mode = "feature-spec"
+phase = "revise"
+schema = "feature-spec-four-file-contract"
+artifact = "features/<kebab-feature-name>/ (the same four files, revised)"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+# The second variant of the same failure: a note that changes ONE WORD. It is the
+# harder half — the seat can pass the drop-an-example task by deleting something and
+# still fail this one, because here the whole list comes back and only one sentence
+# in it may differ.
+[revise]
+note = "the list should read newest first, not oldest first"
+kind = "reword"
+example_number = 2
+# The idea, not one phrasing: a seat that writes "the most recent loan first" has done what
+# was asked. What it may NOT do is leave the old ordering standing.
+must_say_any = ["newest", "most recent", "latest"]
+must_not_say = ["oldest first", "oldest loan first"]
+
+[provenance]
+defect_source = "2026-09-05, the plan of record 'a defect in the send-a-note touch'. Same defect, second shape: the drop-an-example note can be honoured by deleting a line, a one-word note cannot."
+input_source = "input/prior/ — the same four-file spec po-held-009 sends back, so the two tasks measure two notes against one starting point."
+oracle_source = "solution/ — the prior spec with worked example 2 reworded to read newest first (title, step and digest sentence together) and every other sentence carried over word for word."
+grading_source = "harness/revise_gates.py — ordinary code on the produced digest."

@@ -32,12 +32,23 @@ the emission contract the trace corpus and the serving prompt both use. **Which 
 written into `config.json` as `tree_source`**, because a receipt that hides how the artifact was
 produced is how "green-but-dead" grades happen (see po-lane-state §10.7/§10.9).
 
+THE REVISE TASKS (added 2026-09-05)
+----------------------------------
+`--task` also names po-held-009-spec-revise-drop-example and po-held-010-spec-revise-one-word.
+They are the same shape — a file tree, graded by the task's own pytest — but they ask the
+second question: when a person sends a note back instead of approving, does the seat do what
+the note says? On 2026-09-05 it did not, and nothing in the estate noticed, because nothing
+measured it. Their user turn carries the four files that came back unaccepted and the note
+that sent them back, in the forge's own wording; the note lives in the task's `[revise]`
+table, which is also what the grade reads, so the prompt and the grade cannot drift apart.
+
 stdlib only, like the other runners. Python 3.11+.
 
 Usage:
   python3 harness/run_po_spec_eval.py --model po-ft-v1-gemma4 --endpoint http://127.0.0.1:5998/v1
   python3 harness/run_po_spec_eval.py --model … --grade      # run + pytest-grade each rep
   python3 harness/run_po_spec_eval.py --model … --dry-run    # assemble + record, no network
+  python3 harness/run_po_spec_eval.py --model … --task po-held-009-spec-revise-drop-example
 """
 
 from __future__ import annotations
@@ -68,7 +79,19 @@ from runaway_guard import (  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TASKS_DIR = REPO_ROOT / "tasks"
-TASK_ID = "po-held-007-feature-spec"
+DEFAULT_TASK_ID = "po-held-007-feature-spec"
+# The tasks this runner can assemble. All produce a FILE TREE, which is why they share a
+# runner; they differ in what the user turn carries.
+#   first-draft : the brief (po-held-007, unchanged since 2026-08-21)
+#   revise      : the four files that came back unaccepted, plus the note that sent them back
+# A task is a revise task iff its task.toml carries a [revise] table — the note lives there,
+# and it is the same table harness/revise_gates.py grades against, so the words in the prompt
+# and the words in the grade can never drift apart.
+SPEC_SUITE_TASKS = (
+    "po-held-007-feature-spec",
+    "po-held-009-spec-revise-drop-example",
+    "po-held-010-spec-revise-one-word",
+)
 DEFAULT_ENDPOINT = "http://promaxgb10-41b1:9000/v1"
 DEFAULT_PROMPTS_ROOT = REPO_ROOT.parent / "specialist-agent"
 SERVING_PROMPT = "roles/product-owner/prompts/player_feature_spec.md"
@@ -131,7 +154,8 @@ def template_root_identity(template_root: Path) -> dict:
     }
 
 
-def assemble(task_dir: Path, prompts_root: Path, template_root: Path, stack: str = "generic") -> dict:
+def assemble(task_dir: Path, prompts_root: Path, template_root: Path, stack: str = "generic",
+             task: dict | None = None) -> dict:
     """Reproduce what PRODUCTION sends — not a simplification of it.
 
     2026-08-21 correction. This function used to return {system: player_feature_spec.md, user: brief}.
@@ -173,14 +197,45 @@ def assemble(task_dir: Path, prompts_root: Path, template_root: Path, stack: str
             "guardkit checkout. Production puts this template in the user turn; grading without it "
             "measures a request production never sends."
         )
-    brief = (task_dir / "input" / "brief.md").read_text(encoding="utf-8")
-    sections = [
-        "## Methodology template (reference — precedence rules in system prompt apply)\n\n"
-        + template_path.read_text(encoding="utf-8"),
-        "## Approved input\n\n" + brief,
-        "## Stack\n\n" + stack,
-    ]
+    methodology = ("## Methodology template (reference — precedence rules in system prompt apply)"
+                   "\n\n" + template_path.read_text(encoding="utf-8"))
+    revise = (task or {}).get("revise")
+    if revise:
+        sections = [methodology, revise_section(task_dir, revise), "## Stack\n\n" + stack]
+    else:
+        brief = (task_dir / "input" / "brief.md").read_text(encoding="utf-8")
+        sections = [methodology, "## Approved input\n\n" + brief, "## Stack\n\n" + stack]
     return {"system": prompt_path.read_text(encoding="utf-8"), "user": "\n\n".join(sections)}
+
+
+def revise_section(task_dir: Path, revise: dict) -> str:
+    """The user turn for a revise rep: the spec that came back, then the note.
+
+    The wording is the forge's own — "The prior submission was NOT accepted. Resolve this
+    feedback: …" — because the exam has to measure the request production actually sends. On
+    2026-09-05 that request was sent, the writer returned the same six worked examples with
+    one of them reworded, and its coach scored 1.0. Nothing here is a simplification of it.
+    """
+    prior_root = task_dir / "input" / "prior"
+    files = sorted(p for p in (prior_root / "features").rglob("*") if p.is_file())
+    if not files:
+        raise FileNotFoundError(
+            f"no prior specification under {prior_root}/features — a revise task grades a "
+            "SECOND submission, so the first one has to be in the prompt."
+        )
+    blocks = []
+    for f in files:
+        rel = f.relative_to(prior_root).as_posix()
+        blocks.append(f"=== FILE: {rel} ===\n{f.read_text(encoding='utf-8')}=== END FILE ===")
+    return (
+        "## The specification you produced last time\n\n"
+        + "\n\n".join(blocks)
+        + "\n\n## Feedback to resolve\n\n"
+        + "The prior submission was NOT accepted. Resolve this feedback:\n\n"
+        + str(revise.get("note", "")).strip()
+        + "\n\nReturn the complete specification again, with this feedback resolved and "
+          "nothing else changed."
+    )
 
 
 def call_model(endpoint, model, system, user, timeout_s, gen_params, runaway_guard=True) -> tuple[dict, dict | None]:
@@ -348,13 +403,17 @@ def grade_rep(task_dir: Path, rep_dir: Path) -> bool:
 
 
 def run_rep(args, task: dict, task_dir: Path, rep: int, out_dir: Path) -> dict:
-    rep_dir = out_dir / TASK_ID / f"rep{rep}"
+    # The task names itself in its own task.toml; read it from there rather than from the
+    # command line, so a caller that builds an args namespace by hand (the runner's own
+    # tests do) never has to know about a flag it is not exercising.
+    task_id = task["task"].get("id", DEFAULT_TASK_ID)
+    rep_dir = out_dir / task_id / f"rep{rep}"
     rep_dir.mkdir(parents=True, exist_ok=True)
-    asm = assemble(task_dir, Path(args.prompts_root), Path(args.template_root))
+    asm = assemble(task_dir, Path(args.prompts_root), Path(args.template_root), task=task)
     gen = {k: v for k, v in {"temperature": args.temperature, "top_p": args.top_p,
                              "max_tokens": args.max_tokens}.items() if v is not None}
     record = {
-        "task": TASK_ID, "rep": rep, "suite": task["task"].get("suite"),
+        "task": task_id, "rep": rep, "suite": task["task"].get("suite"),
         "schema": task["task"].get("schema"), "endpoint": args.endpoint, "model": args.model,
         "gen_params_sent": gen or "server defaults",
         "system_sha256": sha256_text(asm["system"]), "user_sha256": sha256_text(asm["user"]),
@@ -420,6 +479,8 @@ def run_rep(args, task: dict, task_dir: Path, rep: int, out_dir: Path) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--model", required=True)
+    ap.add_argument("--task", default=DEFAULT_TASK_ID, choices=SPEC_SUITE_TASKS,
+                    help="Which tree-shaped spec task to run. The revise tasks send the\nunaccepted spec and the note that sent it back; po-held-007 sends the brief.")
     ap.add_argument("--endpoint", default=DEFAULT_ENDPOINT)
     ap.add_argument("--prompts-root", default=str(DEFAULT_PROMPTS_ROOT))
     ap.add_argument("--template-root", default=str(DEFAULT_TEMPLATE_ROOT),
@@ -450,20 +511,21 @@ def main() -> int:
                          "2026-09-03 did.")
     args = ap.parse_args()
 
-    task_dir = TASKS_DIR / TASK_ID
+    task_dir = TASKS_DIR / args.task
     task = load_task(task_dir)
     n_reps = int(task["task"].get("reps", 3))
     if args.rep is not None and not (1 <= args.rep <= n_reps):
         ap.error(f"--rep {args.rep} outside the pre-registered 1..{n_reps}")
     stamp = _dt.datetime.now(_dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    out_dir = Path(args.out) if args.out else REPO_ROOT / "runs" / "po-heldout-spec" / f"{stamp}-{args.model}"
+    suite = task["task"].get("suite", "po-heldout-spec")
+    out_dir = Path(args.out) if args.out else REPO_ROOT / "runs" / suite / f"{stamp}-{args.model}"
 
     results = []
     for rep in ([args.rep] if args.rep else range(1, n_reps + 1)):
-        print(f"→ {TASK_ID} rep{rep}")
+        print(f"→ {args.task} rep{rep}")
         results.append(run_rep(args, task, task_dir, rep, out_dir))
 
-    summary = {"endpoint": args.endpoint, "model_alias": args.model, "task": TASK_ID,
+    summary = {"endpoint": args.endpoint, "model_alias": args.model, "task": args.task,
                "reps": results, "at": _dt.datetime.now(_dt.timezone.utc).isoformat()}
     (out_dir / "run_summary.json").write_text(json.dumps(summary, indent=2))
     for r in results:

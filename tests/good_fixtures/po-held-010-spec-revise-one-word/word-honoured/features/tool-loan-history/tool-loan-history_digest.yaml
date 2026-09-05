@@ -1,0 +1,35 @@
+feature: tool-loan-history
+generated: "2026-09-05T14:30:00+01:00"
+scenarios:
+- title: "Opening the loan history shows recent loans"
+  tags:
+  - "@key-example"
+  - "@smoke"
+  sentence: "A member opens their loan history and sees the tools they have borrowed recently."
+- title: "The history lists the newest loan first"
+  tags:
+  - "@key-example"
+  sentence: "The list shows the newest loan first and works back through the older ones."
+- title: "A member with more than seven loans still sees seven of them"
+  tags:
+  - "@boundary"
+  sentence: "A member who has borrowed more than seven tools still sees at least seven of them in the list."
+- title: "A member who has borrowed nothing sees an empty history"
+  tags:
+  - "@edge-case"
+  sentence: "A member who has never borrowed anything sees an empty history rather than an error."
+- title: "A tool still out is shown as not yet returned"
+  tags:
+  - "@key-example"
+  sentence: "A tool that has not come back yet is shown as still out."
+- title: "A member cannot see another member's history"
+  tags:
+  - "@negative"
+  sentence: "One member cannot look at the loan history that belongs to somebody else."
+assumptions:
+- id: "ASSUM-001"
+  text: "The loan history shows the seven most recent loans"
+  basis: "The brief asks for recent loans but does not say how many are shown"
+- id: "ASSUM-002"
+  text: "A loan with no return recorded is treated as still out"
+  basis: "The brief does not say how an unreturned loan is marked"

@@ -1,0 +1,8 @@
+{
+  "defect_class": "the note did nothing — the example it named came back reworded instead of dropped",
+  "construction": "the spec sent back for revision, with worked example 3 reworded ('still sees at least seven of them' -> 'is shown no fewer than seven of them') and left in place; every other file follows, so the answer is internally coherent and reads like a fresh draft",
+  "expect_fail": [
+    "test_the_note_was_honoured"
+  ],
+  "authored": "2026-09-05. This is not an invented failure: it is what the production seat returned on 2026-09-05 after being sent 'drop example 3, seven exactly is the rule', and its coach scored it 1.0. A gate with no fixture proving it fires is not a gate — and this is the one it exists for."
+}

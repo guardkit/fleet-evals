@@ -1,0 +1,8 @@
+{
+  "defect_class": "the one word changed, and so did a sentence nobody asked about",
+  "construction": "worked example 2 correctly reworded to read newest first, and worked example 5's digest sentence rewritten from 'A tool that has not come back yet is shown as still out.' to 'A tool that is still out on loan is shown as not yet returned.'",
+  "expect_fail": [
+    "test_nothing_else_changed"
+  ],
+  "authored": "2026-09-05"
+}

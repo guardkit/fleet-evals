@@ -11,9 +11,18 @@
 #     po-held-004          greenfield  base 0/3        tune 3/3
 #     po-held-007          feature-spec                tune 17/17
 #
-# This gate grades feature-spec, greenfield and idea. Extract is DEFERRED, not abandoned: its missing
-# `<think>` is a real unresolved defect (po-lane-state §23.4) and `po-heldout` still exists to measure
-# it. Two gates, two questions: "is the seat good at what we use it for" and "did we fix extract yet".
+# This gate grades feature-spec, the revise path, greenfield and idea. Extract is DEFERRED, not
+# abandoned: its missing `<think>` is a real unresolved defect (po-lane-state §23.4) and `po-heldout`
+# still exists to measure it. Two gates, two questions: "is the seat good at what we use it for" and
+# "did we fix extract yet".
+#
+# THE REVISE PATH was added 2026-09-05, and it is here because of a live defect. Rich sent the note
+# "drop example 3, seven exactly is the rule" back on a spec card. The forge re-dispatched the spec
+# writer with the note at the top of its prompt; the writer returned the same six worked examples with
+# example 3 reworded, its coach scored 1.0, and the second card he was shown was identical to the
+# first with no word that nothing had changed. One of his three touches silently did nothing. These
+# two tasks measure it: po-held-009 sends a note that drops an example, po-held-010 a note that
+# changes one word. Both are graded by ordinary code on the produced list, not by a model.
 #
 # It spans two runners because the artefacts differ — 007 produces a FILE TREE, the others produce
 # response.txt. That is a property of the modes, not an accident.
@@ -30,7 +39,7 @@ REPS="${REPS:-3}"          # greedy decode is deterministic, so REPS=1 is suffic
 cd "$(dirname "$0")/.."
 
 echo "=== PO DEPLOY GATE — model=$MODEL temp=$TEMP ==="
-echo "  modes graded: feature-spec (007) · greenfield (004) · idea (005)"
+echo "  modes graded: feature-spec (007) · revise (009, 010) · greenfield (004) · idea (005)"
 echo "  extract DEFERRED — see po-heldout and po-lane-state §23.4"
 echo
 
@@ -38,6 +47,14 @@ echo "--- feature-spec (po-held-007, file-tree artefact) ---"
 python3 harness/run_po_spec_eval.py --model "$MODEL" --endpoint "$ENDPOINT" \
   --temperature "$TEMP" --max-tokens "$MAXTOK" --rep "$REPS" --grade \
   || echo "  !! 007 RETURNED NONZERO — read the run dir, do not treat as pass"
+
+echo
+echo "--- the revise path (po-held-009, po-held-010: did the note actually land?) ---"
+for T in po-held-009-spec-revise-drop-example po-held-010-spec-revise-one-word; do
+  python3 harness/run_po_spec_eval.py --model "$MODEL" --endpoint "$ENDPOINT" --task "$T" \
+    --temperature "$TEMP" --max-tokens "$MAXTOK" --rep "$REPS" --grade \
+    || echo "  !! $T RETURNED NONZERO — read the run dir, do not treat as pass"
+done
 
 echo
 echo "--- greenfield + idea (po-held-004, po-held-005) ---"

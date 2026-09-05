@@ -47,7 +47,19 @@ def collect(root: Path) -> list[dict]:
                 "ts": (d.get("ts") or "")[:10],
                 "coach": d.get("coach_decision"),
                 "qav": sh.get("verdict"),
-                "agree": d.get("agree"),
+                # The stored flag when the shadow client set it; otherwise derived from the
+                # two verdicts (a coach decision other than approve is a rejection, the same
+                # rule guardkit's client uses). Added 2026-09-05 so verdicts recovered by the
+                # backfill count: they carry a verdict but the live client never set 'agree'.
+                "agree": (
+                    d.get("agree")
+                    if d.get("agree") is not None
+                    else (
+                        ((d.get("coach_decision") == "approve") == (sh.get("verdict") == "approve"))
+                        if d.get("coach_decision") is not None and sh.get("verdict") is not None
+                        else None
+                    )
+                ),
                 "findings": len(sh.get("findings") or []),
                 "status": d.get("status"),
             })

@@ -1,0 +1,46 @@
+feature: users-list-pagination
+generated: '2026-09-06T21:00:00+01:00'
+scenarios:
+- title: The users table gains an index on created_at for paging
+  tags:
+  - '@key-example'
+  - '@smoke'
+  sentence: After the migration, the users table has an index on created_at so pages can be read in creation order.
+- title: A smaller page is returned when a limit is given
+  tags:
+  - '@key-example'
+  sentence: Asking GET /users for a limit of 5 answers 200 with the first five users.
+- title: The second page follows on from the first
+  tags:
+  - '@key-example'
+  sentence: Asking GET /users for limit 10 and offset 10 answers 200 with the two users left after the first page.
+- title: The page query reads ten rows from the users table by default
+  tags:
+  - '@boundary'
+  sentence: With twelve rows in the users table and no limit, the page query reads the first ten rows by created_at.
+- title: Eleven users leave one for the second page
+  tags:
+  - '@boundary'
+  sentence: With eleven users, the second page answers 200 holding the one user left over.
+- title: A limit of zero is refused
+  tags:
+  - '@negative'
+  sentence: A limit of 0 is refused with 400 and the reply says the limit must be a positive whole number.
+- title: A limit above one hundred is refused
+  tags:
+  - '@negative'
+  sentence: A limit of 101 is refused with 400 and the reply says the limit may not exceed 100.
+- title: The migration leaves the existing users columns unchanged
+  tags:
+  - '@edge-case'
+  sentence: Adding the index leaves every existing column of the users table in place with the same type.
+assumptions:
+- id: ASSUM-001
+  text: A page lists users in the order they were created, oldest first
+  basis: The sentence gives a page size but not an order; without an order 'the first ten' has no meaning
+- id: ASSUM-002
+  text: The second page is asked for with an offset parameter counted in users
+  basis: The sentence names the limit but not how a caller reaches the next page; an offset is the simplest shape
+- id: ASSUM-003
+  text: The largest limit a caller may ask for is 100
+  basis: The sentence gives a default but no ceiling; 100 is the limit the service already enforces on its list routes

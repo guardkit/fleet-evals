@@ -91,6 +91,12 @@ SPEC_SUITE_TASKS = (
     "po-held-007-feature-spec",
     "po-held-009-spec-revise-drop-example",
     "po-held-010-spec-revise-one-word",
+    # The wire-idiom exam row (2026-09-06): three first-draft tasks whose brief is one of
+    # this weekend's sentences with the target repository named. Assembled exactly like
+    # po-held-007 — nothing is added to the prompt; the gate is what differs.
+    "po-held-011-wire-idiom-fresh-db",
+    "po-held-012-wire-idiom-add-endpoint",
+    "po-held-013-wire-idiom-extend-endpoint",
 )
 DEFAULT_ENDPOINT = "http://promaxgb10-41b1:9000/v1"
 DEFAULT_PROMPTS_ROOT = REPO_ROOT.parent / "specialist-agent"

@@ -1,0 +1,47 @@
+feature: fresh-database-user-creation-and-domain-counts
+generated: '2026-09-06T21:00:00+01:00'
+scenarios:
+- title: Creating a user on a freshly created database answers 201
+  tags:
+  - '@key-example'
+  - '@smoke'
+  sentence: On a database that has just been created, posting a new user to /users answers 201 with the user's id and email.
+- title: Counting users by domain on a freshly created database answers 200
+  tags:
+  - '@key-example'
+  - '@smoke'
+  sentence: Asking /users/count-by-domain on a database with no users yet answers 200 with an empty list rather than an error.
+- title: Counts by domain reflect the users created since the database was made
+  tags:
+  - '@key-example'
+  sentence: Users created through POST /users are counted by domain when /users/count-by-domain is asked afterwards.
+- title: A single user yields a single domain count
+  tags:
+  - '@boundary'
+  sentence: With exactly one user in a new database, the count route lists that one domain with a count of 1.
+- title: The first user created is readable by id
+  tags:
+  - '@boundary'
+  sentence: The first user written to a new database can be read back by id with the email that was posted.
+- title: Creating a user without an email is rejected on a freshly created database
+  tags:
+  - '@negative'
+  sentence: A POST /users with no email on a new database is refused with 400 and told the email is missing.
+- title: Creating a user with an email already taken is rejected
+  tags:
+  - '@negative'
+  sentence: A second POST /users with an email already taken is refused with 409 and told the email is in use.
+- title: Two users created at the same moment on a freshly created database both answer 201
+  tags:
+  - '@edge-case'
+  sentence: Two users posted at the same moment to a new database both answer 201 and both are counted by domain afterwards.
+assumptions:
+- id: ASSUM-001
+  text: GET /users/count-by-domain answers 200 with an empty list when no users exist, rather than 404
+  basis: The sentence says the count route answers 200 on a fresh database but not what the body holds when there are no users
+- id: ASSUM-002
+  text: A POST /users body with no email is rejected with 400
+  basis: The sentence does not say how a bad body is refused; 400 is the status the service already uses for invalid input
+- id: ASSUM-003
+  text: A second user with an email already taken is rejected with 409
+  basis: The sentence does not mention duplicate emails; 409 is the status the service already documents for an email that exists

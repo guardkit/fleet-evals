@@ -1,0 +1,8 @@
+{
+  "defect_class": "worked examples in the schema idiom — a migration, a column, a table — that the routing law cannot prove by rule",
+  "construction": "the solution spec with three worked examples rewritten to describe the database instead of the endpoint: 'The users table gains an index on created_at for paging', 'The page query reads ten rows from the users table by default', 'The migration leaves the existing users columns unchanged'; the other five examples and the four files' agreement with each other are unchanged, so only the wire-idiom gate fails. The features/ entry here is a symbolic link to tasks/po-held-013-wire-idiom-extend-endpoint/broken/features — the task's own broken/ sibling is the single source, this directory is its registration for the frozen integrity test",
+  "expect_fail": [
+    "test_every_worked_example_can_be_proven_by_rule"
+  ],
+  "authored": "2026-09-06 (the rewrite-on-refusal lane, Part F). A new gate with no fixture proving it fires is not a gate."
+}

@@ -1,0 +1,29 @@
+[task]
+id = "po-held-012-wire-idiom-add-endpoint"
+suite = "po-heldout-wire-idiom"
+mode = "feature-spec"
+phase = "auto"
+schema = "feature-spec-four-file-contract"
+artifact = "features/<kebab-feature-name>/ (four files: .feature + _assumptions.yaml + _summary.md + _digest.yaml)"
+reps = 3
+timeout_seconds = 1800
+
+[grading]
+command = "python3 -m pytest test/ -q"
+output_env = "PO_EVAL_OUTPUT_DIR"
+
+# The question this task asks (2026-09-06): given a sentence that adds an endpoint, does the
+# spec seat write worked examples the routing law can stamp by rule, with no note from
+# anyone? The gate classifies every scenario with guardkit's own rules, the target
+# repository declared as an HTTP surface — the same context the plan stage's pre-commit
+# stamping gives the rules on api_test. This table is data the gate reads.
+[wire_idiom]
+target_repository = "api_test"
+repo_has_http_surface = true
+
+[provenance]
+sentence_source = "the 2026-08-25 bake-off, sentence two — 'Add a GET /users/active-count endpoint that returns the number of active and inactive users as separate counts.' (rewrite-on-refusal spec 2026-09-06, rule 27)"
+brief_source = "input/brief.md — the sentence word for word, with the target repository named and nothing else added"
+gate_source = "harness/wire_idiom_gates.py — guardkit's extract_scenario_blocks + classify_scenario, rules only, no model, imported not copied; plus the four structural gates of po-held-007's test module, reused by import (rule 29)"
+oracle_source = "solution/ — hand-written 2026-09-06 in the machine idiom (every worked example is a request to the endpoint and its reply) and validated against the real gates; broken/ is the same spec with three examples rewritten in the schema idiom (a migration, a column, a table), which the wire-idiom gate must fail; registered for the frozen integrity test at tests/broken_fixtures/po-held-012-wire-idiom-add-endpoint/schema-idiom/"
+seat_driven = "no — nothing was run against a seat in this lane (rule 30); driving the seat is a later, attended act"

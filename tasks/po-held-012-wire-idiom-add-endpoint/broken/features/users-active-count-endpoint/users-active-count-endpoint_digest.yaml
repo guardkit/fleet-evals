@@ -1,0 +1,46 @@
+feature: users-active-count-endpoint
+generated: '2026-09-06T21:00:00+01:00'
+scenarios:
+- title: The users table has an is_active column
+  tags:
+  - '@key-example'
+  - '@smoke'
+  sentence: After the migration, the users table has an is_active column that defaults to true.
+- title: The two counts are separate fields in the reply
+  tags:
+  - '@key-example'
+  sentence: The reply carries the active number and the inactive number under separate names rather than one combined total.
+- title: No users gives zero for both counts
+  tags:
+  - '@boundary'
+  sentence: With no users at all, the count route answers 200 with 0 active and 0 inactive.
+- title: Active rows are counted from the is_active column
+  tags:
+  - '@boundary'
+  sentence: Grouping the users table by is_active puts three rows in the true group and two in the false group.
+- title: Only inactive users gives an active count of zero
+  tags:
+  - '@boundary'
+  sentence: When every user is inactive, the active count is 0 and the inactive count is the number of users.
+- title: Posting to the count route is not allowed
+  tags:
+  - '@negative'
+  sentence: A POST to the count route is refused with 405 because only GET is offered.
+- title: Asking for the counts in a format other than JSON is refused
+  tags:
+  - '@negative'
+  sentence: Asking the count route for a format other than JSON is refused with 406.
+- title: The migration can be rolled back without losing user rows
+  tags:
+  - '@edge-case'
+  sentence: Rolling the migration back removes the is_active column and keeps every user row.
+assumptions:
+- id: ASSUM-001
+  text: The reply names its two numbers active and inactive
+  basis: The sentence asks for separate counts but does not say what they are called
+- id: ASSUM-002
+  text: A POST to /users/active-count is refused with 405
+  basis: The sentence asks only for GET; 405 is how the service refuses a method a route does not offer
+- id: ASSUM-003
+  text: The count route offers JSON only and refuses other Accept headers with 406
+  basis: The sentence does not say what formats are offered; 406 is the status the service already uses for a format it does not offer

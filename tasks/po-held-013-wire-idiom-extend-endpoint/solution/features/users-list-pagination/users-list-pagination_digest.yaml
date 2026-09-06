@@ -1,0 +1,46 @@
+feature: users-list-pagination
+generated: '2026-09-06T21:00:00+01:00'
+scenarios:
+- title: The first page holds ten users when no limit is given
+  tags:
+  - '@key-example'
+  - '@smoke'
+  sentence: With twelve users and no limit given, GET /users answers 200 with the first ten of them.
+- title: A smaller page is returned when a limit is given
+  tags:
+  - '@key-example'
+  sentence: Asking GET /users for a limit of 5 answers 200 with the first five users.
+- title: The second page follows on from the first
+  tags:
+  - '@key-example'
+  sentence: Asking GET /users for limit 10 and offset 10 answers 200 with the two users left after the first page.
+- title: Exactly ten users fill one page with nothing left over
+  tags:
+  - '@boundary'
+  sentence: With exactly ten users, the default page answers 200 holding all ten.
+- title: Eleven users leave one for the second page
+  tags:
+  - '@boundary'
+  sentence: With eleven users, the second page answers 200 holding the one user left over.
+- title: A limit of zero is refused
+  tags:
+  - '@negative'
+  sentence: A limit of 0 is refused with 400 and the reply says the limit must be a positive whole number.
+- title: A limit above one hundred is refused
+  tags:
+  - '@negative'
+  sentence: A limit of 101 is refused with 400 and the reply says the limit may not exceed 100.
+- title: An offset past the last user answers an empty page
+  tags:
+  - '@edge-case'
+  sentence: An offset beyond the last user answers 200 with an empty list rather than an error.
+assumptions:
+- id: ASSUM-001
+  text: A page lists users in the order they were created, oldest first
+  basis: The sentence gives a page size but not an order; without an order 'the first ten' has no meaning
+- id: ASSUM-002
+  text: The second page is asked for with an offset parameter counted in users
+  basis: The sentence names the limit but not how a caller reaches the next page; an offset is the simplest shape
+- id: ASSUM-003
+  text: The largest limit a caller may ask for is 100
+  basis: The sentence gives a default but no ceiling; 100 is the limit the service already enforces on its list routes
